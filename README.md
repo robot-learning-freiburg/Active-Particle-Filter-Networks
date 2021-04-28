@@ -10,10 +10,11 @@
 0. We assume corresponding nvidia-driver is already installed in host machine.
 1. Bootstrap container definition file. \
     `<path_to_def_file>$ sudo singularity build tensorflow_latest-gpu.sif tensorflow_latest-gpu.def` => command takes few minutes to complete
-2. After successfuly build, verify that packages such as tensorflow+gpu, miniconda is installed correctly. \
+2. After successfuly build, verify that packages such as tensorflow+gpu is installed correctly. \
     `<path_to_sif_file>$ sudo singularity shell --nv tensorflow_latest-gpu.sif`
   Note: --nv ensure cuda related packages are loaded \
     `~>nvidia-smi` => returns driver details if above assumptions are satisfied \
+    `~>source /opt/venvs/py3-igibson/bin/activate` => activate virtualenv\
     `~>python` \
     `>>>import tensorflow as tf` \
     `>>>tf.__version__` \
