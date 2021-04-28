@@ -1,0 +1,27 @@
+#references
+# https://stackoverflow.com/questions/58269375/how-to-install-packages-with-miniconda-in-dockerfile
+# https://superuser.com/questions/1582294/how-to-run-a-conda-command-inside-singularity
+
+Bootstrap:docker
+From:tensorflow/tensorflow:latest-gpu
+
+%labels
+AUTHOR Suresh Guttikonda
+
+%post
+    # basic packages install
+    apt-get update # && apt-get -y upgrade
+    apt-get -y install \
+    wget \
+    git
+    
+    # cleanup
+    rm -rf /var/lib/apt/lists/*
+    apt-get clean
+    
+    #NOTE: to persist changes need to install packages at different location other than default \root
+    
+    # Installing Miniconda
+    wget https://repo.anaconda.com/miniconda/Miniconda3-py39_4.9.2-Linux-x86_64.sh && \
+    /bin/bash Miniconda3-py39_4.9.2-Linux-x86_64.sh -b -p /opt/miniconda3 && \
+    rm -f Miniconda3-py39_4.9.2-Linux-x86_64.sh
