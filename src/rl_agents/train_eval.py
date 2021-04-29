@@ -20,6 +20,8 @@ from six.moves import range
 import tensorflow as tf  # pylint: disable=g-explicit-tensorflow-version-import
 import numpy as np
 
+tf.debugging.enable_check_numerics()
+
 import functools
 
 # custom tf_agents
