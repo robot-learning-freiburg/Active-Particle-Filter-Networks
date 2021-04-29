@@ -14,6 +14,8 @@
     --config_file './configs/turtlebot_point_nav.yaml' \
     --num_iterations 3000 \
     --initial_collect_steps 500 \
+    --use_tf_functions=True \
+    --use_parallel_envs=True \
     --collect_steps_per_iteration 1 \
     --num_parallel_environments 1 \
     --num_parallel_environments_eval 1 \
