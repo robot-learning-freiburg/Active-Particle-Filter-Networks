@@ -10,7 +10,7 @@
 1. Enable NeuroDebian repository by following instructions on [neuro-debian](http://neuro.debian.net/)
 2. Install Singularity-Container as follows: \
     `$ sudo apt-get install -y singularity-container`
-3. For more details, refer: [singulairty guide](https://sylabs.io/guides/3.7/user-guide/index.html)
+3. For more details, refer: [singularity guide](https://sylabs.io/guides/3.7/user-guide/index.html)
 
 #### Steps to create singularity image:
 0. We assume corresponding nvidia-driver is already installed in host machine.
