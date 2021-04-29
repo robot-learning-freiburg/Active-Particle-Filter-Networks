@@ -486,6 +486,10 @@ def main(_):
     print('critic_joint_fc_layers', critic_joint_fc_layers)
     print('==================================================')
 
+    # sanity check otherwise following error is thrown after few iterations:
+    # Invalid argument:  Alpha loss is inf or nan. : Tensor had NaN values
+    assert FLAGS.num_iterations >= FLAGS.replay_buffer_capacity
+
     config_file = FLAGS.config_file
     action_timestep = FLAGS.action_timestep
     physics_timestep = FLAGS.physics_timestep
