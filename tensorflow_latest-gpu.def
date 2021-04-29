@@ -19,7 +19,7 @@ AUTHOR Suresh Guttikonda
     rm -rf /var/lib/apt/lists/*
     apt-get clean
 
-    #NOTE: to persist changes need to install packages at different location other than default \root
+    #NOTE: to persist changes need to install packages at different location other than default /root
 
     # setup virtualenv
     python3 -m venv --system-site-packages /opt/venvs/py3-igibson
