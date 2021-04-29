@@ -23,5 +23,5 @@
     `<path_to_def_file>$ singularity shell --nv -B /usr/share/glvnd tensorflow_latest-gpu.sif` => don't run with sudo \
     `~> source /opt/venvs/py3-igibson/bin/activate`
     `(py3-igibson)~> python -m gibson2.examples.demo.env_example` => should open window with robot otherwise we see and error 'ERROR: Unable to initialize EGL'
-4. To Bind/MOunt host machine directories within container use --bind [ref](https://sylabs.io/guides/3.0/user-guide/bind_paths_and_mounts.html)\
-    `<path_to_sif_file>$ sudo singularity shell --nv --bind ./src:/mnt/src tensorflow_latest-gpu.sif`
+4. To Bind/Mount host machine directories within container use --bind [ref](https://sylabs.io/guides/3.0/user-guide/bind_paths_and_mounts.html)\
+    `<path_to_sif_file>$ singularity shell --nv --bind /usr/share/glvnd,./src:/mnt/src tensorflow_latest-gpu.sif`
