@@ -1,5 +1,11 @@
 # deep-activate-localization
 
+#### Verified Setup On:
+* Operating System: Ubuntu 20.04.2 LTS
+* Nvidia-Driver Version: 460.73.01
+* CUDA Version: 11.2
+
+
 #### Steps to Install Singularity:
 1. Enable NeuroDebian repository by following instructions on [neuro-debian](http://neuro.debian.net/)
 2. Install Singularity-Container as follows: \
