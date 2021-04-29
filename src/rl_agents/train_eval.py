@@ -78,9 +78,9 @@ flags.DEFINE_float('critic_learning_rate', 3e-4,
 flags.DEFINE_float('alpha_learning_rate', 3e-4,
                    'Alpha learning rate')
 
-flags.DEFINE_boolean('use_tf_functions', True,
+flags.DEFINE_boolean('use_tf_functions', False,
                      'Whether to use graph/eager mode execution')
-flags.DEFINE_boolean('use_parallel_envs', True,
+flags.DEFINE_boolean('use_parallel_envs', False,
                      'Whether to use parallel env or not')
 flags.DEFINE_integer('num_eval_episodes', 10,
                      'The number of episodes to run eval on.')
@@ -474,6 +474,7 @@ def main(_):
     critic_action_fc_layers = [256]
     critic_joint_fc_layers = [256]
 
+    print('==================================================')
     for k, v in FLAGS.flag_values_dict().items():
         print(k, v)
     print('conv_1d_layer_params', conv_1d_layer_params)
@@ -483,6 +484,7 @@ def main(_):
     print('critic_obs_fc_layers', critic_obs_fc_layers)
     print('critic_action_fc_layers', critic_action_fc_layers)
     print('critic_joint_fc_layers', critic_joint_fc_layers)
+    print('==================================================')
 
     config_file = FLAGS.config_file
     action_timestep = FLAGS.action_timestep
