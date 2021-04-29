@@ -1,6 +1,6 @@
 # deep-activate-localization/src/rl_agents
 
-#### Steps to train agent:
+#### Steps to train agent in container:
 1. Run shell within container image \
 `<path_to_sif_file>$ singularity shell --nv --bind /usr/share/glvnd,./src:/mnt/src tensorflow_latest-gpu.sif`
 2. Activate virtual environment \
