@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from envs.navigate_env import NavigateGibsonEnv
+from .envs.navigate_env import NavigateGibsonEnv
 import gin
 # custom tf_agents
 from tf_agents.environments import gym_wrapper

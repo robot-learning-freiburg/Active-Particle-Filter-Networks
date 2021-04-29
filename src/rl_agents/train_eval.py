@@ -29,7 +29,7 @@ from tf_agents.agents.sac import sac_agent
 from tf_agents.agents.sac import tanh_normal_projection_network
 from tf_agents.drivers import dynamic_step_driver
 # from tf_agents.environments import suite_gibson
-import environments import suite_gibson
+from environments import suite_gibson
 from tf_agents.environments import tf_py_environment
 from tf_agents.environments import parallel_py_environment
 from tf_agents.eval import metric_utils
@@ -90,7 +90,7 @@ flags.DEFINE_integer('gpu_c', 0,
                      'GPU id for compute, e.g. Tensorflow.')
 
 # Added for Gibson
-flags.DEFINE_string('config_file', None,
+flags.DEFINE_string('config_file', os.path.join('./configs', 'turtlebot_point_nav.yaml'),
                     'Config file for the experiment.')
 flags.DEFINE_list('model_ids', None,
                   'A comma-separated list of model ids to overwrite config_file.'
