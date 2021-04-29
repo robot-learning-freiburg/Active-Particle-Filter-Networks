@@ -20,7 +20,10 @@ from six.moves import range
 import tensorflow as tf  # pylint: disable=g-explicit-tensorflow-version-import
 import numpy as np
 
+# error out inf or NaN
 tf.debugging.enable_check_numerics()
+
+# tf.config.run_functions_eagerly(False)
 
 import functools
 
@@ -39,6 +42,7 @@ from tf_agents.metrics import tf_metrics
 from tf_agents.metrics import py_metrics
 from tf_agents.metrics import batched_py_metric
 from tf_agents.networks import actor_distribution_network
+from tf_agents.networks import normal_projection_network
 from tf_agents.networks.utils import mlp_layers
 from tf_agents.policies import greedy_policy
 from tf_agents.policies import random_tf_policy
@@ -115,6 +119,17 @@ flags.DEFINE_integer('gpu_g', 0,
 
 FLAGS = flags.FLAGS
 
+def normal_projection_net(action_spec,
+                          init_action_stddev=0.35,
+                          init_means_output_factor=0.1):
+    del init_action_stddev
+    return normal_projection_network.NormalProjectionNetwork(
+        action_spec,
+        mean_transform=None,
+        state_dependent_std=True,
+        init_means_output_factor=init_means_output_factor,
+        std_transform=sac_agent.std_clip_transform,
+        scale_distribution=True)
 
 @gin.configurable
 def train_eval(
@@ -264,7 +279,7 @@ def train_eval(
             preprocessing_layers=preprocessing_layers,
             preprocessing_combiner=preprocessing_combiner,
             fc_layer_params=actor_fc_layers,
-            continuous_projection_net=tanh_normal_projection_network.TanhNormalProjectionNetwork,
+            continuous_projection_net=normal_projection_net, #tanh_normal_projection_network.TanhNormalProjectionNetwork,
             kernel_initializer=glorot_uniform_initializer
             )
         critic_net = critic_network.CriticNetwork(
@@ -400,6 +415,7 @@ def train_eval(
 
         def train_step():
             experience, _ = next(iterator)
+            # tf.debugging.check_numerics(experience, "Bad!")
             return tf_agent.train(experience)
 
         if use_tf_functions:
