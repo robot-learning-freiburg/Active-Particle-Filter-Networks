@@ -78,6 +78,10 @@ flags.DEFINE_float('critic_learning_rate', 3e-4,
 flags.DEFINE_float('alpha_learning_rate', 3e-4,
                    'Alpha learning rate')
 
+flags.DEFINE_boolean('use_tf_functions', True,
+                     'Whether to use graph/eager mode execution')
+flags.DEFINE_boolean('use_parallel_envs', True,
+                     'Whether to use parallel env or not')
 flags.DEFINE_integer('num_eval_episodes', 10,
                      'The number of episodes to run eval on.')
 flags.DEFINE_integer('eval_interval', 10000,
@@ -140,11 +144,12 @@ def train_eval(
     actor_learning_rate=3e-4,
     critic_learning_rate=3e-4,
     alpha_learning_rate=3e-4,
-    td_errors_loss_fn=tf.compat.v1.losses.mean_squared_error,
+    td_errors_loss_fn=tf.math.squared_difference,
     gamma=0.99,
     reward_scale_factor=1.0,
     gradient_clipping=None,
     use_tf_functions=True,
+    use_parallel_envs=True,
     # Params for eval
     num_eval_episodes=30,
     eval_interval=10000,
@@ -197,14 +202,14 @@ def train_eval(
         tf_py_env = [lambda model_id=model_ids[i]: env_load_fn(model_id, 'headless', gpu)
                      for i in range(num_parallel_environments)]
         tf_env = tf_py_environment.TFPyEnvironment(
-            parallel_py_environment.ParallelPyEnvironment(tf_py_env))
+            parallel_py_environment.ParallelPyEnvironment(tf_py_env) if use_parallel_envs else tf_py_env[0])
 
         if eval_env_mode == 'gui':
             assert num_parallel_environments_eval == 1, 'only one GUI env is allowed'
         eval_py_env = [lambda model_id=model_ids_eval[i]: env_load_fn(model_id, eval_env_mode, gpu)
                        for i in range(num_parallel_environments_eval)]
         eval_tf_env = tf_py_environment.TFPyEnvironment(
-            parallel_py_environment.ParallelPyEnvironment(eval_py_env))
+            parallel_py_environment.ParallelPyEnvironment(eval_py_env) if use_parallel_envs else eval_py_env[0])
 
         time_step_spec = tf_env.time_step_spec()
         observation_spec = time_step_spec.observation
@@ -514,6 +519,8 @@ def main(_):
         critic_learning_rate=FLAGS.critic_learning_rate,
         alpha_learning_rate=FLAGS.alpha_learning_rate,
         gamma=FLAGS.gamma,
+        use_tf_functions=FLAGS.use_tf_functions,
+        use_parallel_envs=FLAGS.use_parallel_envs,
         num_eval_episodes=FLAGS.num_eval_episodes,
         eval_interval=FLAGS.eval_interval,
         eval_only=FLAGS.eval_only,
