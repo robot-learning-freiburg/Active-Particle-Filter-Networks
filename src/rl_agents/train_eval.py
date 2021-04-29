@@ -1,35 +1,7 @@
 #!/usr/bin/env python3
 
-# coding=utf-8
-# Copyright 2018 The TF-Agents Authors.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-# Lint as: python2, python3
-r"""Train and Eval SAC.
-
-All hyperparameters come from the SAC paper
-https://arxiv.org/pdf/1812.05905.pdf
-
-To run:
-
-```bash
-tensorboard --logdir $HOME/tmp/sac/gym/HalfCheetah-v2/ --port 2223 &
-
-python tf_agents/agents/sac/examples/v2/train_eval.py \
-  --root_dir=$HOME/tmp/sac/gym/HalfCheetah-v2/ \
-  --alsologtostderr
-```
+"""
+reference: https://github.com/StanfordVL/agents/blob/cvpr21_challenge_tf2.4/tf_agents/agents/sac/examples/v2/train_eval.py
 """
 
 from __future__ import absolute_import
@@ -57,7 +29,7 @@ from tf_agents.agents.sac import sac_agent
 from tf_agents.agents.sac import tanh_normal_projection_network
 from tf_agents.drivers import dynamic_step_driver
 # from tf_agents.environments import suite_gibson
-import custom_suite_gibson as suite_gibson
+import environments import suite_gibson
 from tf_agents.environments import tf_py_environment
 from tf_agents.environments import parallel_py_environment
 from tf_agents.eval import metric_utils
