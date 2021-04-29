@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from environments import suite_gibson
+import suite_gibson
 import os
 
 suite_gibson.load(
