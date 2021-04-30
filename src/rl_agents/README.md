@@ -33,7 +33,8 @@
     --eval_interval 500 \
     --gpu_c 0 \
     --env_mode 'headless' \
-    --gpu_g 0
+    --gpu_g 0 \
+    --seed 100
 ```
 5. if above steps are successful, we see training progress as follows
 ```
@@ -57,5 +58,6 @@ I0429 09:27:42.979353 140051197933376 train_eval.py:416] step = 100, loss = -2.5
     --num_eval_episodes 10 \
     --gpu_c 0 \
     --env_mode 'gui' \
-    --gpu_g 0
+    --gpu_g 0 \
+    --seed 100
 ```
