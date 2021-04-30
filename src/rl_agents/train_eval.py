@@ -185,7 +185,7 @@ def train_eval(
     summaries_flush_secs=10,
     debug_summaries=False,
     summarize_grads_and_vars=False,
-    eval_metrics_callback=None
+    eval_metrics_callback=None,
     seed=42):
 
     """A simple train and eval for SAC."""
