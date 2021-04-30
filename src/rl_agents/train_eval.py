@@ -222,17 +222,22 @@ def train_eval(
             assert len(model_ids_eval) == num_parallel_environments_eval, \
                 'model ids eval provided, but length not equal to num_parallel_environments_eval'
 
-        tf_py_env = [lambda model_id=model_ids[i]: env_load_fn(model_id, 'headless', gpu)
-                     for i in range(num_parallel_environments)]
-        tf_env = tf_py_environment.TFPyEnvironment(
-            parallel_py_environment.ParallelPyEnvironment(tf_py_env) if use_parallel_envs else tf_py_env[0])
+        if use_parallel_envs:
+            tf_py_env = [lambda model_id=model_ids[i]: env_load_fn(model_id, 'headless', gpu)
+                         for i in range(num_parallel_environments)]
+            tf_env = tf_py_environment.TFPyEnvironment(
+                parallel_py_environment.ParallelPyEnvironment(tf_py_env))
 
-        if eval_env_mode == 'gui':
-            assert num_parallel_environments_eval == 1, 'only one GUI env is allowed'
-        eval_py_env = [lambda model_id=model_ids_eval[i]: env_load_fn(model_id, eval_env_mode, gpu)
-                       for i in range(num_parallel_environments_eval)]
-        eval_tf_env = tf_py_environment.TFPyEnvironment(
-            parallel_py_environment.ParallelPyEnvironment(eval_py_env) if use_parallel_envs else eval_py_env[0])
+            if eval_env_mode == 'gui':
+                assert num_parallel_environments_eval == 1, 'only one GUI env is allowed'
+            eval_py_env = [lambda model_id=model_ids_eval[i]: env_load_fn(model_id, eval_env_mode, gpu)
+                           for i in range(num_parallel_environments_eval)]
+            eval_tf_env = tf_py_environment.TFPyEnvironment(
+                parallel_py_environment.ParallelPyEnvironment(eval_py_env))
+        else:
+            tf_py_env = env_load_fn(model_ids[0], 'headless', gpu)
+            tf_env = tf_py_environment.TFPyEnvironment(tf_py_env)
+            eval_tf_env = tf_env
 
         ## TODO: need to pass params instead of hard-coded
         if init_pf_net:
@@ -539,8 +544,8 @@ def main(_):
     config_file = FLAGS.config_file
     action_timestep = FLAGS.action_timestep
     physics_timestep = FLAGS.physics_timestep
-    is_localize_env = True
-    init_pf_net = True
+    is_localize_env = False
+    init_pf_net = False
 
     # set random seeds
     random.seed(FLAGS.seed)
