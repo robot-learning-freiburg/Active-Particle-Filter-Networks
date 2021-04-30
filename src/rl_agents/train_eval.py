@@ -19,6 +19,7 @@ import gin
 from six.moves import range
 import tensorflow as tf  # pylint: disable=g-explicit-tensorflow-version-import
 import numpy as np
+import random
 
 # error out inf or NaN
 tf.debugging.enable_check_numerics()
@@ -83,6 +84,7 @@ flags.DEFINE_float('critic_learning_rate', 3e-4,
                    'Critic learning rate')
 flags.DEFINE_float('alpha_learning_rate', 3e-4,
                    'Alpha learning rate')
+flags.DEFINE_integer('seed', 100, 'random seed')
 
 flags.DEFINE_boolean('use_tf_functions', False,
                      'Whether to use graph/eager mode execution')
@@ -183,7 +185,8 @@ def train_eval(
     summaries_flush_secs=10,
     debug_summaries=False,
     summarize_grads_and_vars=False,
-    eval_metrics_callback=None):
+    eval_metrics_callback=None
+    seed=42):
 
     """A simple train and eval for SAC."""
     root_dir = os.path.expanduser(root_dir)
@@ -221,12 +224,18 @@ def train_eval(
         tf_env = tf_py_environment.TFPyEnvironment(
             parallel_py_environment.ParallelPyEnvironment(tf_py_env) if use_parallel_envs else tf_py_env[0])
 
+        seed_seq = [seed] * num_parallel_environments if use_parallel_envs else seed
+        tf_env.seed(seed_seq)
+
         if eval_env_mode == 'gui':
             assert num_parallel_environments_eval == 1, 'only one GUI env is allowed'
         eval_py_env = [lambda model_id=model_ids_eval[i]: env_load_fn(model_id, eval_env_mode, gpu)
                        for i in range(num_parallel_environments_eval)]
         eval_tf_env = tf_py_environment.TFPyEnvironment(
             parallel_py_environment.ParallelPyEnvironment(eval_py_env) if use_parallel_envs else eval_py_env[0])
+
+        seed_seq = [seed] * num_parallel_environments_eval if use_parallel_envs else seed
+        eval_tf_env.seed(seed_seq)
 
         time_step_spec = tf_env.time_step_spec()
         observation_spec = time_step_spec.observation
@@ -393,7 +402,7 @@ def train_eval(
         if eval_metrics_callback is not None:
             eval_metrics_callback(results, global_step.numpy())
         metric_utils.log_metrics(eval_metrics)
-        
+
         if eval_only:
             print('EVAL DONE')
             return
@@ -475,9 +484,6 @@ def train_eval(
 
 
 def main(_):
-    np.random.seed(42)
-    tf.random.set_seed(42)
-
     tf.compat.v1.enable_v2_behavior()
     logging.set_verbosity(logging.INFO)
     gin.parse_config_files_and_bindings(FLAGS.gin_file, FLAGS.gin_param)
@@ -512,6 +518,11 @@ def main(_):
     config_file = FLAGS.config_file
     action_timestep = FLAGS.action_timestep
     physics_timestep = FLAGS.physics_timestep
+
+    # set random seeds
+    random.seed(FLAGS.seed)
+    np.random.seed(FLAGS.seed)
+    tf.random.set_seed(FLAGS.seed)
 
     train_eval(
         root_dir=FLAGS.root_dir,
@@ -551,6 +562,7 @@ def main(_):
         eval_only=FLAGS.eval_only,
         num_parallel_environments_eval=FLAGS.num_parallel_environments_eval,
         model_ids_eval=FLAGS.model_ids_eval,
+        seed=FLAGS.seed,
     )
 
 
