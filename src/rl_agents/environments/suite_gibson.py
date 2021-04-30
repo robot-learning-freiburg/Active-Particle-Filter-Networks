@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from .envs.navigate_env import NavigateGibsonEnv
+from .envs.localize_env import LocalizeGibsonEnv
 import gin
 # custom tf_agents
 from tf_agents.environments import gym_wrapper
@@ -10,6 +11,7 @@ from tf_agents.environments import wrappers
 def load(config_file,
          model_id=None,
          env_mode='headless',
+         is_localize_env=True,
          action_timestep=1.0 / 10.0,
          physics_timestep=1.0 / 40.0,
          device_idx=0,
@@ -17,7 +19,15 @@ def load(config_file,
          env_wrappers=(),
          spec_dtype_map=None):
 
-    env = NavigateGibsonEnv(config_file=config_file,
+    if is_localize_env:
+        env = LocalizeGibsonEnv(config_file=config_file,
+                     scene_id=model_id,
+                     mode=env_mode,
+                     action_timestep=action_timestep,
+                     physics_timestep=physics_timestep,
+                     device_idx=device_idx)
+    else:
+        env = NavigateGibsonEnv(config_file=config_file,
                      scene_id=model_id,
                      mode=env_mode,
                      action_timestep=action_timestep,

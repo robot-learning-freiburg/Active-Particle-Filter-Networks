@@ -141,6 +141,7 @@ def train_eval(
     root_dir,
     gpu=0,
     env_load_fn=None,
+    init_pf_net=False,
     model_ids=None,
     reload_interval=None,
     eval_env_mode='headless',
@@ -234,26 +235,28 @@ def train_eval(
             parallel_py_environment.ParallelPyEnvironment(eval_py_env) if use_parallel_envs else eval_py_env[0])
 
         ## TODO: need to pass params instead of hard-coded
-        argparser = argparse.ArgumentParser()
-        pfnet_params = argparser.parse_args([])
-        pfnet_params.batch_size = 1
-        pfnet_params.trajlen = 1
+        if init_pf_net:
+            print('initializing particle filter ....')
+            argparser = argparse.ArgumentParser()
+            pfnet_params = argparser.parse_args([])
+            pfnet_params.batch_size = 1
+            pfnet_params.trajlen = 1
 
-        pfnet_params.num_particles = 100
-        pfnet_params.resample = True
-        pfnet_params.alpha_resample_ratio = 1.
-        pfnet_params.transition_std = np.array([0., 0.], dtype=np.float32)
+            pfnet_params.num_particles = 100
+            pfnet_params.resample = True
+            pfnet_params.alpha_resample_ratio = 1.
+            pfnet_params.transition_std = np.array([0., 0.], dtype=np.float32)
 
-        pfnet_params.global_map_size = (1000, 1000, 1)
-        pfnet_params.window_scaler = 8.0
-        pfnet_params.return_state = True
-        pfnet_params.stateful = False
+            pfnet_params.global_map_size = (1000, 1000, 1)
+            pfnet_params.window_scaler = 8.0
+            pfnet_params.return_state = True
+            pfnet_params.stateful = False
 
-        # Create a new pfnet model instance
-        pfnet_model = pfnet.pfnet_model(pfnet_params)
+            # Create a new pfnet model instance
+            pfnet_model = pfnet.pfnet_model(pfnet_params)
 
-        tf_env._envs[0].pfnet_model = pfnet_model
-        eval_tf_env._envs[0].pfnet_model = pfnet_model
+            tf_env._envs[0].pfnet_model = pfnet_model
+            eval_tf_env._envs[0].pfnet_model = pfnet_model
 
         time_step_spec = tf_env.time_step_spec()
         observation_spec = time_step_spec.observation
@@ -536,6 +539,8 @@ def main(_):
     config_file = FLAGS.config_file
     action_timestep = FLAGS.action_timestep
     physics_timestep = FLAGS.physics_timestep
+    is_localize_env = True
+    init_pf_net = True
 
     # set random seeds
     random.seed(FLAGS.seed)
@@ -549,10 +554,12 @@ def main(_):
             config_file=config_file,
             model_id=model_id,
             env_mode=mode,
+            is_localize_env=is_localize_env,
             action_timestep=action_timestep,
             physics_timestep=physics_timestep,
             device_idx=device_idx,
         ),
+        init_pf_net=init_pf_net,
         model_ids=FLAGS.model_ids,
         eval_env_mode=FLAGS.env_mode,
         num_iterations=FLAGS.num_iterations,
