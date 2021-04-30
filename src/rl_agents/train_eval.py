@@ -185,8 +185,7 @@ def train_eval(
     summaries_flush_secs=10,
     debug_summaries=False,
     summarize_grads_and_vars=False,
-    eval_metrics_callback=None,
-    seed=42):
+    eval_metrics_callback=None):
 
     """A simple train and eval for SAC."""
     root_dir = os.path.expanduser(root_dir)
@@ -224,18 +223,12 @@ def train_eval(
         tf_env = tf_py_environment.TFPyEnvironment(
             parallel_py_environment.ParallelPyEnvironment(tf_py_env) if use_parallel_envs else tf_py_env[0])
 
-        seed_seq = [seed] * num_parallel_environments if use_parallel_envs else seed
-        tf_env.seed(seed_seq)
-
         if eval_env_mode == 'gui':
             assert num_parallel_environments_eval == 1, 'only one GUI env is allowed'
         eval_py_env = [lambda model_id=model_ids_eval[i]: env_load_fn(model_id, eval_env_mode, gpu)
                        for i in range(num_parallel_environments_eval)]
         eval_tf_env = tf_py_environment.TFPyEnvironment(
             parallel_py_environment.ParallelPyEnvironment(eval_py_env) if use_parallel_envs else eval_py_env[0])
-
-        seed_seq = [seed] * num_parallel_environments_eval if use_parallel_envs else seed
-        eval_tf_env.seed(seed_seq)
 
         time_step_spec = tf_env.time_step_spec()
         observation_spec = time_step_spec.observation
@@ -562,7 +555,6 @@ def main(_):
         eval_only=FLAGS.eval_only,
         num_parallel_environments_eval=FLAGS.num_parallel_environments_eval,
         model_ids_eval=FLAGS.model_ids_eval,
-        seed=FLAGS.seed,
     )
 
 
