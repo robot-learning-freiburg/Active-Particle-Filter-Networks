@@ -27,15 +27,15 @@
     <path_to_sif_file>$ sudo singularity shell --nv tensorflow_latest-gpu.sif
     
     # get driver details if above assumptions are satisfied
-    ~>nvidia-smi
+    ~> nvidia-smi
     
     # activate virtualenv
-    ~>source /opt/venvs/py3-igibson/bin/activate
+    ~> source /opt/venvs/py3-igibson/bin/activate
     
-    ~>python
-    >>>import tensorflow as tf
-    >>>tf.__version__
-    >>>>tf.config.list_physical_devices() => returns list of available devices
+    ~> python
+    >>> import tensorflow as tf
+    >>> tf.__version__
+    >>>> tf.config.list_physical_devices() => returns list of available devices
     ```
 3. Run demo igibson gui example. Following should open window with robot otherwise we see and error 'ERROR: Unable to initialize EGL'
     ```
