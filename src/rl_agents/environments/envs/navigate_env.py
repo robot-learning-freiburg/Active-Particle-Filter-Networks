@@ -5,8 +5,6 @@ from gibson2.envs.igibson_env import iGibsonEnv
 import gym
 import numpy as np
 
-from pfnetwork import pfnet
-
 class NavigateGibsonEnv(iGibsonEnv):
     """
     Custom implementation of navigation task based on iGibsonEnv
@@ -65,6 +63,8 @@ class NavigateGibsonEnv(iGibsonEnv):
                     dtype=np.float32)
 
         self.observation_space = gym.spaces.Dict(observation_space)
+
+        self.pfnet_model = None
 
     def step(self, action):
         """

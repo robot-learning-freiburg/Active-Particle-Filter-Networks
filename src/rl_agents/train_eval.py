@@ -28,6 +28,9 @@ tf.debugging.enable_check_numerics()
 
 import functools
 
+import argparse
+from pfnetwork import pfnet
+
 # custom tf_agents
 from tf_agents.system import system_multiprocessing as multiprocessing
 from tf_agents.agents.ddpg import critic_network
@@ -229,6 +232,28 @@ def train_eval(
                        for i in range(num_parallel_environments_eval)]
         eval_tf_env = tf_py_environment.TFPyEnvironment(
             parallel_py_environment.ParallelPyEnvironment(eval_py_env) if use_parallel_envs else eval_py_env[0])
+
+        ## TODO: need to pass params instead of hard-coded
+        argparser = argparse.ArgumentParser()
+        pfnet_params = argparser.parse_args([])
+        pfnet_params.batch_size = 1
+        pfnet_params.trajlen = 1
+
+        pfnet_params.num_particles = 100
+        pfnet_params.resample = True
+        pfnet_params.alpha_resample_ratio = 1.
+        pfnet_params.transition_std = np.array([0., 0.], dtype=np.float32)
+
+        pfnet_params.global_map_size = (1000, 1000, 1)
+        pfnet_params.window_scaler = 8.0
+        pfnet_params.return_state = True
+        pfnet_params.stateful = False
+
+        # Create a new pfnet model instance
+        pfnet_model = pfnet.pfnet_model(pfnet_params)
+
+        tf_env._envs[0].pfnet_model = pfnet_model
+        eval_tf_env._envs[0].pfnet_model = pfnet_model
 
         time_step_spec = tf_env.time_step_spec()
         observation_spec = time_step_spec.observation
@@ -504,9 +529,9 @@ def main(_):
     print('critic_joint_fc_layers', critic_joint_fc_layers)
     print('==================================================')
 
-    # sanity check otherwise following error is thrown after few iterations:
-    # Invalid argument:  Alpha loss is inf or nan. : Tensor had NaN values
-    assert FLAGS.num_iterations >= FLAGS.replay_buffer_capacity
+    ## HACK: supporting only one parallel env currently
+    assert FLAGS.num_parallel_environments == 1
+    assert FLAGS.num_parallel_environments_eval == 1
 
     config_file = FLAGS.config_file
     action_timestep = FLAGS.action_timestep
