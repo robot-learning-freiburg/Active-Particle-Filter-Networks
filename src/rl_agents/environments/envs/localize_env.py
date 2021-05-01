@@ -80,6 +80,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
                     dtype=np.float32)
 
         self.observation_space = gym.spaces.Dict(observation_space)
+        print("=====> LocalizeGibsonEnv initialized")
 
         argparser = argparse.ArgumentParser()
         self.pf_params = argparser.parse_args([])

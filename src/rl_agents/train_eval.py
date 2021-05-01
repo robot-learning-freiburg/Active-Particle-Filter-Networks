@@ -89,7 +89,7 @@ flags.DEFINE_float('alpha_learning_rate', 3e-4,
                    'Alpha learning rate')
 flags.DEFINE_integer('seed', 100, 'random seed')
 
-flags.DEFINE_boolean('use_tf_functions', False,
+flags.DEFINE_boolean('use_tf_functions', True,
                      'Whether to use graph/eager mode execution')
 flags.DEFINE_boolean('use_parallel_envs', False,
                      'Whether to use parallel env or not')
@@ -141,7 +141,6 @@ def train_eval(
     root_dir,
     gpu=0,
     env_load_fn=None,
-    init_pf_net=False,
     model_ids=None,
     reload_interval=None,
     eval_env_mode='headless',
@@ -239,30 +238,6 @@ def train_eval(
             tf_py_env = env_load_fn(model_ids[0], 'headless', gpu)
             tf_env = tf_py_environment.TFPyEnvironment(tf_py_env)
             eval_tf_env = tf_env
-
-        ## TODO: need to pass params instead of hard-coded
-        if init_pf_net:
-            print('initializing particle filter ....')
-            argparser = argparse.ArgumentParser()
-            pfnet_params = argparser.parse_args([])
-            pfnet_params.batch_size = 1
-            pfnet_params.trajlen = 1
-
-            pfnet_params.num_particles = 100
-            pfnet_params.resample = True
-            pfnet_params.alpha_resample_ratio = 1.
-            pfnet_params.transition_std = np.array([0., 0.], dtype=np.float32)
-
-            pfnet_params.global_map_size = (1000, 1000, 1)
-            pfnet_params.window_scaler = 8.0
-            pfnet_params.return_state = True
-            pfnet_params.stateful = False
-
-            # Create a new pfnet model instance
-            pfnet_model = pfnet.pfnet_model(pfnet_params)
-
-            tf_env._envs[0].pfnet_model = pfnet_model
-            eval_tf_env._envs[0].pfnet_model = pfnet_model
 
         time_step_spec = tf_env.time_step_spec()
         observation_spec = time_step_spec.observation
@@ -538,6 +513,9 @@ def main(_):
     print('critic_joint_fc_layers', critic_joint_fc_layers)
     print('==================================================')
 
+    ## HACK: pfnet is not supported with parallel environments currently
+    assert not FLAGS.use_parallel_envs
+
     ## HACK: supporting only one parallel env currently
     assert FLAGS.num_parallel_environments == 1
     assert FLAGS.num_parallel_environments_eval == 1
@@ -546,7 +524,6 @@ def main(_):
     action_timestep = FLAGS.action_timestep
     physics_timestep = FLAGS.physics_timestep
     is_localize_env = False
-    init_pf_net = False
 
     # set random seeds
     random.seed(FLAGS.seed)
@@ -565,7 +542,6 @@ def main(_):
             physics_timestep=physics_timestep,
             device_idx=device_idx,
         ),
-        init_pf_net=init_pf_net,
         model_ids=FLAGS.model_ids,
         eval_env_mode=FLAGS.env_mode,
         num_iterations=FLAGS.num_iterations,
