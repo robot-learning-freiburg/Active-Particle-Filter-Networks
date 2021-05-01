@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from collections import OrderedDict
+from ..env_utils import datautils
 from gibson2.envs.igibson_env import iGibsonEnv
 import gym
 import numpy as np
