@@ -9,8 +9,11 @@ from ..env_utils import render
 from gibson2.envs.igibson_env import iGibsonEnv
 from gibson2.utils.assets_utils import get_scene_path
 import gym
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+import matplotlib.pyplot as plt
 import numpy as np
 import os
+from pathlib import Path
 from PIL import Image
 from pfnetwork import pfnet
 import tensorflow as tf
@@ -82,7 +85,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.pf_params = argparser.parse_args([])
 
         self.pf_params.map_pixel_in_meters = 0.1
-        self.pf_params.init_particles_distr = 'uniform'
+        self.pf_params.init_particles_distr = 'gaussian'
         self.pf_params.init_particles_std = np.array([15, 0.523599], dtype=np.float32)
         self.pf_params.num_particles = 100
         self.pf_params.resample = True
@@ -101,6 +104,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.pf_params.init_particles_cov = np.diag(particle_std2[(0, 0, 1),])
 
         self.pf_params.pfnet_load = ''
+        self.pf_params.use_plot = True
+        self.pf_params.store_plot = True
+
+        self.out_folder = os.path.join('./', 'episode_runs')
+        Path(self.out_folder).mkdir(parents=True, exist_ok=True)
 
         # Create a new pfnet model instance
         self.pfnet_model = pfnet.pfnet_model(self.pf_params)
@@ -110,6 +118,31 @@ class LocalizeGibsonEnv(iGibsonEnv):
         if self.pf_params.pfnet_load:
             self.pfnet_model.load_weights(self.pf_params.pfnet_load)
             print("=====> Loaded pf model from " + self.pf_params.pfnet_load)
+
+        if self.pf_params.use_plot:
+            # code related to displaying results in matplotlib
+            self.fig = plt.figure(figsize=(7, 7))
+            self.plt_ax = None
+            self.env_plts = {
+                'map_plt': None,
+                'robot_gt_plt': {
+                    'position_plt': None,
+                    'heading_plt': None,
+                },
+                'robot_est_plt': {
+                    'position_plt': None,
+                    'heading_plt': None,
+                    'particles_plt': None,
+                },
+                'step_txt_plt': None,
+            }
+
+            #HACK FigureCanvasAgg and ion is not working together
+            if self.pf_params.store_plot:
+                self.canvas = FigureCanvasAgg(self.fig)
+            else:
+                plt.ion()
+                plt.show()
 
     def load_miscellaneous_variables(self):
         """
@@ -121,9 +154,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.obstacle_map = None
         self.floor_map = None
 
+        self.curr_plt_images = []
         self.curr_pfnet_state = None
         self.curr_rgb_obs = None
         self.curr_gt_pose = None
+        self.curr_est_pose = None
 
     def reset_variables(self):
         """
@@ -135,9 +170,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.obstacle_map = None
         self.floor_map = None
 
+        self.curr_plt_images = []
         self.curr_pfnet_state = None
         self.curr_rgb_obs = None
         self.curr_gt_pose = None
+        self.curr_est_pose = None
 
     def step(self, action):
         """
@@ -278,6 +315,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         self.curr_pfnet_state = new_pfnet_state
         self.curr_gt_pose = new_pose
+        self.curr_est_pose = self.get_est_pose()
         self.curr_rgb_obs = new_rgb_obs
 
         return reward
@@ -293,6 +331,26 @@ class LocalizeGibsonEnv(iGibsonEnv):
         num_particles = self.pf_params.num_particles
         init_particles_cov = self.pf_params.init_particles_cov
         init_particles_distr = self.pf_params.init_particles_distr
+
+        if self.pf_params.use_plot:
+                #clear subplots
+                plt.clf()
+                self.plt_ax = self.fig.add_subplot(111)
+                self.env_plts = {
+                    'map_plt': None,
+                    'robot_gt_plt': {
+                        'position_plt': None,
+                        'heading_plt': None,
+                    },
+                    'robot_est_plt': {
+                        'position_plt': None,
+                        'heading_plt': None,
+                        'particles_plt': None,
+                    },
+                    'step_txt_plt': None,
+                }
+
+                self.store_results()
 
         # get new robot state
         new_robot_state = self.robots[0].calc_state()
@@ -346,6 +404,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.obstacle_map = obstacle_map
         self.curr_pfnet_state = [init_particles, init_particle_weights, obstacle_map]
         self.curr_gt_pose = new_pose
+        self.curr_est_pose = self.get_est_pose()
         self.curr_rgb_obs = new_rgb_obs
 
     def get_obstacle_map(self):
@@ -481,8 +540,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
         return robot_pose
 
     def get_est_pose(self):
-        # after transition update
-        particles, particle_weights, _ = self.pfnet_state
+
+        batch_size = self.pf_params.batch_size
+        num_particles = self.pf_params.num_particles
+        particles, particle_weights, _ = self.curr_pfnet_state # after transition update
         lin_weights = tf.nn.softmax(particle_weights, axis=-1)
 
         assert list(particles.shape) == [batch_size, num_particles, 3]
@@ -499,3 +560,107 @@ class LocalizeGibsonEnv(iGibsonEnv):
         est_pose = tf.stack([part_x, part_y, part_th], axis=-1)
 
         return est_pose
+
+    def render(self, mode='human'):
+        """
+        Render plots
+        """
+        # super(LocalizeGibsonEnv, self).render(mode)
+
+        if self.pf_params.use_plot:
+            # environment map
+            floor_map = self.floor_map[0].numpy()
+            map_plt = self.env_plts['map_plt']
+            map_plt = render.draw_floor_map(floor_map, self.plt_ax, map_plt)
+            self.env_plts['map_plt'] = map_plt
+
+            # ground truth robot pose and heading
+            color = '#7B241C'
+            robot_pose = self.curr_gt_pose[0].numpy()
+            position_plt = self.env_plts['robot_gt_plt']['position_plt']
+            heading_plt = self.env_plts['robot_gt_plt']['heading_plt']
+            position_plt, heading_plt = render.draw_robot_pose(
+                                robot_pose,
+                                color,
+                                floor_map.shape,
+                                self.plt_ax,
+                                position_plt,
+                                heading_plt)
+            self.env_plts['robot_gt_plt']['position_plt'] = position_plt
+            self.env_plts['robot_gt_plt']['heading_plt'] = heading_plt
+
+            # estimated robot pose and heading
+            color = '#515A5A'
+            est_pose = self.curr_est_pose[0].numpy()
+            position_plt = self.env_plts['robot_est_plt']['position_plt']
+            heading_plt = self.env_plts['robot_est_plt']['heading_plt']
+            position_plt, heading_plt = render.draw_robot_pose(
+                                est_pose,
+                                color,
+                                floor_map.shape,
+                                self.plt_ax,
+                                position_plt,
+                                heading_plt)
+            self.env_plts['robot_est_plt']['position_plt'] = position_plt
+            self.env_plts['robot_est_plt']['heading_plt'] = heading_plt
+
+            # particles color coded using weights
+            particles, particle_weights, _ = self.curr_pfnet_state   # after transition update
+            lin_weights = tf.nn.softmax(particle_weights, axis=-1)
+            particles_plt = self.env_plts['robot_est_plt']['particles_plt']
+            particles_plt = render.draw_particles_pose(
+                            particles[0].numpy(),
+                            lin_weights[0].numpy(),
+                            floor_map.shape,
+                            particles_plt)
+            self.env_plts['robot_est_plt']['particles_plt'] = particles_plt
+
+            # episode info
+            step_txt_plt = self.env_plts['step_txt_plt']
+            step_txt_plt = render.draw_text(
+                        f'episode: {self.current_episode}, step: {self.current_step}',
+                        '#7B241C', self.plt_ax, step_txt_plt)
+            self.env_plts['step_txt_plt'] = step_txt_plt
+
+            self.plt_ax.legend([self.env_plts['robot_gt_plt']['position_plt'],
+                                self.env_plts['robot_est_plt']['position_plt']],
+                            ["gt_pose", "est_pose"], loc='upper left')
+
+            if self.pf_params.store_plot:
+                self.canvas.draw()
+                plt_img = np.array(self.canvas.renderer._renderer)
+                plt_img = cv2.cvtColor(plt_img, cv2.COLOR_RGB2BGR)
+                self.curr_plt_images.append(plt_img)
+            else:
+                plt.draw()
+                plt.pause(0.00000000001)
+
+    def close(self):
+        """
+        environment close()
+        """
+        super(LocalizeGibsonEnv, self).close()
+
+        if self.pf_params.use_plot:
+            if self.pf_params.store_plot:
+                self.store_results()
+            else:
+                # to prevent plot from closing after environment is closed
+                plt.ioff()
+                plt.show()
+
+        print("=====> iGibsonEnv closed")
+
+    def store_results(self):
+        if len(self.curr_plt_images) > 0:
+            fps = 30
+            frameSize = (self.curr_plt_images[0].shape[0], self.curr_plt_images[0].shape[1])
+            file_path = os.path.join(self.out_folder, f'episode_run_{self.current_episode}.avi')
+            out = cv2.VideoWriter(file_path,
+                    cv2.VideoWriter_fourcc(*'XVID'),
+                    fps, frameSize)
+
+            for img in self.curr_plt_images:
+                out.write(img)
+            out.release()
+            print(f'stored results to {file_path}')
