@@ -266,3 +266,125 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.curr_pfnet_state = [init_particles, init_particle_weights, obstacle_map]
         self.curr_gt_pose = new_pose
         self.curr_rgb_obs = new_rgb_obs
+
+    def get_obstacle_map(self):
+        """
+        Get the scene obstacle map
+
+        :return ndarray: obstacle map of current scene (H, W, 1)
+        """
+        obstacle_map = np.array(Image.open(
+                    os.path.join(get_scene_path(self.config.get('scene_id')),
+                            f'floor_{self.task.floor_num}.png')
+                ))
+
+        # process image for training
+        obstacle_map = datautils.process_floor_map(obstacle_map)
+
+        return obstacle_map
+
+    def get_floor_map(self):
+        """
+        Get the scene floor map (traversability map + obstacle map)
+
+        :return ndarray: floor map of current scene (H, W, 1)
+        """
+
+        obstacle_map = np.array(Image.open(
+                    os.path.join(get_scene_path(self.config.get('scene_id')),
+                            f'floor_{self.task.floor_num}.png')
+                ))
+
+        trav_map = np.array(Image.open(
+                    os.path.join(get_scene_path(self.config.get('scene_id')),
+                            f'floor_trav_{self.task.floor_num}.png')
+                ))
+
+        trav_map[obstacle_map == 0] = 0
+
+        trav_map_erosion=self.config.get('trav_map_erosion', 2)
+        trav_map = cv2.erode(trav_map, np.ones((trav_map_erosion, trav_map_erosion)))
+        trav_map[trav_map < 255] = 0
+
+        # process image for training
+        floor_map = datautils.process_floor_map(trav_map)
+
+        return floor_map
+
+    def get_random_particles(self, num_particles, particles_distr, robot_pose, scene_map, particles_cov):
+        """
+        Sample random particles based on the scene
+
+        :param particles_distr: string type of distribution, possible value: [gaussian, uniform]
+        :param robot_pose: ndarray indicating the robot pose ([batch_size], 3) in pixel space
+            if None, random particle poses are sampled using unifrom distribution
+            otherwise, sampled using gaussian distribution around the robot_pose
+        :param particles_cov: for tracking Gaussian covariance matrix (3, 3)
+        :param num_particles: integer indicating the number of random particles per batch
+
+        :return ndarray: random particle poses  (batch_size, num_particles, 3) in pixel space
+        """
+
+        assert list(robot_pose.shape) == [1, 3]
+        assert list(particles_cov.shape) == [3, 3]
+
+        particles = []
+        batches = robot_pose.shape[0]
+        if particles_distr == 'uniform':
+            # iterate per batch_size
+            for b_idx in range(batches):
+                sample_i = 0
+                b_particles = []
+
+                # get bounding box for more efficient sampling
+                # rmin, rmax, cmin, cmax = self.bounding_box(scene_map)
+                rmin, rmax, cmin, cmax = self.bounding_box(scene_map, robot_pose[b_idx], lmt=100)
+
+                while sample_i < num_particles:
+                    particle = np.random.uniform(low=(cmin, rmin, 0.0), high=(cmax, rmax, 2.0*np.pi), size=(3, ))
+                    # reject if mask is zero
+                    if not scene_map[int(np.rint(particle[1])), int(np.rint(particle[0]))]:
+                        continue
+                    b_particles.append(particle)
+
+                    sample_i = sample_i + 1
+                particles.append(b_particles)
+        elif particles_distr == 'gaussian':
+            # iterate per batch_size
+            for b_idx in range(batches):
+                # sample offset from the Gaussian
+                center = np.random.multivariate_normal(mean=robot_pose[b_idx], cov=particles_cov)
+
+                # sample particles from the Gaussian, centered around the offset
+                particles.append(np.random.multivariate_normal(mean=center, cov=particles_cov, size=num_particles))
+        else:
+            raise ValueError
+
+        particles = np.stack(particles) # [batch_size, num_particles, 3]
+        return particles
+
+    def bounding_box(self, img, robot_pose=None, lmt=100):
+        """
+        Bounding box of non-zeros in an array.
+
+        :param img: numpy array
+        :param robot_pose: numpy array of robot pose
+        :param lmt: integer representing width/length of bounding box
+
+        :return (int, int, int, int): bounding box indices top_row, bottom_row, left_column, right_column
+        """
+        rows = np.any(img, axis=1)
+        cols = np.any(img, axis=0)
+        rmin, rmax = np.where(rows)[0][[0, -1]]
+        cmin, cmax = np.where(cols)[0][[0, -1]]
+
+        if robot_pose is not None:
+            # futher constraint the bounding box
+            x, y, _ = robot_pose
+
+            rmin = np.rint(y-lmt) if (y-lmt) > rmin else rmin
+            rmax = np.rint(y+lmt) if (y+lmt) < rmax else rmax
+            cmin = np.rint(x-lmt) if (x-lmt) > cmin else cmin
+            cmax = np.rint(x+lmt) if (x+lmt) < cmax else cmax
+
+        return rmin, rmax, cmin, cmax

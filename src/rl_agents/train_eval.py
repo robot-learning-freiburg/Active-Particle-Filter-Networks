@@ -235,6 +235,7 @@ def train_eval(
             eval_tf_env = tf_py_environment.TFPyEnvironment(
                 parallel_py_environment.ParallelPyEnvironment(eval_py_env))
         else:
+            ## HACK: use same env for train and eval
             tf_py_env = env_load_fn(model_ids[0], 'headless', gpu)
             tf_env = tf_py_environment.TFPyEnvironment(tf_py_env)
             eval_tf_env = tf_env
