@@ -232,7 +232,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
                     self.robots[0].calc_state(),    # robot proprioceptive state
             ])
         if 'rgb_obs' in self.custom_output:
-            custom_state['rgb'] = state['rgb']  # [0, 1] range rgb image
+            processed_state['rgb'] = state['rgb']  # [0, 1] range rgb image
 
         return processed_state
 
