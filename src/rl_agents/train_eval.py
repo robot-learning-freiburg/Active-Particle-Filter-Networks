@@ -247,8 +247,8 @@ def train_eval(
 
         glorot_uniform_initializer = tf.compat.v1.keras.initializers.glorot_uniform()
         preprocessing_layers = {}
-        if 'rgb' in observation_spec:
-            preprocessing_layers['rgb'] = tf.keras.Sequential(mlp_layers(
+        if 'rgb_obs' in observation_spec:
+            preprocessing_layers['rgb_obs'] = tf.keras.Sequential(mlp_layers(
                 conv_1d_layer_params=None,
                 conv_2d_layer_params=conv_2d_layer_params,
                 fc_layer_params=encoder_fc_layers,
@@ -514,7 +514,8 @@ def main(_):
     print('==================================================')
 
     ## HACK: pfnet is not supported with parallel environments currently
-    assert not FLAGS.use_parallel_envs
+    is_localize_env = False
+    assert not FLAGS.use_parallel_envs or not is_localize_env
 
     ## HACK: supporting only one parallel env currently
     assert FLAGS.num_parallel_environments == 1
@@ -523,7 +524,6 @@ def main(_):
     config_file = FLAGS.config_file
     action_timestep = FLAGS.action_timestep
     physics_timestep = FLAGS.physics_timestep
-    is_localize_env = False
 
     # set random seeds
     random.seed(FLAGS.seed)

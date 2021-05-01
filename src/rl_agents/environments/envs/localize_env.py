@@ -74,7 +74,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
                     dtype=np.float32)
         # image_height and image_width are obtained from env config file
         if 'rgb_obs' in self.custom_output:
-            observation_space['rgb'] = gym.spaces.Box(
+            observation_space['rgb_obs'] = gym.spaces.Box(
                     low=0.0, high=1.0,
                     shape=(self.image_height, self.image_width, 3),
                     dtype=np.float32)
@@ -232,7 +232,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
                     self.robots[0].calc_state(),    # robot proprioceptive state
             ])
         if 'rgb_obs' in self.custom_output:
-            processed_state['rgb'] = state['rgb']  # [0, 1] range rgb image
+            processed_state['rgb_obs'] = state['rgb']  # [0, 1] range rgb image
 
         return processed_state
 
