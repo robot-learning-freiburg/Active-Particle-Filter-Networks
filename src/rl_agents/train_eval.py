@@ -105,7 +105,7 @@ flags.DEFINE_integer('gpu_c', 0,
                      'GPU id for compute, e.g. Tensorflow.')
 
 # Added for Gibson
-flags.DEFINE_string('config_file', os.path.join('./configs', 'turtlebot_point_nav.yaml'),
+flags.DEFINE_string('config_file', os.path.join(os.path.dirname(os.path.realpath(__file__)), 'configs', 'turtlebot_point_nav.yaml'),
                     'Config file for the experiment.')
 flags.DEFINE_list('model_ids', None,
                   'A comma-separated list of model ids to overwrite config_file.'
