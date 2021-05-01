@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 
 from collections import OrderedDict
+import cv2
 from ..env_utils import datautils
 from gibson2.envs.igibson_env import iGibsonEnv
+from gibson2.utils.assets_utils import get_scene_path
 import gym
 import numpy as np
+import os
+from PIL import Image
+import tensorflow as tf
 
 class LocalizeGibsonEnv(iGibsonEnv):
     """
@@ -70,6 +75,17 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.observation_space = gym.spaces.Dict(observation_space)
 
         self.pfnet_model = None
+        self.num_particles = 10
+        self.batch_size = 1
+        self.map_size = [1000, 1000, 1]
+        self.init_particles_distr = 'uniform'
+        self.init_particles_std = np.array([15, 0.523599], dtype=np.float32)
+
+        # build initial covariance matrix of particles, in pixels and radians
+        particle_std = self.init_particles_std.copy()
+        # particle_std[0] = particle_std[0] / params.map_pixel_in_meters  # convert meters to pixels
+        particle_std2 = np.square(particle_std)  # variance
+        self.init_particles_cov = np.diag(particle_std2[(0, 0, 1),])
 
     def load_miscellaneous_variables(self):
         """
@@ -127,8 +143,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
         """
 
         state = super(LocalizeGibsonEnv, self).reset()
+        new_rgb_obs = state['rgb']
 
         custom_state = self.process_state(state)
+
+        self.reset_pfnet(new_rgb_obs)
 
         return custom_state
 
@@ -167,7 +186,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         new_rgb_obs = datautils.process_raw_image(new_rgb_obs)
 
         # process new robot state: convert coords to pixel space
-        new_pose = self.get_robot_pose(robot_state, floor_map.shape)
+        new_pose = self.get_robot_pose(new_robot_state, floor_map.shape)
 
         # calculate actual odometry b/w old pose and new pose
         assert list(old_pose.shape) == [3] and list(new_pose.shape) == [3]
@@ -225,23 +244,15 @@ class LocalizeGibsonEnv(iGibsonEnv):
         # get new robot state
         new_robot_state = self.robots[0].calc_state()
 
+        # process new env map
+        floor_map = self.get_floor_map()
+        obstacle_map = self.get_obstacle_map()
+
         # process new rgb observation: convert to [-1, +1] range
         new_rgb_obs = datautils.process_raw_image(new_rgb_obs)
 
         # process new robot state: convert coords to pixel space
-        new_pose = self.get_robot_pose(robot_state, floor_map.shape)
-
-        # process new env map
-        new_floor_map = self.get_floor_map()
-        new_obstacle_map = self.get_obstacle_map()
-
-        # get random particles based on init distribution conditions
-        rnd_particles = self.get_random_particles(
-                                num_particles,
-                                particles_distr,
-                                true_pose.numpy(),
-                                floor_map[0],
-                                particles_cov)
+        new_pose = self.get_robot_pose(new_robot_state, floor_map.shape)
 
         # convert to tensor
         new_rgb_obs = tf.expand_dims(
@@ -250,20 +261,36 @@ class LocalizeGibsonEnv(iGibsonEnv):
         new_pose = tf.expand_dims(
                         tf.convert_to_tensor(new_pose, dtype=tf.float32)
                         , axis=0)
-        new_floor_map = tf.expand_dims(
-                    tf.convert_to_tensor(new_floor_map, dtype=tf.float32)
+        floor_map = tf.expand_dims(
+                    tf.convert_to_tensor(floor_map, dtype=tf.float32)
                     , axis=0)
-        new_obstacle_map = tf.expand_dims(
-                    tf.convert_to_tensor(new_obstacle_map, dtype=tf.float32)
+        obstacle_map = tf.expand_dims(
+                    tf.convert_to_tensor(obstacle_map, dtype=tf.float32)
                     , axis=0)
-        new_init_particles = tf.convert_to_tensor(rnd_particles, dtype=tf.float32)
-        new_init_particle_weights = tf.constant(
-                                    np.log(1.0/float(num_particles)),
-                                    shape=(batch_size, num_particles),
+
+        # get random particles and weights based on init distribution conditions
+        init_particles = tf.convert_to_tensor(
+                            self.get_random_particles(
+                                self.num_particles,
+                                self.init_particles_distr,
+                                new_pose.numpy(),
+                                floor_map[0],
+                                self.init_particles_cov), dtype=tf.float32)
+        init_particle_weights = tf.constant(
+                                    np.log(1.0/float(self.num_particles)),
+                                    shape=(self.batch_size, self.num_particles),
                                     dtype=tf.float32)
 
-        self.obstacle_map = obstacle_map
+        # sanity check
+        assert list(new_pose.shape) == [self.batch_size, 3]
+        assert list(new_rgb_obs.shape) == [self.batch_size, 56, 56, 3]
+        assert list(init_particles.shape) == [self.batch_size, self.num_particles, 3]
+        assert list(init_particle_weights.shape) == [self.batch_size, self.num_particles]
+        assert list(floor_map.shape) == [self.batch_size, *self.map_size]
+        assert list(obstacle_map.shape) == [self.batch_size, *self.map_size]
+
         self.floor_map = floor_map
+        self.obstacle_map = obstacle_map
         self.curr_pfnet_state = [init_particles, init_particle_weights, obstacle_map]
         self.curr_gt_pose = new_pose
         self.curr_rgb_obs = new_rgb_obs
@@ -389,3 +416,33 @@ class LocalizeGibsonEnv(iGibsonEnv):
             cmax = np.rint(x+lmt) if (x+lmt) < cmax else cmax
 
         return rmin, rmax, cmin, cmax
+
+    def get_robot_pose(self, robot_state, floor_map_shape):
+        robot_pos = robot_state[0:3]    # [x, y, z]
+        robot_orn = robot_state[3:6]    # [r, p, y]
+
+        # transform from co-ordinate space to pixel space
+        robot_pos_xy = datautils.transform_pose(robot_pos[:2], floor_map_shape, self.scene.trav_map_resolution**2)  # [x, y]
+        robot_pose = np.array([robot_pos_xy[0], robot_pos_xy[1], robot_orn[2]])  # [x, y, theta]
+
+        return robot_pose
+
+    def get_est_pose(self):
+        # after transition update
+        particles, particle_weights, _ = self.pfnet_state
+        lin_weights = tf.nn.softmax(particle_weights, axis=-1)
+
+        assert list(particles.shape) == [self.batch_size, self.num_particles, 3]
+        assert list(lin_weights.shape) == [self.batch_size, self.num_particles]
+
+        est_pose = tf.math.reduce_sum(tf.math.multiply(
+                            particles[:, :, :], lin_weights[:, :, None]
+                        ), axis=1)
+        assert list(est_pose.shape) == [self.batch_size, 3]
+
+        # normalize between [-pi, +pi]
+        part_x, part_y, part_th = tf.unstack(est_pose, axis=-1, num=3)   # (k, 3)
+        part_th = tf.math.floormod(part_th + np.pi, 2*np.pi) - np.pi
+        est_pose = tf.stack([part_x, part_y, part_th], axis=-1)
+
+        return est_pose
