@@ -141,8 +141,8 @@ strategy = strategy_utils.get_strategy(tpu=False, use_gpu=use_gpu)
 
 #### Agent ####
 observation_spec, action_spec, time_step_spec = (spec_utils.get_tensor_specs(collect_env))
-logging.info('Observation Spec: ',observation_spec)
-logging.info('Action Spec: ',action_spec)
+logging.info(observation_spec)
+logging.info(action_spec)
 
 with strategy.scope():
 
