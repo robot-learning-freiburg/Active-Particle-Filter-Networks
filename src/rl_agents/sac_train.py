@@ -3,6 +3,7 @@
 # reference: https://www.tensorflow.org/agents/tutorials/7_SAC_minitaur_tutorial
 
 from datetime import datetime
+import matplotlib.pyplot as plt
 import numpy as np
 import os
 import random
@@ -368,3 +369,12 @@ reverb_server.stop()
 
 policy_dir = os.path.join(params.rootdir, 'output')
 tf_policy_saver.save(policy_dir)
+
+steps = range(0, num_iterations + 1, eval_interval)
+plt.plot(steps, returns)
+plt.ylabel('Average Return')
+plt.xlabel('Step')
+plt.ylim()
+plt.savefig(os.path.join(policy_dir,'/average_return.png'))
+
+print('training finished')
