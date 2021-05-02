@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from collections import OrderedDict
+import cv2
 from gibson2.envs.igibson_env import iGibsonEnv
 import gym
 import numpy as np
@@ -48,7 +49,7 @@ class NavigateGibsonEnv(iGibsonEnv):
 
         # custom tf_agents we are using supports dict() type observations
         observation_space = OrderedDict()
-        self.custom_output = ['rgb_obs', ]
+        self.custom_output = ['task_obs', ]
 
         if 'task_obs' in self.custom_output:
             observation_space['task_obs'] = gym.spaces.Box(
@@ -125,4 +126,5 @@ class NavigateGibsonEnv(iGibsonEnv):
         if 'rgb_obs' in self.custom_output:
             processed_state['rgb_obs'] = state['rgb']  # [0, 1] range rgb image
 
+        # cv2.imwrite('./test.png', processed_state['rgb_obs'] * 255)
         return processed_state

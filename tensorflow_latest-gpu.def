@@ -12,7 +12,7 @@ AUTHOR Suresh Guttikonda
     # basic packages install
     apt-get update # && apt-get -y upgrade
     apt-get -y install \
-    wget cmake git python3-venv\
+    wget cmake git python3-venv vim\
     mesa-common-dev libglu1-mesa-dev freeglut3-dev
 
     # cleanup
@@ -29,12 +29,20 @@ AUTHOR Suresh Guttikonda
     # install igibson packages
     git clone --branch master https://github.com/StanfordVL/iGibson /opt/igibson --recursive
     cd /opt/igibson
-    pip install -e .
+    pip3 install -e .
+
+    # install igibson custom pybullet
+    pip3 uninstall -y pybullet
+    pip3 install https://github.com/StanfordVL/bullet3/archive/master.zip
 
     # install custom tf-agents
-    git clone --branch cvpr21_challenge_tf2.4 https://github.com/StanfordVL/agents/ /opt/agents --recursive
+    # git clone --branch cvpr21_challenge_tf2.4 https://github.com/StanfordVL/agents/ /opt/agents --recursive
+    git clone --branch cvpr21_challenge_tf2.4 https://github.com/suresh-guttikonda/agents/ /opt/agents --recursive
     cd /opt/agents
-    pip install -e .
+    pip3 install -e .
+
+    # install reverb
+    pip3 install dm-reverb
 
     # download the required assets
     python -m gibson2.utils.assets_utils --download_assets
