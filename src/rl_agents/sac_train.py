@@ -2,6 +2,7 @@
 
 # reference: https://www.tensorflow.org/agents/tutorials/7_SAC_minitaur_tutorial
 
+from absl import logging
 from datetime import datetime
 import matplotlib.pyplot as plt
 import numpy as np
@@ -140,8 +141,8 @@ strategy = strategy_utils.get_strategy(tpu=False, use_gpu=use_gpu)
 
 #### Agent ####
 observation_spec, action_spec, time_step_spec = (spec_utils.get_tensor_specs(collect_env))
-print('Observation Spec: ',observation_spec)
-print('Action Spec: ',action_spec)
+logging.info('Observation Spec: ',observation_spec)
+logging.info('Action Spec: ',action_spec)
 
 with strategy.scope():
 
@@ -335,7 +336,7 @@ def get_eval_metrics():
 def log_eval_metrics(step, metrics):
   eval_results = (', ').join(
       '{} = {:.6f}'.format(name, result) for name, result in metrics.items())
-  print('step = {0}: {1}'.format(step, eval_results))
+  logging.info('step = {0}: {1}'.format(step, eval_results))
 
 #### Training the agent ####
 
@@ -362,12 +363,12 @@ for _ in range(num_iterations):
     returns.append(metrics["AverageReturn"])
 
   if log_interval and step % log_interval == 0:
-    print('step = {0}: loss = {1}'.format(step, loss_info.loss.numpy()))
+    logging.info('step = {0}: loss = {1}'.format(step, loss_info.loss.numpy()))
 
 rb_observer.close()
 reverb_server.stop()
 
-policy_dir = os.path.join(params.rootdir, 'output')
+policy_dir = os.path.join(rootdir, 'output')
 tf_policy_saver.save(policy_dir)
 
 steps = range(0, num_iterations + 1, eval_interval)
@@ -377,4 +378,4 @@ plt.xlabel('Step')
 plt.ylim()
 plt.savefig(os.path.join(policy_dir,'/average_return.png'))
 
-print('training finished')
+logging.info('training finished')
