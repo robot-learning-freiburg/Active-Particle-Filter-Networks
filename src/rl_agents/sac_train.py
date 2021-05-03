@@ -33,6 +33,8 @@ from tf_agents.train.utils import spec_utils
 from tf_agents.train.utils import strategy_utils
 from tf_agents.train.utils import train_utils
 
+logging.set_verbosity(logging.INFO)
+
 # error out inf or NaN
 tf.debugging.enable_check_numerics()
 
@@ -141,8 +143,8 @@ strategy = strategy_utils.get_strategy(tpu=False, use_gpu=use_gpu)
 
 #### Agent ####
 observation_spec, action_spec, time_step_spec = (spec_utils.get_tensor_specs(collect_env))
-logging.info(observation_spec)
-logging.info(action_spec)
+logging.info('Observation Spec = {0}'.format(observation_spec))
+logging.info('Action Spec = {0}'.format(action_spec))
 
 with strategy.scope():
 
