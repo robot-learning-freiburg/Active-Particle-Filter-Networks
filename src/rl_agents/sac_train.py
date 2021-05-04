@@ -92,7 +92,7 @@ np.random.seed(seed)
 tf.random.set_seed(seed)
 
 # rootdir = tempfile.gettempdir()
-rootdir = os.path.join('./runs', datetime.now().strftime('%Y%m%d-%H%M%S'))
+rootdir = os.path.join('./runs', datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
 
 gpus = tf.config.experimental.list_physical_devices('GPU')
 assert device_idx < len(gpus)

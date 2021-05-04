@@ -1,0 +1,3035 @@
+2021-05-04 07:42:27.942700: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+WARNING:root:Argument blacklist is deprecated. Please use denylist.
+WARNING:root:Argument blacklist is deprecated. Please use denylist.
+INFO:root:Importing iGibson (gibson2 module)
+INFO:root:Assets path: /home/guttikon/activate-localization/igibson/gibson2/data/assets
+INFO:root:Gibson Dataset path: /home/guttikon/activate-localization/igibson/gibson2/data/g_dataset
+INFO:root:iG Dataset path: /home/guttikon/activate-localization/igibson/gibson2/data/ig_dataset
+INFO:root:3D-FRONT Dataset path: /home/guttikon/activate-localization/igibson/gibson2/data/threedfront_dataset
+INFO:root:CubiCasa5K Dataset path: /home/guttikon/activate-localization/igibson/gibson2/data/cubicasa_dataset
+INFO:root:Example path: /home/guttikon/activate-localization/igibson/gibson2/examples
+INFO:root:Example config path: /home/guttikon/activate-localization/igibson/gibson2/examples/configs
+pybullet build time: May  2 2021 09:44:36
+INFO:tensorflow:Enabled check-numerics callback in thread MainThread
+INFO:tensorflow:Enabled check-numerics callback in thread MainThread
+2021-05-04 07:42:43.301650: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2021-05-04 07:42:43.304074: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcuda.so.1
+2021-05-04 07:42:43.365471: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-05-04 07:42:43.366267: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties: 
+pciBusID: 0000:01:00.0 name: TITAN X (Pascal) computeCapability: 6.1
+coreClock: 1.531GHz coreCount: 28 deviceMemorySize: 11.90GiB deviceMemoryBandwidth: 447.48GiB/s
+2021-05-04 07:42:43.366330: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-05-04 07:42:43.367088: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 1 with properties: 
+pciBusID: 0000:02:00.0 name: TITAN X (Pascal) computeCapability: 6.1
+coreClock: 1.531GHz coreCount: 28 deviceMemorySize: 11.91GiB deviceMemoryBandwidth: 447.48GiB/s
+2021-05-04 07:42:43.367112: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2021-05-04 07:42:43.372931: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
+2021-05-04 07:42:43.372979: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
+2021-05-04 07:42:43.375187: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcufft.so.10
+2021-05-04 07:42:43.376781: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcurand.so.10
+2021-05-04 07:42:43.380507: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusolver.so.10
+2021-05-04 07:42:43.382469: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusparse.so.11
+2021-05-04 07:42:43.396831: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
+2021-05-04 07:42:43.396918: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-05-04 07:42:43.397644: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-05-04 07:42:43.398321: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-05-04 07:42:43.399010: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-05-04 07:42:43.399651: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0, 1
+2021-05-04 07:42:43.399950: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-05-04 07:42:43.400250: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2021-05-04 07:42:43.400333: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-05-04 07:42:43.401002: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties: 
+pciBusID: 0000:01:00.0 name: TITAN X (Pascal) computeCapability: 6.1
+coreClock: 1.531GHz coreCount: 28 deviceMemorySize: 11.90GiB deviceMemoryBandwidth: 447.48GiB/s
+2021-05-04 07:42:43.401017: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2021-05-04 07:42:43.401032: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
+2021-05-04 07:42:43.401044: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
+2021-05-04 07:42:43.401055: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcufft.so.10
+2021-05-04 07:42:43.401066: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcurand.so.10
+2021-05-04 07:42:43.401077: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusolver.so.10
+2021-05-04 07:42:43.401088: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusparse.so.11
+2021-05-04 07:42:43.401099: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
+2021-05-04 07:42:43.401141: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-05-04 07:42:43.401822: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-05-04 07:42:43.402371: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0
+2021-05-04 07:42:43.402392: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2021-05-04 07:42:43.819594: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1261] Device interconnect StreamExecutor with strength 1 edge matrix:
+2021-05-04 07:42:43.819635: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1267]      0 
+2021-05-04 07:42:43.819641: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1280] 0:   N 
+2021-05-04 07:42:43.819804: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-05-04 07:42:43.820294: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-05-04 07:42:43.820747: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-05-04 07:42:43.821173: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1406] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 11010 MB memory) -> physical GPU (device: 0, name: TITAN X (Pascal), pci bus id: 0000:01:00.0, compute capability: 6.1)
+INFO:root:Device 0 is available for rendering
+INFO:root:Device 1 is available for rendering
+INFO:root:Command '['/home/guttikon/activate-localization/igibson/gibson2/render/mesh_renderer/build/test_device', '2']' returned non-zero exit status 1.
+INFO:root:Device 2 is not available for rendering
+INFO:root:Command '['/home/guttikon/activate-localization/igibson/gibson2/render/mesh_renderer/build/test_device', '3']' returned non-zero exit status 1.
+INFO:root:Device 3 is not available for rendering
+INFO:root:Using device 0 for rendering
+WARNING:root:Environment texture not available, cannot use PBR.
+INFO:root:IndoorScene model: Rs
+INFO:root:StaticIndoorScene scene: Rs
+INFO:root:Loading traversable graph
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/g_dataset/Rs/mesh_z_up.obj
+/home/guttikon/activate-localization/igibson/gibson2/render/mesh_renderer/mesh_renderer_cpu.py:464: RuntimeWarning: divide by zero encountered in true_divide
+  delta_uv1[:, 1] * delta_uv2[:, 0])
+/home/guttikon/activate-localization/igibson/gibson2/render/mesh_renderer/mesh_renderer_cpu.py:466: RuntimeWarning: invalid value encountered in multiply
+  delta_pos2 * delta_uv1[:, 1][:, None]) * r[:, None]
+/home/guttikon/activate-localization/igibson/gibson2/render/mesh_renderer/mesh_renderer_cpu.py:468: RuntimeWarning: invalid value encountered in multiply
+  delta_pos1 * delta_uv2[:, 0][:, None]) * r[:, None]
+INFO:root:Loading robot model file: turtlebot/turtlebot.urdf
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/kobuki_description/meshes/main_body.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/mjcf_primitives/cube.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/kobuki_description/meshes/wheel.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/mjcf_primitives/cube.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/mjcf_primitives/cube.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/pole_bottom.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/plate_bottom.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/pole_middle.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/plate_middle.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/pole_top.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/pole_kinect.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/plate_top.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/sensors/kinect.obj
+INFO:root:Device 0 is available for rendering
+INFO:root:Device 1 is available for rendering
+INFO:root:Command '['/home/guttikon/activate-localization/igibson/gibson2/render/mesh_renderer/build/test_device', '2']' returned non-zero exit status 1.
+INFO:root:Device 2 is not available for rendering
+INFO:root:Command '['/home/guttikon/activate-localization/igibson/gibson2/render/mesh_renderer/build/test_device', '3']' returned non-zero exit status 1.
+INFO:root:Device 3 is not available for rendering
+INFO:root:Using device 0 for rendering
+WARNING:root:Environment texture not available, cannot use PBR.
+INFO:root:IndoorScene model: Rs
+INFO:root:StaticIndoorScene scene: Rs
+INFO:root:Loading traversable graph
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/g_dataset/Rs/mesh_z_up.obj
+INFO:root:Loading robot model file: turtlebot/turtlebot.urdf
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/kobuki_description/meshes/main_body.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/mjcf_primitives/cube.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/kobuki_description/meshes/wheel.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/mjcf_primitives/cube.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/mjcf_primitives/cube.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/pole_bottom.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/plate_bottom.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/pole_middle.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/plate_middle.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/pole_top.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/pole_kinect.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/plate_top.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/sensors/kinect.obj
+INFO:absl:Devices: 
+[LogicalDevice(name='/device:CPU:0', device_type='CPU'), LogicalDevice(name='/device:GPU:0', device_type='GPU')]
+WARNING:tensorflow:NCCL is not supported when using virtual GPUs, fallingback to reduction to one device
+WARNING:tensorflow:NCCL is not supported when using virtual GPUs, fallingback to reduction to one device
+INFO:tensorflow:Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+INFO:tensorflow:Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+INFO:absl:Devices after getting strategy:
+[LogicalDevice(name='/device:CPU:0', device_type='CPU'), LogicalDevice(name='/device:GPU:0', device_type='GPU')]
+INFO:absl:Observation Spec = OrderedDict([('rgb_obs', BoundedTensorSpec(shape=(56, 56, 3), dtype=tf.float32, name='observation/rgb_obs', minimum=array(0., dtype=float32), maximum=array(1., dtype=float32)))])
+INFO:absl:Action Spec = BoundedTensorSpec(shape=(2,), dtype=tf.float32, name='action', minimum=array(-1., dtype=float32), maximum=array(1., dtype=float32))
+2021-05-04 07:43:04.604804: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
+2021-05-04 07:43:05.439762: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
+2021-05-04 07:43:05.630620: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
+[reverb/cc/platform/tfrecord_checkpointer.cc:144] Initializing TFRecordCheckpointer in /tmp/tmpthwnicvz
+[reverb/cc/platform/tfrecord_checkpointer.cc:338] Loading latest checkpoint from /tmp/tmpthwnicvz
+[reverb/cc/platform/default/server.cc:55] Started replay server on port 17468
+WARNING:tensorflow:From /home/guttikon/activate-localization/agents/tf_agents/train/learner.py:146: StrategyBase.experimental_distribute_datasets_from_function (from tensorflow.python.distribute.distribute_lib) is deprecated and will be removed in a future version.
+Instructions for updating:
+rename to distribute_datasets_from_function
+WARNING:tensorflow:From /home/guttikon/activate-localization/agents/tf_agents/train/learner.py:146: StrategyBase.experimental_distribute_datasets_from_function (from tensorflow.python.distribute.distribute_lib) is deprecated and will be removed in a future version.
+Instructions for updating:
+rename to distribute_datasets_from_function
+2021-05-04 07:43:12.172715: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:116] None of the MLIR optimization passes are enabled (registered 2)
+2021-05-04 07:43:12.191201: I tensorflow/core/platform/profile_utils/cpu_utils.cc:112] CPU Frequency: 3199980000 Hz
+WARNING:tensorflow:From /home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/ops/linalg/linear_operator_diag.py:175: calling LinearOperator.__init__ (from tensorflow.python.ops.linalg.linear_operator) with graph_parents is deprecated and will be removed in a future version.
+Instructions for updating:
+Do not pass `graph_parents`.  They will  no longer be used.
+WARNING:tensorflow:From /home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/ops/linalg/linear_operator_diag.py:175: calling LinearOperator.__init__ (from tensorflow.python.ops.linalg.linear_operator) with graph_parents is deprecated and will be removed in a future version.
+Instructions for updating:
+Do not pass `graph_parents`.  They will  no longer be used.
+INFO:absl:No checkpoint available at ./runs/20210504-074243/train/checkpoints
+WARNING:absl:WARNING: Could not serialize policy.distribution() for policy "<tf_agents.policies.actor_policy.ActorPolicy object at 0x7f332016feb8>". Calling saved_model.distribution() will raise the following assertion error: Unable to make a CompositeTensor for "tfp.distributions.SquashToSpecNormal("ActorDistributionNetwork_TanhNormalProjectionNetwork_SquashToSpecNormal", dtype=float32)" of type `<class 'tf_agents.distributions.utils.SquashToSpecNormal'>`. Email `tfprobability@tensorflow.org` or file an issue on github if you would benefit from this working. (Unable to convert dependent entry 'scale' of object 'tfp.distributions.SquashToSpecNormal("ActorDistributionNetwork_TanhNormalProjectionNetwork_SquashToSpecNormal", dtype=float32)': Failed to convert object of type <class 'tensorflow.python.ops.linalg.linear_operator_diag.LinearOperatorDiag'> to Tensor. Contents: <tensorflow.python.ops.linalg.linear_operator_diag.LinearOperatorDiag object at 0x7f32585583c8>. Consider casting elements to a supported type.)
+2021-05-04 07:43:19.441240: W tensorflow/python/util/util.cc:348] Sets are not currently considered sequences, but this may change in the future, so consider avoiding using them.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+[reverb/cc/client.cc:159] Sampler and server are owned by the same process (14702) so Table uniform_table is accessed directly without gRPC.
+INFO:absl:step = 100: loss = -2.670339584350586
+INFO:absl:step = 200: loss = -2.7928855419158936
+INFO:absl:step = 300: loss = -3.3243799209594727
+INFO:absl:step = 400: loss = -3.4868555068969727
+INFO:absl:step = 500: loss = -3.8954081535339355
+INFO:absl:step = 600: loss = -4.302673816680908
+INFO:absl:step = 700: loss = -4.893686771392822
+INFO:absl:step = 800: loss = -5.2666754722595215
+INFO:absl:step = 900: loss = -5.461380958557129
+INFO:absl:Step: 1000, 5.714 steps/sec
+INFO:absl:step = 1000: loss = -5.853309154510498
+INFO:absl:step = 1100: loss = -6.321292877197266
+INFO:absl:step = 1200: loss = -6.552867889404297
+INFO:absl:step = 1300: loss = -7.068785667419434
+INFO:absl:step = 1400: loss = -7.484210014343262
+INFO:absl:step = 1500: loss = -7.882346153259277
+INFO:absl:step = 1600: loss = -7.990988254547119
+INFO:absl:step = 1700: loss = -8.375507354736328
+INFO:absl:step = 1800: loss = -8.608756065368652
+INFO:absl:step = 1900: loss = -8.76173210144043
+INFO:absl:Step: 2000, 14.224 steps/sec
+INFO:absl:step = 2000: loss = -9.084564208984375
+INFO:absl:step = 2100: loss = -9.746780395507812
+INFO:absl:step = 2200: loss = -9.80851936340332
+INFO:absl:step = 2300: loss = -9.944525718688965
+INFO:absl:step = 2400: loss = -9.187255859375
+INFO:absl:step = 2500: loss = -10.108335494995117
+INFO:absl:step = 2600: loss = -10.36982250213623
+INFO:absl:step = 2700: loss = -10.767830848693848
+INFO:absl:step = 2800: loss = -11.108658790588379
+INFO:absl:step = 2900: loss = -11.012861251831055
+INFO:absl:Step: 3000, 14.366 steps/sec
+INFO:absl:step = 3000: loss = -11.419878959655762
+INFO:absl:step = 3100: loss = -11.474176406860352
+INFO:absl:step = 3200: loss = -11.896570205688477
+INFO:absl:step = 3300: loss = -12.063758850097656
+INFO:absl:step = 3400: loss = -11.994328498840332
+INFO:absl:step = 3500: loss = -12.205784797668457
+INFO:absl:step = 3600: loss = -12.479543685913086
+INFO:absl:step = 3700: loss = -12.375665664672852
+INFO:absl:step = 3800: loss = -12.417692184448242
+INFO:absl:step = 3900: loss = -12.641708374023438
+INFO:absl:Step: 4000, 14.379 steps/sec
+INFO:absl:step = 4000: loss = -12.579052925109863
+INFO:absl:step = 4100: loss = -12.849714279174805
+INFO:absl:step = 4200: loss = -12.538566589355469
+INFO:absl:step = 4300: loss = -12.934051513671875
+INFO:absl:step = 4400: loss = -13.237954139709473
+INFO:absl:step = 4500: loss = -13.245344161987305
+INFO:absl:step = 4600: loss = -13.428962707519531
+INFO:absl:step = 4700: loss = -12.53825855255127
+INFO:absl:step = 4800: loss = -13.339946746826172
+INFO:absl:step = 4900: loss = -13.556495666503906
+INFO:absl:Step: 5000, 14.231 steps/sec
+INFO:absl:step = 5000: loss = -13.38328742980957
+INFO:absl:step = 5100: loss = -13.467798233032227
+INFO:absl:step = 5200: loss = -13.538119316101074
+INFO:absl:step = 5300: loss = -13.64443302154541
+INFO:absl:step = 5400: loss = -13.701051712036133
+INFO:absl:step = 5500: loss = -13.480009078979492
+INFO:absl:step = 5600: loss = -13.563499450683594
+INFO:absl:step = 5700: loss = -13.804464340209961
+INFO:absl:step = 5800: loss = -14.140970230102539
+INFO:absl:step = 5900: loss = -13.967426300048828
+INFO:absl:Step: 6000, 14.500 steps/sec
+INFO:absl:step = 6000: loss = -13.787591934204102
+INFO:absl:step = 6100: loss = -13.76937484741211
+INFO:absl:step = 6200: loss = -13.985891342163086
+INFO:absl:step = 6300: loss = -14.076017379760742
+INFO:absl:step = 6400: loss = -13.758831024169922
+INFO:absl:step = 6500: loss = -13.890239715576172
+INFO:absl:step = 6600: loss = -14.040534973144531
+INFO:absl:step = 6700: loss = -13.75718879699707
+INFO:absl:step = 6800: loss = -14.066007614135742
+INFO:absl:step = 6900: loss = -13.937105178833008
+INFO:absl:Step: 7000, 14.167 steps/sec
+INFO:absl:step = 7000: loss = -13.947505950927734
+INFO:absl:step = 7100: loss = -13.918732643127441
+INFO:absl:step = 7200: loss = -13.917427062988281
+INFO:absl:step = 7300: loss = -12.794275283813477
+INFO:absl:step = 7400: loss = -13.795743942260742
+INFO:absl:step = 7500: loss = -13.921445846557617
+INFO:absl:step = 7600: loss = -13.558158874511719
+INFO:absl:step = 7700: loss = -13.982572555541992
+INFO:absl:step = 7800: loss = -13.602925300598145
+INFO:absl:step = 7900: loss = -13.827799797058105
+INFO:absl:Step: 8000, 13.922 steps/sec
+INFO:absl:step = 8000: loss = -13.99135971069336
+INFO:absl:step = 8100: loss = -14.15748405456543
+INFO:absl:step = 8200: loss = -13.637144088745117
+INFO:absl:step = 8300: loss = -13.027323722839355
+INFO:absl:step = 8400: loss = -13.661205291748047
+INFO:absl:step = 8500: loss = -14.089338302612305
+INFO:absl:step = 8600: loss = -13.894265174865723
+INFO:absl:step = 8700: loss = -13.756460189819336
+INFO:absl:step = 8800: loss = -14.05976390838623
+INFO:absl:step = 8900: loss = -13.789316177368164
+INFO:absl:Step: 9000, 14.443 steps/sec
+INFO:absl:step = 9000: loss = -13.389875411987305
+INFO:absl:step = 9100: loss = -12.807382583618164
+INFO:absl:step = 9200: loss = -13.616939544677734
+INFO:absl:step = 9300: loss = -13.819926261901855
+INFO:absl:step = 9400: loss = -13.963289260864258
+INFO:absl:step = 9500: loss = -13.388376235961914
+INFO:absl:step = 9600: loss = -13.64598274230957
+INFO:absl:step = 9700: loss = -13.783468246459961
+INFO:absl:step = 9800: loss = -13.871103286743164
+INFO:absl:step = 9900: loss = -13.453956604003906
+INFO:absl:Step: 10000, 14.397 steps/sec
+INFO:absl:step = 10000: AverageReturn = -1.378579, AverageEpisodeLength = 458.200012
+INFO:absl:step = 10000: loss = -12.676809310913086
+INFO:absl:step = 10100: loss = -13.793622970581055
+INFO:absl:step = 10200: loss = -13.62300968170166
+INFO:absl:step = 10300: loss = -13.800647735595703
+INFO:absl:step = 10400: loss = -13.383796691894531
+INFO:absl:step = 10500: loss = -13.392254829406738
+INFO:absl:step = 10600: loss = -13.775020599365234
+INFO:absl:step = 10700: loss = -13.371496200561523
+INFO:absl:step = 10800: loss = -12.959768295288086
+INFO:absl:step = 10900: loss = -13.518661499023438
+INFO:absl:Step: 11000, 6.610 steps/sec
+INFO:absl:step = 11000: loss = -13.695625305175781
+INFO:absl:step = 11100: loss = -12.83967399597168
+INFO:absl:step = 11200: loss = -13.478443145751953
+INFO:absl:step = 11300: loss = -12.986623764038086
+INFO:absl:step = 11400: loss = -13.1658353805542
+INFO:absl:step = 11500: loss = -13.872623443603516
+INFO:absl:step = 11600: loss = -13.914483070373535
+INFO:absl:step = 11700: loss = -12.981670379638672
+INFO:absl:step = 11800: loss = -13.25903606414795
+INFO:absl:step = 11900: loss = -13.743106842041016
+INFO:absl:Step: 12000, 13.849 steps/sec
+INFO:absl:step = 12000: loss = -13.347652435302734
+INFO:absl:step = 12100: loss = -13.36590576171875
+INFO:absl:step = 12200: loss = -13.441314697265625
+INFO:absl:step = 12300: loss = -12.691109657287598
+INFO:absl:step = 12400: loss = -12.494682312011719
+INFO:absl:step = 12500: loss = -13.472819328308105
+INFO:absl:step = 12600: loss = -12.904556274414062
+INFO:absl:step = 12700: loss = -13.385082244873047
+INFO:absl:step = 12800: loss = -13.130254745483398
+INFO:absl:step = 12900: loss = -13.486927032470703
+INFO:absl:Step: 13000, 13.967 steps/sec
+INFO:absl:step = 13000: loss = -13.390875816345215
+INFO:absl:step = 13100: loss = -13.449670791625977
+INFO:absl:step = 13200: loss = -12.94018840789795
+INFO:absl:step = 13300: loss = -13.48581314086914
+INFO:absl:step = 13400: loss = -13.474586486816406
+INFO:absl:step = 13500: loss = -13.914812088012695
+INFO:absl:step = 13600: loss = -13.598320007324219
+INFO:absl:step = 13700: loss = -11.932278633117676
+INFO:absl:step = 13800: loss = -13.020233154296875
+INFO:absl:step = 13900: loss = -13.300315856933594
+INFO:absl:Step: 14000, 14.189 steps/sec
+INFO:absl:step = 14000: loss = -13.782533645629883
+INFO:absl:step = 14100: loss = -13.087276458740234
+INFO:absl:step = 14200: loss = -12.873710632324219
+INFO:absl:step = 14300: loss = -13.967721939086914
+INFO:absl:step = 14400: loss = -13.97045612335205
+INFO:absl:step = 14500: loss = -13.67784595489502
+INFO:absl:step = 14600: loss = -13.108320236206055
+INFO:absl:step = 14700: loss = -12.918758392333984
+INFO:absl:step = 14800: loss = -13.43796157836914
+INFO:absl:step = 14900: loss = -13.621244430541992
+INFO:absl:Step: 15000, 14.050 steps/sec
+INFO:absl:step = 15000: loss = -13.809489250183105
+INFO:absl:step = 15100: loss = -13.952183723449707
+INFO:absl:step = 15200: loss = -13.420120239257812
+INFO:absl:step = 15300: loss = -14.075813293457031
+INFO:absl:step = 15400: loss = -13.969419479370117
+INFO:absl:step = 15500: loss = -13.104889869689941
+INFO:absl:step = 15600: loss = -13.266475677490234
+INFO:absl:step = 15700: loss = -13.891805648803711
+INFO:absl:step = 15800: loss = -13.894643783569336
+INFO:absl:step = 15900: loss = -14.002073287963867
+INFO:absl:Step: 16000, 13.810 steps/sec
+INFO:absl:step = 16000: loss = -14.283364295959473
+INFO:absl:step = 16100: loss = -13.716949462890625
+INFO:absl:step = 16200: loss = -13.903970718383789
+INFO:absl:step = 16300: loss = -14.288521766662598
+INFO:absl:step = 16400: loss = -13.7249755859375
+INFO:absl:step = 16500: loss = -13.910354614257812
+INFO:absl:step = 16600: loss = -14.51308822631836
+INFO:absl:step = 16700: loss = -14.426108360290527
+INFO:absl:step = 16800: loss = -12.612564086914062
+INFO:absl:step = 16900: loss = -14.757051467895508
+INFO:absl:Step: 17000, 13.755 steps/sec
+INFO:absl:step = 17000: loss = -14.544910430908203
+INFO:absl:step = 17100: loss = -13.38642692565918
+INFO:absl:step = 17200: loss = -14.586623191833496
+INFO:absl:step = 17300: loss = -14.423857688903809
+INFO:absl:step = 17400: loss = -13.663479804992676
+INFO:absl:step = 17500: loss = -14.272846221923828
+INFO:absl:step = 17600: loss = -13.60993766784668
+INFO:absl:step = 17700: loss = -13.799890518188477
+INFO:absl:step = 17800: loss = -14.094491958618164
+INFO:absl:step = 17900: loss = -12.075728416442871
+INFO:absl:Step: 18000, 13.835 steps/sec
+INFO:absl:step = 18000: loss = -14.65161418914795
+INFO:absl:step = 18100: loss = -13.052410125732422
+INFO:absl:step = 18200: loss = -11.805132865905762
+INFO:absl:step = 18300: loss = -13.96883773803711
+INFO:absl:step = 18400: loss = -13.136136054992676
+INFO:absl:step = 18500: loss = -14.439339637756348
+INFO:absl:step = 18600: loss = -12.811949729919434
+INFO:absl:step = 18700: loss = -12.945734977722168
+INFO:absl:step = 18800: loss = -13.700087547302246
+INFO:absl:step = 18900: loss = -5.534836769104004
+INFO:absl:Step: 19000, 13.798 steps/sec
+INFO:absl:step = 19000: loss = -14.457552909851074
+INFO:absl:step = 19100: loss = -12.500534057617188
+INFO:absl:step = 19200: loss = -10.820697784423828
+INFO:absl:step = 19300: loss = -14.003129959106445
+INFO:absl:step = 19400: loss = -9.352773666381836
+INFO:absl:step = 19500: loss = -9.736903190612793
+INFO:absl:step = 19600: loss = -5.748713493347168
+INFO:absl:step = 19700: loss = 2.8093295097351074
+INFO:absl:step = 19800: loss = -5.212044715881348
+INFO:absl:step = 19900: loss = 22.27728271484375
+INFO:absl:Step: 20000, 13.820 steps/sec
+INFO:absl:step = 20000: AverageReturn = -0.520000, AverageEpisodeLength = 500.000000
+INFO:absl:step = 20000: loss = 10.326934814453125
+INFO:absl:step = 20100: loss = 11.321203231811523
+INFO:absl:step = 20200: loss = -9.734532356262207
+INFO:absl:step = 20300: loss = -6.918061256408691
+INFO:absl:step = 20400: loss = -11.975601196289062
+INFO:absl:step = 20500: loss = -10.22795581817627
+INFO:absl:step = 20600: loss = -10.768070220947266
+INFO:absl:step = 20700: loss = -8.301332473754883
+INFO:absl:step = 20800: loss = -3.7050647735595703
+INFO:absl:step = 20900: loss = -7.455939769744873
+INFO:absl:Step: 21000, 6.547 steps/sec
+INFO:absl:step = 21000: loss = -12.682989120483398
+INFO:absl:step = 21100: loss = -10.311718940734863
+INFO:absl:step = 21200: loss = -10.779597282409668
+INFO:absl:step = 21300: loss = -11.026350975036621
+INFO:absl:step = 21400: loss = -11.810863494873047
+INFO:absl:step = 21500: loss = -8.622405052185059
+INFO:absl:step = 21600: loss = -3.9069201946258545
+INFO:absl:step = 21700: loss = -9.355704307556152
+INFO:absl:step = 21800: loss = -6.3846964836120605
+INFO:absl:step = 21900: loss = -10.105070114135742
+INFO:absl:Step: 22000, 14.130 steps/sec
+INFO:absl:step = 22000: loss = -8.23515796661377
+INFO:absl:step = 22100: loss = -11.291790962219238
+INFO:absl:step = 22200: loss = -9.565082550048828
+INFO:absl:step = 22300: loss = -9.439887046813965
+INFO:absl:step = 22400: loss = 0.8509529232978821
+INFO:absl:step = 22500: loss = -5.947953701019287
+INFO:absl:step = 22600: loss = -8.040276527404785
+INFO:absl:step = 22700: loss = -8.459029197692871
+INFO:absl:step = 22800: loss = -9.410453796386719
+INFO:absl:step = 22900: loss = -11.354572296142578
+INFO:absl:Step: 23000, 14.320 steps/sec
+INFO:absl:step = 23000: loss = -4.854238033294678
+INFO:absl:step = 23100: loss = -8.06866455078125
+INFO:absl:step = 23200: loss = -8.663183212280273
+INFO:absl:step = 23300: loss = -9.14457893371582
+INFO:absl:step = 23400: loss = -9.520703315734863
+INFO:absl:step = 23500: loss = -5.238016605377197
+INFO:absl:step = 23600: loss = -6.221100330352783
+INFO:absl:step = 23700: loss = -8.456561088562012
+INFO:absl:step = 23800: loss = -5.2528581619262695
+INFO:absl:step = 23900: loss = -5.126777648925781
+INFO:absl:Step: 24000, 14.204 steps/sec
+INFO:absl:step = 24000: loss = 0.3525792062282562
+INFO:absl:step = 24100: loss = 16.958003997802734
+INFO:absl:step = 24200: loss = -2.1291708946228027
+INFO:absl:step = 24300: loss = 4.015149116516113
+INFO:absl:step = 24400: loss = 8.29721450805664
+INFO:absl:step = 24500: loss = -9.497653007507324
+INFO:absl:step = 24600: loss = -2.7937281131744385
+INFO:absl:step = 24700: loss = -0.1397990584373474
+INFO:absl:step = 24800: loss = -4.953551292419434
+INFO:absl:step = 24900: loss = 0.8764867186546326
+INFO:absl:Step: 25000, 14.237 steps/sec
+INFO:absl:step = 25000: loss = -6.2843918800354
+INFO:absl:step = 25100: loss = -3.090446710586548
+INFO:absl:step = 25200: loss = 19.0401554107666
+INFO:absl:step = 25300: loss = 0.15847818553447723
+INFO:absl:step = 25400: loss = -6.100555896759033
+INFO:absl:step = 25500: loss = -1.0234758853912354
+INFO:absl:step = 25600: loss = -6.7318501472473145
+INFO:absl:step = 25700: loss = -6.85286808013916
+INFO:absl:step = 25800: loss = -2.612325668334961
+INFO:absl:step = 25900: loss = 5.011928558349609
+INFO:absl:Step: 26000, 14.269 steps/sec
+INFO:absl:step = 26000: loss = 2.1141014099121094
+INFO:absl:step = 26100: loss = -2.2398641109466553
+INFO:absl:step = 26200: loss = 0.0025288164615631104
+INFO:absl:step = 26300: loss = -7.94675350189209
+INFO:absl:step = 26400: loss = -9.141263008117676
+INFO:absl:step = 26500: loss = 3.8105883598327637
+INFO:absl:step = 26600: loss = -1.3244987726211548
+INFO:absl:step = 26700: loss = -0.04324769973754883
+INFO:absl:step = 26800: loss = -5.492010116577148
+INFO:absl:step = 26900: loss = -0.4447733461856842
+INFO:absl:Step: 27000, 14.230 steps/sec
+INFO:absl:step = 27000: loss = -2.9432332515716553
+INFO:absl:step = 27100: loss = 1.8641133308410645
+INFO:absl:step = 27200: loss = -6.298839092254639
+INFO:absl:step = 27300: loss = -5.2676682472229
+INFO:absl:step = 27400: loss = 10.107757568359375
+INFO:absl:step = 27500: loss = 3.89912748336792
+INFO:absl:step = 27600: loss = -10.365019798278809
+INFO:absl:step = 27700: loss = -4.9141526222229
+INFO:absl:step = 27800: loss = 0.920264720916748
+INFO:absl:step = 27900: loss = 3.9471194744110107
+INFO:absl:Step: 28000, 14.604 steps/sec
+INFO:absl:step = 28000: loss = 0.7735255360603333
+INFO:absl:step = 28100: loss = 3.0146663188934326
+INFO:absl:step = 28200: loss = -0.6846602559089661
+INFO:absl:step = 28300: loss = 6.9927473068237305
+INFO:absl:step = 28400: loss = 16.762798309326172
+INFO:absl:step = 28500: loss = -2.44706392288208
+INFO:absl:step = 28600: loss = -6.1282267570495605
+INFO:absl:step = 28700: loss = 3.7494828701019287
+INFO:absl:step = 28800: loss = 2.208904266357422
+INFO:absl:step = 28900: loss = 0.025593996047973633
+INFO:absl:Step: 29000, 14.403 steps/sec
+INFO:absl:step = 29000: loss = -2.0344772338867188
+INFO:absl:step = 29100: loss = -5.546570301055908
+INFO:absl:step = 29200: loss = 0.19845527410507202
+INFO:absl:step = 29300: loss = 2.8242573738098145
+INFO:absl:step = 29400: loss = -3.1801576614379883
+INFO:absl:step = 29500: loss = -4.208103179931641
+INFO:absl:step = 29600: loss = -1.0364899635314941
+INFO:absl:step = 29700: loss = -5.622532844543457
+INFO:absl:step = 29800: loss = -0.02749115228652954
+INFO:absl:step = 29900: loss = 5.648705005645752
+INFO:absl:Step: 30000, 14.157 steps/sec
+INFO:absl:step = 30000: AverageReturn = -4.119168, AverageEpisodeLength = 305.299988
+INFO:absl:step = 30000: loss = -2.092525005340576
+INFO:absl:step = 30100: loss = 1.5048596858978271
+INFO:absl:step = 30200: loss = 1.4117608070373535
+INFO:absl:step = 30300: loss = -1.2036821842193604
+INFO:absl:step = 30400: loss = 1.0275022983551025
+INFO:absl:step = 30500: loss = 0.7152579426765442
+INFO:absl:step = 30600: loss = -2.5351665019989014
+INFO:absl:step = 30700: loss = -3.596604824066162
+INFO:absl:step = 30800: loss = 1.1380810737609863
+INFO:absl:step = 30900: loss = -0.1586408019065857
+INFO:absl:Step: 31000, 8.173 steps/sec
+INFO:absl:step = 31000: loss = 1.6189374923706055
+INFO:absl:step = 31100: loss = 12.140510559082031
+INFO:absl:step = 31200: loss = 0.7550432682037354
+INFO:absl:step = 31300: loss = 7.830854415893555
+INFO:absl:step = 31400: loss = 7.601905345916748
+INFO:absl:step = 31500: loss = 4.606965065002441
+INFO:absl:step = 31600: loss = 4.931058883666992
+INFO:absl:step = 31700: loss = 1.985975980758667
+INFO:absl:step = 31800: loss = 5.831362247467041
+INFO:absl:step = 31900: loss = 8.870576858520508
+INFO:absl:Step: 32000, 14.385 steps/sec
+INFO:absl:step = 32000: loss = 3.5825090408325195
+INFO:absl:step = 32100: loss = 11.40736198425293
+INFO:absl:step = 32200: loss = 5.489892482757568
+INFO:absl:step = 32300: loss = 4.861395835876465
+INFO:absl:step = 32400: loss = 7.547449111938477
+INFO:absl:step = 32500: loss = 2.2539873123168945
+INFO:absl:step = 32600: loss = 2.2645444869995117
+INFO:absl:step = 32700: loss = 7.5331220626831055
+INFO:absl:step = 32800: loss = 8.369366645812988
+INFO:absl:step = 32900: loss = 3.532925605773926
+INFO:absl:Step: 33000, 14.500 steps/sec
+INFO:absl:step = 33000: loss = 3.250100612640381
+INFO:absl:step = 33100: loss = 1.265883445739746
+INFO:absl:step = 33200: loss = 4.8633341789245605
+INFO:absl:step = 33300: loss = 9.11579418182373
+INFO:absl:step = 33400: loss = 2.687501907348633
+INFO:absl:step = 33500: loss = 11.09709358215332
+INFO:absl:step = 33600: loss = 3.7334651947021484
+INFO:absl:step = 33700: loss = 3.3231937885284424
+INFO:absl:step = 33800: loss = 4.0896406173706055
+INFO:absl:step = 33900: loss = 1.9412705898284912
+INFO:absl:Step: 34000, 14.563 steps/sec
+INFO:absl:step = 34000: loss = 2.8416128158569336
+INFO:absl:step = 34100: loss = 0.8102620244026184
+INFO:absl:step = 34200: loss = 1.3024802207946777
+INFO:absl:step = 34300: loss = 7.342935085296631
+INFO:absl:step = 34400: loss = 3.439380645751953
+INFO:absl:step = 34500: loss = 6.910460472106934
+INFO:absl:step = 34600: loss = 4.67917013168335
+INFO:absl:step = 34700: loss = 5.929251670837402
+INFO:absl:step = 34800: loss = 0.46189314126968384
+INFO:absl:step = 34900: loss = 3.193488359451294
+INFO:absl:Step: 35000, 14.513 steps/sec
+INFO:absl:step = 35000: loss = -0.5421223640441895
+INFO:absl:step = 35100: loss = 0.9234378933906555
+INFO:absl:step = 35200: loss = 0.11240494251251221
+INFO:absl:step = 35300: loss = 2.7253737449645996
+INFO:absl:step = 35400: loss = 3.5352890491485596
+INFO:absl:step = 35500: loss = 9.364614486694336
+INFO:absl:step = 35600: loss = 3.6340458393096924
+INFO:absl:step = 35700: loss = 3.7609450817108154
+INFO:absl:step = 35800: loss = 4.106943130493164
+INFO:absl:step = 35900: loss = 6.442602157592773
+INFO:absl:Step: 36000, 14.598 steps/sec
+INFO:absl:step = 36000: loss = 4.970117568969727
+INFO:absl:step = 36100: loss = 3.5086748600006104
+INFO:absl:step = 36200: loss = 2.5399975776672363
+INFO:absl:step = 36300: loss = 3.248964786529541
+INFO:absl:step = 36400: loss = 2.5799779891967773
+INFO:absl:step = 36500: loss = 1.289344310760498
+INFO:absl:step = 36600: loss = -1.4872586727142334
+INFO:absl:step = 36700: loss = 1.279254674911499
+INFO:absl:step = 36800: loss = 1.9996788501739502
+INFO:absl:step = 36900: loss = 0.5000673532485962
+INFO:absl:Step: 37000, 14.594 steps/sec
+INFO:absl:step = 37000: loss = -3.477884292602539
+INFO:absl:step = 37100: loss = 1.3487629890441895
+INFO:absl:step = 37200: loss = -0.5095281600952148
+INFO:absl:step = 37300: loss = 2.6959116458892822
+INFO:absl:step = 37400: loss = -0.40815281867980957
+INFO:absl:step = 37500: loss = 2.4225006103515625
+INFO:absl:step = 37600: loss = -0.44203490018844604
+INFO:absl:step = 37700: loss = 0.585557758808136
+INFO:absl:step = 37800: loss = 3.6379177570343018
+INFO:absl:step = 37900: loss = -0.6054695248603821
+INFO:absl:Step: 38000, 14.553 steps/sec
+INFO:absl:step = 38000: loss = 5.804977893829346
+INFO:absl:step = 38100: loss = -0.8452157974243164
+INFO:absl:step = 38200: loss = 2.734982967376709
+INFO:absl:step = 38300: loss = -1.9904545545578003
+INFO:absl:step = 38400: loss = -1.6436200141906738
+INFO:absl:step = 38500: loss = 1.575530767440796
+INFO:absl:step = 38600: loss = 1.5008635520935059
+INFO:absl:step = 38700: loss = 2.1574721336364746
+INFO:absl:step = 38800: loss = -0.36765825748443604
+INFO:absl:step = 38900: loss = 3.0304982662200928
+INFO:absl:Step: 39000, 14.501 steps/sec
+INFO:absl:step = 39000: loss = 1.495201587677002
+INFO:absl:step = 39100: loss = -0.6123557686805725
+INFO:absl:step = 39200: loss = -0.20404434204101562
+INFO:absl:step = 39300: loss = 1.468198299407959
+INFO:absl:step = 39400: loss = -1.0680468082427979
+INFO:absl:step = 39500: loss = 1.1608812808990479
+INFO:absl:step = 39600: loss = 1.575069785118103
+INFO:absl:step = 39700: loss = 4.99735164642334
+INFO:absl:step = 39800: loss = 1.547616958618164
+INFO:absl:step = 39900: loss = 3.8178513050079346
+INFO:absl:Step: 40000, 14.491 steps/sec
+INFO:absl:step = 40000: AverageReturn = 10.532965, AverageEpisodeLength = 172.500000
+INFO:absl:step = 40000: loss = 1.730866551399231
+INFO:absl:step = 40100: loss = 0.36219847202301025
+INFO:absl:step = 40200: loss = 1.6605641841888428
+INFO:absl:step = 40300: loss = 2.0319807529449463
+INFO:absl:step = 40400: loss = -1.1239266395568848
+INFO:absl:step = 40500: loss = 0.1857696771621704
+INFO:absl:step = 40600: loss = 1.9165611267089844
+INFO:absl:step = 40700: loss = 0.8861954212188721
+INFO:absl:step = 40800: loss = 0.5265585780143738
+INFO:absl:step = 40900: loss = 1.0320632457733154
+INFO:absl:Step: 41000, 10.055 steps/sec
+INFO:absl:step = 41000: loss = 0.4174730181694031
+INFO:absl:step = 41100: loss = 1.922022819519043
+INFO:absl:step = 41200: loss = -1.09562087059021
+INFO:absl:step = 41300: loss = 1.9285540580749512
+INFO:absl:step = 41400: loss = 2.6352310180664062
+INFO:absl:step = 41500: loss = 2.2570834159851074
+INFO:absl:step = 41600: loss = -0.3470996618270874
+INFO:absl:step = 41700: loss = 0.8825631141662598
+INFO:absl:step = 41800: loss = 0.02306881546974182
+INFO:absl:step = 41900: loss = 1.353503942489624
+INFO:absl:Step: 42000, 14.322 steps/sec
+INFO:absl:step = 42000: loss = 2.47536563873291
+INFO:absl:step = 42100: loss = 3.1371350288391113
+INFO:absl:step = 42200: loss = -0.07887651026248932
+INFO:absl:step = 42300: loss = 2.773841142654419
+INFO:absl:step = 42400: loss = 0.4037103056907654
+INFO:absl:step = 42500: loss = 1.240934133529663
+INFO:absl:step = 42600: loss = 1.0708808898925781
+INFO:absl:step = 42700: loss = 0.6041774153709412
+INFO:absl:step = 42800: loss = -0.5407426357269287
+INFO:absl:step = 42900: loss = -0.7740422487258911
+INFO:absl:Step: 43000, 14.253 steps/sec
+INFO:absl:step = 43000: loss = -1.7924015522003174
+INFO:absl:step = 43100: loss = -0.9902158975601196
+INFO:absl:step = 43200: loss = -1.438081979751587
+INFO:absl:step = 43300: loss = -1.2089910507202148
+INFO:absl:step = 43400: loss = 0.596272349357605
+INFO:absl:step = 43500: loss = -2.3741390705108643
+INFO:absl:step = 43600: loss = -2.186612129211426
+INFO:absl:step = 43700: loss = 3.21028995513916
+INFO:absl:step = 43800: loss = -0.5759181976318359
+INFO:absl:step = 43900: loss = -1.1196095943450928
+INFO:absl:Step: 44000, 14.301 steps/sec
+INFO:absl:step = 44000: loss = 0.08877304196357727
+INFO:absl:step = 44100: loss = -0.5946803092956543
+INFO:absl:step = 44200: loss = 3.1576507091522217
+INFO:absl:step = 44300: loss = -0.9202094674110413
+INFO:absl:step = 44400: loss = -1.5678260326385498
+INFO:absl:step = 44500: loss = -2.021484851837158
+INFO:absl:step = 44600: loss = 2.150611400604248
+INFO:absl:step = 44700: loss = 1.2794853448867798
+INFO:absl:step = 44800: loss = -0.412277489900589
+INFO:absl:step = 44900: loss = -0.4075894355773926
+INFO:absl:Step: 45000, 14.361 steps/sec
+INFO:absl:step = 45000: loss = -0.46715086698532104
+INFO:absl:step = 45100: loss = 4.013191223144531
+INFO:absl:step = 45200: loss = 0.04141301289200783
+INFO:absl:step = 45300: loss = 2.2097816467285156
+INFO:absl:step = 45400: loss = 1.7208645343780518
+INFO:absl:step = 45500: loss = -0.7729492783546448
+INFO:absl:step = 45600: loss = 0.4626423120498657
+INFO:absl:step = 45700: loss = 0.503990650177002
+INFO:absl:step = 45800: loss = -1.176245093345642
+INFO:absl:step = 45900: loss = 2.5952260494232178
+INFO:absl:Step: 46000, 14.119 steps/sec
+INFO:absl:step = 46000: loss = -0.298605740070343
+INFO:absl:step = 46100: loss = 1.9707363843917847
+INFO:absl:step = 46200: loss = -1.6057921648025513
+INFO:absl:step = 46300: loss = -1.3787169456481934
+INFO:absl:step = 46400: loss = -0.6572225093841553
+INFO:absl:step = 46500: loss = -2.0574913024902344
+INFO:absl:step = 46600: loss = 0.34786146879196167
+INFO:absl:step = 46700: loss = -0.0960620641708374
+INFO:absl:step = 46800: loss = 0.22882351279258728
+INFO:absl:step = 46900: loss = 1.8717613220214844
+INFO:absl:Step: 47000, 14.303 steps/sec
+INFO:absl:step = 47000: loss = -1.9626342058181763
+INFO:absl:step = 47100: loss = 0.26813745498657227
+INFO:absl:step = 47200: loss = 0.8662720322608948
+INFO:absl:step = 47300: loss = 1.9080029726028442
+INFO:absl:step = 47400: loss = 0.03991013765335083
+INFO:absl:step = 47500: loss = -0.7743622064590454
+INFO:absl:step = 47600: loss = 1.264371633529663
+INFO:absl:step = 47700: loss = -0.693384051322937
+INFO:absl:step = 47800: loss = 1.3814557790756226
+INFO:absl:step = 47900: loss = -1.933844804763794
+INFO:absl:Step: 48000, 14.231 steps/sec
+INFO:absl:step = 48000: loss = -0.993918776512146
+INFO:absl:step = 48100: loss = -0.3997015953063965
+INFO:absl:step = 48200: loss = 0.024867355823516846
+INFO:absl:step = 48300: loss = 1.6412888765335083
+INFO:absl:step = 48400: loss = 0.5182193517684937
+INFO:absl:step = 48500: loss = 0.5704988837242126
+INFO:absl:step = 48600: loss = 0.09566262364387512
+INFO:absl:step = 48700: loss = 2.2536158561706543
+INFO:absl:step = 48800: loss = 1.1952427625656128
+INFO:absl:step = 48900: loss = 0.8722637891769409
+INFO:absl:Step: 49000, 14.099 steps/sec
+INFO:absl:step = 49000: loss = -1.4724812507629395
+INFO:absl:step = 49100: loss = 1.7169957160949707
+INFO:absl:step = 49200: loss = 2.8854079246520996
+INFO:absl:step = 49300: loss = -0.5876464247703552
+INFO:absl:step = 49400: loss = 1.3285852670669556
+INFO:absl:step = 49500: loss = -0.7120578289031982
+INFO:absl:step = 49600: loss = -1.2194483280181885
+INFO:absl:step = 49700: loss = -1.2528401613235474
+INFO:absl:step = 49800: loss = 2.6229705810546875
+INFO:absl:step = 49900: loss = 1.4722203016281128
+INFO:absl:Step: 50000, 14.225 steps/sec
+INFO:absl:step = 50000: AverageReturn = 6.989117, AverageEpisodeLength = 139.300003
+INFO:absl:step = 50000: loss = 1.7920960187911987
+INFO:absl:step = 50100: loss = -1.1268506050109863
+INFO:absl:step = 50200: loss = 1.8926886320114136
+INFO:absl:step = 50300: loss = -0.5916808843612671
+INFO:absl:step = 50400: loss = -0.9299629926681519
+INFO:absl:step = 50500: loss = -3.4493539333343506
+INFO:absl:step = 50600: loss = -0.9991259574890137
+INFO:absl:step = 50700: loss = 2.092886447906494
+INFO:absl:step = 50800: loss = 0.27728164196014404
+INFO:absl:step = 50900: loss = -1.6385157108306885
+INFO:absl:Step: 51000, 10.923 steps/sec
+INFO:absl:step = 51000: loss = -1.7084728479385376
+INFO:absl:step = 51100: loss = 0.16857868432998657
+INFO:absl:step = 51200: loss = 0.08176927268505096
+INFO:absl:step = 51300: loss = -0.7629070281982422
+INFO:absl:step = 51400: loss = 0.08765186369419098
+INFO:absl:step = 51500: loss = 1.831513524055481
+INFO:absl:step = 51600: loss = -0.9901405572891235
+INFO:absl:step = 51700: loss = 2.33213472366333
+INFO:absl:step = 51800: loss = -0.6379935145378113
+INFO:absl:step = 51900: loss = 0.126489520072937
+INFO:absl:Step: 52000, 13.899 steps/sec
+INFO:absl:step = 52000: loss = 0.056514739990234375
+INFO:absl:step = 52100: loss = 1.6382420063018799
+INFO:absl:step = 52200: loss = 0.3723933696746826
+INFO:absl:step = 52300: loss = -1.04864501953125
+INFO:absl:step = 52400: loss = 0.3270653486251831
+INFO:absl:step = 52500: loss = 0.6966692209243774
+INFO:absl:step = 52600: loss = 1.187727451324463
+INFO:absl:step = 52700: loss = 2.7697019577026367
+INFO:absl:step = 52800: loss = 0.9877508282661438
+INFO:absl:step = 52900: loss = 0.8909099102020264
+INFO:absl:Step: 53000, 14.163 steps/sec
+INFO:absl:step = 53000: loss = 1.5705618858337402
+INFO:absl:step = 53100: loss = 4.869411468505859
+INFO:absl:step = 53200: loss = 3.0439887046813965
+INFO:absl:step = 53300: loss = 0.3657968044281006
+INFO:absl:step = 53400: loss = -1.0858030319213867
+INFO:absl:step = 53500: loss = -0.49396201968193054
+INFO:absl:step = 53600: loss = 1.4890373945236206
+INFO:absl:step = 53700: loss = -0.7318600416183472
+INFO:absl:step = 53800: loss = 0.5326479077339172
+INFO:absl:step = 53900: loss = -1.9429857730865479
+INFO:absl:Step: 54000, 14.119 steps/sec
+INFO:absl:step = 54000: loss = -1.0535918474197388
+INFO:absl:step = 54100: loss = 0.6408595442771912
+INFO:absl:step = 54200: loss = -1.475580096244812
+INFO:absl:step = 54300: loss = -0.43162721395492554
+INFO:absl:step = 54400: loss = 0.012971848249435425
+INFO:absl:step = 54500: loss = -0.02644374966621399
+INFO:absl:step = 54600: loss = -1.4724806547164917
+INFO:absl:step = 54700: loss = 1.430070400238037
+INFO:absl:step = 54800: loss = 0.43201157450675964
+INFO:absl:step = 54900: loss = -0.3537602424621582
+INFO:absl:Step: 55000, 13.991 steps/sec
+INFO:absl:step = 55000: loss = -0.2633760869503021
+INFO:absl:step = 55100: loss = -0.5117969512939453
+INFO:absl:step = 55200: loss = -0.44953271746635437
+INFO:absl:step = 55300: loss = -0.26984065771102905
+INFO:absl:step = 55400: loss = 1.613904595375061
+INFO:absl:step = 55500: loss = -0.34384337067604065
+INFO:absl:step = 55600: loss = 0.45146533846855164
+INFO:absl:step = 55700: loss = 0.11618798971176147
+INFO:absl:step = 55800: loss = -0.7023037075996399
+INFO:absl:step = 55900: loss = 0.9305777549743652
+INFO:absl:Step: 56000, 14.090 steps/sec
+INFO:absl:step = 56000: loss = 0.8388087153434753
+INFO:absl:step = 56100: loss = 0.7317662239074707
+INFO:absl:step = 56200: loss = 0.25437599420547485
+INFO:absl:step = 56300: loss = -0.5670099854469299
+INFO:absl:step = 56400: loss = -0.08927078545093536
+INFO:absl:step = 56500: loss = 0.688652753829956
+INFO:absl:step = 56600: loss = 0.04576008766889572
+INFO:absl:step = 56700: loss = -0.46190688014030457
+INFO:absl:step = 56800: loss = -1.3205971717834473
+INFO:absl:step = 56900: loss = -1.8855257034301758
+INFO:absl:Step: 57000, 13.998 steps/sec
+INFO:absl:step = 57000: loss = -2.527613401412964
+INFO:absl:step = 57100: loss = -0.8110812902450562
+INFO:absl:step = 57200: loss = 1.6750787496566772
+INFO:absl:step = 57300: loss = 1.2203449010849
+INFO:absl:step = 57400: loss = -1.6606782674789429
+INFO:absl:step = 57500: loss = -1.1140685081481934
+INFO:absl:step = 57600: loss = 0.5726645588874817
+INFO:absl:step = 57700: loss = -0.22561496496200562
+INFO:absl:step = 57800: loss = -1.833968997001648
+INFO:absl:step = 57900: loss = -0.4127626121044159
+INFO:absl:Step: 58000, 14.004 steps/sec
+INFO:absl:step = 58000: loss = -1.4092766046524048
+INFO:absl:step = 58100: loss = 0.2208225131034851
+INFO:absl:step = 58200: loss = -0.6879826784133911
+INFO:absl:step = 58300: loss = 1.523629903793335
+INFO:absl:step = 58400: loss = 1.6803226470947266
+INFO:absl:step = 58500: loss = 2.887617826461792
+INFO:absl:step = 58600: loss = 2.572803020477295
+INFO:absl:step = 58700: loss = 0.4764060080051422
+INFO:absl:step = 58800: loss = -0.20035064220428467
+INFO:absl:step = 58900: loss = 1.5321557521820068
+INFO:absl:Step: 59000, 14.059 steps/sec
+INFO:absl:step = 59000: loss = -0.03555893898010254
+INFO:absl:step = 59100: loss = -2.4823899269104004
+INFO:absl:step = 59200: loss = -0.2712632417678833
+INFO:absl:step = 59300: loss = -0.12729287147521973
+INFO:absl:step = 59400: loss = 2.1089026927948
+INFO:absl:step = 59500: loss = 2.679865598678589
+INFO:absl:step = 59600: loss = -0.2892603874206543
+INFO:absl:step = 59700: loss = -1.318786382675171
+INFO:absl:step = 59800: loss = 0.12509913742542267
+INFO:absl:step = 59900: loss = -1.0105146169662476
+INFO:absl:Step: 60000, 14.057 steps/sec
+INFO:absl:step = 60000: AverageReturn = 5.156690, AverageEpisodeLength = 95.900002
+INFO:absl:step = 60000: loss = 0.1410030722618103
+INFO:absl:step = 60100: loss = -1.336106300354004
+INFO:absl:step = 60200: loss = 0.658420741558075
+INFO:absl:step = 60300: loss = 0.7946621775627136
+INFO:absl:step = 60400: loss = 0.9813438653945923
+INFO:absl:step = 60500: loss = 0.6429529786109924
+INFO:absl:step = 60600: loss = 0.6162606477737427
+INFO:absl:step = 60700: loss = 0.6270235776901245
+INFO:absl:step = 60800: loss = -0.6828632950782776
+INFO:absl:step = 60900: loss = 2.5877561569213867
+INFO:absl:Step: 61000, 10.790 steps/sec
+INFO:absl:step = 61000: loss = 1.450494647026062
+INFO:absl:step = 61100: loss = 2.1621556282043457
+INFO:absl:step = 61200: loss = 0.9109996557235718
+INFO:absl:step = 61300: loss = -0.058183908462524414
+INFO:absl:step = 61400: loss = 0.8817468881607056
+INFO:absl:step = 61500: loss = 1.6120415925979614
+INFO:absl:step = 61600: loss = 0.6987295746803284
+INFO:absl:step = 61700: loss = 0.47863510251045227
+INFO:absl:step = 61800: loss = -1.2335920333862305
+INFO:absl:step = 61900: loss = 0.60639488697052
+INFO:absl:Step: 62000, 14.053 steps/sec
+INFO:absl:step = 62000: loss = 2.3716061115264893
+INFO:absl:step = 62100: loss = -0.5913675427436829
+INFO:absl:step = 62200: loss = -0.9124082326889038
+INFO:absl:step = 62300: loss = 0.2675425410270691
+INFO:absl:step = 62400: loss = -1.209431767463684
+INFO:absl:step = 62500: loss = 0.3910423517227173
+INFO:absl:step = 62600: loss = -1.919410228729248
+INFO:absl:step = 62700: loss = 1.5015708208084106
+INFO:absl:step = 62800: loss = 0.7882334589958191
+INFO:absl:step = 62900: loss = -0.10211117565631866
+INFO:absl:Step: 63000, 13.986 steps/sec
+INFO:absl:step = 63000: loss = 1.3307749032974243
+INFO:absl:step = 63100: loss = -0.7649314403533936
+INFO:absl:step = 63200: loss = -0.3566698729991913
+INFO:absl:step = 63300: loss = -1.1859962940216064
+INFO:absl:step = 63400: loss = 0.461056649684906
+INFO:absl:step = 63500: loss = -0.02636190503835678
+INFO:absl:step = 63600: loss = 0.31267714500427246
+INFO:absl:step = 63700: loss = 1.5047447681427002
+INFO:absl:step = 63800: loss = -1.5845551490783691
+INFO:absl:step = 63900: loss = 0.6357592344284058
+INFO:absl:Step: 64000, 14.038 steps/sec
+INFO:absl:step = 64000: loss = 0.12645818293094635
+INFO:absl:step = 64100: loss = -0.23767012357711792
+INFO:absl:step = 64200: loss = 1.8905714750289917
+INFO:absl:step = 64300: loss = 0.8619410395622253
+INFO:absl:step = 64400: loss = 2.475106716156006
+INFO:absl:step = 64500: loss = 1.4289988279342651
+INFO:absl:step = 64600: loss = 2.1028659343719482
+INFO:absl:step = 64700: loss = 1.8526195287704468
+INFO:absl:step = 64800: loss = 2.3250629901885986
+INFO:absl:step = 64900: loss = -1.6911247968673706
+INFO:absl:Step: 65000, 13.873 steps/sec
+INFO:absl:step = 65000: loss = -0.9786255359649658
+INFO:absl:step = 65100: loss = 0.023735255002975464
+INFO:absl:step = 65200: loss = 0.3201126456260681
+INFO:absl:step = 65300: loss = -0.7765805125236511
+INFO:absl:step = 65400: loss = -1.0315325260162354
+INFO:absl:step = 65500: loss = 1.4467934370040894
+INFO:absl:step = 65600: loss = -0.9009701013565063
+INFO:absl:step = 65700: loss = 1.6550124883651733
+INFO:absl:step = 65800: loss = 1.5568569898605347
+INFO:absl:step = 65900: loss = 1.1124413013458252
+INFO:absl:Step: 66000, 13.892 steps/sec
+INFO:absl:step = 66000: loss = 0.5196263790130615
+INFO:absl:step = 66100: loss = -0.9213075637817383
+INFO:absl:step = 66200: loss = -0.8709490299224854
+INFO:absl:step = 66300: loss = 0.896160364151001
+INFO:absl:step = 66400: loss = 0.05491077899932861
+INFO:absl:step = 66500: loss = 3.5636003017425537
+INFO:absl:step = 66600: loss = -1.465252161026001
+INFO:absl:step = 66700: loss = 2.503486156463623
+INFO:absl:step = 66800: loss = -0.5052686929702759
+INFO:absl:step = 66900: loss = 0.45642420649528503
+INFO:absl:Step: 67000, 13.992 steps/sec
+INFO:absl:step = 67000: loss = -0.11509823799133301
+INFO:absl:step = 67100: loss = 1.4602751731872559
+INFO:absl:step = 67200: loss = -1.0344760417938232
+INFO:absl:step = 67300: loss = 0.6358041763305664
+INFO:absl:step = 67400: loss = -1.0383756160736084
+INFO:absl:step = 67500: loss = 0.49468958377838135
+INFO:absl:step = 67600: loss = -0.2881534695625305
+INFO:absl:step = 67700: loss = 2.476543426513672
+INFO:absl:step = 67800: loss = 0.08981913328170776
+INFO:absl:step = 67900: loss = -0.9212720394134521
+INFO:absl:Step: 68000, 14.227 steps/sec
+INFO:absl:step = 68000: loss = -1.4216206073760986
+INFO:absl:step = 68100: loss = 1.7097139358520508
+INFO:absl:step = 68200: loss = 0.29137569665908813
+INFO:absl:step = 68300: loss = -0.9800912737846375
+INFO:absl:step = 68400: loss = -0.6992794275283813
+INFO:absl:step = 68500: loss = 1.4205002784729004
+INFO:absl:step = 68600: loss = -0.8099408149719238
+INFO:absl:step = 68700: loss = 1.4272373914718628
+INFO:absl:step = 68800: loss = 1.04254949092865
+INFO:absl:step = 68900: loss = 2.34009051322937
+INFO:absl:Step: 69000, 14.136 steps/sec
+INFO:absl:step = 69000: loss = 0.7293426990509033
+INFO:absl:step = 69100: loss = 1.9047034978866577
+INFO:absl:step = 69200: loss = 1.9692790508270264
+INFO:absl:step = 69300: loss = 1.9676353931427002
+INFO:absl:step = 69400: loss = 1.3974968194961548
+INFO:absl:step = 69500: loss = -1.1845414638519287
+INFO:absl:step = 69600: loss = 0.35342466831207275
+INFO:absl:step = 69700: loss = -0.830165684223175
+INFO:absl:step = 69800: loss = -0.2828180193901062
+INFO:absl:step = 69900: loss = 0.03228212893009186
+INFO:absl:Step: 70000, 13.869 steps/sec
+INFO:absl:step = 70000: AverageReturn = 10.792253, AverageEpisodeLength = 152.500000
+INFO:absl:step = 70000: loss = 0.3475293517112732
+INFO:absl:step = 70100: loss = 0.6226235628128052
+INFO:absl:step = 70200: loss = -0.18615370988845825
+INFO:absl:step = 70300: loss = 0.17630644142627716
+INFO:absl:step = 70400: loss = 0.955978512763977
+INFO:absl:step = 70500: loss = -0.4054226279258728
+INFO:absl:step = 70600: loss = 1.8159337043762207
+INFO:absl:step = 70700: loss = -0.9754603505134583
+INFO:absl:step = 70800: loss = -0.43195652961730957
+INFO:absl:step = 70900: loss = 2.3133621215820312
+INFO:absl:Step: 71000, 10.392 steps/sec
+INFO:absl:step = 71000: loss = 1.1458317041397095
+INFO:absl:step = 71100: loss = 0.766859233379364
+INFO:absl:step = 71200: loss = 0.8358847498893738
+INFO:absl:step = 71300: loss = 2.4595210552215576
+INFO:absl:step = 71400: loss = -1.0637856721878052
+INFO:absl:step = 71500: loss = -0.08572319149971008
+INFO:absl:step = 71600: loss = 0.30590832233428955
+INFO:absl:step = 71700: loss = -0.7451798915863037
+INFO:absl:step = 71800: loss = -1.9640997648239136
+INFO:absl:step = 71900: loss = 1.6475166082382202
+INFO:absl:Step: 72000, 14.195 steps/sec
+INFO:absl:step = 72000: loss = -0.5135178565979004
+INFO:absl:step = 72100: loss = 1.111600399017334
+INFO:absl:step = 72200: loss = 2.7919533252716064
+INFO:absl:step = 72300: loss = 0.6425626277923584
+INFO:absl:step = 72400: loss = -0.6113442778587341
+INFO:absl:step = 72500: loss = 1.1911284923553467
+INFO:absl:step = 72600: loss = 0.1266789585351944
+INFO:absl:step = 72700: loss = -1.0630066394805908
+INFO:absl:step = 72800: loss = 1.9691444635391235
+INFO:absl:step = 72900: loss = -2.129175901412964
+INFO:absl:Step: 73000, 13.963 steps/sec
+INFO:absl:step = 73000: loss = 0.7438502311706543
+INFO:absl:step = 73100: loss = 0.21414846181869507
+INFO:absl:step = 73200: loss = 0.7405604720115662
+INFO:absl:step = 73300: loss = 0.7887907028198242
+INFO:absl:step = 73400: loss = 1.3399008512496948
+INFO:absl:step = 73500: loss = 0.8277323246002197
+INFO:absl:step = 73600: loss = 1.7880250215530396
+INFO:absl:step = 73700: loss = -0.21503794193267822
+INFO:absl:step = 73800: loss = -1.0772695541381836
+INFO:absl:step = 73900: loss = 0.37888044118881226
+INFO:absl:Step: 74000, 14.108 steps/sec
+INFO:absl:step = 74000: loss = 2.8880701065063477
+INFO:absl:step = 74100: loss = 0.8153656721115112
+INFO:absl:step = 74200: loss = 1.046183705329895
+INFO:absl:step = 74300: loss = -2.2525594234466553
+INFO:absl:step = 74400: loss = 1.5043182373046875
+INFO:absl:step = 74500: loss = 0.2749267518520355
+INFO:absl:step = 74600: loss = 1.4978375434875488
+INFO:absl:step = 74700: loss = 0.11358276009559631
+INFO:absl:step = 74800: loss = 0.029762208461761475
+INFO:absl:step = 74900: loss = 0.6963313817977905
+INFO:absl:Step: 75000, 14.131 steps/sec
+INFO:absl:step = 75000: loss = 0.14150752127170563
+INFO:absl:step = 75100: loss = -0.7555603384971619
+INFO:absl:step = 75200: loss = 0.5708367228507996
+INFO:absl:step = 75300: loss = -0.17254817485809326
+INFO:absl:step = 75400: loss = 1.1280075311660767
+INFO:absl:step = 75500: loss = 0.6663841009140015
+INFO:absl:step = 75600: loss = 2.8037548065185547
+INFO:absl:step = 75700: loss = -2.3339078426361084
+INFO:absl:step = 75800: loss = -0.41883400082588196
+INFO:absl:step = 75900: loss = 0.9355614185333252
+INFO:absl:Step: 76000, 13.840 steps/sec
+INFO:absl:step = 76000: loss = 0.6840550899505615
+INFO:absl:step = 76100: loss = 0.7040514945983887
+INFO:absl:step = 76200: loss = 1.3328680992126465
+INFO:absl:step = 76300: loss = 1.7133482694625854
+INFO:absl:step = 76400: loss = -1.1199945211410522
+INFO:absl:step = 76500: loss = -0.555671215057373
+INFO:absl:step = 76600: loss = 0.4221152663230896
+INFO:absl:step = 76700: loss = 1.4401142597198486
+INFO:absl:step = 76800: loss = 3.4837467670440674
+INFO:absl:step = 76900: loss = 1.0186785459518433
+INFO:absl:Step: 77000, 13.850 steps/sec
+INFO:absl:step = 77000: loss = -0.9949158430099487
+INFO:absl:step = 77100: loss = 0.8775529265403748
+INFO:absl:step = 77200: loss = -0.09879320859909058
+INFO:absl:step = 77300: loss = 1.3538732528686523
+INFO:absl:step = 77400: loss = 0.16122139990329742
+INFO:absl:step = 77500: loss = 0.5700348615646362
+INFO:absl:step = 77600: loss = -0.6658777594566345
+INFO:absl:step = 77700: loss = -0.20210857689380646
+INFO:absl:step = 77800: loss = 2.1296582221984863
+INFO:absl:step = 77900: loss = 1.6726311445236206
+INFO:absl:Step: 78000, 13.958 steps/sec
+INFO:absl:step = 78000: loss = 0.8725599646568298
+INFO:absl:step = 78100: loss = -2.025418996810913
+INFO:absl:step = 78200: loss = 0.6782289743423462
+INFO:absl:step = 78300: loss = 1.0281463861465454
+INFO:absl:step = 78400: loss = -0.158402681350708
+INFO:absl:step = 78500: loss = 2.931166648864746
+INFO:absl:step = 78600: loss = -0.766674816608429
+INFO:absl:step = 78700: loss = 2.739772081375122
+INFO:absl:step = 78800: loss = 3.009150266647339
+INFO:absl:step = 78900: loss = 2.4149420261383057
+INFO:absl:Step: 79000, 13.905 steps/sec
+INFO:absl:step = 79000: loss = -0.5465254783630371
+INFO:absl:step = 79100: loss = 0.00610506534576416
+INFO:absl:step = 79200: loss = 1.3697518110275269
+INFO:absl:step = 79300: loss = 0.8466803431510925
+INFO:absl:step = 79400: loss = -0.46019673347473145
+INFO:absl:step = 79500: loss = -0.4823620021343231
+INFO:absl:step = 79600: loss = -1.1704161167144775
+INFO:absl:step = 79700: loss = 0.03766798973083496
+INFO:absl:step = 79800: loss = -0.6838992834091187
+INFO:absl:step = 79900: loss = 0.3181802034378052
+INFO:absl:Step: 80000, 13.970 steps/sec
+INFO:absl:step = 80000: AverageReturn = 4.647695, AverageEpisodeLength = 98.800003
+INFO:absl:step = 80000: loss = -0.382419228553772
+INFO:absl:step = 80100: loss = 2.549165725708008
+INFO:absl:step = 80200: loss = 2.746568441390991
+INFO:absl:step = 80300: loss = 0.9183225631713867
+INFO:absl:step = 80400: loss = 1.3260879516601562
+INFO:absl:step = 80500: loss = 0.2560099959373474
+INFO:absl:step = 80600: loss = -0.07404816150665283
+INFO:absl:step = 80700: loss = -0.32841354608535767
+INFO:absl:step = 80800: loss = 0.5017411708831787
+INFO:absl:step = 80900: loss = -0.453913152217865
+INFO:absl:Step: 81000, 11.343 steps/sec
+INFO:absl:step = 81000: loss = -0.264640212059021
+INFO:absl:step = 81100: loss = 2.176910877227783
+INFO:absl:step = 81200: loss = 0.7943102717399597
+INFO:absl:step = 81300: loss = 1.384286880493164
+INFO:absl:step = 81400: loss = 1.162255883216858
+INFO:absl:step = 81500: loss = 1.0627250671386719
+INFO:absl:step = 81600: loss = -1.1503467559814453
+INFO:absl:step = 81700: loss = 0.32857877016067505
+INFO:absl:step = 81800: loss = 0.16087086498737335
+INFO:absl:step = 81900: loss = -0.2671175003051758
+INFO:absl:Step: 82000, 13.908 steps/sec
+INFO:absl:step = 82000: loss = 1.1185328960418701
+INFO:absl:step = 82100: loss = -0.16396783292293549
+INFO:absl:step = 82200: loss = 0.5895425081253052
+INFO:absl:step = 82300: loss = 0.7663049697875977
+INFO:absl:step = 82400: loss = 0.5115689039230347
+INFO:absl:step = 82500: loss = 0.5527541041374207
+INFO:absl:step = 82600: loss = 2.0202221870422363
+INFO:absl:step = 82700: loss = 2.486964464187622
+INFO:absl:step = 82800: loss = 2.2610812187194824
+INFO:absl:step = 82900: loss = 1.6512954235076904
+INFO:absl:Step: 83000, 13.979 steps/sec
+INFO:absl:step = 83000: loss = -0.9650882482528687
+INFO:absl:step = 83100: loss = -0.15045639872550964
+INFO:absl:step = 83200: loss = 0.6189266443252563
+INFO:absl:step = 83300: loss = -0.9746198654174805
+INFO:absl:step = 83400: loss = -0.2961171865463257
+INFO:absl:step = 83500: loss = -0.6853657364845276
+INFO:absl:step = 83600: loss = -1.5982266664505005
+INFO:absl:step = 83700: loss = 2.1763622760772705
+INFO:absl:step = 83800: loss = 0.7118608951568604
+INFO:absl:step = 83900: loss = 0.7528650760650635
+INFO:absl:Step: 84000, 14.027 steps/sec
+INFO:absl:step = 84000: loss = 1.713813066482544
+INFO:absl:step = 84100: loss = 1.7912604808807373
+INFO:absl:step = 84200: loss = -0.16636618971824646
+INFO:absl:step = 84300: loss = 0.0381808876991272
+INFO:absl:step = 84400: loss = 0.957694947719574
+INFO:absl:step = 84500: loss = 1.8435274362564087
+INFO:absl:step = 84600: loss = 4.131444931030273
+INFO:absl:step = 84700: loss = -1.706351399421692
+INFO:absl:step = 84800: loss = 1.192784070968628
+INFO:absl:step = 84900: loss = 2.2089781761169434
+INFO:absl:Step: 85000, 14.172 steps/sec
+INFO:absl:step = 85000: loss = -0.516653299331665
+INFO:absl:step = 85100: loss = -0.18155348300933838
+INFO:absl:step = 85200: loss = 0.43734291195869446
+INFO:absl:step = 85300: loss = 2.412921905517578
+INFO:absl:step = 85400: loss = -0.8931924104690552
+INFO:absl:step = 85500: loss = 0.10534340143203735
+INFO:absl:step = 85600: loss = -0.8616176843643188
+INFO:absl:step = 85700: loss = -0.5814203023910522
+INFO:absl:step = 85800: loss = 1.6220531463623047
+INFO:absl:step = 85900: loss = -0.8203835487365723
+INFO:absl:Step: 86000, 14.259 steps/sec
+INFO:absl:step = 86000: loss = 3.299015998840332
+INFO:absl:step = 86100: loss = -0.575364351272583
+INFO:absl:step = 86200: loss = 3.4377336502075195
+INFO:absl:step = 86300: loss = 0.2427780032157898
+INFO:absl:step = 86400: loss = -1.1782392263412476
+INFO:absl:step = 86500: loss = -1.8809130191802979
+INFO:absl:step = 86600: loss = 0.43514081835746765
+INFO:absl:step = 86700: loss = 2.1842169761657715
+INFO:absl:step = 86800: loss = 0.575949490070343
+INFO:absl:step = 86900: loss = -0.08897235989570618
+INFO:absl:Step: 87000, 14.214 steps/sec
+INFO:absl:step = 87000: loss = 0.27700769901275635
+INFO:absl:step = 87100: loss = -0.5678613185882568
+INFO:absl:step = 87200: loss = -1.4232478141784668
+INFO:absl:step = 87300: loss = 1.0918052196502686
+INFO:absl:step = 87400: loss = -0.04466104507446289
+INFO:absl:step = 87500: loss = 0.9544483423233032
+INFO:absl:step = 87600: loss = -0.6875393986701965
+INFO:absl:step = 87700: loss = 0.140811026096344
+INFO:absl:step = 87800: loss = 0.772775411605835
+INFO:absl:step = 87900: loss = 2.4440255165100098
+INFO:absl:Step: 88000, 14.163 steps/sec
+INFO:absl:step = 88000: loss = 0.538784384727478
+INFO:absl:step = 88100: loss = 0.02507421374320984
+INFO:absl:step = 88200: loss = 0.41096997261047363
+INFO:absl:step = 88300: loss = 0.15385520458221436
+INFO:absl:step = 88400: loss = 0.23117709159851074
+INFO:absl:step = 88500: loss = -1.0888386964797974
+INFO:absl:step = 88600: loss = -1.1594486236572266
+INFO:absl:step = 88700: loss = -0.09068381786346436
+INFO:absl:step = 88800: loss = 1.0110381841659546
+INFO:absl:step = 88900: loss = -0.34966421127319336
+INFO:absl:Step: 89000, 14.085 steps/sec
+INFO:absl:step = 89000: loss = 0.7054629325866699
+INFO:absl:step = 89100: loss = -0.5232515931129456
+INFO:absl:step = 89200: loss = 0.39964616298675537
+INFO:absl:step = 89300: loss = 0.9621304869651794
+INFO:absl:step = 89400: loss = 0.3377925455570221
+INFO:absl:step = 89500: loss = 1.6591379642486572
+INFO:absl:step = 89600: loss = 0.8544459342956543
+INFO:absl:step = 89700: loss = 0.9357821941375732
+INFO:absl:step = 89800: loss = 2.871181011199951
+INFO:absl:step = 89900: loss = 1.2859787940979004
+INFO:absl:Step: 90000, 13.920 steps/sec
+INFO:absl:step = 90000: AverageReturn = 10.809828, AverageEpisodeLength = 51.099998
+INFO:absl:step = 90000: loss = 0.865778386592865
+INFO:absl:step = 90100: loss = 2.281346082687378
+INFO:absl:step = 90200: loss = 0.3646007478237152
+INFO:absl:step = 90300: loss = -0.9925830364227295
+INFO:absl:step = 90400: loss = 0.5763329863548279
+INFO:absl:step = 90500: loss = 0.7783733606338501
+INFO:absl:step = 90600: loss = -1.1392483711242676
+INFO:absl:step = 90700: loss = -0.18324804306030273
+INFO:absl:step = 90800: loss = 2.027653455734253
+INFO:absl:step = 90900: loss = 0.6894828081130981
+INFO:absl:Step: 91000, 12.563 steps/sec
+INFO:absl:step = 91000: loss = -1.1569290161132812
+INFO:absl:step = 91100: loss = 0.6984262466430664
+INFO:absl:step = 91200: loss = 0.9998646378517151
+INFO:absl:step = 91300: loss = 1.301493525505066
+INFO:absl:step = 91400: loss = 0.4656083881855011
+INFO:absl:step = 91500: loss = 0.6699049472808838
+INFO:absl:step = 91600: loss = -1.2120311260223389
+INFO:absl:step = 91700: loss = 3.2445807456970215
+INFO:absl:step = 91800: loss = 0.39186161756515503
+INFO:absl:step = 91900: loss = 0.5504074096679688
+INFO:absl:Step: 92000, 13.915 steps/sec
+INFO:absl:step = 92000: loss = 0.9616954326629639
+INFO:absl:step = 92100: loss = -0.6447811126708984
+INFO:absl:step = 92200: loss = -0.08345651626586914
+INFO:absl:step = 92300: loss = -1.245707631111145
+INFO:absl:step = 92400: loss = -1.292113184928894
+INFO:absl:step = 92500: loss = 2.107518196105957
+INFO:absl:step = 92600: loss = 0.846298098564148
+INFO:absl:step = 92700: loss = 1.4362428188323975
+INFO:absl:step = 92800: loss = -1.8948944807052612
+INFO:absl:step = 92900: loss = -0.13634419441223145
+INFO:absl:Step: 93000, 13.997 steps/sec
+INFO:absl:step = 93000: loss = 0.7339773178100586
+INFO:absl:step = 93100: loss = -0.8248485326766968
+INFO:absl:step = 93200: loss = 0.5317425727844238
+INFO:absl:step = 93300: loss = -0.8996672630310059
+INFO:absl:step = 93400: loss = 1.010789394378662
+INFO:absl:step = 93500: loss = -0.28160059452056885
+INFO:absl:step = 93600: loss = -0.5981684923171997
+INFO:absl:step = 93700: loss = 0.26160579919815063
+INFO:absl:step = 93800: loss = 1.129988431930542
+INFO:absl:step = 93900: loss = -0.020142018795013428
+INFO:absl:Step: 94000, 13.937 steps/sec
+INFO:absl:step = 94000: loss = -0.14288100600242615
+INFO:absl:step = 94100: loss = 0.06583371013402939
+INFO:absl:step = 94200: loss = 1.8916915655136108
+INFO:absl:step = 94300: loss = 0.09621882438659668
+INFO:absl:step = 94400: loss = -1.370107650756836
+INFO:absl:step = 94500: loss = -0.17859971523284912
+INFO:absl:step = 94600: loss = 0.106201171875
+INFO:absl:step = 94700: loss = -0.10446396470069885
+INFO:absl:step = 94800: loss = 0.7031365633010864
+INFO:absl:step = 94900: loss = 3.075138807296753
+INFO:absl:Step: 95000, 14.117 steps/sec
+INFO:absl:step = 95000: loss = -0.04561379551887512
+INFO:absl:step = 95100: loss = 1.795714020729065
+INFO:absl:step = 95200: loss = -0.4039081335067749
+INFO:absl:step = 95300: loss = 1.3626561164855957
+INFO:absl:step = 95400: loss = -0.5431733131408691
+INFO:absl:step = 95500: loss = 0.570507287979126
+INFO:absl:step = 95600: loss = 0.6730755567550659
+INFO:absl:step = 95700: loss = 0.1600426435470581
+INFO:absl:step = 95800: loss = 0.3854747712612152
+INFO:absl:step = 95900: loss = 0.6963745355606079
+INFO:absl:Step: 96000, 13.920 steps/sec
+INFO:absl:step = 96000: loss = 0.8016167283058167
+INFO:absl:step = 96100: loss = 1.7478086948394775
+INFO:absl:step = 96200: loss = -0.0001742839813232422
+INFO:absl:step = 96300: loss = 2.426426410675049
+INFO:absl:step = 96400: loss = 0.8901296257972717
+INFO:absl:step = 96500: loss = 1.046776294708252
+INFO:absl:step = 96600: loss = -0.19688299298286438
+INFO:absl:step = 96700: loss = -0.1451663374900818
+INFO:absl:step = 96800: loss = -0.24310088157653809
+INFO:absl:step = 96900: loss = -1.0702778100967407
+INFO:absl:Step: 97000, 13.920 steps/sec
+INFO:absl:step = 97000: loss = 2.0646729469299316
+INFO:absl:step = 97100: loss = -0.41133296489715576
+INFO:absl:step = 97200: loss = -0.44395017623901367
+INFO:absl:step = 97300: loss = 0.917782723903656
+INFO:absl:step = 97400: loss = 2.5210351943969727
+INFO:absl:step = 97500: loss = -0.8441995978355408
+INFO:absl:step = 97600: loss = 0.8017849326133728
+INFO:absl:step = 97700: loss = 0.8725528120994568
+INFO:absl:step = 97800: loss = 1.6745258569717407
+INFO:absl:step = 97900: loss = 0.5382868051528931
+INFO:absl:Step: 98000, 13.854 steps/sec
+INFO:absl:step = 98000: loss = 0.14780861139297485
+INFO:absl:step = 98100: loss = 0.8614830374717712
+INFO:absl:step = 98200: loss = -1.70018470287323
+INFO:absl:step = 98300: loss = -0.388003408908844
+INFO:absl:step = 98400: loss = 0.27763885259628296
+INFO:absl:step = 98500: loss = -0.05647343397140503
+INFO:absl:step = 98600: loss = 0.794274091720581
+INFO:absl:step = 98700: loss = -0.8679617643356323
+INFO:absl:step = 98800: loss = 1.6360827684402466
+INFO:absl:step = 98900: loss = 0.527751624584198
+INFO:absl:Step: 99000, 13.985 steps/sec
+INFO:absl:step = 99000: loss = 1.266414999961853
+INFO:absl:step = 99100: loss = -1.4412024021148682
+INFO:absl:step = 99200: loss = -1.2291595935821533
+INFO:absl:step = 99300: loss = 0.9435348510742188
+INFO:absl:step = 99400: loss = 0.23264798521995544
+INFO:absl:step = 99500: loss = 0.4018005132675171
+INFO:absl:step = 99600: loss = -0.5129172801971436
+INFO:absl:step = 99700: loss = 1.0981706380844116
+INFO:absl:step = 99800: loss = 0.13501840829849243
+INFO:absl:step = 99900: loss = 0.4292309284210205
+INFO:absl:Step: 100000, 13.963 steps/sec
+INFO:absl:Saved checkpoint: ./runs/20210504-074243/train/checkpoints/ckpt-100000
+INFO:absl:step = 100000: AverageReturn = 4.646690, AverageEpisodeLength = 93.400002
+INFO:absl:step = 100000: loss = -1.8879362344741821
+INFO:absl:step = 100100: loss = 0.9654882550239563
+INFO:absl:step = 100200: loss = 0.013938650488853455
+INFO:absl:step = 100300: loss = 2.0071160793304443
+INFO:absl:step = 100400: loss = 0.6041719913482666
+INFO:absl:step = 100500: loss = 0.4682602882385254
+INFO:absl:step = 100600: loss = 0.5883328914642334
+INFO:absl:step = 100700: loss = 0.5138877034187317
+INFO:absl:step = 100800: loss = 0.09486985206604004
+INFO:absl:step = 100900: loss = -0.015057802200317383
+INFO:absl:Step: 101000, 10.234 steps/sec
+INFO:absl:step = 101000: loss = -1.2612149715423584
+INFO:absl:step = 101100: loss = 0.18168437480926514
+INFO:absl:step = 101200: loss = 0.5581670999526978
+INFO:absl:step = 101300: loss = 1.9209293127059937
+INFO:absl:step = 101400: loss = -0.6142298579216003
+INFO:absl:step = 101500: loss = 0.7903027534484863
+INFO:absl:step = 101600: loss = 0.2971477806568146
+INFO:absl:step = 101700: loss = -0.17335832118988037
+INFO:absl:step = 101800: loss = 1.6963220834732056
+INFO:absl:step = 101900: loss = 0.8699398040771484
+INFO:absl:Step: 102000, 13.904 steps/sec
+INFO:absl:step = 102000: loss = -1.3309171199798584
+INFO:absl:step = 102100: loss = -0.6946564316749573
+INFO:absl:step = 102200: loss = -0.5890886187553406
+INFO:absl:step = 102300: loss = 0.6842260956764221
+INFO:absl:step = 102400: loss = -1.807558298110962
+INFO:absl:step = 102500: loss = -0.34532439708709717
+INFO:absl:step = 102600: loss = 0.9460910558700562
+INFO:absl:step = 102700: loss = -0.5622535943984985
+INFO:absl:step = 102800: loss = -0.606596827507019
+INFO:absl:step = 102900: loss = 1.5616592168807983
+INFO:absl:Step: 103000, 13.959 steps/sec
+INFO:absl:step = 103000: loss = 0.949142575263977
+INFO:absl:step = 103100: loss = 0.012765586376190186
+INFO:absl:step = 103200: loss = 1.0477746725082397
+INFO:absl:step = 103300: loss = -0.47142940759658813
+INFO:absl:step = 103400: loss = -0.21368610858917236
+INFO:absl:step = 103500: loss = 1.4292893409729004
+INFO:absl:step = 103600: loss = 0.5387090444564819
+INFO:absl:step = 103700: loss = 0.32269132137298584
+INFO:absl:step = 103800: loss = 2.355473041534424
+INFO:absl:step = 103900: loss = -0.291909396648407
+INFO:absl:Step: 104000, 13.964 steps/sec
+INFO:absl:step = 104000: loss = 1.9554595947265625
+INFO:absl:step = 104100: loss = 1.9095568656921387
+INFO:absl:step = 104200: loss = 0.3499123454093933
+INFO:absl:step = 104300: loss = -1.758090615272522
+INFO:absl:step = 104400: loss = 0.05082499980926514
+INFO:absl:step = 104500: loss = -0.21215835213661194
+INFO:absl:step = 104600: loss = -0.10023695230484009
+INFO:absl:step = 104700: loss = 0.9972830414772034
+INFO:absl:step = 104800: loss = -2.0042359828948975
+INFO:absl:step = 104900: loss = -2.3489227294921875
+INFO:absl:Step: 105000, 14.026 steps/sec
+INFO:absl:step = 105000: loss = 0.792707622051239
+INFO:absl:step = 105100: loss = 0.8902595043182373
+INFO:absl:step = 105200: loss = 1.4462947845458984
+INFO:absl:step = 105300: loss = 0.8977888822555542
+INFO:absl:step = 105400: loss = 1.5042359828948975
+INFO:absl:step = 105500: loss = 1.169621229171753
+INFO:absl:step = 105600: loss = 0.14538434147834778
+INFO:absl:step = 105700: loss = 1.2383207082748413
+INFO:absl:step = 105800: loss = 1.528624415397644
+INFO:absl:step = 105900: loss = -0.7973188161849976
+INFO:absl:Step: 106000, 13.921 steps/sec
+INFO:absl:step = 106000: loss = 0.033647358417510986
+INFO:absl:step = 106100: loss = -0.09313677251338959
+INFO:absl:step = 106200: loss = 0.365816593170166
+INFO:absl:step = 106300: loss = -1.4245414733886719
+INFO:absl:step = 106400: loss = 0.6582225561141968
+INFO:absl:step = 106500: loss = -0.598668098449707
+INFO:absl:step = 106600: loss = -1.3281502723693848
+INFO:absl:step = 106700: loss = 0.9675040245056152
+INFO:absl:step = 106800: loss = 2.724742889404297
+INFO:absl:step = 106900: loss = -0.820945680141449
+INFO:absl:Step: 107000, 13.905 steps/sec
+INFO:absl:step = 107000: loss = 0.3524535298347473
+INFO:absl:step = 107100: loss = -0.0685797929763794
+INFO:absl:step = 107200: loss = -0.4025849401950836
+INFO:absl:step = 107300: loss = 0.05093373358249664
+INFO:absl:step = 107400: loss = -0.3385516107082367
+INFO:absl:step = 107500: loss = 0.5471038818359375
+INFO:absl:step = 107600: loss = 0.012895673513412476
+INFO:absl:step = 107700: loss = 0.008317798376083374
+INFO:absl:step = 107800: loss = -0.28950220346450806
+INFO:absl:step = 107900: loss = -1.0445438623428345
+INFO:absl:Step: 108000, 13.881 steps/sec
+INFO:absl:step = 108000: loss = -0.6960939168930054
+INFO:absl:step = 108100: loss = 1.814103364944458
+INFO:absl:step = 108200: loss = 0.20081093907356262
+INFO:absl:step = 108300: loss = -0.05258166790008545
+INFO:absl:step = 108400: loss = -0.5328534245491028
+INFO:absl:step = 108500: loss = -0.543586015701294
+INFO:absl:step = 108600: loss = -0.8366228342056274
+INFO:absl:step = 108700: loss = -1.9654245376586914
+INFO:absl:step = 108800: loss = -0.5021933317184448
+INFO:absl:step = 108900: loss = 0.4111321270465851
+INFO:absl:Step: 109000, 13.951 steps/sec
+INFO:absl:step = 109000: loss = -1.0025105476379395
+INFO:absl:step = 109100: loss = 0.9297760725021362
+INFO:absl:step = 109200: loss = 1.2889962196350098
+INFO:absl:step = 109300: loss = 0.8256046175956726
+INFO:absl:step = 109400: loss = 0.30783811211586
+INFO:absl:step = 109500: loss = -1.4643410444259644
+INFO:absl:step = 109600: loss = 0.7854646444320679
+INFO:absl:step = 109700: loss = 0.6322606801986694
+INFO:absl:step = 109800: loss = -0.0493505597114563
+INFO:absl:step = 109900: loss = 1.0584492683410645
+INFO:absl:Step: 110000, 13.878 steps/sec
+INFO:absl:step = 110000: AverageReturn = 10.714975, AverageEpisodeLength = 33.799999
+INFO:absl:step = 110000: loss = -1.2208647727966309
+INFO:absl:step = 110100: loss = 0.009273171424865723
+INFO:absl:step = 110200: loss = -1.0750558376312256
+INFO:absl:step = 110300: loss = 1.3408331871032715
+INFO:absl:step = 110400: loss = -1.54668128490448
+INFO:absl:step = 110500: loss = -0.7490179538726807
+INFO:absl:step = 110600: loss = -0.41781359910964966
+INFO:absl:step = 110700: loss = 0.8338738083839417
+INFO:absl:step = 110800: loss = -1.099923849105835
+INFO:absl:step = 110900: loss = -0.10360631346702576
+INFO:absl:Step: 111000, 12.395 steps/sec
+INFO:absl:step = 111000: loss = 0.22305087745189667
+INFO:absl:step = 111100: loss = 2.570338010787964
+INFO:absl:step = 111200: loss = 0.36046504974365234
+INFO:absl:step = 111300: loss = -1.3729677200317383
+INFO:absl:step = 111400: loss = -0.8926486968994141
+INFO:absl:step = 111500: loss = 0.7784113883972168
+INFO:absl:step = 111600: loss = 1.508948802947998
+INFO:absl:step = 111700: loss = 1.5476104021072388
+INFO:absl:step = 111800: loss = -0.6951466202735901
+INFO:absl:step = 111900: loss = -1.663864016532898
+INFO:absl:Step: 112000, 13.714 steps/sec
+INFO:absl:step = 112000: loss = -1.6601837873458862
+INFO:absl:step = 112100: loss = -0.013664007186889648
+INFO:absl:step = 112200: loss = -0.27520808577537537
+INFO:absl:step = 112300: loss = -1.4680235385894775
+INFO:absl:step = 112400: loss = -0.025411367416381836
+INFO:absl:step = 112500: loss = 2.4095242023468018
+INFO:absl:step = 112600: loss = 0.5808490514755249
+INFO:absl:step = 112700: loss = -0.049342453479766846
+INFO:absl:step = 112800: loss = 0.33800601959228516
+INFO:absl:step = 112900: loss = 1.2437365055084229
+INFO:absl:Step: 113000, 13.682 steps/sec
+INFO:absl:step = 113000: loss = -0.34198784828186035
+INFO:absl:step = 113100: loss = 0.2612537741661072
+INFO:absl:step = 113200: loss = -1.4600098133087158
+INFO:absl:step = 113300: loss = -1.4621825218200684
+INFO:absl:step = 113400: loss = 0.9094085693359375
+INFO:absl:step = 113500: loss = 0.1410931944847107
+INFO:absl:step = 113600: loss = -0.8143858909606934
+INFO:absl:step = 113700: loss = 1.0045949220657349
+INFO:absl:step = 113800: loss = 3.2251574993133545
+INFO:absl:step = 113900: loss = 1.6367592811584473
+INFO:absl:Step: 114000, 13.709 steps/sec
+INFO:absl:step = 114000: loss = -1.9398047924041748
+INFO:absl:step = 114100: loss = 0.9377504587173462
+INFO:absl:step = 114200: loss = 0.45493626594543457
+INFO:absl:step = 114300: loss = 2.219555616378784
+INFO:absl:step = 114400: loss = -0.5766379833221436
+INFO:absl:step = 114500: loss = -0.7610236406326294
+INFO:absl:step = 114600: loss = -0.23279640078544617
+INFO:absl:step = 114700: loss = 1.0146574974060059
+INFO:absl:step = 114800: loss = -0.5189366340637207
+INFO:absl:step = 114900: loss = -0.1753600835800171
+INFO:absl:Step: 115000, 13.534 steps/sec
+INFO:absl:step = 115000: loss = -0.019759003072977066
+INFO:absl:step = 115100: loss = 1.5686239004135132
+INFO:absl:step = 115200: loss = -0.8976103067398071
+INFO:absl:step = 115300: loss = -0.5301430225372314
+INFO:absl:step = 115400: loss = -0.18058866262435913
+INFO:absl:step = 115500: loss = -0.4474557042121887
+INFO:absl:step = 115600: loss = -1.5026607513427734
+INFO:absl:step = 115700: loss = -0.843176007270813
+INFO:absl:step = 115800: loss = 0.01595357060432434
+INFO:absl:step = 115900: loss = 1.054943561553955
+INFO:absl:Step: 116000, 13.706 steps/sec
+INFO:absl:step = 116000: loss = -1.887178659439087
+INFO:absl:step = 116100: loss = -0.24165941774845123
+INFO:absl:step = 116200: loss = -0.30968448519706726
+INFO:absl:step = 116300: loss = 2.0679118633270264
+INFO:absl:step = 116400: loss = 0.12477920949459076
+INFO:absl:step = 116500: loss = -0.5958541631698608
+INFO:absl:step = 116600: loss = -1.1152989864349365
+INFO:absl:step = 116700: loss = -0.29894471168518066
+INFO:absl:step = 116800: loss = 2.6606180667877197
+INFO:absl:step = 116900: loss = 1.3890886306762695
+INFO:absl:Step: 117000, 13.708 steps/sec
+INFO:absl:step = 117000: loss = -0.30949270725250244
+INFO:absl:step = 117100: loss = 0.868796169757843
+INFO:absl:step = 117200: loss = 0.6139771938323975
+INFO:absl:step = 117300: loss = -0.20390862226486206
+INFO:absl:step = 117400: loss = 0.10071313381195068
+INFO:absl:step = 117500: loss = 1.2138097286224365
+INFO:absl:step = 117600: loss = 1.691631555557251
+INFO:absl:step = 117700: loss = -0.6326981782913208
+INFO:absl:step = 117800: loss = -0.49163153767585754
+INFO:absl:step = 117900: loss = 1.1023683547973633
+INFO:absl:Step: 118000, 13.707 steps/sec
+INFO:absl:step = 118000: loss = -0.0036899149417877197
+INFO:absl:step = 118100: loss = -0.8786755800247192
+INFO:absl:step = 118200: loss = 0.006245642900466919
+INFO:absl:step = 118300: loss = -0.5824147462844849
+INFO:absl:step = 118400: loss = -1.837876796722412
+INFO:absl:step = 118500: loss = 0.13624224066734314
+INFO:absl:step = 118600: loss = -0.8121687173843384
+INFO:absl:step = 118700: loss = 1.1513315439224243
+INFO:absl:step = 118800: loss = -0.1516910195350647
+INFO:absl:step = 118900: loss = 0.6567568182945251
+INFO:absl:Step: 119000, 13.635 steps/sec
+INFO:absl:step = 119000: loss = -0.5272811651229858
+INFO:absl:step = 119100: loss = -0.39071863889694214
+INFO:absl:step = 119200: loss = 0.8593969941139221
+INFO:absl:step = 119300: loss = 0.9650452136993408
+INFO:absl:step = 119400: loss = 1.276158332824707
+INFO:absl:step = 119500: loss = -1.8260728120803833
+INFO:absl:step = 119600: loss = -0.5093696117401123
+INFO:absl:step = 119700: loss = -0.45244133472442627
+INFO:absl:step = 119800: loss = 0.2015562653541565
+INFO:absl:step = 119900: loss = 1.5741593837738037
+INFO:absl:Step: 120000, 13.794 steps/sec
+INFO:absl:step = 120000: AverageReturn = -1.519167, AverageEpisodeLength = 122.500000
+INFO:absl:step = 120000: loss = 0.26564568281173706
+INFO:absl:step = 120100: loss = 0.26918745040893555
+INFO:absl:step = 120200: loss = 1.9634710550308228
+INFO:absl:step = 120300: loss = -0.7352704405784607
+INFO:absl:step = 120400: loss = 1.3732891082763672
+INFO:absl:step = 120500: loss = -0.33897024393081665
+INFO:absl:step = 120600: loss = -0.2698298692703247
+INFO:absl:step = 120700: loss = -0.6562540531158447
+INFO:absl:step = 120800: loss = -0.8922333717346191
+INFO:absl:step = 120900: loss = -1.8201892375946045
+INFO:absl:Step: 121000, 10.326 steps/sec
+INFO:absl:step = 121000: loss = 1.848624348640442
+INFO:absl:step = 121100: loss = -0.10194304585456848
+INFO:absl:step = 121200: loss = -0.7404906153678894
+INFO:absl:step = 121300: loss = 1.8452101945877075
+INFO:absl:step = 121400: loss = 0.19696640968322754
+INFO:absl:step = 121500: loss = 0.864687979221344
+INFO:absl:step = 121600: loss = 1.5870596170425415
+INFO:absl:step = 121700: loss = 0.8225586414337158
+INFO:absl:step = 121800: loss = -0.04445379972457886
+INFO:absl:step = 121900: loss = -0.31168580055236816
+INFO:absl:Step: 122000, 13.767 steps/sec
+INFO:absl:step = 122000: loss = -0.5264407396316528
+INFO:absl:step = 122100: loss = 1.5396326780319214
+INFO:absl:step = 122200: loss = 0.08336104452610016
+INFO:absl:step = 122300: loss = 0.2537901699542999
+INFO:absl:step = 122400: loss = 1.0702877044677734
+INFO:absl:step = 122500: loss = -1.9639018774032593
+INFO:absl:step = 122600: loss = 0.32654523849487305
+INFO:absl:step = 122700: loss = 0.7669563889503479
+INFO:absl:step = 122800: loss = 0.8392113447189331
+INFO:absl:step = 122900: loss = 0.5314002633094788
+INFO:absl:Step: 123000, 13.831 steps/sec
+INFO:absl:step = 123000: loss = 0.966259777545929
+INFO:absl:step = 123100: loss = 1.032426118850708
+INFO:absl:step = 123200: loss = 0.005115240812301636
+INFO:absl:step = 123300: loss = -2.053525924682617
+INFO:absl:step = 123400: loss = -0.522337794303894
+INFO:absl:step = 123500: loss = 1.495107650756836
+INFO:absl:step = 123600: loss = 0.9566017985343933
+INFO:absl:step = 123700: loss = 1.7661188840866089
+INFO:absl:step = 123800: loss = -2.5454812049865723
+INFO:absl:step = 123900: loss = 2.3672351837158203
+INFO:absl:Step: 124000, 13.793 steps/sec
+INFO:absl:step = 124000: loss = 0.7629706263542175
+INFO:absl:step = 124100: loss = -0.8915390968322754
+INFO:absl:step = 124200: loss = 0.2391580045223236
+INFO:absl:step = 124300: loss = -0.3493848145008087
+INFO:absl:step = 124400: loss = -0.03632831573486328
+INFO:absl:step = 124500: loss = -0.047816455364227295
+INFO:absl:step = 124600: loss = 1.3894574642181396
+INFO:absl:step = 124700: loss = 0.11639070510864258
+INFO:absl:step = 124800: loss = -1.6852086782455444
+INFO:absl:step = 124900: loss = -0.711591362953186
+INFO:absl:Step: 125000, 13.769 steps/sec
+INFO:absl:step = 125000: loss = 1.1882104873657227
+INFO:absl:step = 125100: loss = -0.13617360591888428
+INFO:absl:step = 125200: loss = -0.5398208498954773
+INFO:absl:step = 125300: loss = 0.466450572013855
+INFO:absl:step = 125400: loss = 1.9619437456130981
+INFO:absl:step = 125500: loss = 0.00043135881423950195
+INFO:absl:step = 125600: loss = 0.46433427929878235
+INFO:absl:step = 125700: loss = 0.35822102427482605
+INFO:absl:step = 125800: loss = 0.32118403911590576
+INFO:absl:step = 125900: loss = 1.6123220920562744
+INFO:absl:Step: 126000, 13.812 steps/sec
+INFO:absl:step = 126000: loss = 0.21685612201690674
+INFO:absl:step = 126100: loss = 0.7684963941574097
+INFO:absl:step = 126200: loss = 1.129316806793213
+INFO:absl:step = 126300: loss = 0.5784076452255249
+INFO:absl:step = 126400: loss = -0.2776242196559906
+INFO:absl:step = 126500: loss = 1.5016374588012695
+INFO:absl:step = 126600: loss = 0.8339915871620178
+INFO:absl:step = 126700: loss = 1.5033586025238037
+INFO:absl:step = 126800: loss = -0.2985818088054657
+INFO:absl:step = 126900: loss = -1.4766671657562256
+INFO:absl:Step: 127000, 13.777 steps/sec
+INFO:absl:step = 127000: loss = 0.10717019438743591
+INFO:absl:step = 127100: loss = -0.6923002600669861
+INFO:absl:step = 127200: loss = 0.5248709917068481
+INFO:absl:step = 127300: loss = -3.184805393218994
+INFO:absl:step = 127400: loss = -0.25288891792297363
+INFO:absl:step = 127500: loss = -0.35993874073028564
+INFO:absl:step = 127600: loss = 2.5131726264953613
+INFO:absl:step = 127700: loss = -0.9283418655395508
+INFO:absl:step = 127800: loss = 1.664240837097168
+INFO:absl:step = 127900: loss = -0.7490633130073547
+INFO:absl:Step: 128000, 13.804 steps/sec
+INFO:absl:step = 128000: loss = 0.8756141066551208
+INFO:absl:step = 128100: loss = -0.5434379577636719
+INFO:absl:step = 128200: loss = -0.15664583444595337
+INFO:absl:step = 128300: loss = -0.18649938702583313
+INFO:absl:step = 128400: loss = 0.09255671501159668
+INFO:absl:step = 128500: loss = -0.3386862277984619
+INFO:absl:step = 128600: loss = 0.5347095131874084
+INFO:absl:step = 128700: loss = 0.17290106415748596
+INFO:absl:step = 128800: loss = 0.08965840935707092
+INFO:absl:step = 128900: loss = 0.360275536775589
+INFO:absl:Step: 129000, 13.909 steps/sec
+INFO:absl:step = 129000: loss = -1.2051035165786743
+INFO:absl:step = 129100: loss = 0.7418785095214844
+INFO:absl:step = 129200: loss = -0.5725401043891907
+INFO:absl:step = 129300: loss = -0.9743698835372925
+INFO:absl:step = 129400: loss = 0.8750627040863037
+INFO:absl:step = 129500: loss = 1.1008110046386719
+INFO:absl:step = 129600: loss = 0.6020207405090332
+INFO:absl:step = 129700: loss = -0.941676914691925
+INFO:absl:step = 129800: loss = 0.1297985315322876
+INFO:absl:step = 129900: loss = 0.2227371782064438
+INFO:absl:Step: 130000, 13.788 steps/sec
+INFO:absl:step = 130000: AverageReturn = 4.744975, AverageEpisodeLength = 78.800003
+INFO:absl:step = 130000: loss = -1.4748077392578125
+INFO:absl:step = 130100: loss = 1.3680886030197144
+INFO:absl:step = 130200: loss = 0.0579393208026886
+INFO:absl:step = 130300: loss = 1.9830559492111206
+INFO:absl:step = 130400: loss = -1.0030453205108643
+INFO:absl:step = 130500: loss = 0.42528098821640015
+INFO:absl:step = 130600: loss = -0.8041349053382874
+INFO:absl:step = 130700: loss = -0.5221863389015198
+INFO:absl:step = 130800: loss = -1.0064910650253296
+INFO:absl:step = 130900: loss = 0.12396496534347534
+INFO:absl:Step: 131000, 11.188 steps/sec
+INFO:absl:step = 131000: loss = 0.5425574779510498
+INFO:absl:step = 131100: loss = 1.8393393754959106
+INFO:absl:step = 131200: loss = -1.0222673416137695
+INFO:absl:step = 131300: loss = -0.5503868460655212
+INFO:absl:step = 131400: loss = 0.689301609992981
+INFO:absl:step = 131500: loss = -1.0768651962280273
+INFO:absl:step = 131600: loss = 0.943419873714447
+INFO:absl:step = 131700: loss = 1.4793169498443604
+INFO:absl:step = 131800: loss = 0.4443090558052063
+INFO:absl:step = 131900: loss = 0.06421676278114319
+INFO:absl:Step: 132000, 13.830 steps/sec
+INFO:absl:step = 132000: loss = 0.8066568970680237
+INFO:absl:step = 132100: loss = 1.7750489711761475
+INFO:absl:step = 132200: loss = -0.4436590075492859
+INFO:absl:step = 132300: loss = 1.3793420791625977
+INFO:absl:step = 132400: loss = -0.8620396852493286
+INFO:absl:step = 132500: loss = 0.23289495706558228
+INFO:absl:step = 132600: loss = -0.21100547909736633
+INFO:absl:step = 132700: loss = -0.27092716097831726
+INFO:absl:step = 132800: loss = 0.557408332824707
+INFO:absl:step = 132900: loss = 1.0886693000793457
+INFO:absl:Step: 133000, 13.816 steps/sec
+INFO:absl:step = 133000: loss = 0.2857019007205963
+INFO:absl:step = 133100: loss = -0.7015889883041382
+INFO:absl:step = 133200: loss = -1.9246045351028442
+INFO:absl:step = 133300: loss = -0.8975695967674255
+INFO:absl:step = 133400: loss = -0.9660308361053467
+INFO:absl:step = 133500: loss = 0.508244514465332
+INFO:absl:step = 133600: loss = -0.07871145009994507
+INFO:absl:step = 133700: loss = 1.5147796869277954
+INFO:absl:step = 133800: loss = 0.8429734110832214
+INFO:absl:step = 133900: loss = 1.3728998899459839
+INFO:absl:Step: 134000, 13.866 steps/sec
+INFO:absl:step = 134000: loss = 0.9025328159332275
+INFO:absl:step = 134100: loss = 1.2413033246994019
+INFO:absl:step = 134200: loss = 1.8970730304718018
+INFO:absl:step = 134300: loss = 0.45622825622558594
+INFO:absl:step = 134400: loss = -1.250491738319397
+INFO:absl:step = 134500: loss = 1.028348684310913
+INFO:absl:step = 134600: loss = 2.0294344425201416
+INFO:absl:step = 134700: loss = 0.3792429268360138
+INFO:absl:step = 134800: loss = 0.20541992783546448
+INFO:absl:step = 134900: loss = -0.7756010293960571
+INFO:absl:Step: 135000, 13.897 steps/sec
+INFO:absl:step = 135000: loss = -0.5577754974365234
+INFO:absl:step = 135100: loss = 1.78843092918396
+INFO:absl:step = 135200: loss = 0.2112579345703125
+INFO:absl:step = 135300: loss = 1.2336199283599854
+INFO:absl:step = 135400: loss = 0.6919020414352417
+INFO:absl:step = 135500: loss = -0.6140376329421997
+INFO:absl:step = 135600: loss = -0.8738068342208862
+INFO:absl:step = 135700: loss = -0.27270370721817017
+INFO:absl:step = 135800: loss = -1.2454016208648682
+INFO:absl:step = 135900: loss = 0.19243979454040527
+INFO:absl:Step: 136000, 13.821 steps/sec
+INFO:absl:step = 136000: loss = -0.0015305280685424805
+INFO:absl:step = 136100: loss = -0.5309658050537109
+INFO:absl:step = 136200: loss = -0.13543683290481567
+INFO:absl:step = 136300: loss = -0.07756713032722473
+INFO:absl:step = 136400: loss = -0.4462822675704956
+INFO:absl:step = 136500: loss = 1.5274903774261475
+INFO:absl:step = 136600: loss = -0.7293498516082764
+INFO:absl:step = 136700: loss = -0.011784911155700684
+INFO:absl:step = 136800: loss = 1.282050609588623
+INFO:absl:step = 136900: loss = 0.09322607517242432
+INFO:absl:Step: 137000, 13.756 steps/sec
+INFO:absl:step = 137000: loss = -0.7092463970184326
+INFO:absl:step = 137100: loss = -0.9135152101516724
+INFO:absl:step = 137200: loss = 0.9342893362045288
+INFO:absl:step = 137300: loss = -0.5789332389831543
+INFO:absl:step = 137400: loss = 0.008033931255340576
+INFO:absl:step = 137500: loss = -1.3041069507598877
+INFO:absl:step = 137600: loss = 1.3585374355316162
+INFO:absl:step = 137700: loss = -0.2746734619140625
+INFO:absl:step = 137800: loss = 1.3666844367980957
+INFO:absl:step = 137900: loss = 0.2709029018878937
+INFO:absl:Step: 138000, 13.731 steps/sec
+INFO:absl:step = 138000: loss = -0.9318959712982178
+INFO:absl:step = 138100: loss = 0.11200171709060669
+INFO:absl:step = 138200: loss = 0.5210674405097961
+INFO:absl:step = 138300: loss = -0.3962143659591675
+INFO:absl:step = 138400: loss = 1.2710539102554321
+INFO:absl:step = 138500: loss = 1.7942224740982056
+INFO:absl:step = 138600: loss = 1.106255292892456
+INFO:absl:step = 138700: loss = -1.6549913883209229
+INFO:absl:step = 138800: loss = 0.4138376712799072
+INFO:absl:step = 138900: loss = -1.388988971710205
+INFO:absl:Step: 139000, 13.777 steps/sec
+INFO:absl:step = 139000: loss = -1.0526942014694214
+INFO:absl:step = 139100: loss = -1.0107771158218384
+INFO:absl:step = 139200: loss = 0.7868502140045166
+INFO:absl:step = 139300: loss = 1.932711124420166
+INFO:absl:step = 139400: loss = 0.6680675745010376
+INFO:absl:step = 139500: loss = 0.6723628640174866
+INFO:absl:step = 139600: loss = 1.2754936218261719
+INFO:absl:step = 139700: loss = 0.7442902326583862
+INFO:absl:step = 139800: loss = 0.15787431597709656
+INFO:absl:step = 139900: loss = -0.5172598958015442
+INFO:absl:Step: 140000, 13.837 steps/sec
+INFO:absl:step = 140000: AverageReturn = 4.257401, AverageEpisodeLength = 83.599998
+INFO:absl:step = 140000: loss = -1.3820618391036987
+INFO:absl:step = 140100: loss = -0.4813733696937561
+INFO:absl:step = 140200: loss = 1.2117303609848022
+INFO:absl:step = 140300: loss = 1.9233143329620361
+INFO:absl:step = 140400: loss = -1.317505955696106
+INFO:absl:step = 140500: loss = 1.3723654747009277
+INFO:absl:step = 140600: loss = 0.523576557636261
+INFO:absl:step = 140700: loss = 1.6166480779647827
+INFO:absl:step = 140800: loss = -2.0718302726745605
+INFO:absl:step = 140900: loss = -0.05870223045349121
+INFO:absl:Step: 141000, 11.172 steps/sec
+INFO:absl:step = 141000: loss = 0.27926093339920044
+INFO:absl:step = 141100: loss = 0.40041112899780273
+INFO:absl:step = 141200: loss = 1.7974474430084229
+INFO:absl:step = 141300: loss = 2.200655460357666
+INFO:absl:step = 141400: loss = 0.007413625717163086
+INFO:absl:step = 141500: loss = 0.6562957763671875
+INFO:absl:step = 141600: loss = 1.292443871498108
+INFO:absl:step = 141700: loss = -1.0232186317443848
+INFO:absl:step = 141800: loss = 1.6725196838378906
+INFO:absl:step = 141900: loss = -0.1782148778438568
+INFO:absl:Step: 142000, 13.561 steps/sec
+INFO:absl:step = 142000: loss = 0.23839128017425537
+INFO:absl:step = 142100: loss = -0.2858627438545227
+INFO:absl:step = 142200: loss = 0.06954947113990784
+INFO:absl:step = 142300: loss = 0.07078024744987488
+INFO:absl:step = 142400: loss = 0.6375576257705688
+INFO:absl:step = 142500: loss = 0.20509949326515198
+INFO:absl:step = 142600: loss = 1.0822412967681885
+INFO:absl:step = 142700: loss = 1.1878330707550049
+INFO:absl:step = 142800: loss = -1.118088722229004
+INFO:absl:step = 142900: loss = 2.721916675567627
+INFO:absl:Step: 143000, 13.575 steps/sec
+INFO:absl:step = 143000: loss = 0.42780327796936035
+INFO:absl:step = 143100: loss = 0.6689375638961792
+INFO:absl:step = 143200: loss = -2.3785979747772217
+INFO:absl:step = 143300: loss = -1.6992053985595703
+INFO:absl:step = 143400: loss = -3.1176183223724365
+INFO:absl:step = 143500: loss = -0.3352975845336914
+INFO:absl:step = 143600: loss = -0.4297909736633301
+INFO:absl:step = 143700: loss = 0.04727870225906372
+INFO:absl:step = 143800: loss = -0.9661204218864441
+INFO:absl:step = 143900: loss = 1.9491355419158936
+INFO:absl:Step: 144000, 13.543 steps/sec
+INFO:absl:step = 144000: loss = 0.3330731987953186
+INFO:absl:step = 144100: loss = -1.6210918426513672
+INFO:absl:step = 144200: loss = 0.9368600845336914
+INFO:absl:step = 144300: loss = -0.009052842855453491
+INFO:absl:step = 144400: loss = -0.08323299884796143
+INFO:absl:step = 144500: loss = 0.4407050609588623
+INFO:absl:step = 144600: loss = 1.8523930311203003
+INFO:absl:step = 144700: loss = -0.785090446472168
+INFO:absl:step = 144800: loss = 1.0789899826049805
+INFO:absl:step = 144900: loss = 1.3387771844863892
+INFO:absl:Step: 145000, 13.539 steps/sec
+INFO:absl:step = 145000: loss = 2.259640693664551
+INFO:absl:step = 145100: loss = -0.6121311187744141
+INFO:absl:step = 145200: loss = 1.847517728805542
+INFO:absl:step = 145300: loss = 0.5360639095306396
+INFO:absl:step = 145400: loss = -0.5040351152420044
+INFO:absl:step = 145500: loss = 0.2887668013572693
+INFO:absl:step = 145600: loss = 3.010983943939209
+INFO:absl:step = 145700: loss = -1.622114658355713
+INFO:absl:step = 145800: loss = 0.8952764868736267
+INFO:absl:step = 145900: loss = 1.3550453186035156
+INFO:absl:Step: 146000, 13.509 steps/sec
+INFO:absl:step = 146000: loss = -0.2342386543750763
+INFO:absl:step = 146100: loss = 0.5089592933654785
+INFO:absl:step = 146200: loss = 2.1803009510040283
+INFO:absl:step = 146300: loss = 2.6915581226348877
+INFO:absl:step = 146400: loss = 0.04694032669067383
+INFO:absl:step = 146500: loss = 0.6701302528381348
+INFO:absl:step = 146600: loss = 1.990180492401123
+INFO:absl:step = 146700: loss = -0.2330375760793686
+INFO:absl:step = 146800: loss = -0.05622774362564087
+INFO:absl:step = 146900: loss = 0.06326675415039062
+INFO:absl:Step: 147000, 13.554 steps/sec
+INFO:absl:step = 147000: loss = -1.3090248107910156
+INFO:absl:step = 147100: loss = 0.7601639628410339
+INFO:absl:step = 147200: loss = -1.0729591846466064
+INFO:absl:step = 147300: loss = -1.5791845321655273
+INFO:absl:step = 147400: loss = 0.40211164951324463
+INFO:absl:step = 147500: loss = -0.9492281079292297
+INFO:absl:step = 147600: loss = -1.6030309200286865
+INFO:absl:step = 147700: loss = 0.35715335607528687
+INFO:absl:step = 147800: loss = -0.31445395946502686
+INFO:absl:step = 147900: loss = -0.04171550273895264
+INFO:absl:Step: 148000, 13.556 steps/sec
+INFO:absl:step = 148000: loss = 0.5934622287750244
+INFO:absl:step = 148100: loss = 3.521411418914795
+INFO:absl:step = 148200: loss = -2.3508553504943848
+INFO:absl:step = 148300: loss = 0.129738450050354
+INFO:absl:step = 148400: loss = -1.6786584854125977
+INFO:absl:step = 148500: loss = 0.9071691036224365
+INFO:absl:step = 148600: loss = 2.1318726539611816
+INFO:absl:step = 148700: loss = 1.4792840480804443
+INFO:absl:step = 148800: loss = -1.0500459671020508
+INFO:absl:step = 148900: loss = 0.6784020066261292
+INFO:absl:Step: 149000, 13.484 steps/sec
+INFO:absl:step = 149000: loss = -1.2251625061035156
+INFO:absl:step = 149100: loss = -2.588874101638794
+INFO:absl:step = 149200: loss = 1.2340177297592163
+INFO:absl:step = 149300: loss = 0.41143766045570374
+INFO:absl:step = 149400: loss = -1.133136510848999
+INFO:absl:step = 149500: loss = 3.1047234535217285
+INFO:absl:step = 149600: loss = -2.1721410751342773
+INFO:absl:step = 149700: loss = -0.42903992533683777
+INFO:absl:step = 149800: loss = 1.0360565185546875
+INFO:absl:step = 149900: loss = 2.905949354171753
+INFO:absl:Step: 150000, 13.560 steps/sec
+INFO:absl:step = 150000: AverageReturn = 4.728112, AverageEpisodeLength = 83.599998
+INFO:absl:step = 150000: loss = 0.10397934913635254
+INFO:absl:step = 150100: loss = 1.1326446533203125
+INFO:absl:step = 150200: loss = 1.3146488666534424
+INFO:absl:step = 150300: loss = -0.5515515804290771
+INFO:absl:step = 150400: loss = 1.4099854230880737
+INFO:absl:step = 150500: loss = 2.741255044937134
+INFO:absl:step = 150600: loss = 1.6621458530426025
+INFO:absl:step = 150700: loss = -0.14116016030311584
+INFO:absl:step = 150800: loss = 0.6481003165245056
+INFO:absl:step = 150900: loss = -1.809927225112915
+INFO:absl:Step: 151000, 10.883 steps/sec
+INFO:absl:step = 151000: loss = -1.2167701721191406
+INFO:absl:step = 151100: loss = -1.7840509414672852
+INFO:absl:step = 151200: loss = 2.249368906021118
+INFO:absl:step = 151300: loss = -0.6127041578292847
+INFO:absl:step = 151400: loss = -0.5744038820266724
+INFO:absl:step = 151500: loss = -0.7103608846664429
+INFO:absl:step = 151600: loss = 0.7410883903503418
+INFO:absl:step = 151700: loss = -0.9829227924346924
+INFO:absl:step = 151800: loss = -0.7722543478012085
+INFO:absl:step = 151900: loss = -2.219625949859619
+INFO:absl:Step: 152000, 13.868 steps/sec
+INFO:absl:step = 152000: loss = -0.4267454147338867
+INFO:absl:step = 152100: loss = 0.302553653717041
+INFO:absl:step = 152200: loss = 0.08422660827636719
+INFO:absl:step = 152300: loss = -0.13707590103149414
+INFO:absl:step = 152400: loss = 1.3106801509857178
+INFO:absl:step = 152500: loss = 0.9141638875007629
+INFO:absl:step = 152600: loss = 0.8346498012542725
+INFO:absl:step = 152700: loss = -0.6097584366798401
+INFO:absl:step = 152800: loss = 2.403249979019165
+INFO:absl:step = 152900: loss = 1.7030503749847412
+INFO:absl:Step: 153000, 13.868 steps/sec
+INFO:absl:step = 153000: loss = 0.820300817489624
+INFO:absl:step = 153100: loss = -0.5262488126754761
+INFO:absl:step = 153200: loss = 1.0107223987579346
+INFO:absl:step = 153300: loss = 1.1719214916229248
+INFO:absl:step = 153400: loss = -0.2275034785270691
+INFO:absl:step = 153500: loss = 0.8958499431610107
+INFO:absl:step = 153600: loss = -0.11234308779239655
+INFO:absl:step = 153700: loss = 0.21845689415931702
+INFO:absl:step = 153800: loss = 0.03911888599395752
+INFO:absl:step = 153900: loss = -0.15739038586616516
+INFO:absl:Step: 154000, 13.883 steps/sec
+INFO:absl:step = 154000: loss = 2.6723499298095703
+INFO:absl:step = 154100: loss = 1.6179008483886719
+INFO:absl:step = 154200: loss = -0.9510546922683716
+INFO:absl:step = 154300: loss = 1.3478120565414429
+INFO:absl:step = 154400: loss = -0.13153348863124847
+INFO:absl:step = 154500: loss = 0.39202162623405457
+INFO:absl:step = 154600: loss = -0.6292768120765686
+INFO:absl:step = 154700: loss = -0.938765823841095
+INFO:absl:step = 154800: loss = 0.6717046499252319
+INFO:absl:step = 154900: loss = -0.08295993506908417
+INFO:absl:Step: 155000, 13.860 steps/sec
+INFO:absl:step = 155000: loss = -0.7607176899909973
+INFO:absl:step = 155100: loss = 0.5617780089378357
+INFO:absl:step = 155200: loss = -0.677903950214386
+INFO:absl:step = 155300: loss = -0.18874013423919678
+INFO:absl:step = 155400: loss = 2.231679916381836
+INFO:absl:step = 155500: loss = 2.700291872024536
+INFO:absl:step = 155600: loss = 0.9784582853317261
+INFO:absl:step = 155700: loss = 3.3796119689941406
+INFO:absl:step = 155800: loss = -2.04443621635437
+INFO:absl:step = 155900: loss = -0.6084206104278564
+INFO:absl:Step: 156000, 13.889 steps/sec
+INFO:absl:step = 156000: loss = -1.224517822265625
+INFO:absl:step = 156100: loss = 0.6724929213523865
+INFO:absl:step = 156200: loss = 1.0169026851654053
+INFO:absl:step = 156300: loss = -0.8646792769432068
+INFO:absl:step = 156400: loss = 1.6563318967819214
+INFO:absl:step = 156500: loss = 1.2635252475738525
+INFO:absl:step = 156600: loss = 0.1451435685157776
+INFO:absl:step = 156700: loss = -0.10997754335403442
+INFO:absl:step = 156800: loss = 0.40398362278938293
+INFO:absl:step = 156900: loss = -1.5885708332061768
+INFO:absl:Step: 157000, 14.000 steps/sec
+INFO:absl:step = 157000: loss = -1.2542058229446411
+INFO:absl:step = 157100: loss = -0.7068239450454712
+INFO:absl:step = 157200: loss = 2.8818705081939697
+INFO:absl:step = 157300: loss = 2.3845081329345703
+INFO:absl:step = 157400: loss = 2.829500198364258
+INFO:absl:step = 157500: loss = 1.1329364776611328
+INFO:absl:step = 157600: loss = 0.8574391603469849
+INFO:absl:step = 157700: loss = 0.3821828365325928
+INFO:absl:step = 157800: loss = 0.6766934990882874
+INFO:absl:step = 157900: loss = 1.6673171520233154
+INFO:absl:Step: 158000, 13.892 steps/sec
+INFO:absl:step = 158000: loss = 1.1305023431777954
+INFO:absl:step = 158100: loss = 0.08657872676849365
+INFO:absl:step = 158200: loss = 0.1921006739139557
+INFO:absl:step = 158300: loss = 0.25996312499046326
+INFO:absl:step = 158400: loss = 0.010933458805084229
+INFO:absl:step = 158500: loss = 0.02566969394683838
+INFO:absl:step = 158600: loss = 1.2912644147872925
+INFO:absl:step = 158700: loss = 2.6698832511901855
+INFO:absl:step = 158800: loss = 0.10060322284698486
+INFO:absl:step = 158900: loss = 0.6029952764511108
+INFO:absl:Step: 159000, 13.864 steps/sec
+INFO:absl:step = 159000: loss = -0.854505181312561
+INFO:absl:step = 159100: loss = -0.6831112504005432
+INFO:absl:step = 159200: loss = 1.2463452816009521
+INFO:absl:step = 159300: loss = 0.9160115122795105
+INFO:absl:step = 159400: loss = 2.1138105392456055
+INFO:absl:step = 159500: loss = 1.1482068300247192
+INFO:absl:step = 159600: loss = 1.040942907333374
+INFO:absl:step = 159700: loss = -0.6927319765090942
+INFO:absl:step = 159800: loss = 1.2811729907989502
+INFO:absl:step = 159900: loss = -0.40217292308807373
+INFO:absl:Step: 160000, 13.948 steps/sec
+INFO:absl:step = 160000: AverageReturn = 10.769117, AverageEpisodeLength = 32.200001
+INFO:absl:step = 160000: loss = 0.6580700874328613
+INFO:absl:step = 160100: loss = -0.6916565895080566
+INFO:absl:step = 160200: loss = -0.271958589553833
+INFO:absl:step = 160300: loss = 0.8286012411117554
+INFO:absl:step = 160400: loss = 1.4456074237823486
+INFO:absl:step = 160500: loss = 0.6507306098937988
+INFO:absl:step = 160600: loss = 2.3407838344573975
+INFO:absl:step = 160700: loss = -0.818676769733429
+INFO:absl:step = 160800: loss = -0.4880044460296631
+INFO:absl:step = 160900: loss = 1.3666963577270508
+INFO:absl:Step: 161000, 13.155 steps/sec
+INFO:absl:step = 161000: loss = 0.7346986532211304
+INFO:absl:step = 161100: loss = 1.3430743217468262
+INFO:absl:step = 161200: loss = 1.1199374198913574
+INFO:absl:step = 161300: loss = 2.3736279010772705
+INFO:absl:step = 161400: loss = 2.500520944595337
+INFO:absl:step = 161500: loss = 2.7714574337005615
+INFO:absl:step = 161600: loss = 2.745722532272339
+INFO:absl:step = 161700: loss = 0.843735933303833
+INFO:absl:step = 161800: loss = 1.8453887701034546
+INFO:absl:step = 161900: loss = -0.6054322719573975
+INFO:absl:Step: 162000, 14.073 steps/sec
+INFO:absl:step = 162000: loss = -1.0229474306106567
+INFO:absl:step = 162100: loss = 0.8674794435501099
+INFO:absl:step = 162200: loss = 1.8177757263183594
+INFO:absl:step = 162300: loss = 0.8804925084114075
+INFO:absl:step = 162400: loss = 2.236154079437256
+INFO:absl:step = 162500: loss = 2.04040789604187
+INFO:absl:step = 162600: loss = -1.0256541967391968
+INFO:absl:step = 162700: loss = -1.1224112510681152
+INFO:absl:step = 162800: loss = 1.0970268249511719
+INFO:absl:step = 162900: loss = 0.7745901346206665
+INFO:absl:Step: 163000, 13.866 steps/sec
+INFO:absl:step = 163000: loss = 1.535541296005249
+INFO:absl:step = 163100: loss = 2.6581549644470215
+INFO:absl:step = 163200: loss = -1.6439207792282104
+INFO:absl:step = 163300: loss = 0.4263395071029663
+INFO:absl:step = 163400: loss = 1.5375733375549316
+INFO:absl:step = 163500: loss = 0.08170005679130554
+INFO:absl:step = 163600: loss = 2.082980155944824
+INFO:absl:step = 163700: loss = 0.09515810012817383
+INFO:absl:step = 163800: loss = 0.018862605094909668
+INFO:absl:step = 163900: loss = 2.5189380645751953
+INFO:absl:Step: 164000, 14.067 steps/sec
+INFO:absl:step = 164000: loss = -1.1354248523712158
+INFO:absl:step = 164100: loss = 1.2886888980865479
+INFO:absl:step = 164200: loss = 3.2372689247131348
+INFO:absl:step = 164300: loss = -0.6148185729980469
+INFO:absl:step = 164400: loss = 1.9187824726104736
+INFO:absl:step = 164500: loss = 2.700202465057373
+INFO:absl:step = 164600: loss = 0.05917918682098389
+INFO:absl:step = 164700: loss = -0.6465322971343994
+INFO:absl:step = 164800: loss = 1.024388313293457
+INFO:absl:step = 164900: loss = 2.404111385345459
+INFO:absl:Step: 165000, 14.167 steps/sec
+INFO:absl:step = 165000: loss = 0.7131531834602356
+INFO:absl:step = 165100: loss = 1.1375820636749268
+INFO:absl:step = 165200: loss = 1.1801958084106445
+INFO:absl:step = 165300: loss = 0.2328709363937378
+INFO:absl:step = 165400: loss = 2.0627925395965576
+INFO:absl:step = 165500: loss = 2.361445188522339
+INFO:absl:step = 165600: loss = -1.360008716583252
+INFO:absl:step = 165700: loss = 0.5007609128952026
+INFO:absl:step = 165800: loss = -0.31739988923072815
+INFO:absl:step = 165900: loss = -0.31711530685424805
+INFO:absl:Step: 166000, 14.050 steps/sec
+INFO:absl:step = 166000: loss = 2.3658435344696045
+INFO:absl:step = 166100: loss = 3.202165365219116
+INFO:absl:step = 166200: loss = 3.0235791206359863
+INFO:absl:step = 166300: loss = -2.9445948600769043
+INFO:absl:step = 166400: loss = 1.224852204322815
+INFO:absl:step = 166500: loss = -0.22188031673431396
+INFO:absl:step = 166600: loss = 1.936750888824463
+INFO:absl:step = 166700: loss = 1.753417730331421
+INFO:absl:step = 166800: loss = -1.1763346195220947
+INFO:absl:step = 166900: loss = 2.6363208293914795
+INFO:absl:Step: 167000, 14.049 steps/sec
+INFO:absl:step = 167000: loss = 1.6669002771377563
+INFO:absl:step = 167100: loss = 1.1506010293960571
+INFO:absl:step = 167200: loss = 0.7816933393478394
+INFO:absl:step = 167300: loss = 0.08516284823417664
+INFO:absl:step = 167400: loss = -1.093201994895935
+INFO:absl:step = 167500: loss = 0.39461255073547363
+INFO:absl:step = 167600: loss = -1.028249740600586
+INFO:absl:step = 167700: loss = -1.1599284410476685
+INFO:absl:step = 167800: loss = 2.0472865104675293
+INFO:absl:step = 167900: loss = 1.1792582273483276
+INFO:absl:Step: 168000, 13.909 steps/sec
+INFO:absl:step = 168000: loss = 1.1861982345581055
+INFO:absl:step = 168100: loss = 1.6468864679336548
+INFO:absl:step = 168200: loss = 1.160171389579773
+INFO:absl:step = 168300: loss = -0.7253562211990356
+INFO:absl:step = 168400: loss = 1.9763388633728027
+INFO:absl:step = 168500: loss = 1.6504995822906494
+INFO:absl:step = 168600: loss = 1.600799322128296
+INFO:absl:step = 168700: loss = 0.701599657535553
+INFO:absl:step = 168800: loss = 0.9595481157302856
+INFO:absl:step = 168900: loss = -1.071116328239441
+INFO:absl:Step: 169000, 13.904 steps/sec
+INFO:absl:step = 169000: loss = 1.0754334926605225
+INFO:absl:step = 169100: loss = 1.275602102279663
+INFO:absl:step = 169200: loss = 0.4633423984050751
+INFO:absl:step = 169300: loss = -0.10499787330627441
+INFO:absl:step = 169400: loss = 0.6395108103752136
+INFO:absl:step = 169500: loss = -0.7765108346939087
+INFO:absl:step = 169600: loss = 3.160482883453369
+INFO:absl:step = 169700: loss = 1.7046682834625244
+INFO:absl:step = 169800: loss = -0.2956441044807434
+INFO:absl:step = 169900: loss = -0.1940847635269165
+INFO:absl:Step: 170000, 13.941 steps/sec
+INFO:absl:step = 170000: AverageReturn = 4.655980, AverageEpisodeLength = 77.300003
+INFO:absl:step = 170000: loss = 1.7126057147979736
+INFO:absl:step = 170100: loss = 0.09036320447921753
+INFO:absl:step = 170200: loss = -1.5763987302780151
+INFO:absl:step = 170300: loss = 0.9628323316574097
+INFO:absl:step = 170400: loss = 0.484233021736145
+INFO:absl:step = 170500: loss = 0.9288512468338013
+INFO:absl:step = 170600: loss = 2.643873929977417
+INFO:absl:step = 170700: loss = 0.5249146223068237
+INFO:absl:step = 170800: loss = -1.2644338607788086
+INFO:absl:step = 170900: loss = 1.0468720197677612
+INFO:absl:Step: 171000, 11.137 steps/sec
+INFO:absl:step = 171000: loss = -0.14933550357818604
+INFO:absl:step = 171100: loss = -1.5463860034942627
+INFO:absl:step = 171200: loss = -1.9108628034591675
+INFO:absl:step = 171300: loss = 0.7073583006858826
+INFO:absl:step = 171400: loss = 1.1880192756652832
+INFO:absl:step = 171500: loss = 1.7270865440368652
+INFO:absl:step = 171600: loss = 1.0392346382141113
+INFO:absl:step = 171700: loss = -1.0987422466278076
+INFO:absl:step = 171800: loss = 0.5160359740257263
+INFO:absl:step = 171900: loss = 0.014748096466064453
+INFO:absl:Step: 172000, 13.658 steps/sec
+INFO:absl:step = 172000: loss = -1.2987022399902344
+INFO:absl:step = 172100: loss = 0.6785719394683838
+INFO:absl:step = 172200: loss = -0.21104276180267334
+INFO:absl:step = 172300: loss = 0.5113108158111572
+INFO:absl:step = 172400: loss = 0.801892876625061
+INFO:absl:step = 172500: loss = 0.9322633743286133
+INFO:absl:step = 172600: loss = 3.5060648918151855
+INFO:absl:step = 172700: loss = 1.9654300212860107
+INFO:absl:step = 172800: loss = 1.8745944499969482
+INFO:absl:step = 172900: loss = -0.375042200088501
+INFO:absl:Step: 173000, 13.672 steps/sec
+INFO:absl:step = 173000: loss = 1.6690959930419922
+INFO:absl:step = 173100: loss = 0.0586206316947937
+INFO:absl:step = 173200: loss = 0.6062090396881104
+INFO:absl:step = 173300: loss = -0.04699033498764038
+INFO:absl:step = 173400: loss = 1.3145794868469238
+INFO:absl:step = 173500: loss = 2.1978485584259033
+INFO:absl:step = 173600: loss = 0.8675898313522339
+INFO:absl:step = 173700: loss = 1.5049896240234375
+INFO:absl:step = 173800: loss = 1.0377970933914185
+INFO:absl:step = 173900: loss = 1.4939076900482178
+INFO:absl:Step: 174000, 13.698 steps/sec
+INFO:absl:step = 174000: loss = 0.42462706565856934
+INFO:absl:step = 174100: loss = -0.12568020820617676
+INFO:absl:step = 174200: loss = 0.08763062953948975
+INFO:absl:step = 174300: loss = 1.5802860260009766
+INFO:absl:step = 174400: loss = -0.6845995187759399
+INFO:absl:step = 174500: loss = -1.4186145067214966
+INFO:absl:step = 174600: loss = 0.40049585700035095
+INFO:absl:step = 174700: loss = 1.2836298942565918
+INFO:absl:step = 174800: loss = 3.4517171382904053
+INFO:absl:step = 174900: loss = 0.3525862991809845
+INFO:absl:Step: 175000, 13.553 steps/sec
+INFO:absl:step = 175000: loss = 2.537930488586426
+INFO:absl:step = 175100: loss = 0.6488757133483887
+INFO:absl:step = 175200: loss = -0.14826107025146484
+INFO:absl:step = 175300: loss = 0.4897884726524353
+INFO:absl:step = 175400: loss = 1.683174967765808
+INFO:absl:step = 175500: loss = 1.3395335674285889
+INFO:absl:step = 175600: loss = 2.370790958404541
+INFO:absl:step = 175700: loss = 3.5780420303344727
+INFO:absl:step = 175800: loss = 0.8823618292808533
+INFO:absl:step = 175900: loss = 2.2491390705108643
+INFO:absl:Step: 176000, 13.633 steps/sec
+INFO:absl:step = 176000: loss = 1.444362759590149
+INFO:absl:step = 176100: loss = -0.6024885177612305
+INFO:absl:step = 176200: loss = 2.2623980045318604
+INFO:absl:step = 176300: loss = 1.5996110439300537
+INFO:absl:step = 176400: loss = 1.7944400310516357
+INFO:absl:step = 176500: loss = -1.0351321697235107
+INFO:absl:step = 176600: loss = 2.0745339393615723
+INFO:absl:step = 176700: loss = 2.5237984657287598
+INFO:absl:step = 176800: loss = 1.1634058952331543
+INFO:absl:step = 176900: loss = -1.3878986835479736
+INFO:absl:Step: 177000, 13.719 steps/sec
+INFO:absl:step = 177000: loss = 0.7138357162475586
+INFO:absl:step = 177100: loss = 0.8711429834365845
+INFO:absl:step = 177200: loss = 0.6958446502685547
+INFO:absl:step = 177300: loss = 1.9223345518112183
+INFO:absl:step = 177400: loss = 1.7153172492980957
+INFO:absl:step = 177500: loss = 0.8056332468986511
+INFO:absl:step = 177600: loss = 1.6601665019989014
+INFO:absl:step = 177700: loss = 0.6821191310882568
+INFO:absl:step = 177800: loss = 1.0111747980117798
+INFO:absl:step = 177900: loss = -0.7490081787109375
+INFO:absl:Step: 178000, 13.599 steps/sec
+INFO:absl:step = 178000: loss = 3.7285499572753906
+INFO:absl:step = 178100: loss = -0.18769598007202148
+INFO:absl:step = 178200: loss = 1.6589205265045166
+INFO:absl:step = 178300: loss = 0.1775335669517517
+INFO:absl:step = 178400: loss = -0.11504554748535156
+INFO:absl:step = 178500: loss = 0.2198197841644287
+INFO:absl:step = 178600: loss = 2.251811981201172
+INFO:absl:step = 178700: loss = 0.861916184425354
+INFO:absl:step = 178800: loss = 1.885741949081421
+INFO:absl:step = 178900: loss = 0.642399251461029
+INFO:absl:Step: 179000, 13.574 steps/sec
+INFO:absl:step = 179000: loss = 2.41770339012146
+INFO:absl:step = 179100: loss = -1.4217944145202637
+INFO:absl:step = 179200: loss = 1.5815720558166504
+INFO:absl:step = 179300: loss = -0.6097501516342163
+INFO:absl:step = 179400: loss = 0.3375530242919922
+INFO:absl:step = 179500: loss = -0.8816869258880615
+INFO:absl:step = 179600: loss = -0.048483431339263916
+INFO:absl:step = 179700: loss = 1.2675689458847046
+INFO:absl:step = 179800: loss = 0.3189525604248047
+INFO:absl:step = 179900: loss = 1.2752106189727783
+INFO:absl:Step: 180000, 13.660 steps/sec
+INFO:absl:step = 180000: AverageReturn = 4.610122, AverageEpisodeLength = 75.800003
+INFO:absl:step = 180000: loss = 0.7266833186149597
+INFO:absl:step = 180100: loss = 2.0050973892211914
+INFO:absl:step = 180200: loss = 0.1277405023574829
+INFO:absl:step = 180300: loss = -1.0891727209091187
+INFO:absl:step = 180400: loss = 2.398921489715576
+INFO:absl:step = 180500: loss = 2.3762283325195312
+INFO:absl:step = 180600: loss = 0.21585741639137268
+INFO:absl:step = 180700: loss = 0.049159109592437744
+INFO:absl:step = 180800: loss = -0.08310186862945557
+INFO:absl:step = 180900: loss = 0.21847593784332275
+INFO:absl:Step: 181000, 11.356 steps/sec
+INFO:absl:step = 181000: loss = 1.0794326066970825
+INFO:absl:step = 181100: loss = 0.933409571647644
+INFO:absl:step = 181200: loss = 0.22277432680130005
+INFO:absl:step = 181300: loss = -0.9102449417114258
+INFO:absl:step = 181400: loss = -0.5943658351898193
+INFO:absl:step = 181500: loss = 1.3662642240524292
+INFO:absl:step = 181600: loss = 3.008944034576416
+INFO:absl:step = 181700: loss = 0.456487774848938
+INFO:absl:step = 181800: loss = 0.23385018110275269
+INFO:absl:step = 181900: loss = 0.9699087142944336
+INFO:absl:Step: 182000, 13.838 steps/sec
+INFO:absl:step = 182000: loss = 0.6594768762588501
+INFO:absl:step = 182100: loss = 1.4284148216247559
+INFO:absl:step = 182200: loss = -1.0477676391601562
+INFO:absl:step = 182300: loss = 1.5181583166122437
+INFO:absl:step = 182400: loss = 2.2856016159057617
+INFO:absl:step = 182500: loss = -0.8510727882385254
+INFO:absl:step = 182600: loss = 0.7555410265922546
+INFO:absl:step = 182700: loss = 0.15207010507583618
+INFO:absl:step = 182800: loss = -0.01293647289276123
+INFO:absl:step = 182900: loss = 0.9688841700553894
+INFO:absl:Step: 183000, 13.914 steps/sec
+INFO:absl:step = 183000: loss = 1.1620781421661377
+INFO:absl:step = 183100: loss = -0.722944438457489
+INFO:absl:step = 183200: loss = 0.1908091902732849
+INFO:absl:step = 183300: loss = 0.5537436604499817
+INFO:absl:step = 183400: loss = 1.8030834197998047
+INFO:absl:step = 183500: loss = -1.363188624382019
+INFO:absl:step = 183600: loss = -0.7508372068405151
+INFO:absl:step = 183700: loss = -0.20366376638412476
+INFO:absl:step = 183800: loss = -0.22530853748321533
+INFO:absl:step = 183900: loss = 0.29201066493988037
+INFO:absl:Step: 184000, 13.905 steps/sec
+INFO:absl:step = 184000: loss = -0.9640958309173584
+INFO:absl:step = 184100: loss = 0.6835578680038452
+INFO:absl:step = 184200: loss = -0.3378777503967285
+INFO:absl:step = 184300: loss = 0.4384896159172058
+INFO:absl:step = 184400: loss = 1.7764438390731812
+INFO:absl:step = 184500: loss = -0.11299264430999756
+INFO:absl:step = 184600: loss = 0.2855278253555298
+INFO:absl:step = 184700: loss = 0.11288762092590332
+INFO:absl:step = 184800: loss = -0.025016069412231445
+INFO:absl:step = 184900: loss = 3.147125005722046
+INFO:absl:Step: 185000, 13.838 steps/sec
+INFO:absl:step = 185000: loss = 0.9673072099685669
+INFO:absl:step = 185100: loss = -0.9218413829803467
+INFO:absl:step = 185200: loss = -0.5282649993896484
+INFO:absl:step = 185300: loss = -1.64157235622406
+INFO:absl:step = 185400: loss = 1.1411471366882324
+INFO:absl:step = 185500: loss = -0.7478820085525513
+INFO:absl:step = 185600: loss = 1.3696987628936768
+INFO:absl:step = 185700: loss = 4.798819541931152
+INFO:absl:step = 185800: loss = 2.434744119644165
+INFO:absl:step = 185900: loss = 2.381617546081543
+INFO:absl:Step: 186000, 13.859 steps/sec
+INFO:absl:step = 186000: loss = -0.20003175735473633
+INFO:absl:step = 186100: loss = 2.055438280105591
+INFO:absl:step = 186200: loss = 0.3605344295501709
+INFO:absl:step = 186300: loss = 0.7637141346931458
+INFO:absl:step = 186400: loss = -0.6517033576965332
+INFO:absl:step = 186500: loss = -0.019090116024017334
+INFO:absl:step = 186600: loss = -1.0747772455215454
+INFO:absl:step = 186700: loss = -2.585669755935669
+INFO:absl:step = 186800: loss = 0.5559185147285461
+INFO:absl:step = 186900: loss = 1.53738534450531
+INFO:absl:Step: 187000, 13.973 steps/sec
+INFO:absl:step = 187000: loss = 1.0968520641326904
+INFO:absl:step = 187100: loss = 2.0822501182556152
+INFO:absl:step = 187200: loss = 0.7604950666427612
+INFO:absl:step = 187300: loss = 1.7378721237182617
+INFO:absl:step = 187400: loss = 2.211686372756958
+INFO:absl:step = 187500: loss = 0.3608943223953247
+INFO:absl:step = 187600: loss = 1.2421457767486572
+INFO:absl:step = 187700: loss = 0.43244850635528564
+INFO:absl:step = 187800: loss = 0.10421335697174072
+INFO:absl:step = 187900: loss = -0.5671285390853882
+INFO:absl:Step: 188000, 13.759 steps/sec
+INFO:absl:step = 188000: loss = 0.20264828205108643
+INFO:absl:step = 188100: loss = 0.10276514291763306
+INFO:absl:step = 188200: loss = 1.3410323858261108
+INFO:absl:step = 188300: loss = 1.2766540050506592
+INFO:absl:step = 188400: loss = 3.341339111328125
+INFO:absl:step = 188500: loss = 1.172471046447754
+INFO:absl:step = 188600: loss = 0.7762486338615417
+INFO:absl:step = 188700: loss = 0.32698631286621094
+INFO:absl:step = 188800: loss = 1.1544585227966309
+INFO:absl:step = 188900: loss = -2.1797075271606445
+INFO:absl:Step: 189000, 13.891 steps/sec
+INFO:absl:step = 189000: loss = 0.456102192401886
+INFO:absl:step = 189100: loss = -0.8905000686645508
+INFO:absl:step = 189200: loss = 2.842849016189575
+INFO:absl:step = 189300: loss = 0.17194193601608276
+INFO:absl:step = 189400: loss = -0.42383909225463867
+INFO:absl:step = 189500: loss = 2.123904228210449
+INFO:absl:step = 189600: loss = 2.6918773651123047
+INFO:absl:step = 189700: loss = -0.28738439083099365
+INFO:absl:step = 189800: loss = -1.2343568801879883
+INFO:absl:step = 189900: loss = 2.1673295497894287
+INFO:absl:Step: 190000, 13.844 steps/sec
+INFO:absl:step = 190000: AverageReturn = 4.673259, AverageEpisodeLength = 81.599998
+INFO:absl:step = 190000: loss = 0.45705080032348633
+INFO:absl:step = 190100: loss = 0.6550420522689819
+INFO:absl:step = 190200: loss = 0.02507483959197998
+INFO:absl:step = 190300: loss = 2.235191822052002
+INFO:absl:step = 190400: loss = 3.8610148429870605
+INFO:absl:step = 190500: loss = 0.2689998149871826
+INFO:absl:step = 190600: loss = 2.269317150115967
+INFO:absl:step = 190700: loss = 0.015562355518341064
+INFO:absl:step = 190800: loss = -1.2277202606201172
+INFO:absl:step = 190900: loss = 0.07993602752685547
+INFO:absl:Step: 191000, 10.976 steps/sec
+INFO:absl:step = 191000: loss = 2.0129261016845703
+INFO:absl:step = 191100: loss = 2.4702250957489014
+INFO:absl:step = 191200: loss = 1.8376001119613647
+INFO:absl:step = 191300: loss = 2.5577971935272217
+INFO:absl:step = 191400: loss = -1.7859265804290771
+INFO:absl:step = 191500: loss = 1.3328344821929932
+INFO:absl:step = 191600: loss = 1.0718573331832886
+INFO:absl:step = 191700: loss = 1.6464478969573975
+INFO:absl:step = 191800: loss = -1.1415255069732666
+INFO:absl:step = 191900: loss = 0.44704198837280273
+INFO:absl:Step: 192000, 13.831 steps/sec
+INFO:absl:step = 192000: loss = 1.3370721340179443
+INFO:absl:step = 192100: loss = -2.328871250152588
+INFO:absl:step = 192200: loss = -1.623162031173706
+INFO:absl:step = 192300: loss = -0.02183157205581665
+INFO:absl:step = 192400: loss = 1.803096055984497
+INFO:absl:step = 192500: loss = 2.186933755874634
+INFO:absl:step = 192600: loss = 1.508913278579712
+INFO:absl:step = 192700: loss = 1.799052357673645
+INFO:absl:step = 192800: loss = 1.3865677118301392
+INFO:absl:step = 192900: loss = 1.2278165817260742
+INFO:absl:Step: 193000, 13.748 steps/sec
+INFO:absl:step = 193000: loss = 0.5055150985717773
+INFO:absl:step = 193100: loss = 1.1620049476623535
+INFO:absl:step = 193200: loss = -0.35886597633361816
+INFO:absl:step = 193300: loss = -1.1222712993621826
+INFO:absl:step = 193400: loss = 2.5188021659851074
+INFO:absl:step = 193500: loss = 0.31302452087402344
+INFO:absl:step = 193600: loss = 4.379012107849121
+INFO:absl:step = 193700: loss = 0.1675652265548706
+INFO:absl:step = 193800: loss = 0.1129913330078125
+INFO:absl:step = 193900: loss = 2.063810348510742
+INFO:absl:Step: 194000, 13.818 steps/sec
+INFO:absl:step = 194000: loss = 1.2259684801101685
+INFO:absl:step = 194100: loss = 2.802111864089966
+INFO:absl:step = 194200: loss = -0.5678731799125671
+INFO:absl:step = 194300: loss = -1.1449754238128662
+INFO:absl:step = 194400: loss = -0.44803881645202637
+INFO:absl:step = 194500: loss = 1.4116747379302979
+INFO:absl:step = 194600: loss = 2.007314682006836
+INFO:absl:step = 194700: loss = 0.42740297317504883
+INFO:absl:step = 194800: loss = 0.9323691129684448
+INFO:absl:step = 194900: loss = 1.5386241674423218
+INFO:absl:Step: 195000, 13.693 steps/sec
+INFO:absl:step = 195000: loss = 0.565883994102478
+INFO:absl:step = 195100: loss = -1.217758297920227
+INFO:absl:step = 195200: loss = -0.06417369842529297
+INFO:absl:step = 195300: loss = 3.3938517570495605
+INFO:absl:step = 195400: loss = 1.3347992897033691
+INFO:absl:step = 195500: loss = -0.24799859523773193
+INFO:absl:step = 195600: loss = -0.19539785385131836
+INFO:absl:step = 195700: loss = -1.14139986038208
+INFO:absl:step = 195800: loss = 2.2214202880859375
+INFO:absl:step = 195900: loss = 0.4517350196838379
+INFO:absl:Step: 196000, 13.879 steps/sec
+INFO:absl:step = 196000: loss = 0.6856650710105896
+INFO:absl:step = 196100: loss = -0.8575348854064941
+INFO:absl:step = 196200: loss = 1.3794677257537842
+INFO:absl:step = 196300: loss = 0.7333170175552368
+INFO:absl:step = 196400: loss = 4.415270805358887
+INFO:absl:step = 196500: loss = 0.6205329298973083
+INFO:absl:step = 196600: loss = 2.2205862998962402
+INFO:absl:step = 196700: loss = 1.2399451732635498
+INFO:absl:step = 196800: loss = -0.11858439445495605
+INFO:absl:step = 196900: loss = -1.259728193283081
+INFO:absl:Step: 197000, 13.863 steps/sec
+INFO:absl:step = 197000: loss = 2.3104565143585205
+INFO:absl:step = 197100: loss = 3.584423303604126
+INFO:absl:step = 197200: loss = 0.26959872245788574
+INFO:absl:step = 197300: loss = 0.08891534805297852
+INFO:absl:step = 197400: loss = 1.0359869003295898
+INFO:absl:step = 197500: loss = 0.6352493762969971
+INFO:absl:step = 197600: loss = 2.0772318840026855
+INFO:absl:step = 197700: loss = 4.146365165710449
+INFO:absl:step = 197800: loss = 0.8538106679916382
+INFO:absl:step = 197900: loss = 0.8133310079574585
+INFO:absl:Step: 198000, 13.760 steps/sec
+INFO:absl:step = 198000: loss = 0.04261612892150879
+INFO:absl:step = 198100: loss = 0.2389230728149414
+INFO:absl:step = 198200: loss = 1.906996488571167
+INFO:absl:step = 198300: loss = -0.9167270660400391
+INFO:absl:step = 198400: loss = 1.5270854234695435
+INFO:absl:step = 198500: loss = 2.088813304901123
+INFO:absl:step = 198600: loss = 0.7360877990722656
+INFO:absl:step = 198700: loss = 1.1105300188064575
+INFO:absl:step = 198800: loss = -1.1396807432174683
+INFO:absl:step = 198900: loss = -1.1981323957443237
+INFO:absl:Step: 199000, 13.798 steps/sec
+INFO:absl:step = 199000: loss = 0.32477325201034546
+INFO:absl:step = 199100: loss = -0.39770710468292236
+INFO:absl:step = 199200: loss = -0.7740073204040527
+INFO:absl:step = 199300: loss = 2.1038239002227783
+INFO:absl:step = 199400: loss = 0.9763233661651611
+INFO:absl:step = 199500: loss = 1.4391953945159912
+INFO:absl:step = 199600: loss = 1.3300926685333252
+INFO:absl:step = 199700: loss = -0.006792187690734863
+INFO:absl:step = 199800: loss = -1.2000000476837158
+INFO:absl:step = 199900: loss = 0.1077042818069458
+INFO:absl:Step: 200000, 13.751 steps/sec
+INFO:absl:Saved checkpoint: ./runs/20210504-074243/train/checkpoints/ckpt-200000
+INFO:absl:step = 200000: AverageReturn = 4.600832, AverageEpisodeLength = 78.400002
+INFO:absl:step = 200000: loss = 0.5589661598205566
+INFO:absl:step = 200100: loss = 2.4238429069519043
+INFO:absl:step = 200200: loss = 2.5108189582824707
+INFO:absl:step = 200300: loss = -1.3864487409591675
+INFO:absl:step = 200400: loss = 1.6492959260940552
+INFO:absl:step = 200500: loss = 0.25813567638397217
+INFO:absl:step = 200600: loss = 2.2842018604278564
+INFO:absl:step = 200700: loss = 1.999751091003418
+INFO:absl:step = 200800: loss = -0.1751546859741211
+INFO:absl:step = 200900: loss = 2.9023709297180176
+INFO:absl:Step: 201000, 10.986 steps/sec
+INFO:absl:step = 201000: loss = 1.0728535652160645
+INFO:absl:step = 201100: loss = 2.0381672382354736
+INFO:absl:step = 201200: loss = -2.359285831451416
+INFO:absl:step = 201300: loss = -0.04291868209838867
+INFO:absl:step = 201400: loss = -1.5397286415100098
+INFO:absl:step = 201500: loss = 0.2429201602935791
+INFO:absl:step = 201600: loss = 1.0144941806793213
+INFO:absl:step = 201700: loss = 3.196810007095337
+INFO:absl:step = 201800: loss = -0.8975925445556641
+INFO:absl:step = 201900: loss = 0.9876342415809631
+INFO:absl:Step: 202000, 14.067 steps/sec
+INFO:absl:step = 202000: loss = 5.6382904052734375
+INFO:absl:step = 202100: loss = 0.6234408617019653
+INFO:absl:step = 202200: loss = -1.1059411764144897
+INFO:absl:step = 202300: loss = -0.6251523494720459
+INFO:absl:step = 202400: loss = 0.5010057687759399
+INFO:absl:step = 202500: loss = 0.9703884124755859
+INFO:absl:step = 202600: loss = 1.2048006057739258
+INFO:absl:step = 202700: loss = 0.4810359477996826
+INFO:absl:step = 202800: loss = 0.10615956783294678
+INFO:absl:step = 202900: loss = -0.04625403881072998
+INFO:absl:Step: 203000, 13.961 steps/sec
+INFO:absl:step = 203000: loss = 2.5301637649536133
+INFO:absl:step = 203100: loss = 3.541240692138672
+INFO:absl:step = 203200: loss = 0.7597180604934692
+INFO:absl:step = 203300: loss = -0.5166271924972534
+INFO:absl:step = 203400: loss = -1.1050920486450195
+INFO:absl:step = 203500: loss = -0.18595457077026367
+INFO:absl:step = 203600: loss = 0.3874291181564331
+INFO:absl:step = 203700: loss = 1.9394841194152832
+INFO:absl:step = 203800: loss = 2.26430344581604
+INFO:absl:step = 203900: loss = 1.5390102863311768
+INFO:absl:Step: 204000, 13.987 steps/sec
+INFO:absl:step = 204000: loss = 1.607457160949707
+INFO:absl:step = 204100: loss = 1.0941556692123413
+INFO:absl:step = 204200: loss = 1.043280839920044
+INFO:absl:step = 204300: loss = 3.304079055786133
+INFO:absl:step = 204400: loss = 0.9323943257331848
+INFO:absl:step = 204500: loss = 1.1032288074493408
+INFO:absl:step = 204600: loss = 2.5217652320861816
+INFO:absl:step = 204700: loss = -0.6104341745376587
+INFO:absl:step = 204800: loss = 0.18195772171020508
+INFO:absl:step = 204900: loss = 0.8085882663726807
+INFO:absl:Step: 205000, 13.975 steps/sec
+INFO:absl:step = 205000: loss = 1.526364803314209
+INFO:absl:step = 205100: loss = 2.1062886714935303
+INFO:absl:step = 205200: loss = 1.1376705169677734
+INFO:absl:step = 205300: loss = 5.597899436950684
+INFO:absl:step = 205400: loss = 0.19199275970458984
+INFO:absl:step = 205500: loss = 2.3804469108581543
+INFO:absl:step = 205600: loss = 1.4020240306854248
+INFO:absl:step = 205700: loss = -0.036455512046813965
+INFO:absl:step = 205800: loss = 0.459963321685791
+INFO:absl:step = 205900: loss = 0.6028479933738708
+INFO:absl:Step: 206000, 13.895 steps/sec
+INFO:absl:step = 206000: loss = 0.8007252216339111
+INFO:absl:step = 206100: loss = 1.3871809244155884
+INFO:absl:step = 206200: loss = 0.9211175441741943
+INFO:absl:step = 206300: loss = 0.03326559066772461
+INFO:absl:step = 206400: loss = 2.0536327362060547
+INFO:absl:step = 206500: loss = 0.8526939749717712
+INFO:absl:step = 206600: loss = 0.8363364338874817
+INFO:absl:step = 206700: loss = -0.468003511428833
+INFO:absl:step = 206800: loss = 2.8313205242156982
+INFO:absl:step = 206900: loss = 0.052036404609680176
+INFO:absl:Step: 207000, 13.874 steps/sec
+INFO:absl:step = 207000: loss = 1.8085476160049438
+INFO:absl:step = 207100: loss = 1.6793240308761597
+INFO:absl:step = 207200: loss = 2.2313413619995117
+INFO:absl:step = 207300: loss = -0.5354872941970825
+INFO:absl:step = 207400: loss = 1.4873738288879395
+INFO:absl:step = 207500: loss = 1.9087938070297241
+INFO:absl:step = 207600: loss = 1.2787346839904785
+INFO:absl:step = 207700: loss = 0.1736297607421875
+INFO:absl:step = 207800: loss = 3.5633394718170166
+INFO:absl:step = 207900: loss = 0.004059433937072754
+INFO:absl:Step: 208000, 13.947 steps/sec
+INFO:absl:step = 208000: loss = 0.6484525799751282
+INFO:absl:step = 208100: loss = 2.3396451473236084
+INFO:absl:step = 208200: loss = 1.232266902923584
+INFO:absl:step = 208300: loss = 1.3058302402496338
+INFO:absl:step = 208400: loss = 1.34571373462677
+INFO:absl:step = 208500: loss = 2.2177772521972656
+INFO:absl:step = 208600: loss = 1.5468647480010986
+INFO:absl:step = 208700: loss = 1.5853221416473389
+INFO:absl:step = 208800: loss = 1.9071300029754639
+INFO:absl:step = 208900: loss = 1.857443928718567
+INFO:absl:Step: 209000, 14.025 steps/sec
+INFO:absl:step = 209000: loss = -0.38070476055145264
+INFO:absl:step = 209100: loss = 1.359442949295044
+INFO:absl:step = 209200: loss = 3.1554007530212402
+INFO:absl:step = 209300: loss = -0.44992971420288086
+INFO:absl:step = 209400: loss = -0.17325150966644287
+INFO:absl:step = 209500: loss = 1.893815279006958
+INFO:absl:step = 209600: loss = 2.542099952697754
+INFO:absl:step = 209700: loss = 2.1044647693634033
+INFO:absl:step = 209800: loss = 0.09492087364196777
+INFO:absl:step = 209900: loss = -1.8317807912826538
+INFO:absl:Step: 210000, 13.915 steps/sec
+INFO:absl:step = 210000: AverageReturn = 4.709117, AverageEpisodeLength = 79.699997
+INFO:absl:step = 210000: loss = 0.6927101612091064
+INFO:absl:step = 210100: loss = 0.3573641777038574
+INFO:absl:step = 210200: loss = 2.7054755687713623
+INFO:absl:step = 210300: loss = 2.6232054233551025
+INFO:absl:step = 210400: loss = 2.8778812885284424
+INFO:absl:step = 210500: loss = 2.5356152057647705
+INFO:absl:step = 210600: loss = 1.5798745155334473
+INFO:absl:step = 210700: loss = -0.5257105827331543
+INFO:absl:step = 210800: loss = 1.7769272327423096
+INFO:absl:step = 210900: loss = -0.8988323211669922
+INFO:absl:Step: 211000, 11.099 steps/sec
+INFO:absl:step = 211000: loss = 0.777173638343811
+INFO:absl:step = 211100: loss = 1.7289259433746338
+INFO:absl:step = 211200: loss = 1.8742475509643555
+INFO:absl:step = 211300: loss = 1.0147120952606201
+INFO:absl:step = 211400: loss = 1.1122167110443115
+INFO:absl:step = 211500: loss = 0.1697901487350464
+INFO:absl:step = 211600: loss = 0.9713882803916931
+INFO:absl:step = 211700: loss = 2.154465675354004
+INFO:absl:step = 211800: loss = 0.17217576503753662
+INFO:absl:step = 211900: loss = 1.041788101196289
+INFO:absl:Step: 212000, 13.595 steps/sec
+INFO:absl:step = 212000: loss = -2.8638546466827393
+INFO:absl:step = 212100: loss = 2.631610631942749
+INFO:absl:step = 212200: loss = 0.3479686975479126
+INFO:absl:step = 212300: loss = 1.6846461296081543
+INFO:absl:step = 212400: loss = -1.3090956211090088
+INFO:absl:step = 212500: loss = -0.34805381298065186
+INFO:absl:step = 212600: loss = 0.0734177827835083
+INFO:absl:step = 212700: loss = -1.815894365310669
+INFO:absl:step = 212800: loss = 0.4909496307373047
+INFO:absl:step = 212900: loss = -0.7459142208099365
+INFO:absl:Step: 213000, 13.947 steps/sec
+INFO:absl:step = 213000: loss = 2.888059616088867
+INFO:absl:step = 213100: loss = 0.9126392602920532
+INFO:absl:step = 213200: loss = 0.06433886289596558
+INFO:absl:step = 213300: loss = 1.3847320079803467
+INFO:absl:step = 213400: loss = 0.837335467338562
+INFO:absl:step = 213500: loss = 2.085946559906006
+INFO:absl:step = 213600: loss = 2.5472686290740967
+INFO:absl:step = 213700: loss = 1.2968240976333618
+INFO:absl:step = 213800: loss = 2.0578560829162598
+INFO:absl:step = 213900: loss = -0.028248071670532227
+INFO:absl:Step: 214000, 13.876 steps/sec
+INFO:absl:step = 214000: loss = -0.15925002098083496
+INFO:absl:step = 214100: loss = 1.2673225402832031
+INFO:absl:step = 214200: loss = 1.287788987159729
+INFO:absl:step = 214300: loss = 1.1246955394744873
+INFO:absl:step = 214400: loss = 0.2596930265426636
+INFO:absl:step = 214500: loss = -0.13600647449493408
+INFO:absl:step = 214600: loss = 1.3308374881744385
+INFO:absl:step = 214700: loss = 4.725671768188477
+INFO:absl:step = 214800: loss = 4.28087043762207
+INFO:absl:step = 214900: loss = 2.354856491088867
+INFO:absl:Step: 215000, 13.790 steps/sec
+INFO:absl:step = 215000: loss = 1.0801587104797363
+INFO:absl:step = 215100: loss = 0.9304511547088623
+INFO:absl:step = 215200: loss = 3.1930532455444336
+INFO:absl:step = 215300: loss = -0.16721367835998535
+INFO:absl:step = 215400: loss = 2.707057476043701
+INFO:absl:step = 215500: loss = -2.2019081115722656
+INFO:absl:step = 215600: loss = 0.8547131419181824
+INFO:absl:step = 215700: loss = 0.26465320587158203
+INFO:absl:step = 215800: loss = 1.7863609790802002
+INFO:absl:step = 215900: loss = 2.2392263412475586
+INFO:absl:Step: 216000, 13.799 steps/sec
+INFO:absl:step = 216000: loss = 0.021158814430236816
+INFO:absl:step = 216100: loss = 1.160494089126587
+INFO:absl:step = 216200: loss = 3.500552177429199
+INFO:absl:step = 216300: loss = 2.5111329555511475
+INFO:absl:step = 216400: loss = 2.5453200340270996
+INFO:absl:step = 216500: loss = -0.08178114891052246
+INFO:absl:step = 216600: loss = -2.829056739807129
+INFO:absl:step = 216700: loss = 0.7990385293960571
+INFO:absl:step = 216800: loss = 0.4730480909347534
+INFO:absl:step = 216900: loss = 1.3969149589538574
+INFO:absl:Step: 217000, 13.856 steps/sec
+INFO:absl:step = 217000: loss = 2.40891170501709
+INFO:absl:step = 217100: loss = -0.47136807441711426
+INFO:absl:step = 217200: loss = 0.8254711627960205
+INFO:absl:step = 217300: loss = 0.8377960920333862
+INFO:absl:step = 217400: loss = -0.060051679611206055
+INFO:absl:step = 217500: loss = 3.1660847663879395
+INFO:absl:step = 217600: loss = -0.2141050100326538
+INFO:absl:step = 217700: loss = 1.366875410079956
+INFO:absl:step = 217800: loss = 1.6393946409225464
+INFO:absl:step = 217900: loss = 1.365143060684204
+INFO:absl:Step: 218000, 13.750 steps/sec
+INFO:absl:step = 218000: loss = 2.1503281593322754
+INFO:absl:step = 218100: loss = 0.31526756286621094
+INFO:absl:step = 218200: loss = 1.044421911239624
+INFO:absl:step = 218300: loss = 2.798236608505249
+INFO:absl:step = 218400: loss = 0.8641337156295776
+INFO:absl:step = 218500: loss = 0.6928201913833618
+INFO:absl:step = 218600: loss = -0.41218137741088867
+INFO:absl:step = 218700: loss = 0.8608862161636353
+INFO:absl:step = 218800: loss = 0.06337809562683105
+INFO:absl:step = 218900: loss = -0.5663101673126221
+INFO:absl:Step: 219000, 13.810 steps/sec
+INFO:absl:step = 219000: loss = 1.8610479831695557
+INFO:absl:step = 219100: loss = 1.9382762908935547
+INFO:absl:step = 219200: loss = 0.8209772109985352
+INFO:absl:step = 219300: loss = 1.3925350904464722
+INFO:absl:step = 219400: loss = 1.3298931121826172
+INFO:absl:step = 219500: loss = 1.7150568962097168
+INFO:absl:step = 219600: loss = 0.37018609046936035
+INFO:absl:step = 219700: loss = 1.1185916662216187
+INFO:absl:step = 219800: loss = 2.222626209259033
+INFO:absl:step = 219900: loss = -0.03288412094116211
+INFO:absl:Step: 220000, 13.773 steps/sec
+INFO:absl:step = 220000: AverageReturn = 4.623259, AverageEpisodeLength = 78.000000
+INFO:absl:step = 220000: loss = 1.7877682447433472
+INFO:absl:step = 220100: loss = 1.7115812301635742
+INFO:absl:step = 220200: loss = 2.2444796562194824
+INFO:absl:step = 220300: loss = 1.3742307424545288
+INFO:absl:step = 220400: loss = 1.0920101404190063
+INFO:absl:step = 220500: loss = -0.10487186908721924
+INFO:absl:step = 220600: loss = -0.3975602388381958
+INFO:absl:step = 220700: loss = 1.5227943658828735
+INFO:absl:step = 220800: loss = 1.5112290382385254
+INFO:absl:step = 220900: loss = 0.9940415620803833
+INFO:absl:Step: 221000, 11.018 steps/sec
+INFO:absl:step = 221000: loss = 1.7968131303787231
+INFO:absl:step = 221100: loss = 1.4872095584869385
+INFO:absl:step = 221200: loss = 3.6944332122802734
+INFO:absl:step = 221300: loss = 2.3525242805480957
+INFO:absl:step = 221400: loss = 0.5718839168548584
+INFO:absl:step = 221500: loss = 1.575237512588501
+INFO:absl:step = 221600: loss = 1.875072956085205
+INFO:absl:step = 221700: loss = 0.773239016532898
+INFO:absl:step = 221800: loss = 0.14652252197265625
+INFO:absl:step = 221900: loss = 1.4246861934661865
+INFO:absl:Step: 222000, 13.388 steps/sec
+INFO:absl:step = 222000: loss = -0.8613026142120361
+INFO:absl:step = 222100: loss = 2.2379813194274902
+INFO:absl:step = 222200: loss = 2.5838241577148438
+INFO:absl:step = 222300: loss = -0.65117347240448
+INFO:absl:step = 222400: loss = 0.8849935531616211
+INFO:absl:step = 222500: loss = 2.503162145614624
+INFO:absl:step = 222600: loss = 1.6320438385009766
+INFO:absl:step = 222700: loss = 4.183206558227539
+INFO:absl:step = 222800: loss = 4.730955123901367
+INFO:absl:step = 222900: loss = 2.1833953857421875
+INFO:absl:Step: 223000, 13.492 steps/sec
+INFO:absl:step = 223000: loss = 0.6903179883956909
+INFO:absl:step = 223100: loss = 2.6993327140808105
+INFO:absl:step = 223200: loss = 1.8449862003326416
+INFO:absl:step = 223300: loss = 1.6164109706878662
+INFO:absl:step = 223400: loss = 0.21509897708892822
+INFO:absl:step = 223500: loss = -0.20367932319641113
+INFO:absl:step = 223600: loss = 0.9186245799064636
+INFO:absl:step = 223700: loss = -1.8386716842651367
+INFO:absl:step = 223800: loss = 2.6158430576324463
+INFO:absl:step = 223900: loss = 1.606317162513733
+INFO:absl:Step: 224000, 13.416 steps/sec
+INFO:absl:step = 224000: loss = 3.5973241329193115
+INFO:absl:step = 224100: loss = 1.8582148551940918
+INFO:absl:step = 224200: loss = 0.47552597522735596
+INFO:absl:step = 224300: loss = 0.023642539978027344
+INFO:absl:step = 224400: loss = -2.5230202674865723
+INFO:absl:step = 224500: loss = 2.081101894378662
+INFO:absl:step = 224600: loss = 0.052108049392700195
+INFO:absl:step = 224700: loss = 2.2892518043518066
+INFO:absl:step = 224800: loss = 2.171271562576294
+INFO:absl:step = 224900: loss = -1.719961166381836
+INFO:absl:Step: 225000, 13.398 steps/sec
+INFO:absl:step = 225000: loss = 0.9381701946258545
+INFO:absl:step = 225100: loss = 0.9555643200874329
+INFO:absl:step = 225200: loss = 0.39457952976226807
+INFO:absl:step = 225300: loss = -0.32122838497161865
+INFO:absl:step = 225400: loss = 2.1672050952911377
+INFO:absl:step = 225500: loss = -0.60947585105896
+INFO:absl:step = 225600: loss = -0.1204298734664917
+INFO:absl:step = 225700: loss = 0.923269510269165
+INFO:absl:step = 225800: loss = 2.3188300132751465
+INFO:absl:step = 225900: loss = 4.008415699005127
+INFO:absl:Step: 226000, 13.408 steps/sec
+INFO:absl:step = 226000: loss = 1.215762734413147
+INFO:absl:step = 226100: loss = 1.2654614448547363
+INFO:absl:step = 226200: loss = 0.18372929096221924
+INFO:absl:step = 226300: loss = 1.3628020286560059
+INFO:absl:step = 226400: loss = -0.10269713401794434
+INFO:absl:step = 226500: loss = 0.5934758186340332
+INFO:absl:step = 226600: loss = -0.09926319122314453
+INFO:absl:step = 226700: loss = 1.724198341369629
+INFO:absl:step = 226800: loss = 0.1469019651412964
+INFO:absl:step = 226900: loss = -0.6485122442245483
+INFO:absl:Step: 227000, 13.336 steps/sec
+INFO:absl:step = 227000: loss = -0.40859508514404297
+INFO:absl:step = 227100: loss = 0.5210021138191223
+INFO:absl:step = 227200: loss = 1.6936285495758057
+INFO:absl:step = 227300: loss = -0.08966898918151855
+INFO:absl:step = 227400: loss = 1.0722157955169678
+INFO:absl:step = 227500: loss = -0.087962806224823
+INFO:absl:step = 227600: loss = 0.7021356225013733
+INFO:absl:step = 227700: loss = 0.7876006364822388
+INFO:absl:step = 227800: loss = 1.6967830657958984
+INFO:absl:step = 227900: loss = 0.058077335357666016
+INFO:absl:Step: 228000, 13.306 steps/sec
+INFO:absl:step = 228000: loss = 2.923891544342041
+INFO:absl:step = 228100: loss = 0.22347915172576904
+INFO:absl:step = 228200: loss = 1.3183417320251465
+INFO:absl:step = 228300: loss = -0.1364140510559082
+INFO:absl:step = 228400: loss = 1.6523836851119995
+INFO:absl:step = 228500: loss = 0.49589109420776367
+INFO:absl:step = 228600: loss = 2.5105762481689453
+INFO:absl:step = 228700: loss = 1.3171448707580566
+INFO:absl:step = 228800: loss = 3.428961753845215
+INFO:absl:step = 228900: loss = 2.1697797775268555
+INFO:absl:Step: 229000, 13.376 steps/sec
+INFO:absl:step = 229000: loss = 2.043384552001953
+INFO:absl:step = 229100: loss = 3.455467462539673
+INFO:absl:step = 229200: loss = 2.0146965980529785
+INFO:absl:step = 229300: loss = 3.675288200378418
+INFO:absl:step = 229400: loss = -1.4127802848815918
+INFO:absl:step = 229500: loss = -0.8205798864364624
+INFO:absl:step = 229600: loss = 2.5538532733917236
+INFO:absl:step = 229700: loss = 0.2534223794937134
+INFO:absl:step = 229800: loss = 1.8128587007522583
+INFO:absl:step = 229900: loss = 0.6785597801208496
+INFO:absl:Step: 230000, 13.323 steps/sec
+INFO:absl:step = 230000: AverageReturn = 4.655685, AverageEpisodeLength = 80.300003
+INFO:absl:step = 230000: loss = -0.8111667633056641
+INFO:absl:step = 230100: loss = -0.1467123031616211
+INFO:absl:step = 230200: loss = 0.5787826180458069
+INFO:absl:step = 230300: loss = 0.3763187527656555
+INFO:absl:step = 230400: loss = 1.7889313697814941
+INFO:absl:step = 230500: loss = -1.226250410079956
+INFO:absl:step = 230600: loss = 1.6607868671417236
+INFO:absl:step = 230700: loss = 1.2663657665252686
+INFO:absl:step = 230800: loss = 0.8578755855560303
+INFO:absl:step = 230900: loss = 0.2912297248840332
+INFO:absl:Step: 231000, 11.318 steps/sec
+INFO:absl:step = 231000: loss = 2.0743632316589355
+INFO:absl:step = 231100: loss = -0.21386146545410156
+INFO:absl:step = 231200: loss = 1.6848257780075073
+INFO:absl:step = 231300: loss = 1.0329883098602295
+INFO:absl:step = 231400: loss = 2.1744322776794434
+INFO:absl:step = 231500: loss = 2.4957332611083984
+INFO:absl:step = 231600: loss = 1.4195899963378906
+INFO:absl:step = 231700: loss = 0.725928783416748
+INFO:absl:step = 231800: loss = 1.7360810041427612
+INFO:absl:step = 231900: loss = 0.680126428604126
+INFO:absl:Step: 232000, 14.072 steps/sec
+INFO:absl:step = 232000: loss = 2.796985387802124
+INFO:absl:step = 232100: loss = 0.8624805212020874
+INFO:absl:step = 232200: loss = 0.622065544128418
+INFO:absl:step = 232300: loss = -0.26148855686187744
+INFO:absl:step = 232400: loss = 0.648055911064148
+INFO:absl:step = 232500: loss = 0.9157843589782715
+INFO:absl:step = 232600: loss = 0.4642467498779297
+INFO:absl:step = 232700: loss = -0.21707499027252197
+INFO:absl:step = 232800: loss = 0.4296008348464966
+INFO:absl:step = 232900: loss = 1.1210790872573853
+INFO:absl:Step: 233000, 13.955 steps/sec
+INFO:absl:step = 233000: loss = 0.4039849042892456
+INFO:absl:step = 233100: loss = 1.8580838441848755
+INFO:absl:step = 233200: loss = 3.2110021114349365
+INFO:absl:step = 233300: loss = 1.7402619123458862
+INFO:absl:step = 233400: loss = 2.6394078731536865
+INFO:absl:step = 233500: loss = 1.5943303108215332
+INFO:absl:step = 233600: loss = 2.652855396270752
+INFO:absl:step = 233700: loss = 1.8313910961151123
+INFO:absl:step = 233800: loss = 1.1896802186965942
+INFO:absl:step = 233900: loss = 1.7054028511047363
+INFO:absl:Step: 234000, 14.021 steps/sec
+INFO:absl:step = 234000: loss = 0.8673044443130493
+INFO:absl:step = 234100: loss = 2.2414464950561523
+INFO:absl:step = 234200: loss = -0.12741851806640625
+INFO:absl:step = 234300: loss = 1.1434510946273804
+INFO:absl:step = 234400: loss = 2.7217392921447754
+INFO:absl:step = 234500: loss = -2.099853992462158
+INFO:absl:step = 234600: loss = 0.7113844156265259
+INFO:absl:step = 234700: loss = 0.19433128833770752
+INFO:absl:step = 234800: loss = -1.0437703132629395
+INFO:absl:step = 234900: loss = 1.5822100639343262
+INFO:absl:Step: 235000, 14.127 steps/sec
+INFO:absl:step = 235000: loss = 0.3341361880302429
+INFO:absl:step = 235100: loss = 2.820056200027466
+INFO:absl:step = 235200: loss = 1.180098533630371
+INFO:absl:step = 235300: loss = 3.278870105743408
+INFO:absl:step = 235400: loss = -1.1245355606079102
+INFO:absl:step = 235500: loss = 0.9811630249023438
+INFO:absl:step = 235600: loss = 1.323936104774475
+INFO:absl:step = 235700: loss = 0.39242613315582275
+INFO:absl:step = 235800: loss = 3.293579578399658
+INFO:absl:step = 235900: loss = 1.7710986137390137
+INFO:absl:Step: 236000, 14.016 steps/sec
+INFO:absl:step = 236000: loss = 3.1182901859283447
+INFO:absl:step = 236100: loss = -1.5577472448349
+INFO:absl:step = 236200: loss = 1.7369318008422852
+INFO:absl:step = 236300: loss = 2.161705493927002
+INFO:absl:step = 236400: loss = 1.8594753742218018
+INFO:absl:step = 236500: loss = 0.40725159645080566
+INFO:absl:step = 236600: loss = 3.1337168216705322
+INFO:absl:step = 236700: loss = 2.872203826904297
+INFO:absl:step = 236800: loss = 2.146791934967041
+INFO:absl:step = 236900: loss = -0.18095576763153076
+INFO:absl:Step: 237000, 14.034 steps/sec
+INFO:absl:step = 237000: loss = 2.8498282432556152
+INFO:absl:step = 237100: loss = 0.9495562314987183
+INFO:absl:step = 237200: loss = 2.403989553451538
+INFO:absl:step = 237300: loss = 0.9071178436279297
+INFO:absl:step = 237400: loss = 1.9785881042480469
+INFO:absl:step = 237500: loss = 3.4130964279174805
+INFO:absl:step = 237600: loss = 3.1968894004821777
+INFO:absl:step = 237700: loss = 1.8760643005371094
+INFO:absl:step = 237800: loss = 1.5012352466583252
+INFO:absl:step = 237900: loss = 0.45565032958984375
+INFO:absl:Step: 238000, 13.944 steps/sec
+INFO:absl:step = 238000: loss = 4.0309062004089355
+INFO:absl:step = 238100: loss = 1.8362010717391968
+INFO:absl:step = 238200: loss = 2.6463680267333984
+INFO:absl:step = 238300: loss = 2.0065460205078125
+INFO:absl:step = 238400: loss = 1.2935841083526611
+INFO:absl:step = 238500: loss = 2.7770681381225586
+INFO:absl:step = 238600: loss = 1.0092830657958984
+INFO:absl:step = 238700: loss = 1.8922709226608276
+INFO:absl:step = 238800: loss = 1.9556605815887451
+INFO:absl:step = 238900: loss = -0.5617587566375732
+INFO:absl:Step: 239000, 14.040 steps/sec
+INFO:absl:step = 239000: loss = 2.7188339233398438
+INFO:absl:step = 239100: loss = 1.3102984428405762
+INFO:absl:step = 239200: loss = 1.2304894924163818
+INFO:absl:step = 239300: loss = 0.8050768971443176
+INFO:absl:step = 239400: loss = 1.181412696838379
+INFO:absl:step = 239500: loss = 2.866750717163086
+INFO:absl:step = 239600: loss = 2.6548523902893066
+INFO:absl:step = 239700: loss = 1.2173795700073242
+INFO:absl:step = 239800: loss = 4.058400630950928
+INFO:absl:step = 239900: loss = 0.37353911995887756
+INFO:absl:Step: 240000, 14.051 steps/sec
+INFO:absl:step = 240000: AverageReturn = 9.743970, AverageEpisodeLength = 35.000000
+INFO:absl:step = 240000: loss = 0.36842799186706543
+INFO:absl:step = 240100: loss = 0.48949384689331055
+INFO:absl:step = 240200: loss = 2.5634655952453613
+INFO:absl:step = 240300: loss = 0.3579794764518738
+INFO:absl:step = 240400: loss = 0.9640330672264099
+INFO:absl:step = 240500: loss = 1.6404008865356445
+INFO:absl:step = 240600: loss = 0.6538822650909424
+INFO:absl:step = 240700: loss = 1.40964674949646
+INFO:absl:step = 240800: loss = -0.9767003059387207
+INFO:absl:step = 240900: loss = 1.407305121421814
+INFO:absl:Step: 241000, 12.882 steps/sec
+INFO:absl:step = 241000: loss = 3.0325770378112793
+INFO:absl:step = 241100: loss = 1.0345534086227417
+INFO:absl:step = 241200: loss = -1.606302261352539
+INFO:absl:step = 241300: loss = 0.8991034626960754
+INFO:absl:step = 241400: loss = 1.1197470426559448
+INFO:absl:step = 241500: loss = 2.5375449657440186
+INFO:absl:step = 241600: loss = 2.5521998405456543
+INFO:absl:step = 241700: loss = 3.221938133239746
+INFO:absl:step = 241800: loss = 1.91825270652771
+INFO:absl:step = 241900: loss = 0.2767852544784546
+INFO:absl:Step: 242000, 13.889 steps/sec
+INFO:absl:step = 242000: loss = 1.3264576196670532
+INFO:absl:step = 242100: loss = 3.104574680328369
+INFO:absl:step = 242200: loss = 3.472339153289795
+INFO:absl:step = 242300: loss = 3.5723912715911865
+INFO:absl:step = 242400: loss = 1.7586867809295654
+INFO:absl:step = 242500: loss = 1.3387752771377563
+INFO:absl:step = 242600: loss = 2.0099070072174072
+INFO:absl:step = 242700: loss = 0.18281328678131104
+INFO:absl:step = 242800: loss = 0.824424684047699
+INFO:absl:step = 242900: loss = 3.359886407852173
+INFO:absl:Step: 243000, 13.802 steps/sec
+INFO:absl:step = 243000: loss = 3.098701000213623
+INFO:absl:step = 243100: loss = 1.335983395576477
+INFO:absl:step = 243200: loss = 0.3718070983886719
+INFO:absl:step = 243300: loss = 1.5173327922821045
+INFO:absl:step = 243400: loss = 2.027012348175049
+INFO:absl:step = 243500: loss = 1.4350178241729736
+INFO:absl:step = 243600: loss = 1.632290244102478
+INFO:absl:step = 243700: loss = 2.022733688354492
+INFO:absl:step = 243800: loss = 2.1147079467773438
+INFO:absl:step = 243900: loss = 2.959873676300049
+INFO:absl:Step: 244000, 13.767 steps/sec
+INFO:absl:step = 244000: loss = 1.1129382848739624
+INFO:absl:step = 244100: loss = 0.8597488403320312
+INFO:absl:step = 244200: loss = 2.698230266571045
+INFO:absl:step = 244300: loss = 0.3137858510017395
+INFO:absl:step = 244400: loss = 2.496058464050293
+INFO:absl:step = 244500: loss = 1.8584564924240112
+INFO:absl:step = 244600: loss = 2.0561351776123047
+INFO:absl:step = 244700: loss = 3.6718766689300537
+INFO:absl:step = 244800: loss = 4.772974967956543
+INFO:absl:step = 244900: loss = 1.9156842231750488
+INFO:absl:Step: 245000, 13.873 steps/sec
+INFO:absl:step = 245000: loss = 0.11954116821289062
+INFO:absl:step = 245100: loss = 0.14076435565948486
+INFO:absl:step = 245200: loss = 3.5489931106567383
+INFO:absl:step = 245300: loss = 1.710897445678711
+INFO:absl:step = 245400: loss = 2.605118751525879
+INFO:absl:step = 245500: loss = 2.9965462684631348
+INFO:absl:step = 245600: loss = 1.163739562034607
+INFO:absl:step = 245700: loss = -0.29771745204925537
+INFO:absl:step = 245800: loss = 1.8858189582824707
+INFO:absl:step = 245900: loss = 2.4662559032440186
+INFO:absl:Step: 246000, 13.877 steps/sec
+INFO:absl:step = 246000: loss = 0.7397785186767578
+INFO:absl:step = 246100: loss = 0.8264660835266113
+INFO:absl:step = 246200: loss = 0.8888972401618958
+INFO:absl:step = 246300: loss = 2.338395833969116
+INFO:absl:step = 246400: loss = 0.14369690418243408
+INFO:absl:step = 246500: loss = 1.60756254196167
+INFO:absl:step = 246600: loss = 0.815303385257721
+INFO:absl:step = 246700: loss = 0.2399536371231079
+INFO:absl:step = 246800: loss = 2.963563919067383
+INFO:absl:step = 246900: loss = 1.3482341766357422
+INFO:absl:Step: 247000, 13.935 steps/sec
+INFO:absl:step = 247000: loss = 1.096435546875
+INFO:absl:step = 247100: loss = 1.479619026184082
+INFO:absl:step = 247200: loss = 1.9242091178894043
+INFO:absl:step = 247300: loss = 3.8707358837127686
+INFO:absl:step = 247400: loss = 1.944563865661621
+INFO:absl:step = 247500: loss = -0.4892237186431885
+INFO:absl:step = 247600: loss = 1.1339185237884521
+INFO:absl:step = 247700: loss = 2.4576191902160645
+INFO:absl:step = 247800: loss = 0.8030390739440918
+INFO:absl:step = 247900: loss = 2.424126386642456
+INFO:absl:Step: 248000, 13.880 steps/sec
+INFO:absl:step = 248000: loss = -1.0697522163391113
+INFO:absl:step = 248100: loss = 0.39596235752105713
+INFO:absl:step = 248200: loss = 1.4132425785064697
+INFO:absl:step = 248300: loss = 2.840186595916748
+INFO:absl:step = 248400: loss = 0.9692445397377014
+INFO:absl:step = 248500: loss = 1.550947666168213
+INFO:absl:step = 248600: loss = 0.9363958239555359
+INFO:absl:step = 248700: loss = 1.8166697025299072
+INFO:absl:step = 248800: loss = 4.228696346282959
+INFO:absl:step = 248900: loss = 3.5369791984558105
+INFO:absl:Step: 249000, 13.919 steps/sec
+INFO:absl:step = 249000: loss = -0.23288702964782715
+INFO:absl:step = 249100: loss = 3.760941505432129
+INFO:absl:step = 249200: loss = 3.1282052993774414
+INFO:absl:step = 249300: loss = 1.9733762741088867
+INFO:absl:step = 249400: loss = 2.360816478729248
+INFO:absl:step = 249500: loss = -0.015573859214782715
+INFO:absl:step = 249600: loss = 3.1169447898864746
+INFO:absl:step = 249700: loss = 0.6587642431259155
+INFO:absl:step = 249800: loss = -0.12172555923461914
+INFO:absl:step = 249900: loss = 0.9752457737922668
+INFO:absl:Step: 250000, 14.005 steps/sec
+INFO:absl:step = 250000: AverageReturn = 10.838112, AverageEpisodeLength = 31.299999
+INFO:absl:step = 250000: loss = -0.4792520999908447
+[reverb/cc/platform/default/server.cc:64] Shutting down replay server
+WARNING:absl:WARNING: Could not serialize policy.distribution() for policy "<tf_agents.policies.actor_policy.ActorPolicy object at 0x7f332016feb8>". Calling saved_model.distribution() will raise the following assertion error: Unable to make a CompositeTensor for "tfp.distributions.SquashToSpecNormal("ActorDistributionNetwork_TanhNormalProjectionNetwork_SquashToSpecNormal", dtype=float32)" of type `<class 'tf_agents.distributions.utils.SquashToSpecNormal'>`. Email `tfprobability@tensorflow.org` or file an issue on github if you would benefit from this working. (Unable to convert dependent entry 'scale' of object 'tfp.distributions.SquashToSpecNormal("ActorDistributionNetwork_TanhNormalProjectionNetwork_SquashToSpecNormal", dtype=float32)': Failed to convert object of type <class 'tensorflow.python.ops.linalg.linear_operator_diag.LinearOperatorDiag'> to Tensor. Contents: <tensorflow.python.ops.linalg.linear_operator_diag.LinearOperatorDiag object at 0x7f312e74db00>. Consider casting elements to a supported type.)
+WARNING:absl:Found untraced functions such as ActorDistributionNetwork_layer_call_fn, ActorDistributionNetwork_layer_call_and_return_conditional_losses, EncodingNetwork_layer_call_fn, EncodingNetwork_layer_call_and_return_conditional_losses, TanhNormalProjectionNetwork_layer_call_fn while saving (showing 5 of 30). These functions will not be directly callable after loading.
+WARNING:absl:Found untraced functions such as ActorDistributionNetwork_layer_call_fn, ActorDistributionNetwork_layer_call_and_return_conditional_losses, EncodingNetwork_layer_call_fn, EncodingNetwork_layer_call_and_return_conditional_losses, TanhNormalProjectionNetwork_layer_call_fn while saving (showing 5 of 30). These functions will not be directly callable after loading.
+torch is not available, falling back to rendering to memory(instead of tensor)
+******************PyBullet Logging Information:
+PyBullet Logging Information******************
+=====> NavigateGibsonEnv initialized
+******************PyBullet Logging Information:
+PyBullet Logging Information******************
+=====> NavigateGibsonEnv initialized
+Traceback (most recent call last):
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/framework/op_def_library.py", line 522, in _apply_op_helper
+    preferred_dtype=default_dtype)
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/profiler/trace.py", line 163, in wrapped
+    return func(*args, **kwargs)
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/framework/ops.py", line 1509, in convert_to_tensor
+    (dtype.name, value.dtype.name, value))
+ValueError: Tensor conversion requested dtype resource for Tensor with dtype float32: <tf.Tensor 'conv2d/kernel/Read/ReadVariableOp:0' shape=(8, 8, 3, 32) dtype=float32>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "sac_train.py", line 374, in <module>
+    tf_policy_saver.save(policy_dir)
+  File "/home/guttikon/activate-localization/agents/tf_agents/policies/policy_saver.py", line 524, in save
+    self._policy, export_dir, signatures=self._signatures, options=options)
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/saved_model/save.py", line 1033, in save
+    obj, signatures, options, meta_graph_def)
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/saved_model/save.py", line 1198, in _build_meta_graph
+    return _build_meta_graph_impl(obj, signatures, options, meta_graph_def)
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/saved_model/save.py", line 1153, in _build_meta_graph_impl
+    options.namespace_whitelist)
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/saved_model/save.py", line 690, in _fill_meta_graph_def
+    saver_def = saver.to_proto()
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/training/saving/functional_saver.py", line 182, in to_proto
+    restore_op = self._traced_restore(filename_tensor).op
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/eager/def_function.py", line 828, in __call__
+    result = self._call(*args, **kwds)
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/eager/def_function.py", line 871, in _call
+    self._initialize(args, kwds, add_initializers_to=initializers)
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/eager/def_function.py", line 726, in _initialize
+    *args, **kwds))
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/eager/function.py", line 2969, in _get_concrete_function_internal_garbage_collected
+    graph_function, _ = self._maybe_define_function(args, kwargs)
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/eager/function.py", line 3361, in _maybe_define_function
+    graph_function = self._create_graph_function(args, kwargs)
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/eager/function.py", line 3206, in _create_graph_function
+    capture_by_value=self._capture_by_value),
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/framework/func_graph.py", line 990, in func_graph_from_py_func
+    func_outputs = python_func(*func_args, **func_kwargs)
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/eager/def_function.py", line 634, in wrapped_fn
+    out = weak_wrapped_fn().__wrapped__(*args, **kwds)
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/eager/function.py", line 3882, in bound_method_wrapper
+    return wrapped_fn(weak_instance(), *args, **kwargs)
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/training/saving/functional_saver.py", line 202, in _traced_restore
+    restore_ops = self.restore(file_prefix)
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/training/saving/functional_saver.py", line 345, in restore
+    restore_ops = restore_fn()
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/training/saving/functional_saver.py", line 321, in restore_fn
+    restore_ops.update(saver.restore(file_prefix, options))
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/training/saving/functional_saver.py", line 116, in restore
+    restored_tensors, restored_shapes=None)
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/training/saving/saveable_object_util.py", line 132, in restore
+    self.handle_op, self._var_shape, restored_tensor)
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/ops/resource_variable_ops.py", line 309, in shape_safe_assign_variable_handle
+    handle, value_tensor, name=name)
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/ops/gen_resource_variable_ops.py", line 155, in assign_variable_op
+    "AssignVariableOp", resource=resource, value=value, name=name)
+  File "/home/guttikon/.local/lib/python3.6/site-packages/tensorflow/python/framework/op_def_library.py", line 545, in _apply_op_helper
+    (prefix, dtypes.as_dtype(input_arg.type).name))
+TypeError: Input 'resource' of 'AssignVariableOp' Op has type float32 that does not match expected type of resource.
