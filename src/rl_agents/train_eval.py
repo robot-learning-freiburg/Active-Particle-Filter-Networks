@@ -400,14 +400,16 @@ def train_eval(
             train_step=global_step,
             summary_writer=eval_summary_writer,
             summary_prefix='Metrics',
+            use_function=use_tf_functions,
         )
         if eval_metrics_callback is not None:
             eval_metrics_callback(results, global_step.numpy())
         metric_utils.log_metrics(eval_metrics)
 
         if eval_only:
-            print('EVAL DONE')
+            logging.info('Eval finished')
             return
+        logging.info('Training starting .....')
 
         time_step = None
         policy_state = collect_policy.get_initial_state(tf_env.batch_size)
@@ -430,8 +432,7 @@ def train_eval(
             # tf.debugging.check_numerics(experience, "Bad!")
             return tf_agent.train(experience)
 
-        if use_tf_functions:
-            train_step = common.function(train_step)
+        train_step = common.function(train_step)
 
         global_step_val = global_step.numpy()
         while global_step_val < num_iterations:
@@ -469,6 +470,7 @@ def train_eval(
                     train_step=global_step,
                     summary_writer=eval_summary_writer,
                     summary_prefix='Metrics',
+                    use_function=use_tf_functions,
                 )
                 if eval_metrics_callback is not None:
                     eval_metrics_callback(results, global_step_val)
@@ -482,6 +484,8 @@ def train_eval(
 
             if global_step_val % rb_checkpoint_interval == 0:
                 rb_checkpointer.save(global_step=global_step_val)
+
+        logging.info('Training finished')
         return train_loss
 
 
