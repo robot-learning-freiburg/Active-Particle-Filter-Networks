@@ -383,7 +383,6 @@ def train_eval(
             initial_collect_driver.run = common.function(
                 initial_collect_driver.run)
             collect_driver.run = common.function(collect_driver.run)
-            tf_agent.train = common.function(tf_agent.train)
 
         if replay_buffer.num_frames() == 0:
             # Collect initial replay data.
@@ -432,6 +431,8 @@ def train_eval(
             # tf.debugging.check_numerics(experience, "Bad!")
             return tf_agent.train(experience)
 
+        # (Optional) Optimize by wrapping some of the code in a graph using TF function.
+        tf_agent.train = common.function(tf_agent.train)
         train_step = common.function(train_step)
 
         global_step_val = global_step.numpy()
