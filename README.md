@@ -45,7 +45,7 @@
     ~> source /opt/venvs/py3-igibson/bin/activate
     
     # launch igibson gui example
-    (py3-igibson)~> python -m gibson2.examples.demo.env_example`
+    (py3-igibson)~> python -m gibson2.examples.demo.env_example
     ```
 4. To Bind/Mount host machine directories within container use --bind [ref](https://sylabs.io/guides/3.0/user-guide/bind_paths_and_mounts.html)
     ```

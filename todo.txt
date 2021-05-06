@@ -1,0 +1,5 @@
+May 5th 2021
+------------
+1. fix the rgb - nan/inf issue for non-parallel env
+2. then try on-policy algorithm say PPO for navigation task (task_obs and rgb_obs)
+3. then try to incorporate pfnet into rl agent
