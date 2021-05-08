@@ -5,7 +5,7 @@ from tf_agents.replay_buffers import reverb_replay_buffer
 from tf_agents.replay_buffers import reverb_utils
 
 
-class ReplayBuffer(object):
+class ReverbReplayBuffer(object):
     """
     Replay Buffer implementation based on reverb
     Stores experience data collected by Actors and consumed by learner during training

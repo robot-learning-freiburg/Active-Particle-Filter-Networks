@@ -62,16 +62,18 @@ class PPOAgent(object):
         self.root_dir = os.path.expanduser(root_dir)
 
         # create train and eval environments
-        train_py_env = env_load_fn(None, 'headless', gpu)
+        self.train_py_env = env_load_fn(None, 'headless', gpu)
         # eval_py_env = env_load_fn(None, 'headless', gpu)
-        eval_py_env = train_py_env
+        self.eval_py_env = self.train_py_env
 
         # tf_agents actor currently only support PyEnvironment
-        assert isinstance(train_py_env, py_environment.PyEnvironment)
-        assert isinstance(eval_py_env, py_environment.PyEnvironment)
+        assert isinstance(self.train_py_env, py_environment.PyEnvironment)
+        assert isinstance(self.eval_py_env, py_environment.PyEnvironment)
 
         # get environment specs
-        observation_spec, action_spec, time_step_spec = spec_utils.get_tensor_specs(train_py_env)
+        observation_spec, action_spec, time_step_spec = spec_utils.get_tensor_specs(
+            env=self.train_py_env
+        )
         logging.info('\n Observation specs: %s \n Action specs: %s', observation_spec, action_spec)
 
         with strategy.scope():
@@ -141,8 +143,8 @@ class PPOAgent(object):
             use_tf_function=use_tf_function
         )
         self.random_policy = random_py_policy.RandomPyPolicy(
-            time_step_spec=time_step_spec,
-            action_spec=action_spec
+            time_step_spec=self.train_py_env.time_step_spec(),
+            action_spec=self.train_py_env.action_spec()
         )
 
     def instantiate_preprocessing_layers(self,
