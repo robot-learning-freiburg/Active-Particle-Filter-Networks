@@ -10,6 +10,8 @@ from tf_agents.agents.ppo import ppo_clip_agent
 from tf_agents.environments import py_environment
 from tf_agents.networks import actor_distribution_network
 from tf_agents.networks import value_network
+from tf_agents.policies import py_tf_eager_policy
+from tf_agents.policies import random_py_policy
 from tf_agents.networks.utils import mlp_layers
 from tf_agents.train.utils import spec_utils
 
@@ -25,12 +27,13 @@ class PPOAgent(object):
                  train_step_counter,
                  strategy,
                  gpu=0,
+                 use_tf_function=True,
                  # train
                  num_epochs=25,
                  learning_rate=1e-3,
                  debug_summaries=False,
                  summarize_grads_and_vars=False,
-    ):
+                 ):
         """
         Initialize
 
@@ -44,6 +47,8 @@ class PPOAgent(object):
             distribution stratergy
         :param gpu: int
             gpu device number
+        :param use_tf_function: bool
+            whether or not wrap function into tf graph
         :param num_epochs: int
             number of epochs for computing policy updates
         :param learning_rate: float
@@ -78,13 +83,13 @@ class PPOAgent(object):
             self.__value_fc_layers = [256]
 
         with strategy.scope():
-            # construct preprocessing_layers and preprocessing_combiner
-            preprocessing_layers, preprocessing_combiner = self.construct_preprocessing_layers(
+            # instantiate preprocessing_layers and preprocessing_combiner
+            preprocessing_layers, preprocessing_combiner = self.instantiate_preprocessing_layers(
                 observation_spec
             )
 
         with strategy.scope():
-            # construct actor network to sample action from distribution conditioned on current observation
+            # instantiate actor network to sample action from distribution conditioned on current observation
             actor_net = actor_distribution_network.ActorDistributionNetwork(
                 input_tensor_spec=observation_spec,
                 output_tensor_spec=action_spec,
@@ -95,7 +100,7 @@ class PPOAgent(object):
             )
 
         with strategy.scope():
-            # construct value network to estimate V(s)
+            # instantiate value network to estimate V(s)
             value_net = value_network.ValueNetwork(
                 input_tensor_spec=observation_spec,
                 preprocessing_layers=preprocessing_layers,
@@ -112,7 +117,7 @@ class PPOAgent(object):
                 optimizer=tf.compat.v1.train.AdamOptimizer(
                     learning_rate=learning_rate
                 ),
-                action_net=actor_net,
+                actor_net=actor_net,
                 value_net=value_net,
                 importance_ratio_clipping=0.2,
                 normalize_observations=False,
@@ -125,8 +130,24 @@ class PPOAgent(object):
             )
             tf_agent.initialize()
 
+        # instantiate agent policies
+        self.tf_agent = tf_agent
+        self.eval_policy = py_tf_eager_policy.PyTFEagerPolicy(
+            policy=tf_agent.policy,
+            use_tf_function=use_tf_function
+        )
+        self.collect_policy = py_tf_eager_policy.PyTFEagerPolicy(
+            policy=tf_agent.collect_policy,
+            use_tf_function=use_tf_function
+        )
+        self.random_policy = random_py_policy.RandomPyPolicy(
+            time_step_spec=time_step_spec,
+            action_spec=action_spec
+        )
 
-    def construct_preprocessing_layers(self, observation_spec):
+    def instantiate_preprocessing_layers(self,
+                                         observation_spec
+                                         ):
         """
 
         :param observation_spec: OrderedDict

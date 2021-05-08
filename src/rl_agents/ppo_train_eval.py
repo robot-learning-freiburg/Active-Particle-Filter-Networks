@@ -7,6 +7,7 @@ import tensorflow as tf
 
 # import custom tf_agents
 from custom_agents.ppo_rl_agent import PPOAgent
+from custom_agents.replay_buffer import ReplayBuffer
 from environments import suite_gibson
 from tf_agents.train.utils import strategy_utils
 
@@ -22,6 +23,32 @@ def parse_args():
     # initialize parser
     arg_parser = argparse.ArgumentParser()
 
+    # define training parameters
+    arg_parser.add_argument(
+        '--replay_buffer_capacity',
+        type=int,
+        default=1000,
+        help='Replay buffer capacity'
+    )
+    arg_parser.add_argument(
+        '--sequence_length',
+        type=int,
+        default=1,
+        help='Consecutive sequence length'
+    )
+    arg_parser.add_argument(
+        '--stride_length',
+        type=int,
+        default=1,
+        help='Sliding window stride'
+    )
+    arg_parser.add_argument(
+        '--batch_size',
+        type=int,
+        default=8,
+        help='Batch size for each training step'
+    )
+
     # define igibson env parameters
     arg_parser.add_argument(
         '--config_file',
@@ -31,7 +58,7 @@ def parse_args():
             'configs',
             'turtlebot_point_nav.yaml'
         ),
-        help='Config file for the experiment.'
+        help='Config file for the experiment'
     )
     arg_parser.add_argument(
         '--action_timestep',
@@ -59,6 +86,7 @@ def parse_args():
     params.root_dir = './test_output'
     params.is_localize_env = False
     params.summary_interval = 1000
+    params.use_tf_function = True
 
     logging.set_verbosity(logging.INFO)
     tf.compat.v1.enable_v2_behavior()
@@ -103,8 +131,32 @@ def train_eval(arg_params):
             ),
             train_step_counter=global_step,
             strategy=strategy,
-            gpu=arg_params.gpu_num
+            gpu=arg_params.gpu_num,
+            use_tf_function=arg_params.use_tf_function
         )
+        tf_agent = ppo_agent.tf_agent
+
+        # instantiate replay buffer
+        rb = ReplayBuffer(
+            table_name='uniform_table',
+            replay_buffer_capacity=arg_params.replay_buffer_capacity
+        )
+
+        # generate tf dataset from replay buffer
+        dataset = rb.get_dataset(
+            collect_data_spec=tf_agent.collect_data_spec,
+            sequence_length=arg_params.sequence_length,
+            batch_size=arg_params.batch_size,
+        )
+        experience_dataset_fn = lambda: dataset
+
+        # instantiate replay buffer traj observer
+        rb_traj_observer = rb.get_rb_traj_observer(
+            sequence_length=arg_params.sequence_length,
+            stride_length=arg_params.stride_length,
+        )
+
+        rb.close()
 
 
 if __name__ == '__main__':
