@@ -7,12 +7,14 @@ import tensorflow as tf
 
 # import custom tf_agents
 from custom_agents.ppo_rl_agent import PPOAgent
+from custom_agents.sac_rl_agent import SACAgent
 from custom_agents.replay_buffer import ReverbReplayBuffer
 from environments import suite_gibson
 from tf_agents.train import actor
 from tf_agents.train import learner
 from tf_agents.train import triggers
 from tf_agents.train.utils import strategy_utils
+from tf_agents.utils import common
 
 
 def parse_args():
@@ -36,7 +38,7 @@ def parse_args():
     arg_parser.add_argument(
         '--sequence_length',
         type=int,
-        default=1,
+        default=2,
         help='Consecutive sequence length'
     )
     arg_parser.add_argument(
@@ -72,14 +74,20 @@ def parse_args():
     arg_parser.add_argument(
         '--eval_interval',
         type=int,
-        default=1000,
+        default=500,
         help='Run evaluation every eval_interval train steps'
     )
     arg_parser.add_argument(
         '--log_interval',
         type=int,
         default=100,
-        help='log loss every log_interval train steps'
+        help='Log loss every log_interval train steps'
+    )
+    arg_parser.add_argument(
+        '--policy_save_interval',
+        type=int,
+        default=500,
+        help='Save policies every policy_save_interval train steps'
     )
 
     # define igibson env parameters
@@ -123,8 +131,27 @@ def parse_args():
 
     logging.set_verbosity(logging.INFO)
     tf.compat.v1.enable_v2_behavior()
+    tf.debugging.enable_check_numerics()  # error out inf or NaN
 
     return params
+
+
+def get_eval_metrics(eval_actor):
+    """
+    Run the actor to generate metrics
+
+    :param eval_actor:
+        evaluation actor
+    :return: dict
+        dictionary of eval metrics
+    """
+
+    eval_actor.run()
+    results = {}
+    for metric in eval_actor.metrics:
+        results[metric.name] = metric.result()
+
+    return results
 
 
 def train_eval(arg_params):
@@ -151,142 +178,164 @@ def train_eval(arg_params):
         arg_params.root_dir,
         'eval'
     )
+    policy_dir = os.path.join(
+        arg_params.root_dir,
+        'policy'
+    )
 
     with strategy.scope():
         # create or get global step tensor
         global_step = tf.compat.v1.train.get_or_create_global_step()
 
-    with tf.compat.v2.summary.record_if(
-            lambda: tf.math.equal(global_step % arg_params.summary_interval, 0)
-    ):
-        # create ppo agent
-        ppo_agent = PPOAgent(
-            root_dir=arg_params.root_dir,
-            env_load_fn=lambda model_id, mode, device_idx: suite_gibson.load(
-                config_file=arg_params.config_file,
-                model_id=model_id,
-                env_mode=mode,
-                is_localize_env=arg_params.is_localize_env,
-                action_timestep=arg_params.action_timestep,
-                physics_timestep=arg_params.physics_timestep,
-                device_idx=device_idx,
-            ),
-            train_step_counter=global_step,
-            strategy=strategy,
-            gpu=arg_params.gpu_num,
-            use_tf_function=arg_params.use_tf_function
-        )
-        tf_agent = ppo_agent.tf_agent
-        collect_env = ppo_agent.train_py_env
-        eval_env = ppo_agent.eval_py_env
-        random_policy = ppo_agent.random_policy
-        collect_policy = ppo_agent.collect_policy
-        eval_policy = ppo_agent.eval_policy
+    # create ppo agent
+    ppo_agent = SACAgent(
+        root_dir=arg_params.root_dir,
+        env_load_fn=lambda model_id, mode, device_idx: suite_gibson.load(
+            config_file=arg_params.config_file,
+            model_id=model_id,
+            env_mode=mode,
+            is_localize_env=arg_params.is_localize_env,
+            action_timestep=arg_params.action_timestep,
+            physics_timestep=arg_params.physics_timestep,
+            device_idx=device_idx,
+        ),
+        train_step_counter=global_step,
+        strategy=strategy,
+        gpu=arg_params.gpu_num,
+        use_tf_function=arg_params.use_tf_function
+    )
+    tf_agent = ppo_agent.tf_agent
+    collect_env = ppo_agent.train_py_env
+    eval_env = ppo_agent.eval_py_env
+    random_policy = ppo_agent.random_policy
+    collect_policy = ppo_agent.collect_policy
+    eval_policy = ppo_agent.eval_policy
 
-        # instantiate reverb replay buffer
-        rb = ReverbReplayBuffer(
-            table_name='uniform_table',
-            replay_buffer_capacity=arg_params.replay_buffer_capacity
-        )
+    # instantiate reverb replay buffer
+    rb = ReverbReplayBuffer(
+        table_name='uniform_table',
+        replay_buffer_capacity=arg_params.replay_buffer_capacity
+    )
 
-        # generate tf dataset from replay buffer
-        dataset = rb.get_dataset(
-            collect_data_spec=tf_agent.collect_data_spec,
-            sequence_length=arg_params.sequence_length,
-            batch_size=arg_params.batch_size,
-        )
-        experience_dataset_fn = lambda: dataset
+    # generate tf dataset from replay buffer
+    dataset = rb.get_dataset(
+        collect_data_spec=tf_agent.collect_data_spec,
+        sequence_length=arg_params.sequence_length,
+        batch_size=arg_params.batch_size,
+    )
+    experience_dataset_fn = lambda: dataset
 
-        # instantiate replay buffer traj observer
-        rb_traj_observer = rb.get_rb_traj_observer(
-            sequence_length=arg_params.sequence_length,
-            stride_length=arg_params.stride_length,
-        )
+    # instantiate replay buffer traj observer
+    rb_traj_observer = rb.get_rb_traj_observer(
+        sequence_length=arg_params.sequence_length,
+        stride_length=arg_params.stride_length,
+    )
 
-        # Metrics
-        train_metrics = actor.collect_metrics(
-            buffer_size=10,
-        )
-        eval_metrics = actor.eval_metrics(
-            buffer_size=arg_params.num_eval_episodes,
-        )
+    # Metrics
+    train_metrics = actor.collect_metrics(
+        buffer_size=10,
+    )
+    eval_metrics = actor.eval_metrics(
+        buffer_size=arg_params.num_eval_episodes,
+    )
 
-        # use random policy to collect initial experiences to seed the replay buffer
-        initial_collect_actor = actor.Actor(
-            env=collect_env,
-            policy=random_policy,
+    # use random policy to collect initial experiences to seed the replay buffer
+    initial_collect_actor = actor.Actor(
+        env=collect_env,
+        policy=random_policy,
+        train_step=global_step,
+        steps_per_run=arg_params.initial_collect_steps,
+        observers=[rb_traj_observer],
+        metrics=train_metrics,
+    )
+    logging.info('Initializing replay buffer by collecting experience for %d steps '
+                 'with a random policy.', arg_params.initial_collect_steps)
+    initial_collect_actor.run()
+
+    # use collect policy to gather more experiences during training
+    collect_actor = actor.Actor(
+        env=collect_env,
+        policy=collect_policy,
+        train_step=global_step,
+        steps_per_run=1,
+        observers=[rb_traj_observer],
+        metrics=train_metrics,
+        summary_dir=train_dir,
+        name='train',
+    )
+
+    # use eval policy to evaluate during training
+    eval_actor = actor.Actor(
+        env=eval_env,
+        policy=eval_policy,
+        train_step=global_step,
+        episodes_per_run=arg_params.num_eval_episodes,
+        observers=None,
+        metrics=eval_metrics,
+        summary_dir=eval_dir,
+        summary_interval=arg_params.eval_interval,
+        name='eval',
+    )
+
+    # policy checkpoint trigger
+    policy_checkpointer = common.Checkpointer(
+        ckpt_dir=policy_dir,
+        policy=tf_agent.policy,
+        global_step=global_step,
+    )
+
+    ## HACK: there is problem with triggers.PolicySavedModelTrigger
+    # instantiate agent learner with triggers
+    learning_triggers = [
+        triggers.StepPerSecondLogTrigger(
             train_step=global_step,
-            steps_per_run=arg_params.initial_collect_steps,
-            metrics=train_metrics,
-            observers=[rb_traj_observer]
-        )
-        logging.info('Initializing replay buffer by collecting experience for %d steps '
-                     'with a random policy.', arg_params.initial_collect_steps)
-        initial_collect_actor.run()
+            interval=1000
+        ),
+    ]
+    agent_learner = learner.Learner(
+        root_dir=arg_params.root_dir,
+        train_step=global_step,
+        agent=tf_agent,
+        experience_dataset_fn=experience_dataset_fn,
+        # triggers=learning_triggers,
+        strategy=strategy,
+    )
 
-        # use collect policy to gather more experiences during training
-        collect_actor = actor.Actor(
-            env=collect_env,
-            policy=collect_policy,
-            train_step=global_step,
-            steps_per_run=1,
-            observers=[rb_traj_observer],
-            metrics=train_metrics,
-            summary_dir=train_dir,
-        )
+    print('====> Starting training')
 
-        # use eval policy to evaluate during training
-        eval_actor = actor.Actor(
-            env=eval_env,
-            policy=eval_policy,
-            train_step=global_step,
-            episodes_per_run=arg_params.num_eval_episodes,
-            observers=None,
-            metrics=eval_metrics,
-            summary_dir=eval_dir,
+    # reset the train step
+    tf_agent.train_step_counter.assign(0)
+
+    returns = []
+    for _ in range(arg_params.num_iterations):
+        # training
+        collect_actor.run()
+        loss_info = agent_learner.run(
+            iterations=1
         )
 
-        return
+        step = agent_learner.train_step_numpy
 
-        # instantiate agent learner
-        learning_triggers = [
-            triggers.StepPerSecondLogTrigger(
-                train_step=global_step,
-                interval=1000
-            )
-        ]
-        agent_learner = learner.Learner(
-            root_dir=arg_params.root_dir,
-            train_step=global_step,
-            agent=tf_agent,
-            experience_dataset_fn=experience_dataset_fn,
-            triggers=learning_triggers,
-            strategy=strategy,
-        )
+        # evaluation
+        if step % arg_params.eval_interval == 0:
+            metrics = get_eval_metrics(eval_actor)
+            returns.append(metrics["AverageReturn"])
 
-        print('====> Starting training')
+            # eval_actor.log_metrics()
+            eval_results = ', '.join('{} = {:.6f}'.format(name, result) for name, result in metrics.items())
+            logging.info('step = %d: %s', step, eval_results)
 
-        # reset the train step
-        tf_agent.train_step_counter.assign(0)
+        # logging
+        if step % arg_params.log_interval == 0:
+            # collect_actor.log_metrics()
+            logging.info('step = %d: loss = %f', step, loss_info.loss.numpy())
 
-        for _ in range(arg_params.num_iterations):
-            # training
-            collect_actor.run()
-            loss_info = agent_learner.run(
-                iterations=1
-            )
+        # save policy
+        if step % arg_params.policy_save_interval == 0:
+            policy_checkpointer.save(global_step=step)
 
-            # evaluation
-            step = agent_learner.train_step_numpy
-            if step % arg_params.eval_interval == 0:
-                pass
-
-            # logging
-            if step % arg_params.log_interval == 0:
-                logging.info('step = %d: loss = %d', step, loss_info.loss.numpy())
-
-        # close replay buffer
-        rb.close()
+    # close replay buffer
+    rb.close()
 
 
 if __name__ == '__main__':
