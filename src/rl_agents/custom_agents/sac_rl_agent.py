@@ -11,11 +11,24 @@ from tf_agents.agents.sac import sac_agent
 from tf_agents.agents.sac import tanh_normal_projection_network
 from tf_agents.environments import py_environment
 from tf_agents.networks import actor_distribution_network
-from tf_agents.networks import value_network
+from tf_agents.networks import normal_projection_network
 from tf_agents.policies import py_tf_eager_policy
 from tf_agents.policies import random_py_policy
 from tf_agents.networks.utils import mlp_layers
 from tf_agents.train.utils import spec_utils
+
+
+def normal_projection_net(action_spec,
+                          init_action_stddev=0.35,
+                          init_means_output_factor=0.1):
+    del init_action_stddev
+    return normal_projection_network.NormalProjectionNetwork(
+        action_spec,
+        mean_transform=None,
+        state_dependent_std=True,
+        init_means_output_factor=init_means_output_factor,
+        std_transform=sac_agent.std_clip_transform,
+        scale_distribution=True)
 
 
 class SACAgent(object):
@@ -38,7 +51,7 @@ class SACAgent(object):
                  target_update_period=1,
                  td_errors_loss_fn=tf.math.squared_difference,
                  gamma=0.99,
-                 reward_scale_factor = 1.0,
+                 reward_scale_factor=1.0,
                  gradient_clipping=None,
                  debug_summaries=False,
                  summarize_grads_and_vars=False,
@@ -123,6 +136,7 @@ class SACAgent(object):
                 preprocessing_layers=preprocessing_layers,
                 preprocessing_combiner=preprocessing_combiner,
                 fc_layer_params=self.__actor_fc_layers,
+                continuous_projection_net=normal_projection_net,
                 # continuous_projection_net=tanh_normal_projection_network.TanhNormalProjectionNetwork,
                 kernel_initializer=self.__glorot_uniform_initializer,
             )
