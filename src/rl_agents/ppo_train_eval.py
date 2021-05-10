@@ -129,6 +129,9 @@ def parse_args():
     params.summary_interval = 1000
     params.use_tf_function = True
 
+    os.environ['CUDA_VISIBLE_DEVICES'] = str(params.gpu_num)
+    os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
+
     logging.set_verbosity(logging.INFO)
     tf.compat.v1.enable_v2_behavior()
     tf.debugging.enable_check_numerics()  # error out inf or NaN
