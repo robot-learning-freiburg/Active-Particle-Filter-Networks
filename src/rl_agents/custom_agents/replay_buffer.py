@@ -38,6 +38,7 @@ class ReverbReplayBuffer(object):
         )
         self.__reverb_replay = None
         self.rb_traj_observer = None
+        self.rb_eps_observer = None
 
     def get_dataset(self,
                     collect_data_spec,
@@ -48,6 +49,7 @@ class ReverbReplayBuffer(object):
         Instantiate replay buffer and return as dataset
 
         :param collect_data_spec:
+            structure expected of experience collected by agent.collect_policy
         :param sequence_length: int
             number of time steps each sample consists / sequence of consecutive items
         :param batch_size: int
@@ -79,9 +81,9 @@ class ReverbReplayBuffer(object):
         """
         Instantiate observer for writing trajectory data to replay buffer
 
-        :param sequence_length:
+        :param sequence_length: int
              number of time steps each sample consists / sequence of consecutive items
-        :param stride_length:
+        :param stride_length: int
             stride value for sliding window for overlapping sequences
         :return: reverb_utils.ReverbAddTrajectoryObserver
             observer instance
@@ -96,13 +98,39 @@ class ReverbReplayBuffer(object):
 
         return self.rb_traj_observer
 
+    def get_rb_eps_observer(self,
+                            max_sequence_length=10,
+                            bypass_partial_episodes=True):
+        """
+        Instantiate observer for writing episode data to replay buffer
+
+        :param max_sequence_length: int
+            upper limit of size of internal buffer
+        :param bypass_partial_episodes: bool
+            whether or not to bypass if episode length is greater than max_sequence_length
+        :return: reverb_utils.ReverbAddEpisodeObserver
+            observer instance
+        """
+
+        self.rb_eps_observer = reverb_utils.ReverbAddEpisodeObserver(
+            py_client=self.__reverb_replay.py_client,
+            table_name=self.__table_name,
+            max_sequence_length=max_sequence_length,
+            bypass_partial_episodes=bypass_partial_episodes,
+        )
+
+        return self.rb_eps_observer
+
     def close(self):
         """
         Close observers and Terminate reverb replay buffer server
+
         :return:
         """
 
         if self.rb_traj_observer is not None:
             self.rb_traj_observer.close()
+        if self.rb_eps_observer is not None:
+            self.rb_eps_observer.close()
         if self.__reverb_server is not None:
             self.__reverb_server.stop()
