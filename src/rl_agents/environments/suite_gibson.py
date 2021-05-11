@@ -7,6 +7,7 @@ import gin
 from tf_agents.environments import gym_wrapper
 from tf_agents.environments import wrappers
 
+
 @gin.configurable
 def load(config_file,
          model_id=None,
@@ -18,21 +19,20 @@ def load(config_file,
          gym_env_wrappers=(),
          env_wrappers=(),
          spec_dtype_map=None):
-
     if is_localize_env:
         env = LocalizeGibsonEnv(config_file=config_file,
-                     scene_id=model_id,
-                     mode=env_mode,
-                     action_timestep=action_timestep,
-                     physics_timestep=physics_timestep,
-                     device_idx=device_idx)
+                                scene_id=model_id,
+                                mode=env_mode,
+                                action_timestep=action_timestep,
+                                physics_timestep=physics_timestep,
+                                device_idx=device_idx)
     else:
         env = NavigateGibsonEnv(config_file=config_file,
-                     scene_id=model_id,
-                     mode=env_mode,
-                     action_timestep=action_timestep,
-                     physics_timestep=physics_timestep,
-                     device_idx=device_idx)
+                                scene_id=model_id,
+                                mode=env_mode,
+                                action_timestep=action_timestep,
+                                physics_timestep=physics_timestep,
+                                device_idx=device_idx)
 
     discount = env.config.get('discount_factor', 0.99)
     max_episode_steps = env.config.get('max_step', 500)
@@ -47,6 +47,7 @@ def load(config_file,
         spec_dtype_map=spec_dtype_map,
         auto_reset=True
     )
+
 
 @gin.configurable
 def wrap_env(env,

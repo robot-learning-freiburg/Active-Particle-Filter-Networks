@@ -6,21 +6,22 @@ from gibson2.envs.igibson_env import iGibsonEnv
 import gym
 import numpy as np
 
+
 class NavigateGibsonEnv(iGibsonEnv):
     """
     Custom implementation of navigation task based on iGibsonEnv
     """
 
     def __init__(
-        self,
-        config_file,
-        scene_id=None,
-        mode='headless',
-        action_timestep=1 / 10.0,
-        physics_timestep=1 / 240.0,
-        device_idx=0,
-        render_to_tensor=False,
-        automatic_reset=False,
+            self,
+            config_file,
+            scene_id=None,
+            mode='headless',
+            action_timestep=1 / 10.0,
+            physics_timestep=1 / 240.0,
+            device_idx=0,
+            render_to_tensor=False,
+            automatic_reset=False,
     ):
         """
         :param config_file: config_file path
@@ -34,14 +35,14 @@ class NavigateGibsonEnv(iGibsonEnv):
         """
 
         super(NavigateGibsonEnv, self).__init__(
-                        config_file=config_file,
-                        scene_id=scene_id,
-                        mode=mode,
-                        action_timestep=action_timestep,
-                        physics_timestep=physics_timestep,
-                        device_idx=device_idx,
-                        render_to_tensor=render_to_tensor,
-                        automatic_reset=automatic_reset)
+            config_file=config_file,
+            scene_id=scene_id,
+            mode=mode,
+            action_timestep=action_timestep,
+            physics_timestep=physics_timestep,
+            device_idx=device_idx,
+            render_to_tensor=render_to_tensor,
+            automatic_reset=automatic_reset)
 
         # override observation_space
         # task_obs_dim = robot_prorpio_state (18) + goal_coords (2)
@@ -53,15 +54,17 @@ class NavigateGibsonEnv(iGibsonEnv):
 
         if 'task_obs' in self.custom_output:
             observation_space['task_obs'] = gym.spaces.Box(
-                    low=-np.inf, high=+np.inf,
-                    shape=(TASK_OBS_DIM,),
-                    dtype=np.float32)
+                low=-np.inf, high=+np.inf,
+                shape=(TASK_OBS_DIM,),
+                dtype=np.float32
+            )
         # image_height and image_width are obtained from env config file
         if 'rgb_obs' in self.custom_output:
             observation_space['rgb_obs'] = gym.spaces.Box(
-                    low=0.0, high=1.0,
-                    shape=(self.image_height, self.image_width, 3),
-                    dtype=np.float32)
+                low=0.0, high=1.0,
+                shape=(self.image_height, self.image_width, 3),
+                dtype=np.float32
+            )
 
         self.observation_space = gym.spaces.Dict(observation_space)
         print("=====> NavigateGibsonEnv initialized")
@@ -120,11 +123,22 @@ class NavigateGibsonEnv(iGibsonEnv):
         processed_state = OrderedDict()
         if 'task_obs' in self.custom_output:
             processed_state['task_obs'] = np.concatenate([
-                    self.robots[0].calc_state(),    # robot proprioceptive state
-                    self.task.get_task_obs(self)[:-2], # goal x, y relative distance
+                self.robots[0].calc_state(),  # robot proprioceptive state
+                self.task.get_task_obs(self)[:-2],  # goal x, y relative distance
             ])
+            # print(np.min(processed_state['task_obs']), np.max(processed_state['task_obs']))
         if 'rgb_obs' in self.custom_output:
             processed_state['rgb_obs'] = state['rgb']  # [0, 1] range rgb image
-
-        # cv2.imwrite('./test.png', processed_state['rgb_obs'] * 255)
+            # cv2.imwrite('./test.png', processed_state['rgb_obs'] * 255)
         return processed_state
+
+    def render(self, mode='human'):
+        """
+        Renders the environment.
+
+        :param mode: str
+            mode to render with
+        :return:
+        """
+
+        super(NavigateGibsonEnv, self).render(mode=mode)

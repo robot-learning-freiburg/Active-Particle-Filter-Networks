@@ -96,7 +96,6 @@ class ReverbReplayBuffer(object):
 
         return self.rb_traj_observer
 
-
     def close(self):
         """
         Close observers and Terminate reverb replay buffer server
