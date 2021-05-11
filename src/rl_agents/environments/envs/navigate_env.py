@@ -46,16 +46,17 @@ class NavigateGibsonEnv(iGibsonEnv):
 
         # override observation_space
         # task_obs_dim = robot_prorpio_state (18) + goal_coords (2)
-        TASK_OBS_DIM = 20
+        task_obs_dim = 20
 
         # custom tf_agents we are using supports dict() type observations
         observation_space = OrderedDict()
         self.custom_output = ['task_obs', ]
 
         if 'task_obs' in self.custom_output:
+            ## HACK: use [-1k, +1k] range for TanhNormalProjectionNetwork to work
             observation_space['task_obs'] = gym.spaces.Box(
-                low=-np.inf, high=+np.inf,
-                shape=(TASK_OBS_DIM,),
+                low=-1000.0, high=+1000.0,
+                shape=(task_obs_dim,),
                 dtype=np.float32
             )
         # image_height and image_width are obtained from env config file

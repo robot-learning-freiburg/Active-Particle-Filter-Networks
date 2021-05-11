@@ -136,8 +136,8 @@ class SACAgent(object):
                 preprocessing_layers=preprocessing_layers,
                 preprocessing_combiner=preprocessing_combiner,
                 fc_layer_params=self.__actor_fc_layers,
-                continuous_projection_net=normal_projection_net,
-                # continuous_projection_net=tanh_normal_projection_network.TanhNormalProjectionNetwork,
+                # continuous_projection_net=normal_projection_net,
+                continuous_projection_net=tanh_normal_projection_network.TanhNormalProjectionNetwork,
                 kernel_initializer=self.__glorot_uniform_initializer,
             )
 
