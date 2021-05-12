@@ -123,7 +123,7 @@ def train_eval(
     log_interval=50,
     summary_interval=50,
     summaries_flush_secs=1,
-    use_tf_functions=True,
+    use_tf_functions=False,
     debug_summaries=False,
     summarize_grads_and_vars=False):
   """A simple train and eval for PPO."""
@@ -279,8 +279,8 @@ def train_eval(
     if use_tf_functions:
       # TODO(b/123828980): Enable once the cause for slowdown was identified.
       collect_driver.run = common.function(collect_driver.run, autograph=False)
-      tf_agent.train = common.function(tf_agent.train, autograph=False)
-      train_step = common.function(train_step)
+    tf_agent.train = common.function(tf_agent.train, autograph=False)
+    train_step = common.function(train_step)
 
     collect_time = 0
     train_time = 0
@@ -351,6 +351,8 @@ def train_eval(
 def main(_):
   logging.set_verbosity(logging.INFO)
   tf.compat.v1.enable_v2_behavior()
+
+  os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 
   is_localize_env = False
   config_file = FLAGS.config_file
