@@ -42,7 +42,7 @@ class ReverbReplayBuffer(object):
 
     def get_dataset(self,
                     collect_data_spec,
-                    sequence_length=1,
+                    sequence_length=2,
                     batch_size=1,
                     ):
         """
@@ -75,7 +75,7 @@ class ReverbReplayBuffer(object):
         return dataset
 
     def get_rb_traj_observer(self,
-                             sequence_length=1,
+                             sequence_length=2,
                              stride_length=1
                              ):
         """

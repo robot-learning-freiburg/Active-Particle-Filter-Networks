@@ -6,7 +6,6 @@ import os
 import tensorflow as tf
 
 # import custom tf_agents
-from custom_agents.ppo_rl_agent import PPOAgent
 from custom_agents.sac_rl_agent import SACAgent
 from custom_agents.replay_buffer import ReverbReplayBuffer
 from environments import suite_gibson

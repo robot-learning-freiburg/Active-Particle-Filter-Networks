@@ -186,6 +186,7 @@ class SACAgent(object):
 
         # instantiate agent policies
         self.tf_agent = tf_agent
+        # tf_greedy_policy = greedy_policy.GreedyPolicy(tf_agent.policy)
         self.eval_policy = py_tf_eager_policy.PyTFEagerPolicy(
             policy=tf_agent.policy,
             use_tf_function=use_tf_function
