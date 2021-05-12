@@ -189,8 +189,8 @@ def train_eval(arg_params):
         # create or get global step tensor
         global_step = tf.compat.v1.train.get_or_create_global_step()
 
-    # create ppo agent
-    ppo_agent = SACAgent(
+    # create sac agent
+    sac_agent = SACAgent(
         root_dir=arg_params.root_dir,
         env_load_fn=lambda model_id, mode, device_idx: suite_gibson.load(
             config_file=arg_params.config_file,
@@ -206,12 +206,12 @@ def train_eval(arg_params):
         gpu=arg_params.gpu_num,
         use_tf_function=arg_params.use_tf_function
     )
-    tf_agent = ppo_agent.tf_agent
-    collect_env = ppo_agent.train_py_env
-    eval_env = ppo_agent.eval_py_env
-    random_policy = ppo_agent.random_policy
-    collect_policy = ppo_agent.collect_policy
-    eval_policy = ppo_agent.eval_policy
+    tf_agent = sac_agent.tf_agent
+    collect_env = sac_agent.train_py_env
+    eval_env = sac_agent.eval_py_env
+    random_policy = sac_agent.random_policy
+    collect_policy = sac_agent.collect_policy
+    eval_policy = sac_agent.eval_policy
 
     # instantiate reverb replay buffer
     rb = ReverbReplayBuffer(
