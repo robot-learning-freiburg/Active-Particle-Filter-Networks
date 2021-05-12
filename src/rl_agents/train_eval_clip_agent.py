@@ -86,6 +86,8 @@ flags.DEFINE_integer('num_eval_episodes', 30,
 flags.DEFINE_boolean('use_rnns', False,
                      'If true, use RNN for policy and value function.')
 flags.DEFINE_integer('seed', 100, 'random seed')
+flags.DEFINE_boolean('use_tf_functions', True,
+                     'Whether to use graph/eager mode execution')
 
 flags.DEFINE_string('config_file', os.path.join(os.path.dirname(os.path.realpath(__file__)), 'configs', 'turtlebot_point_nav.yaml'),
                     'Config file for the experiment.')
@@ -123,7 +125,7 @@ def train_eval(
     log_interval=50,
     summary_interval=50,
     summaries_flush_secs=1,
-    use_tf_functions=False,
+    use_tf_functions=True,
     debug_summaries=False,
     summarize_grads_and_vars=False):
   """A simple train and eval for PPO."""
@@ -278,8 +280,8 @@ def train_eval(
 
     if use_tf_functions:
       # TODO(b/123828980): Enable once the cause for slowdown was identified.
-      collect_driver.run = common.function(collect_driver.run, autograph=False)
-    tf_agent.train = common.function(tf_agent.train, autograph=False)
+      collect_driver.run = common.function(collect_driver.run)
+    tf_agent.train = common.function(tf_agent.train)
     train_step = common.function(train_step)
 
     collect_time = 0
@@ -381,6 +383,7 @@ def main(_):
       num_parallel_environments=FLAGS.num_parallel_environments,
       replay_buffer_capacity=FLAGS.replay_buffer_capacity,
       num_epochs=FLAGS.num_epochs,
+      use_tf_functions=FLAGS.use_tf_functions,
       num_eval_episodes=FLAGS.num_eval_episodes)
 
 
