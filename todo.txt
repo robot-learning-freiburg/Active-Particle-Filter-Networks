@@ -3,3 +3,17 @@ May 5th 2021
 1. fix the rgb - nan/inf issue for non-parallel env
 2. then try on-policy algorithm say PPO for navigation task (task_obs and rgb_obs)
 3. then try to incorporate pfnet into rl agent
+
+May 12th 2021
+-------------
+1. fix ppo with rgb_obs
+2. test pretrained pfnet
+3. check if end to end works or need any changes
+
+
+end project goals:
+1. reproduce pfnet on housing dataset
+2. fine tuned it to igibson
+3. use pretrained pfnet with rl agent ppo -> with better representation of particles
+4. end-to-end pfnet + rl agent
+5. baseline comparision
