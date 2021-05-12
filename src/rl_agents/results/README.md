@@ -20,9 +20,10 @@
   
   ### Results
   *blue - training curve, orange - evaluation curve*
-  |Experiement | Result     | AverageEpisodeLength      | AverageEpisodeReturn      |
-  |------------|------------|------------|-------------|
-  |task_obs only (2021-05-06)| [Navigate_Fixed_Goal - (non-parallel_py_env)](2021-05-06_10-06-32)|![Metrics_AverageEpisodeLength](2021-05-06_10-06-32/images/Metrics_AverageEpisodeLength.svg)|![Metrics_AverageReturn](2021-05-06_10-06-32/images/Metrics_AverageReturn.svg)| -> same train and eval envs with normal_projection_network.NormalProjectionNetwork train_eval.py
-  |rgb_obs only (2021-05-07)| [Navigate_Fixed_Goal - (non-parallel_py_env)](2021-05-07_00-07-34)|![Metrics_AverageEpisodeLength](2021-05-07_00-07-34/images/Metrics_AverageEpisodeLength.svg)|![Metrics_AverageReturn](2021-05-07_00-07-34/images/Metrics_AverageReturn.svg)| -> same train and eval envs with tanh_normal_projection_network.TanhNormalProjectionNetwork train_eval.py
+  |Experiement | Agent |  Result     | AverageEpisodeLength      | AverageEpisodeReturn      |
+  |------------|-------|-----|------------|-------------|
+  |task_obs only (2021-05-06)| SAC |[Navigate_Fixed_Goal - (non-parallel_py_env)](2021-05-06_10-06-32)|![Metrics_AverageEpisodeLength](2021-05-06_10-06-32/images/Metrics_AverageEpisodeLength.svg)|![Metrics_AverageReturn](2021-05-06_10-06-32/images/Metrics_AverageReturn.svg)| -> same train and eval envs with normal_projection_network.NormalProjectionNetwork train_eval.py
+  |rgb_obs only (2021-05-07)| SAC |[Navigate_Fixed_Goal - (non-parallel_py_env)](2021-05-07_00-07-34)|![Metrics_AverageEpisodeLength](2021-05-07_00-07-34/images/Metrics_AverageEpisodeLength.svg)|![Metrics_AverageReturn](2021-05-07_00-07-34/images/Metrics_AverageReturn.svg)| -> same train and eval envs with tanh_normal_projection_network.TanhNormalProjectionNetwork train_eval.py
+  |task_obs only (2021-05-12)| PPOClipAgent |[Navigate_Fixed_Goal - (non-parallel_py_env)](2021-05-12_12-46-55)|![Metrics_AverageEpisodeLength](2021-05-12_12-46-55/images/Metrics_AverageEpisodeLength.svg)|![Metrics_AverageReturn](2021-05-12_12-46-55/images/Metrics_AverageReturn.svg)| -> same train and eval envs with tanh activation non-mini batch training
 
 </details>
