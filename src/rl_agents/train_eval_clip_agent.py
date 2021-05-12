@@ -43,6 +43,9 @@ import tensorflow as tf  # pylint: disable=g-explicit-tensorflow-version-import
 import numpy as np
 import random
 
+# error out inf or NaN
+tf.debugging.enable_check_numerics()
+
 from tf_agents.agents.ppo import ppo_clip_agent
 from tf_agents.drivers import dynamic_episode_driver
 from tf_agents.environments import parallel_py_environment
@@ -163,13 +166,25 @@ def train_eval(
     actor_fc_layers = [256]
     value_fc_layers = [256]
     preprocessing_layers = {}
-    preprocessing_layers['task_obs'] = tf.keras.Sequential(mlp_layers(
-        conv_1d_layer_params=None,
-        conv_2d_layer_params=None,
-        fc_layer_params=encoder_fc_layers,
-        kernel_initializer=glorot_uniform_initializer,
-    ))
-    preprocessing_combiner = None
+    if 'rgb_obs' in observation_spec:
+        preprocessing_layers['rgb_obs'] = tf.keras.Sequential(mlp_layers(
+            conv_1d_layer_params=None,
+            conv_2d_layer_params=conv_2d_layer_params,
+            fc_layer_params=encoder_fc_layers,
+            kernel_initializer=glorot_uniform_initializer,
+        ))
+    if 'task_obs' in observation_spec:
+        preprocessing_layers['task_obs'] = tf.keras.Sequential(mlp_layers(
+            conv_1d_layer_params=None,
+            conv_2d_layer_params=None,
+            fc_layer_params=encoder_fc_layers,
+            kernel_initializer=glorot_uniform_initializer,
+        ))
+
+    if len(preprocessing_layers) <= 1:
+        preprocessing_combiner = None
+    else:
+        preprocessing_combiner = tf.keras.layers.Concatenate(axis=-1)
 
     if use_rnns:
       actor_net = actor_distribution_rnn_network.ActorDistributionRnnNetwork(
