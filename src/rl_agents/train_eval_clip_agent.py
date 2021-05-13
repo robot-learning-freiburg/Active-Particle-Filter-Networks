@@ -55,7 +55,9 @@ flags.DEFINE_multi_string(
     'gin_file', None, 'Path to the trainer config files.')
 flags.DEFINE_multi_string('gin_param', None, 'Gin binding to pass through.')
 
-flags.DEFINE_integer('num_environment_steps', 25000000,
+flags.DEFINE_integer('num_epochs', 25,
+                     'Number of epochs for computing policy updates.')
+flags.DEFINE_integer('num_environment_steps', 2500000,
                      'Number of environment steps to run before finishing.')
 flags.DEFINE_integer('collect_episodes_per_iteration', 30,
                      'The number of episodes to take in the environment before each update.'
@@ -76,7 +78,7 @@ flags.DEFINE_boolean('use_parallel_envs', False,
                      'Whether to use parallel env or not')
 flags.DEFINE_integer('num_eval_episodes', 10,
                      'The number of episodes to run eval on.')
-flags.DEFINE_integer('eval_interval', 10000,
+flags.DEFINE_integer('eval_interval', 500,
                      'Run eval every eval_interval train steps')
 flags.DEFINE_boolean('eval_only', False,
                      'Whether to run evaluation only on trained checkpoints')
@@ -119,7 +121,7 @@ def train_eval(
     actor_fc_layers=[256, 256],
     value_fc_layers=[256, 256],
     # Params for collect
-    num_environment_steps=25000000,
+    num_environment_steps=2500000,
     collect_episodes_per_iteration=30,
     num_parallel_environments=1,
     replay_buffer_capacity=1001,    # Per-environment
@@ -130,17 +132,17 @@ def train_eval(
     use_parallel_envs=True,
     # Params for eval
     num_eval_episodes=30,
-    eval_interval=10000,
+    eval_interval=500,
     eval_only=False,
     eval_deterministic=False,
     num_parallel_environments_eval=1,
     model_ids_eval=None,
     # Params for summaries and logging
-    train_checkpoint_interval=10000,
-    policy_checkpoint_interval=10000,
-    log_interval=100,
-    summary_interval=1000,
-    summaries_flush_secs=10,
+    train_checkpoint_interval=500,
+    policy_checkpoint_interval=500,
+    log_interval=50,
+    summary_interval=50,
+    summaries_flush_secs=1,
     debug_summaries=False,
     summarize_grads_and_vars=False,
     eval_metrics_callback=None):
