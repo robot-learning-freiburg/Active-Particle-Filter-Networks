@@ -7,6 +7,7 @@ import random
 import tensorflow as tf
 
 from pfnetwork.pfnet import pfnet_model
+from environments import suite_gibson
 
 
 def parse_args():
@@ -42,6 +43,12 @@ def parse_args():
         default=1,
         help='Fix the random seed'
     )
+    arg_parser.add_argument(
+        '--device_idx',
+        type=int,
+        default='0',
+        help='use gpu no. to train'
+    )
 
     # define particle parameters
     arg_parser.add_argument(
@@ -76,6 +83,30 @@ def parse_args():
              'Assumes values 0.0 < alpha <= 1.0. Alpha equal to 1.0 corresponds to hard-resampling'
     )
 
+    # define igibson env parameters
+    arg_parser.add_argument(
+        '--config_file',
+        type=str,
+        default=os.path.join(
+            os.path.dirname(os.path.realpath(__file__)),
+            'configs',
+            'turtlebot_point_nav.yaml'
+        ),
+        help='Config file for the experiment'
+    )
+    arg_parser.add_argument(
+        '--action_timestep',
+        type=float,
+        default=1.0 / 10.0,
+        help='Action time step for the simulator'
+    )
+    arg_parser.add_argument(
+        '--physics_timestep',
+        type=float,
+        default=1.0 / 40.0,
+        help='Physics time step for the simulator'
+    )
+
     # parse parameters
     params = arg_parser.parse_args()
 
@@ -96,6 +127,8 @@ def parse_args():
     # HACK: hardcoded values for floor map/obstacle map
     params.global_map_size = [1000, 1000, 1]
     params.window_scaler = 8.0
+
+    params.is_localize_env = True
 
     # set random seeds
     random.seed(params.seed)
@@ -122,6 +155,18 @@ def pfnet_test(arg_params):
     if arg_params.pfnet_loadpath:
         pfnet.load_weights(arg_params.pfnet_loadpath)
         print("=====> Loaded pf model from: " + arg_params.pfnet_loadpath)
+
+        # create igibson env
+        env = suite_gibson.load(
+            config_file=arg_params.config_file,
+            model_id=None,
+            env_mode='headless',
+            is_localize_env=arg_params.is_localize_env,
+            action_timestep=arg_params.action_timestep,
+            physics_timestep=arg_params.physics_timestep,
+            device_idx=arg_params.device_idx,
+        )
+        env.reset()
 
 
 if __name__ == '__main__':
