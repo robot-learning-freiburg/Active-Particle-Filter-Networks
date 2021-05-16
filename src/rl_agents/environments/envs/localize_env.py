@@ -69,8 +69,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.custom_output = ['task_obs', ]
 
         if 'task_obs' in self.custom_output:
+            # HACK: use [-1k, +1k] range for TanhNormalProjectionNetwork to work
             observation_space['task_obs'] = gym.spaces.Box(
-                low=-np.inf, high=+np.inf,
+                low=-1000.0, high=+1000.0,
                 shape=(task_obs_dim,),
                 dtype=np.float32)
         # image_height and image_width are obtained from env config file
@@ -103,9 +104,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         # build initial covariance matrix of particles, in pixels and radians
         particle_std2 = np.square(self.pf_params.init_particles_std.copy())  # variance
-        self.pf_params.init_particles_cov = np.diag(particle_std2[(0, 0, 1),])
+        self.pf_params.init_particles_cov = np.diag(particle_std2[(0, 0, 1), ])
 
-        self.pf_params.pfnet_load = ''
+        self.pf_params.pfnet_load = '/media/suresh/robotics/deep-activate-localization/src/rl_agents/pfnetwork/' \
+                                    'checkpoints/checkpoint_87_5.830/pfnet_checkpoint'
         self.pf_params.use_plot = True
         self.pf_params.store_plot = True
 
@@ -119,7 +121,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         # load model from checkpoint file
         if self.pf_params.pfnet_load:
             self.pfnet_model.load_weights(self.pf_params.pfnet_load)
-            print("=====> Loaded pf model from " + self.pf_params.pfnet_load)
+            print("=====> Loaded pf model checkpoint " + self.pf_params.pfnet_load)
 
         if self.pf_params.use_plot:
             # code related to displaying results in matplotlib
@@ -145,6 +147,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             else:
                 plt.ion()
                 plt.show()
+        print("=====> LocalizeGibsonEnv initialized")
 
     def load_miscellaneous_variables(self):
         """
