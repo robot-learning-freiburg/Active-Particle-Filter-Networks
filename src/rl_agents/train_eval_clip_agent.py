@@ -368,6 +368,8 @@ def train_eval(
                              total_loss)
                 steps_per_sec = (global_step_val - timed_at_step) / (collect_time + train_time)
                 logging.info('%.3f steps/sec', steps_per_sec)
+                logging.info('collect_time = %.3f, train_time = %.3f', collect_time,
+                     train_time)
                 tf.compat.v2.summary.scalar(
                     name='global_steps_per_sec', data=steps_per_sec, step=global_step)
 
