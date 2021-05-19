@@ -234,8 +234,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
             processed_state['task_obs'] = np.concatenate([
                 self.robots[0].calc_state(),  # robot proprioceptive state
             ])
+            # print(np.min(processed_state['task_obs']), np.max(processed_state['task_obs']))
         if 'rgb_obs' in self.custom_output:
             processed_state['rgb_obs'] = state['rgb']  # [0, 1] range rgb image
+            # cv2.imwrite('./test.png', processed_state['rgb_obs'] * 255)
 
         return processed_state
 

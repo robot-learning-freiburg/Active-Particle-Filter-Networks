@@ -316,7 +316,7 @@ def train_eval(arg_params):
         strategy=strategy,
     )
 
-    print('====> Starting training')
+    logging.info('====> Starting training')
 
     # reset the train step
     tf_agent.train_step_counter.assign(0)
