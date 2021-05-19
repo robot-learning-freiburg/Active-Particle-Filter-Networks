@@ -2,7 +2,9 @@
 
 from absl import logging
 import argparse
+import numpy as np
 import os
+import random
 import tensorflow as tf
 
 # import custom tf_agents
@@ -88,6 +90,12 @@ def parse_args():
         default=500,
         help='Save policies every policy_save_interval train steps'
     )
+    arg_parser.add_argument(
+        '--seed',
+        type=int,
+        default=100,
+        help='Fix the random seed'
+    )
 
     # define igibson env parameters
     arg_parser.add_argument(
@@ -127,6 +135,11 @@ def parse_args():
     params.is_localize_env = False
     params.summary_interval = 1000
     params.use_tf_function = True
+
+    # set random seeds
+    random.seed(params.seed)
+    np.random.seed(params.seed)
+    tf.random.set_seed(params.seed)
 
     os.environ['CUDA_VISIBLE_DEVICES'] = str(params.gpu_num)
     os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
@@ -286,7 +299,7 @@ def train_eval(arg_params):
         global_step=global_step,
     )
 
-    ## HACK: there is problem with triggers.PolicySavedModelTrigger
+    # HACK: there is problem with triggers.PolicySavedModelTrigger
     # instantiate agent learner with triggers
     learning_triggers = [
         triggers.StepPerSecondLogTrigger(
