@@ -120,7 +120,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         # load model from checkpoint file
         if self.pf_params.pfnet_load:
             self.pfnet_model.load_weights(self.pf_params.pfnet_load)
-            print("=====> Loaded pf model checkpoint " + self.pf_params.pfnet_load)
+            print("=====> loaded pf model checkpoint " + self.pf_params.pfnet_load)
 
         if self.pf_params.use_plot:
             # code related to displaying results in matplotlib

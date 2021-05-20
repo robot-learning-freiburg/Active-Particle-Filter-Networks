@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
+import numpy as np
 import os
+import random
+import tensorflow as tf
 
 # import custom tf_agents
 from environments import suite_gibson
@@ -47,7 +50,15 @@ def main():
 
 
 if __name__ == '__main__':
+    # set gpu
     gpu_num = 0
     os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu_num)
     os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
+
+    # set random seeds
+    seed = 100
+    random.seed(seed)
+    np.random.seed(seed)
+    tf.random.set_seed(seed)
+
     main()
