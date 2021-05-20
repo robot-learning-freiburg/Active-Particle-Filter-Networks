@@ -198,6 +198,7 @@ def train_eval(arg_params):
         arg_params.root_dir,
         'policy'
     )
+    tf.profiler.experimental.start(logdir=arg_params.root_dir)
 
     with strategy.scope():
         # create or get global step tensor
@@ -353,6 +354,8 @@ def train_eval(arg_params):
 
     # close replay buffer
     rb.close()
+
+    tf.profiler.experimental.stop()
 
 
 if __name__ == '__main__':

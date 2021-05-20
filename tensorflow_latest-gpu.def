@@ -43,6 +43,7 @@ AUTHOR Suresh Guttikonda
 
     # install reverb
     pip3 install dm-reverb
+    pip3 install -U tensorboard-plugin-profile
 
     # download the required assets
     python -m gibson2.utils.assets_utils --download_assets
