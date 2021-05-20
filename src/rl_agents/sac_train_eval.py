@@ -148,6 +148,7 @@ def parse_args():
     tf.compat.v1.enable_v2_behavior()
     tf.debugging.enable_check_numerics()  # error out inf or NaN
 
+    print(params)
     return params
 
 

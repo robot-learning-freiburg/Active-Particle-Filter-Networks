@@ -108,6 +108,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         self.pf_params.pfnet_load = '/media/suresh/robotics/deep-activate-localization/src/rl_agents/pfnetwork/' \
                                     'checkpoints/checkpoint_87_5.830/pfnet_checkpoint'
+        # self.pf_params.pfnet_load = '/home/guttikon/activate-localization/deep-activate-localization/src/rl_agents/pfnetwork/' \
+        #                             'checkpoints/checkpoint_87_5.830/pfnet_checkpoint'
         self.pf_params.use_plot = True
         self.pf_params.store_plot = True
 
