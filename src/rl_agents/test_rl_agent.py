@@ -47,4 +47,7 @@ def main():
 
 
 if __name__ == '__main__':
+    gpu_num = 0
+    os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu_num)
+    os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
     main()

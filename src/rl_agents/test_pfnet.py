@@ -130,6 +130,10 @@ def parse_args():
 
     params.is_localize_env = True
 
+    gpu_num = 0
+    os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu_num)
+    os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
+
     # set random seeds
     random.seed(params.seed)
     np.random.seed(params.seed)

@@ -17,3 +17,10 @@ end project goals:
 3. use pretrained pfnet with rl agent ppo -> with better representation of particles
 4. end-to-end pfnet + rl agent
 5. baseline comparision
+
+May 19th 2021
+-------------
+1. collect stats for random start position with random policy gaussian and uniform init distribution with/without transition noise
+2. use tf profiling or some tool to narrow where the code is taking time
+3. change local map for loop into batches
+4. decrease batch size and number of steps
