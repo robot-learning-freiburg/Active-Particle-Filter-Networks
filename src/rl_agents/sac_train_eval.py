@@ -205,10 +205,11 @@ def train_eval(arg_params):
     # create sac agent
     sac_agent = SACAgent(
         root_dir=arg_params.root_dir,
-        env_load_fn=lambda model_id, mode, device_idx: suite_gibson.load(
+        env_load_fn=lambda model_id, mode, use_tf_function, device_idx: suite_gibson.load(
             config_file=arg_params.config_file,
             model_id=model_id,
             env_mode=mode,
+            use_tf_function=use_tf_function,
             is_localize_env=arg_params.is_localize_env,
             action_timestep=arg_params.action_timestep,
             physics_timestep=arg_params.physics_timestep,

@@ -29,6 +29,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             config_file,
             scene_id=None,
             mode='headless',
+            use_tf_function=True,
             action_timestep=1 / 10.0,
             physics_timestep=1 / 240.0,
             device_idx=0,
@@ -89,7 +90,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.pf_params.map_pixel_in_meters = 0.1
         self.pf_params.init_particles_distr = 'gaussian'
         self.pf_params.init_particles_std = np.array([15, 0.523599], dtype=np.float32)
-        self.pf_params.num_particles = 100
+        self.pf_params.num_particles = 500
         self.pf_params.resample = True
         self.pf_params.alpha_resample_ratio = 1.
         self.pf_params.transition_std = np.array([0., 0.], dtype=np.float32)
@@ -121,6 +122,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
         if self.pf_params.pfnet_load:
             self.pfnet_model.load_weights(self.pf_params.pfnet_load)
             print("=====> loaded pf model checkpoint " + self.pf_params.pfnet_load)
+
+        if use_tf_function:
+            print("=====> wrapped pfnet in tf.graph")
+            self.pfnet_model = tf.function(self.pfnet_model)
 
         if self.pf_params.use_plot:
             # code related to displaying results in matplotlib

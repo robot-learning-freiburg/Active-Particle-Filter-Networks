@@ -26,6 +26,7 @@ def main():
         config_file=config_file,
         model_id=None,
         env_mode='headless',
+        use_tf_function=True,
         is_localize_env=is_localize_env,
         action_timestep=action_timestep,
         physics_timestep=physics_timestep,
