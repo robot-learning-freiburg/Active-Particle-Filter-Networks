@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from absl import app
+from absl import logging
 import numpy as np
 import os
 import random
@@ -11,7 +13,11 @@ from tf_agents.policies import random_py_policy
 from tf_agents.train import actor
 
 
-def main():
+def main(argv):
+
+    logdir = './test_output'
+    tf.profiler.experimental.start(logdir=logdir)
+
     config_file = os.path.join(
         os.path.dirname(os.path.realpath(__file__)),
         'configs',
@@ -24,6 +30,7 @@ def main():
     device_idx = 0
     initial_collect_steps = 100
 
+    logging.info("creating envs start")
     # create igibson env
     py_env = suite_gibson.load(
         config_file=config_file,
@@ -35,6 +42,7 @@ def main():
         physics_timestep=physics_timestep,
         device_idx=device_idx,
     )
+    logging.info("creating envs end")
 
     # create random policy
     random_policy = random_py_policy.RandomPyPolicy(
@@ -42,6 +50,7 @@ def main():
         action_spec=py_env.action_spec()
     )
 
+    logging.info("initial_collect_actor start")
     # use random policy to collect initial experiences to seed the replay buffer
     initial_collect_actor = actor.Actor(
         env=py_env,
@@ -52,6 +61,7 @@ def main():
         metrics=None,
     )
     initial_collect_actor.run()
+    logging.info("initial_collect_actor end")
 
     # time_step = py_env.reset()
     # while not time_step.is_last():
@@ -62,6 +72,7 @@ def main():
     # py_env.close()
 
     print('done')
+    tf.profiler.experimental.stop()
 
 
 if __name__ == '__main__':
@@ -76,7 +87,5 @@ if __name__ == '__main__':
     np.random.seed(seed)
     tf.random.set_seed(seed)
 
-    logdir = './test_output'
-    tf.profiler.experimental.start(logdir=logdir)
-    main()
-    tf.profiler.experimental.stop()
+    logging.set_verbosity(logging.INFO)
+    app.run(main)
