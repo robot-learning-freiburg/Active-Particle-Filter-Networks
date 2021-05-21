@@ -333,7 +333,7 @@ def train_eval(arg_params):
 def main(_):
     logging.set_verbosity(logging.INFO)
     tf.compat.v1.enable_v2_behavior()
-    tf.debugging.enable_check_numerics()  # error out inf or NaN
+    # tf.debugging.enable_check_numerics()  # error out inf or NaN
 
     os.environ['CUDA_VISIBLE_DEVICES'] = str(FLAGS.gpu_num)
     os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'

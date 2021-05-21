@@ -97,10 +97,11 @@ class SACAgent(object):
 
         self.root_dir = os.path.expanduser(root_dir)
 
-        # create train and eval environments
-        self.train_py_env = env_load_fn(None, 'headless', use_tf_function, gpu)
-        # eval_py_env = env_load_fn(None, 'headless', gpu)
-        self.eval_py_env = self.train_py_env
+        with strategy.scope():
+            # create train and eval environments
+            self.train_py_env = env_load_fn(None, 'headless', use_tf_function, gpu)
+            # eval_py_env = env_load_fn(None, 'headless', gpu)
+            self.eval_py_env = self.train_py_env
 
         # tf_agents actor currently only support PyEnvironment
         assert isinstance(self.train_py_env, py_environment.PyEnvironment)
