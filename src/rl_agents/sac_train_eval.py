@@ -148,7 +148,7 @@ def parse_args():
     tf.compat.v1.enable_v2_behavior()
     tf.debugging.enable_check_numerics()  # error out inf or NaN
 
-    print(params)
+    logging.info(params)
     return params
 
 
@@ -204,6 +204,7 @@ def train_eval(arg_params):
         # create or get global step tensor
         global_step = tf.compat.v1.train.get_or_create_global_step()
 
+    logging.info('Creating SAC Agent')
     # create sac agent
     sac_agent = SACAgent(
         root_dir=arg_params.root_dir,
@@ -327,10 +328,12 @@ def train_eval(arg_params):
     returns = []
     for _ in range(arg_params.num_iterations):
         # training
-        collect_actor.run()
-        loss_info = agent_learner.run(
-            iterations=1
-        )
+        # Creates a trace event for each training step with the step number.
+        with tf.profiler.experimental.Trace("Train", step_num=step):
+            collect_actor.run()
+            loss_info = agent_learner.run(
+                iterations=1
+            )
 
         step = agent_learner.train_step_numpy
 
