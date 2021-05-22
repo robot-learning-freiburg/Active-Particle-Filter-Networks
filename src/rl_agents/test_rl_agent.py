@@ -74,7 +74,7 @@ def test_agent(arg_params):
     """
     """
 
-    # tf.profiler.experimental.start(logdir=logdir)
+    tf.profiler.experimental.start(logdir='./log_dir')
 
     # create sac agent
     logging.info('Creating SAC Agent')
@@ -119,7 +119,7 @@ def test_agent(arg_params):
     # py_env.close()
 
     logging.info('Test Done')
-    # tf.profiler.experimental.stop()
+    tf.profiler.experimental.stop()
 
 
 def main(_):

@@ -191,6 +191,8 @@ def train_eval(
     train_dir = os.path.join(root_dir, 'train')
     eval_dir = os.path.join(root_dir, 'eval')
 
+    tf.profiler.experimental.start(logdir='./log_dir')
+
     train_summary_writer = tf.compat.v2.summary.create_file_writer(
         train_dir, flush_millis=summaries_flush_secs * 1000)
     train_summary_writer.set_as_default()
@@ -485,6 +487,8 @@ def train_eval(
                 rb_checkpointer.save(global_step=global_step_val)
 
         logging.info('Training finished')
+        tf.profiler.experimental.stop()
+        
         return train_loss
 
 
