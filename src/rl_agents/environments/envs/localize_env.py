@@ -110,11 +110,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
                                     'checkpoints/checkpoint_87_5.830/pfnet_checkpoint'
         # self.pf_params.pfnet_load = '/home/guttikon/activate-localization/deep-activate-localization/src/rl_agents/pfnetwork/' \
         #                             'checkpoints/checkpoint_87_5.830/pfnet_checkpoint'
-        self.pf_params.use_plot = True
-        self.pf_params.store_plot = True
-
-        self.out_folder = os.path.join('./', 'episode_runs')
-        Path(self.out_folder).mkdir(parents=True, exist_ok=True)
+        self.pf_params.use_plot = False
+        self.pf_params.store_plot = False
 
         # Create a new pfnet model instance
         self.pfnet_model = pfnet.pfnet_model(self.pf_params)
@@ -150,6 +147,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
             # HACK FigureCanvasAgg and ion is not working together
             if self.pf_params.store_plot:
                 self.canvas = FigureCanvasAgg(self.fig)
+                self.out_folder = os.path.join('./', 'episode_runs')
+                Path(self.out_folder).mkdir(parents=True, exist_ok=True)
             else:
                 plt.ion()
                 plt.show()
@@ -386,13 +385,13 @@ class LocalizeGibsonEnv(iGibsonEnv):
             tf.convert_to_tensor(obstacle_map, dtype=tf.float32), axis=0)
 
         # get random particles and weights based on init distribution conditions
-        init_particles = tf.convert_to_tensor(
+        init_particles = tf.cast(tf.convert_to_tensor(
             self.get_random_particles(
                 num_particles,
                 init_particles_distr,
                 new_pose.numpy(),
                 floor_map[0],
-                init_particles_cov), dtype=tf.float32)
+                init_particles_cov)), dtype=tf.float32)
         init_particle_weights = tf.constant(
             np.log(1.0 / float(num_particles)),
             shape=(batch_size, num_particles),
