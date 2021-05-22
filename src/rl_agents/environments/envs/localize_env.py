@@ -106,10 +106,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
         particle_std2 = np.square(self.pf_params.init_particles_std.copy())  # variance
         self.pf_params.init_particles_cov = np.diag(particle_std2[(0, 0, 1), ])
 
-        self.pf_params.pfnet_load = '/media/suresh/robotics/deep-activate-localization/src/rl_agents/pfnetwork/' \
-                                    'checkpoints/checkpoint_87_5.830/pfnet_checkpoint'
-        # self.pf_params.pfnet_load = '/home/guttikon/activate-localization/deep-activate-localization/src/rl_agents/pfnetwork/' \
-        #                             'checkpoints/checkpoint_87_5.830/pfnet_checkpoint'
+        self.pf_params.pfnet_load = '/media/suresh/robotics/deep-activate-localization/src/rl_agents' \
+                                    '/pfnetwork/checkpoints/checkpoint_87_5.830/pfnet_checkpoint'
+        # self.pf_params.pfnet_load = '/home/guttikon/activate-localization/deep-activate-localization/src/rl_agents' \
+        #                             '/pfnetwork/checkpoints/checkpoint_87_5.830/pfnet_checkpoint '
         self.pf_params.use_plot = False
         self.pf_params.store_plot = False
 

@@ -21,15 +21,9 @@ import tensorflow as tf  # pylint: disable=g-explicit-tensorflow-version-import
 import numpy as np
 import random
 
-# error out inf or NaN
-tf.debugging.enable_check_numerics()
-
 # tf.config.run_functions_eagerly(False)
 
 import functools
-
-import argparse
-from pfnetwork import pfnet
 
 # custom tf_agents
 from tf_agents.system import system_multiprocessing as multiprocessing
@@ -52,7 +46,6 @@ from tf_agents.policies import greedy_policy
 from tf_agents.policies import random_tf_policy
 from tf_agents.replay_buffers import tf_uniform_replay_buffer
 from tf_agents.utils import common
-
 
 flags.DEFINE_string('root_dir', os.getenv('TEST_UNDECLARED_OUTPUTS_DIR'),
                     'Root directory for writing logs/summaries/checkpoints.')
@@ -105,7 +98,9 @@ flags.DEFINE_integer('gpu_c', 0,
                      'GPU id for compute, e.g. Tensorflow.')
 
 # Added for Gibson
-flags.DEFINE_string('config_file', os.path.join(os.path.dirname(os.path.realpath(__file__)), 'configs', 'turtlebot_point_nav.yaml'),
+flags.DEFINE_boolean('is_localize_env', True, 'Whether to use navigation/localization env')
+flags.DEFINE_string('config_file',
+                    os.path.join(os.path.dirname(os.path.realpath(__file__)), 'configs', 'turtlebot_point_nav.yaml'),
                     'Config file for the experiment.')
 flags.DEFINE_list('model_ids', None,
                   'A comma-separated list of model ids to overwrite config_file.'
@@ -124,6 +119,7 @@ flags.DEFINE_integer('gpu_g', 0,
 
 FLAGS = flags.FLAGS
 
+
 def normal_projection_net(action_spec,
                           init_action_stddev=0.35,
                           init_means_output_factor=0.1):
@@ -136,60 +132,60 @@ def normal_projection_net(action_spec,
         std_transform=sac_agent.std_clip_transform,
         scale_distribution=True)
 
+
 @gin.configurable
 def train_eval(
-    root_dir,
-    gpu=0,
-    env_load_fn=None,
-    model_ids=None,
-    reload_interval=None,
-    eval_env_mode='headless',
-    num_iterations=1000000,
-    conv_1d_layer_params=None,
-    conv_2d_layer_params=None,
-    encoder_fc_layers=[256],
-    actor_fc_layers=[256, 256],
-    critic_obs_fc_layers=None,
-    critic_action_fc_layers=None,
-    critic_joint_fc_layers=[256, 256],
-    # Params for collect
-    initial_collect_steps=10000,
-    collect_steps_per_iteration=1,
-    num_parallel_environments=1,
-    replay_buffer_capacity=1000000,
-    # Params for target update
-    target_update_tau=0.005,
-    target_update_period=1,
-    # Params for train
-    train_steps_per_iteration=1,
-    batch_size=256,
-    actor_learning_rate=3e-4,
-    critic_learning_rate=3e-4,
-    alpha_learning_rate=3e-4,
-    td_errors_loss_fn=tf.math.squared_difference,
-    gamma=0.99,
-    reward_scale_factor=1.0,
-    gradient_clipping=None,
-    use_tf_functions=True,
-    use_parallel_envs=True,
-    # Params for eval
-    num_eval_episodes=30,
-    eval_interval=10000,
-    eval_only=False,
-    eval_deterministic=False,
-    num_parallel_environments_eval=1,
-    model_ids_eval=None,
-    # Params for summaries and logging
-    train_checkpoint_interval=10000,
-    policy_checkpoint_interval=10000,
-    rb_checkpoint_interval=50000,
-    log_interval=100,
-    summary_interval=1000,
-    summaries_flush_secs=10,
-    debug_summaries=False,
-    summarize_grads_and_vars=False,
-    eval_metrics_callback=None):
-
+        root_dir,
+        gpu=0,
+        env_load_fn=None,
+        model_ids=None,
+        reload_interval=None,
+        eval_env_mode='headless',
+        num_iterations=1000000,
+        conv_1d_layer_params=None,
+        conv_2d_layer_params=None,
+        encoder_fc_layers=[256],
+        actor_fc_layers=[256, 256],
+        critic_obs_fc_layers=None,
+        critic_action_fc_layers=None,
+        critic_joint_fc_layers=[256, 256],
+        # Params for collect
+        initial_collect_steps=10000,
+        collect_steps_per_iteration=1,
+        num_parallel_environments=1,
+        replay_buffer_capacity=1000000,
+        # Params for target update
+        target_update_tau=0.005,
+        target_update_period=1,
+        # Params for train
+        train_steps_per_iteration=1,
+        batch_size=256,
+        actor_learning_rate=3e-4,
+        critic_learning_rate=3e-4,
+        alpha_learning_rate=3e-4,
+        td_errors_loss_fn=tf.math.squared_difference,
+        gamma=0.99,
+        reward_scale_factor=1.0,
+        gradient_clipping=None,
+        use_tf_functions=True,
+        use_parallel_envs=True,
+        # Params for eval
+        num_eval_episodes=30,
+        eval_interval=10000,
+        eval_only=False,
+        eval_deterministic=False,
+        num_parallel_environments_eval=1,
+        model_ids_eval=None,
+        # Params for summaries and logging
+        train_checkpoint_interval=10000,
+        policy_checkpoint_interval=10000,
+        rb_checkpoint_interval=50000,
+        log_interval=100,
+        summary_interval=1000,
+        summaries_flush_secs=10,
+        debug_summaries=False,
+        summarize_grads_and_vars=False,
+        eval_metrics_callback=None):
     """A simple train and eval for SAC."""
     root_dir = os.path.expanduser(root_dir)
     train_dir = os.path.join(root_dir, 'train')
@@ -234,16 +230,15 @@ def train_eval(
             eval_tf_env = tf_py_environment.TFPyEnvironment(
                 parallel_py_environment.ParallelPyEnvironment(eval_py_env))
         else:
-            ## HACK: use same env for train and eval
-            tf_py_env = env_load_fn(model_ids[0], 'headless', gpu)
+            # HACK: use same env for train and eval
+            tf_py_env = env_load_fn(model_ids[0], 'headless', True, gpu)
             tf_env = tf_py_environment.TFPyEnvironment(tf_py_env)
             eval_tf_env = tf_env
 
         time_step_spec = tf_env.time_step_spec()
         observation_spec = time_step_spec.observation
         action_spec = tf_env.action_spec()
-        print('observation_spec', observation_spec)
-        print('action_spec', action_spec)
+        logging.info('\n Observation specs: %s \n Action specs: %s', observation_spec, action_spec)
 
         glorot_uniform_initializer = tf.compat.v1.keras.initializers.glorot_uniform()
         preprocessing_layers = {}
@@ -290,9 +285,10 @@ def train_eval(
             preprocessing_layers=preprocessing_layers,
             preprocessing_combiner=preprocessing_combiner,
             fc_layer_params=actor_fc_layers,
-            continuous_projection_net=normal_projection_net, #tanh_normal_projection_network.TanhNormalProjectionNetwork,
+            continuous_projection_net=normal_projection_net,
+            # tanh_normal_projection_network.TanhNormalProjectionNetwork,
             kernel_initializer=glorot_uniform_initializer
-            )
+        )
         critic_net = critic_network.CriticNetwork(
             (observation_spec, action_spec),
             preprocessing_layers=preprocessing_layers,
@@ -301,8 +297,9 @@ def train_eval(
             action_fc_layer_params=critic_action_fc_layers,
             joint_fc_layer_params=critic_joint_fc_layers,
             kernel_initializer=glorot_uniform_initializer
-            )
+        )
 
+        logging.info('Creating SAC Agent')
         tf_agent = sac_agent.SacAgent(
             time_step_spec,
             action_spec,
@@ -419,10 +416,11 @@ def train_eval(
         # Prepare replay buffer as dataset with invalid transitions filtered.
         def _filter_invalid_transition(trajectories, unused_arg1):
             return ~trajectories.is_boundary()[0]
+
         dataset = replay_buffer.as_dataset(
             sample_batch_size=batch_size,
             num_steps=2).unbatch().filter(
-                _filter_invalid_transition).batch(batch_size).prefetch(5)
+            _filter_invalid_transition).batch(batch_size).prefetch(5)
         # Dataset generates trajectories with shape [Bx2x...]
         iterator = iter(dataset)
 
@@ -492,6 +490,7 @@ def train_eval(
 
 def main(_):
     tf.compat.v1.enable_v2_behavior()
+    # tf.debugging.enable_check_numerics()    # error out inf or NaN
     logging.set_verbosity(logging.INFO)
     gin.parse_config_files_and_bindings(FLAGS.gin_file, FLAGS.gin_param)
 
@@ -518,17 +517,17 @@ def main(_):
     print('critic_joint_fc_layers', critic_joint_fc_layers)
     print('==================================================')
 
-    ## HACK: pfnet is not supported with parallel environments currently
-    is_localize_env = False
-    assert not FLAGS.use_parallel_envs or not is_localize_env
+    # HACK: pfnet is not supported with parallel environments currently
+    assert not FLAGS.use_parallel_envs or not FLAGS.is_localize_env
 
-    ## HACK: supporting only one parallel env currently
+    # HACK: supporting only one parallel env currently
     assert FLAGS.num_parallel_environments == 1
     assert FLAGS.num_parallel_environments_eval == 1
 
     config_file = FLAGS.config_file
     action_timestep = FLAGS.action_timestep
     physics_timestep = FLAGS.physics_timestep
+    is_localize_env = FLAGS.is_localize_env
 
     # set random seeds
     random.seed(FLAGS.seed)
@@ -538,10 +537,11 @@ def main(_):
     train_eval(
         root_dir=FLAGS.root_dir,
         gpu=FLAGS.gpu_g,
-        env_load_fn=lambda model_id, mode, device_idx: suite_gibson.load(
+        env_load_fn=lambda model_id, mode, use_tf_function, device_idx: suite_gibson.load(
             config_file=config_file,
             model_id=model_id,
             env_mode=mode,
+            use_tf_function=use_tf_function,
             is_localize_env=is_localize_env,
             action_timestep=action_timestep,
             physics_timestep=physics_timestep,
