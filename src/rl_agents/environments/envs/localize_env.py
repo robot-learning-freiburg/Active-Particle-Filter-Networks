@@ -670,4 +670,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
             for img in self.curr_plt_images:
                 out.write(img)
             out.release()
-            print(f'stored results to {file_path}')
+            print(f'stored img results {len(self.curr_plt_images)} to {file_path}')
+            self.curr_plt_images = []
+
+    def __del__(self):
+        if len(self.curr_plt_images) > 0:
+            self.close()
