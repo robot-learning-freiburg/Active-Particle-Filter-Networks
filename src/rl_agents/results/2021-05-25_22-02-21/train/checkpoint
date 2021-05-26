@@ -1,0 +1,2 @@
+model_checkpoint_path: "ckpt-50000"
+last_preserved_timestamp: 1621973164.4362571
