@@ -24,3 +24,15 @@ May 19th 2021
 2. use tf profiling or some tool to narrow where the code is taking time
 3. change local map for loop into batches
 4. decrease batch size and number of steps
+
+May 26th 2021
+-------------
+goal: better gaussian with noise
+1. normalize reward in range [-10, 0]
+2. provide est_pose to gt_pose to train rl_agent
+3. plot mse per step metric for random and rl agent -
+  a) different timesteps
+  b) different number particles
+  c) with and without transition noise
+  d) different init covariance
+4. try with large and smaller  [e-3, e-5] learning rates for sac

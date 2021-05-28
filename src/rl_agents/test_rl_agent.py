@@ -270,10 +270,11 @@ def test_agent(arg_params):
 
     train_checkpointer.initialize_or_restore()
 
+    policy = random_policy
     time_step = tf_env.reset()
     while not time_step.is_last():
         tf_env.render('human')
-        action_step = random_policy.action(time_step)
+        action_step = policy.action(time_step)
         time_step = tf_env.step(action_step.action)
         print(time_step.reward)
     tf_env.close()
