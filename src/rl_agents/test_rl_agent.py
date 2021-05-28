@@ -22,7 +22,6 @@ from tf_agents.policies import greedy_policy
 from tf_agents.policies import random_tf_policy
 from tf_agents.utils import common
 
-
 flags.DEFINE_string(
     name='root_dir',
     default='./test_output',
@@ -82,7 +81,62 @@ flags.DEFINE_integer(
     help='GPU id for graphics/computation'
 )
 
+# define pfNet env parameters
+flags.DEFINE_string(
+    name='init_particles_distr',
+    default='gaussian',
+    help='Distribution of initial particles. Possible values: gaussian / uniform.'
+)
+flags.DEFINE_list(
+    name='init_particles_std',
+    default=[30, 0.523599],
+    help='Standard deviations for generated initial particles for tracking distribution. '
+         'Values: translation std (meters), rotation std (radians)'
+)
+flags.DEFINE_integer(
+    name='num_particles',
+    default=500,
+    help='Number of particles in Particle Filter.'
+)
+flags.DEFINE_boolean(
+    name='resample',
+    default=True,
+    help='Resample particles in Particle Filter. Possible values: true / false.'
+)
+flags.DEFINE_float(
+    name='alpha_resample_ratio',
+    default=0.5,
+    help='Trade-off parameter for soft-resampling in PF-net. '
+         'Only effective if resample == true. Assumes values 0.0 < alpha <= 1.0. '
+         'Alpha equal to 1.0 corresponds to hard-resampling.'
+)
+flags.DEFINE_list(
+    name='transition_std',
+    default=[0.0, 0.0],
+    help='Standard deviations for transition model. Values: translation std (meters), rotation std (radians)'
+)
+flags.DEFINE_string(
+    name='pfnet_load',
+    default=os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        'pfnetwork/checkpoints',
+        'checkpoint_87_5.830/pfnet_checkpoint'
+    ),
+    help='Load a previously trained pfnet model from a checkpoint file.'
+)
+flags.DEFINE_boolean(
+    name='use_plot',
+    default=False,
+    help='Enable Plotting of particles on env map. Possible values: true / false.'
+)
+flags.DEFINE_boolean(
+    name='store_plot',
+    default=False,
+    help='Store the plots sequence as video. Possible values: true / false.'
+)
+
 FLAGS = flags.FLAGS
+
 
 def normal_projection_net(action_spec,
                           init_action_stddev=0.35,
@@ -95,6 +149,7 @@ def normal_projection_net(action_spec,
         init_means_output_factor=init_means_output_factor,
         std_transform=sac_agent.std_clip_transform,
         scale_distribution=True)
+
 
 def test_agent(arg_params):
     """
@@ -111,12 +166,12 @@ def test_agent(arg_params):
     critic_obs_fc_layers = [256]
     critic_action_fc_layers = [256]
     critic_joint_fc_layers = [256]
-    gamma=0.99
-    actor_learning_rate=3e-4
-    critic_learning_rate=3e-4
-    alpha_learning_rate=3e-4
-    target_update_tau=0.005
-    target_update_period=1
+    gamma = 0.99
+    actor_learning_rate = 3e-4
+    critic_learning_rate = 3e-4
+    alpha_learning_rate = 3e-4
+    target_update_tau = 0.005
+    target_update_period = 1
     td_errors_loss_fn = tf.math.squared_difference
     reward_scale_factor = 1.0
     gradient_clipping = None
@@ -131,7 +186,7 @@ def test_agent(arg_params):
     eval_metrics_callback = None
     eval_deterministic = False
 
-    env_load_fn=lambda model_id, mode, use_tf_function, device_idx: suite_gibson.load(
+    env_load_fn = lambda model_id, mode, use_tf_function, device_idx: suite_gibson.load(
         config_file=arg_params.config_file,
         model_id=model_id,
         env_mode=mode,
@@ -301,6 +356,7 @@ def main(_):
     tf.random.set_seed(FLAGS.seed)
 
     test_agent(FLAGS)
+
 
 if __name__ == '__main__':
     app.run(main)

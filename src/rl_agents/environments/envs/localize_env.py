@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
+from absl import flags
 import argparse
 from collections import OrderedDict
+import copy
 import cv2
 from ..env_utils import datautils
 from ..env_utils import pfnet_loss
@@ -62,8 +64,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
         del self.task.reward_functions[-1]
 
         # override observation_space
-        # task_obs_dim = robot_prorpio_state (18) + goal_coords (2)
-        task_obs_dim = 18
+        # task_obs_dim = robot_prorpio_state (18) + est_pose (3)
+        task_obs_dim = 18 + 3
 
         # custom tf_agents we are using supports dict() type observations
         observation_space = OrderedDict()
@@ -87,14 +89,22 @@ class LocalizeGibsonEnv(iGibsonEnv):
         argparser = argparse.ArgumentParser()
         self.pf_params = argparser.parse_args([])
 
-        self.pf_params.map_pixel_in_meters = 0.1
-        self.pf_params.init_particles_distr = 'gaussian'
-        self.pf_params.init_particles_std = np.array([15, 0.523599], dtype=np.float32)
-        self.pf_params.num_particles = 500
-        self.pf_params.resample = True
-        self.pf_params.alpha_resample_ratio = 1.
-        self.pf_params.transition_std = np.array([0., 0.], dtype=np.float32)
+        FLAGS = flags.FLAGS
+        assert 0.0 <= FLAGS.alpha_resample_ratio <= 1.0
+        assert FLAGS.init_particles_distr in ['gaussian', 'uniform']
+        assert len(FLAGS.transition_std) == len(FLAGS.init_particles_std) == 2
 
+        self.pf_params.init_particles_distr = FLAGS.init_particles_distr
+        self.pf_params.init_particles_std = np.array(FLAGS.init_particles_std, dtype=np.float32)
+        self.pf_params.num_particles = FLAGS.num_particles
+        self.pf_params.resample = FLAGS.resample
+        self.pf_params.alpha_resample_ratio = FLAGS.alpha_resample_ratio
+        self.pf_params.transition_std = np.array(FLAGS.transition_std, dtype=np.float32)
+        self.pf_params.pfnet_load = FLAGS.pfnet_load
+        self.pf_params.use_plot = FLAGS.use_plot
+        self.pf_params.store_plot = FLAGS.store_plot
+
+        self.pf_params.map_pixel_in_meters = 0.1
         self.pf_params.batch_size = 1
         self.pf_params.trajlen = 1
         self.pf_params.return_state = True
@@ -104,14 +114,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         # build initial covariance matrix of particles, in pixels and radians
         particle_std2 = np.square(self.pf_params.init_particles_std.copy())  # variance
-        self.pf_params.init_particles_cov = np.diag(particle_std2[(0, 0, 1), ])
-
-        self.pf_params.pfnet_load = '/media/suresh/robotics/deep-activate-localization/src/rl_agents' \
-                                    '/pfnetwork/checkpoints/checkpoint_87_5.830/pfnet_checkpoint'
-        # self.pf_params.pfnet_load = '/home/guttikon/activate-localization/deep-activate-localization/src/rl_agents' \
-        #                             '/pfnetwork/checkpoints/checkpoint_87_5.830/pfnet_checkpoint'
-        self.pf_params.use_plot = False
-        self.pf_params.store_plot = False
+        self.pf_params.init_particles_cov = np.diag(particle_std2[(0, 0, 1),])
 
         # Create a new pfnet model instance
         self.pfnet_model = pfnet.pfnet_model(self.pf_params)
@@ -201,12 +204,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
         """
 
         state, reward, done, info = super(LocalizeGibsonEnv, self).step(action)
-        new_rgb_obs = state['rgb']
-
-        custom_state = self.process_state(state)
+        new_rgb_obs = copy.deepcopy(state['rgb'])
 
         reward = self.step_pfnet(new_rgb_obs, reward)
 
+        custom_state = self.process_state(state)
         return custom_state, reward, done, info
 
     def reset(self):
@@ -219,10 +221,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
         state = super(LocalizeGibsonEnv, self).reset()
         new_rgb_obs = state['rgb']
 
-        custom_state = self.process_state(state)
-
         self.reset_pfnet(new_rgb_obs)
 
+        custom_state = self.process_state(state)
         return custom_state
 
     def process_state(self, state):
@@ -239,6 +240,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         if 'task_obs' in self.custom_output:
             processed_state['task_obs'] = np.concatenate([
                 self.robots[0].calc_state(),  # robot proprioceptive state
+                self.curr_est_pose[0].numpy()  # gaussian mean of particles (x,y, theta)
             ])
             # print(np.min(processed_state['task_obs']), np.max(processed_state['task_obs']))
         if 'rgb_obs' in self.custom_output:
@@ -319,8 +321,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
         loss_dict = pfnet_loss.compute_loss(particles, particle_weights, true_old_pose, map_pixel_in_meters)
 
         # TODO: may need better reward
-        # compute reward
+        # compute reward and normalize to range [-10, 0]
         reward = reward - tf.squeeze(loss_dict['coords']).numpy()
+        reward = reward / 10 if -reward <= 100 else reward / 100
+        reward = np.clip(reward, -10, 0)
 
         self.curr_pfnet_state = new_pfnet_state
         self.curr_gt_pose = new_pose

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 """
-reference: https://github.com/StanfordVL/agents/blob/cvpr21_challenge_tf2.4/tf_agents/agents/sac/examples/v2/train_eval.py
+reference:
+    https://github.com/StanfordVL/agents/blob/cvpr21_challenge_tf2.4/tf_agents/agents/sac/examples/v2/train_eval.py
 """
 
 from __future__ import absolute_import
@@ -117,6 +118,30 @@ flags.DEFINE_float('physics_timestep', 1.0 / 40.0,
 flags.DEFINE_integer('gpu_g', 0,
                      'GPU id for graphics, e.g. Gibson.')
 
+# Added for Particle Filter
+flags.DEFINE_string('init_particles_distr', 'gaussian',
+                    'Distribution of initial particles. Possible values: gaussian / uniform.')
+flags.DEFINE_list('init_particles_std', [15, 0.523599],
+                  'Standard deviations for generated initial particles for tracking distribution. '
+                  'Values: translation std (meters), rotation std (radians)')
+flags.DEFINE_integer('num_particles', 500,
+                     'Number of particles in Particle Filter.')
+flags.DEFINE_boolean('resample', True,
+                     'Resample particles in Particle Filter. Possible values: true / false.')
+flags.DEFINE_float('alpha_resample_ratio', 0.5,
+                   'Trade-off parameter for soft-resampling in PF-net. '
+                   'Only effective if resample == true. Assumes values 0.0 < alpha <= 1.0. '
+                   'Alpha equal to 1.0 corresponds to hard-resampling.')
+flags.DEFINE_list('transition_std', [0.0, 0.0],
+                  'Standard deviations for transition model. Values: translation std (meters), rotation std (radians)')
+flags.DEFINE_string('pfnet_load',
+                    os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pfnetwork/checkpoints',
+                                 'checkpoint_87_5.830/pfnet_checkpoint'),
+                    'Load a previously trained pfnet model from a checkpoint file.')
+flags.DEFINE_boolean('use_plot', False,
+                     'Enable Plotting of particles on env map. Possible values: true / false.')
+flags.DEFINE_boolean('store_plot', False,
+                     'Store the plots sequence as video. Possible values: true / false.')
 FLAGS = flags.FLAGS
 
 
@@ -191,7 +216,7 @@ def train_eval(
     train_dir = os.path.join(root_dir, 'train')
     eval_dir = os.path.join(root_dir, 'eval')
 
-    tf.profiler.experimental.start(logdir='./log_dir')
+    # tf.profiler.experimental.start(logdir='./log_dir')
 
     train_summary_writer = tf.compat.v2.summary.create_file_writer(
         train_dir, flush_millis=summaries_flush_secs * 1000)
@@ -487,8 +512,8 @@ def train_eval(
                 rb_checkpointer.save(global_step=global_step_val)
 
         logging.info('Training finished')
-        tf.profiler.experimental.stop()
-        
+        # tf.profiler.experimental.stop()
+
         return train_loss
 
 
