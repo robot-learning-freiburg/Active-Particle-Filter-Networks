@@ -22,22 +22,11 @@ from tf_agents.policies import greedy_policy
 from tf_agents.policies import random_tf_policy
 from tf_agents.utils import common
 
+# define testing parameters
 flags.DEFINE_string(
     name='root_dir',
     default='./test_output',
-    help='Root directory for writing logs/summaries/checkpoints.'
-)
-
-# define training parameters
-flags.DEFINE_integer(
-    name='initial_collect_steps',
-    default=100,
-    help='Number of steps to collect at the beginning of training using random policy'
-)
-flags.DEFINE_boolean(
-    name='use_tf_function',
-    default=True,
-    help='Whether to use graph/eager mode execution'
+    help='Root directory for pretrained agent logs/summaries/checkpoints.'
 )
 flags.DEFINE_integer(
     name='num_eval_episodes',
@@ -48,6 +37,11 @@ flags.DEFINE_integer(
     name='seed',
     default=100,
     help='Fix the random seed'
+)
+flags.DEFINE_string(
+    name='agent',
+    default='random',
+    help='Agent Behavior'
 )
 
 # define igibson env parameters
@@ -157,7 +151,6 @@ def test_agent(arg_params):
 
     root_dir = os.path.expanduser(arg_params.root_dir)
     train_dir = os.path.join(arg_params.root_dir, 'train')
-    eval_dir = os.path.join(arg_params.root_dir, 'eval')
 
     conv_1d_layer_params = [(32, 8, 4), (64, 4, 2), (64, 3, 1)]
     conv_2d_layer_params = [(32, (8, 8), 4), (64, (4, 4), 2), (64, (3, 3), 2)]
@@ -325,14 +318,24 @@ def test_agent(arg_params):
 
     train_checkpointer.initialize_or_restore()
 
-    policy = random_policy
-    time_step = tf_env.reset()
-    while not time_step.is_last():
-        tf_env.render('human')
-        action_step = policy.action(time_step)
-        time_step = tf_env.step(action_step.action)
-        print(time_step.reward)
-    tf_env.close()
+    if arg_params.agent == 'sac_agent':
+        policy = eval_policy
+        log_dir = os.path.join(arg_params.root_dir, 'sac_agent')
+    else:
+        policy = random_policy
+        log_dir = os.path.join(arg_params.root_dir, 'rnd_agent')
+
+    test_summary_writer = tf.summary.create_file_writer(log_dir)
+    with test_summary_writer.as_default():
+        step = 0
+        time_step = tf_env.reset()
+        while not time_step.is_last():
+            tf_env.render('human')
+            action_step = policy.action(time_step)
+            time_step = tf_env.step(action_step.action)
+            tf.summary.scalar('mse_reward', time_step.reward[0], step=step)
+            step += 1
+        tf_env.close()
 
     logging.info('Test Done')
 
