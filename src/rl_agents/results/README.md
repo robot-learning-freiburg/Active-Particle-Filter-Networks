@@ -36,4 +36,8 @@
   ### Results
   *blue - training curve, orange - evaluation curve*
 
+  |Experiement |Experiement |Experiement |Experiement |
+  |------------|------------|------------|------------|
+  |![Eval_Low_Init_Covariance](2021-05-29_11-11-00/images/eval_low_init_covariance.svg)|![Eval_More_Particles](2021-05-29_11-11-00/images/eval_more_particles.svg)|![Eval_With_Noise](2021-05-29_11-11-00/images/eval_w_noise.svg)|![Eval_WithOut_Noise](2021-05-29_11-11-00/images/eval_wo_noise.svg)|
+
 </details>
