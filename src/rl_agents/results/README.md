@@ -34,10 +34,11 @@
   <summary>May 26th - May 2nd Summary</summary>
 
   ### Results
-  *blue - training curve, orange - evaluation curve*
+  *blue - random agent, red - sac trained agent*
 
-  |Experiement |Experiement |Experiement |Experiement |
+  |With Out Transition Noise |With Transition Noise |With Lower Initial Covariance |With More Particles |
   |------------|------------|------------|------------|
-  |![Eval_Low_Init_Covariance](2021-05-29_11-11-00/images/eval_low_init_covariance.svg)|![Eval_More_Particles](2021-05-29_11-11-00/images/eval_more_particles.svg)|![Eval_With_Noise](2021-05-29_11-11-00/images/eval_w_noise.svg)|![Eval_WithOut_Noise](2021-05-29_11-11-00/images/eval_wo_noise.svg)|
+  |![Eval_WithOut_Noise](2021-05-29_11-11-00/images/eval_wo_noise.svg)|![Eval_With_Noise](2021-05-29_11-11-00/images/eval_w_noise.svg)|![Eval_Low_Init_Covariance](2021-05-29_11-11-00/images/eval_low_init_covariance.svg)|![Eval_More_Particles](2021-05-29_11-11-00/images/eval_more_particles.svg)|
+  |transition_std: ['0', '0']<br/>init_particles_std: ['30', '0.523599']<br/>init_particles_distr: gaussian<br/>num_particles: 1000<br/>alpha_resample_ratio 0.8|transition_std: ['1', '0']<br/>init_particles_std ['30', '0.523599']<br/>init_particles_distr: gaussian<br/>num_particles: 1000<br/>alpha_resample_ratio 0.8|transition_std: ['0.2', '0']<br/>init_particles_std ['15', '0.523599']<br/>init_particles_distr: gaussian<br/>num_particles: 1500<br/>alpha_resample_ratio 0.8|transition_std: ['0.5', '0']<br/>init_particles_std ['30', '0.523599']<br/>init_particles_distr: gaussian<br/>num_particles: 2500<br/>alpha_resample_ratio 0.8|
 
 </details>
