@@ -34,7 +34,7 @@
   <summary>May 26th - May 2nd Summary</summary>
 
   ### Results
-  *blue - random agent, red - sac trained agent*
+  *<span style="color:blue">blue</span> - random agent, <span style="color:red">red</span> - sac trained agent*
 
   |With Out Transition Noise |With Transition Noise |With Lower Initial Covariance |With More Particles |
   |------------|------------|------------|------------|
