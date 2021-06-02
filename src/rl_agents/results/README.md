@@ -31,10 +31,10 @@
 
 
 <details open>
-  <summary>May 26th - May 2nd Summary</summary>
+  <summary>May 26th - June 2nd Summary</summary>
 
   ### Results
-  *<span style="color:blue">blue</span> - random agent, <span style="color:red">red</span> - sac trained agent*
+  <span style="color:blue">blue</span> - *random agent*, <span style="color:red">red</span> - *sac trained agent*
 
   |With Out Transition Noise |With Transition Noise |With Lower Initial Covariance |With More Particles |
   |------------|------------|------------|------------|
