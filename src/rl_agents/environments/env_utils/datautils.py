@@ -5,6 +5,7 @@ import numpy as np
 import pybullet as p
 import tensorflow as tf
 
+
 def normalize(angle):
     """
     Normalize the angle to [-pi, pi]
@@ -14,6 +15,7 @@ def normalize(angle):
     quaternion = p.getQuaternionFromEuler(np.array([0, 0, angle]))
     euler = p.getEulerFromQuaternion(quaternion)
     return euler[2]
+
 
 def calc_odometry(old_pose, new_pose):
     """
@@ -40,6 +42,7 @@ def calc_odometry(old_pose, new_pose):
     odometry = np.array([odom_x, odom_y, odom_th])
     return odometry
 
+
 def sample_motion_odometry(old_pose, odometry):
     """
     Sample new pose based on give pose and odometry
@@ -61,6 +64,7 @@ def sample_motion_odometry(old_pose, odometry):
     new_pose = np.array([x2, y2, th2])
     return new_pose
 
+
 def decode_image(img, resize=None):
     """
     Decode image
@@ -68,11 +72,12 @@ def decode_image(img, resize=None):
     :param resize: tuple of width, height, new size of image (optional)
     :return np.ndarray: image (k, H, W, 1)
     """
-    #TODO
+    # TODO
     # img = cv2.imdecode(img, -1)
     if resize is not None:
         img = cv2.resize(img, resize)
     return img
+
 
 def process_floor_map(floormap):
     """
@@ -90,6 +95,7 @@ def process_floor_map(floormap):
     floormap = normalize_map(floormap.astype(np.float32))
     return floormap
 
+
 def normalize_map(x):
     """
     Normalize map input
@@ -97,7 +103,8 @@ def normalize_map(x):
     :return np.ndarray: normalized map (H, W, ch)
     """
     # rescale to [0, 2], later zero padding will produce equivalent obstacle
-    return x * (2.0/255.0)
+    return x * (2.0 / 255.0)
+
 
 def normalize_observation(x):
     """
@@ -108,8 +115,9 @@ def normalize_observation(x):
     # resale to [-1, 1]
     if x.ndim == 2 or x.shape[2] == 1:  # depth
         return x * (2.0 / 100.0) - 1.0
-    else:   # rgb
+    else:  # rgb
         return x * (2.0 / 255.0) - 1.0
+
 
 def process_raw_image(image, resize=(56, 56)):
     """
@@ -123,6 +131,7 @@ def process_raw_image(image, resize=(56, 56)):
     image = normalize_observation(np.atleast_3d(image.astype(np.float32)))
 
     return image
+
 
 def get_discrete_action():
     """
@@ -142,6 +151,7 @@ def get_discrete_action():
         action = 3  # left
     return action
 
+
 def transform_pose(position, map_shape, map_resolution):
     """
     Transform pose from 2D co-ordinate space to pixel space
@@ -153,10 +163,11 @@ def transform_pose(position, map_shape, map_resolution):
     x, y = position
     height, width, channel = map_shape
 
-    x = (x / map_resolution) + width/2
-    y = (y / map_resolution) + height/2
+    x = (x / map_resolution) + width / 2
+    y = (y / map_resolution) + height / 2
 
     return np.array([x, y])
+
 
 def gather_episode_stats(env, params, action_model, sample_particles=False):
     """
@@ -180,11 +191,11 @@ def gather_episode_stats(env, params, action_model, sample_particles=False):
     true_poses = []
     observation = []
 
-    obs = env.reset()   # already processed
+    obs = env.reset()  # already processed
     observation.append(obs)
 
-    floor_map = env.get_floor_map()    # already processed
-    obstacle_map = env.get_obstacle_map()   # already processed
+    floor_map = env.get_floor_map()  # already processed
+    obstacle_map = env.get_obstacle_map()  # already processed
     assert list(floor_map.shape) == list(map_size)
     assert list(obstacle_map.shape) == list(map_size)
 
@@ -192,7 +203,7 @@ def gather_episode_stats(env, params, action_model, sample_particles=False):
     assert list(old_pose.shape) == [3]
     true_poses.append(old_pose)
 
-    for _ in range(trajlen-1):
+    for _ in range(trajlen - 1):
         if agent == 'manual':
             action = get_discrete_action()
         elif agent == 'pretrained':
@@ -223,8 +234,9 @@ def gather_episode_stats(env, params, action_model, sample_particles=False):
 
     if sample_particles:
         # sample random particles and corresponding weights
-        init_particles = env.get_random_particles(num_particles, particles_distr, true_poses[0], particles_cov).squeeze(axis=0)
-        init_particle_weights = np.full((num_particles, ), (1./num_particles))
+        init_particles = env.get_random_particles(num_particles, particles_distr, true_poses[0], particles_cov).squeeze(
+            axis=0)
+        init_particle_weights = np.full((num_particles,), (1. / num_particles))
         assert list(init_particles.shape) == [num_particles, 3]
         assert list(init_particle_weights.shape) == [num_particles]
 
@@ -233,15 +245,16 @@ def gather_episode_stats(env, params, action_model, sample_particles=False):
         init_particle_weights = None
 
     episode_data = {}
-    episode_data['floor_map'] = floor_map # (height, width, 1)
-    episode_data['obstacle_map'] = obstacle_map # (height, width, 1)
+    episode_data['floor_map'] = floor_map  # (height, width, 1)
+    episode_data['obstacle_map'] = obstacle_map  # (height, width, 1)
     episode_data['odometry'] = np.stack(odometry)  # (trajlen, 3)
     episode_data['true_states'] = np.stack(true_poses)  # (trajlen, 3)
-    episode_data['observation'] = np.stack(observation) # (trajlen, height, width, 3)
-    episode_data['init_particles'] = init_particles   # (num_particles, 3)
-    episode_data['init_particle_weights'] = init_particle_weights   # (num_particles,)
+    episode_data['observation'] = np.stack(observation)  # (trajlen, height, width, 3)
+    episode_data['init_particles'] = init_particles  # (num_particles, 3)
+    episode_data['init_particle_weights'] = init_particle_weights  # (num_particles,)
 
     return episode_data
+
 
 def get_batch_data(env, params, action_model):
     """
@@ -296,6 +309,7 @@ def get_batch_data(env, params, action_model):
 
     return batch_data
 
+
 def serialize_tf_record(episode_data):
     """
     Serialize episode data (state, odometry, observation, global map) as tf record
@@ -329,6 +343,7 @@ def serialize_tf_record(episode_data):
 
     return tf.train.Example(features=tf.train.Features(feature=record)).SerializeToString()
 
+
 def deserialize_tf_record(raw_record):
     """
     Serialize episode tf record (state, odometry, observation, global map)
@@ -355,6 +370,7 @@ def deserialize_tf_record(raw_record):
     features_tensor = tf.io.parse_single_example(raw_record, tfrecord_format)
     return features_tensor
 
+
 def get_dataflow(filenames, batch_size, s_buffer_size=100, is_training=False):
     """
     Custom dataset for TF record
@@ -366,6 +382,7 @@ def get_dataflow(filenames, batch_size, s_buffer_size=100, is_training=False):
     ds = ds.batch(batch_size, drop_remainder=True).prefetch(tf.data.experimental.AUTOTUNE)
 
     return ds
+
 
 def transform_raw_record(env, parsed_record, params):
     """
@@ -385,18 +402,19 @@ def transform_raw_record(env, parsed_record, params):
     particles_distr = params.init_particles_distr
 
     trans_record['observation'] = parsed_record['observation'].reshape(
-                [batch_size] + list(parsed_record['observation_shape'][0]))[:, :trajlen]
+        [batch_size] + list(parsed_record['observation_shape'][0]))[:, :trajlen]
     trans_record['odometry'] = parsed_record['odometry'].reshape(
-                [batch_size] + list(parsed_record['odometry_shape'][0]))[:, :trajlen]
+        [batch_size] + list(parsed_record['odometry_shape'][0]))[:, :trajlen]
     trans_record['true_states'] = parsed_record['state'].reshape(
-                [batch_size] + list(parsed_record['state_shape'][0]))[:, :trajlen]
+        [batch_size] + list(parsed_record['state_shape'][0]))[:, :trajlen]
 
     # get floor and obstance map of environment scene
     trans_record['obstacle_map'] = tf.tile(tf.expand_dims(env.get_obstacle_map(), axis=0), [batch_size, 1, 1, 1])
     trans_record['floor_map'] = tf.tile(tf.expand_dims(env.get_floor_map(), axis=0), [batch_size, 1, 1, 1])
 
     # sample random particles and corresponding weights
-    trans_record['init_particles'] = env.get_random_particles(num_particles, particles_distr, trans_record['true_states'][:, 0, :], particles_cov)
+    trans_record['init_particles'] = env.get_random_particles(num_particles, particles_distr,
+                                                              trans_record['true_states'][:, 0, :], particles_cov)
 
     # sanity check
     assert list(trans_record['odometry'].shape) == [batch_size, trajlen, 3]
