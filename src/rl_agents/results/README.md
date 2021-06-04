@@ -34,7 +34,9 @@
   <summary>May 26th - June 2nd Summary</summary>
 
   ### Results
-  <span style="color:blue">blue</span> - *random agent*, <span style="color:red">red</span> - *sac trained agent*
+  ![#1589F0](https://via.placeholder.com/15/1589F0/000000?text=+) - *random agent* ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) - *sac trained agent*\
+  reward scale: [-10, 0]\
+  env obs: proprio (gt_pose, gt_velocity, est_pose)
 
   |With Out Transition Noise |With Transition Noise |With Lower Initial Covariance |With More Particles |
   |------------|------------|------------|------------|
