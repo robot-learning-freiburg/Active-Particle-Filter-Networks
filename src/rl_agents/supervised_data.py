@@ -3,12 +3,14 @@
 from absl import app
 from absl import flags
 from absl import logging
+import argparse
 import numpy as np
 import os
 import random
 import tensorflow as tf
 
 # import custom tf_agents
+from environments.env_utils import datautils
 from environments.envs.localize_env import LocalizeGibsonEnv
 
 # define testing parameters
@@ -29,7 +31,7 @@ flags.DEFINE_integer(
 )
 flags.DEFINE_string(
     name='agent',
-    default='manual',
+    default='random',
     help='Agent Behavior'
 )
 
@@ -42,6 +44,11 @@ flags.DEFINE_string(
         'turtlebot_random_nav.yaml'
     ),
     help='Config file for the experiment'
+)
+flags.DEFINE_string(
+    name='env_mode',
+    default='headless',
+    help='Environment render mode'
 )
 flags.DEFINE_float(
     name='action_timestep',
@@ -84,134 +91,22 @@ flags.DEFINE_boolean(
 FLAGS = flags.FLAGS
 
 
-def serialize_tf_record(episode_data):
+def collect_data(env, params, filename='./test.tfrecord', num_records=10):
     """
-    Serialize complete episode data as tf record
-    """
-
-    actions = episode_data['actions']
-    record = {
-        'actions': tf.train.Feature(
-            float_list=tf.train.FloatList(
-                value=actions.flatten()
-            )
-        ),
-        'actions_shape': tf.train.Feature(
-            int64_list=tf.train.Int64List(
-                value=actions.shape
-            )
-        ),
-    }
-
-    return tf.train.Example(
-        features=tf.train.Features(feature=record)
-    ).SerializeToString()
-
-
-def deserialize_tf_record(raw_record):
-    """
-    De-Serialize tf record containing complete episode data
+    Run the gym environment and collect the required stats
+    :param params: parsed parameters
+    :return dict: episode stats data containing:
+        odometry, true poses, observation, particles, particles weights, floor map
     """
 
-    tfrecord_format = {
-        'actions': tf.io.FixedLenSequenceFeature(
-            (),
-            dtype=tf.float32,
-            allow_missing=True
-        ),
-        'actions_shape': tf.io.FixedLenSequenceFeature(
-            (),
-            dtype=tf.int64,
-            allow_missing=True
-        )
-    }
-
-    return tf.io.parse_single_example(raw_record, tfrecord_format)
-
-
-def get_discrete_action():
-    """
-    Get manual keyboard action
-    :return int: discrete action for moving forward/backward/left/right
-    """
-    key = input('Enter Key: ')
-    # default stay still
-    if key == 'w':
-        action = 0  # forward
-    elif key == 's':
-        action = 1  # backward
-    elif key == 'd':
-        action = 2  # right
-    elif key == 'a':
-        action = 3  # left
-    else:
-        action = 4
-    return action
-
-
-def get_continuous_action():
-    raise NotImplementedError
-
-
-def get_manual_action():
-    if FLAGS.is_discrete:
-        return get_discrete_action()
-    else:
-        return get_continuous_action()
-
-
-def gather_episode_stats(env):
-    """
-    Step through igibson environment and collect the required stats
-    """
-
-    env.reset()
-
-    actions = []
-    for _ in range(FLAGS.max_step):
-        if FLAGS.agent == 'manual':
-            action = get_manual_action()
-        else:
-            # default random action
-            action = env.action_space.sample()
-        actions.append(action)
-
-        # take action and get new observation
-        obs, reward, done, _ = env.step(action)
-
-    episode_data = {'actions': np.stack(actions)}
-
-    return episode_data
-
-
-def collect_data(env):
-    """
-    """
-
-    with tf.io.TFRecordWriter(FLAGS.filename) as writer:
-        for i in range(FLAGS.num_records):
+    with tf.io.TFRecordWriter(filename) as writer:
+        for i in range(num_records):
             print(f'episode: {i}')
-
-            episode_data = gather_episode_stats(env)
-            record = serialize_tf_record(episode_data)
+            episode_data = datautils.gather_episode_stats(env, params, sample_particles=False)
+            record = datautils.serialize_tf_record(episode_data)
             writer.write(record)
 
-    print(f'Collected successfully in {FLAGS.filename}')
-
-
-def transform_raw_record(parsed_record):
-    trans_record = {'actions': parsed_record['actions'].reshape([] + list(parsed_record['actions_shape']))}
-
-    return trans_record
-
-
-def get_dataflow(filenames):
-    """
-    Custom dataset for TF record
-    """
-    ds = tf.data.TFRecordDataset(filenames)
-    ds = ds.map(deserialize_tf_record, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-    return ds
+    print(f'Collected successfully in {filename}')
 
 
 def main(_):
@@ -234,7 +129,7 @@ def main(_):
     env = LocalizeGibsonEnv(
         config_file=FLAGS.config_file,
         scene_id=None,
-        mode='gui',
+        mode=FLAGS.env_mode,
         use_tf_function=True,
         action_timestep=FLAGS.action_timestep,
         physics_timestep=FLAGS.physics_timestep,
@@ -249,7 +144,15 @@ def main(_):
         print(k, v)
     print('==================================================')
 
-    collect_data(env)
+    argparser = argparse.ArgumentParser()
+    params = argparser.parse_args([])
+
+    params.agent = FLAGS.agent
+    params.trajlen = FLAGS.max_step
+    params.global_map_size = [1000, 1000, 1]
+
+
+    collect_data(env, params, FLAGS.filename, FLAGS.num_records)
 
     # test_ds = get_dataflow([FLAGS.filename])
     # itr = test_ds.as_numpy_iterator()

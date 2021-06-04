@@ -169,12 +169,11 @@ def transform_pose(position, map_shape, map_resolution):
     return np.array([x, y])
 
 
-def gather_episode_stats(env, params, action_model, sample_particles=False):
+def gather_episode_stats(env, params, sample_particles=False):
     """
     Run the gym environment and collect the required stats
     :param env: igibson env instance
     :param params: parsed parameters
-    :param action_model: pretrained action sampler model
     :param sample_particles: whether or not to sample particles
     :return dict: episode stats data containing:
         odometry, true poses, observation, particles, particles weights, floor map
@@ -183,9 +182,6 @@ def gather_episode_stats(env, params, action_model, sample_particles=False):
     agent = params.agent
     trajlen = params.trajlen
     map_size = params.global_map_size
-    num_particles = params.num_particles
-    particles_cov = params.init_particles_cov
-    particles_distr = params.init_particles_distr
 
     odometry = []
     true_poses = []
@@ -199,15 +195,13 @@ def gather_episode_stats(env, params, action_model, sample_particles=False):
     assert list(floor_map.shape) == list(map_size)
     assert list(obstacle_map.shape) == list(map_size)
 
-    old_pose = env.get_robot_state()['pose']
+    old_pose = env.get_robot_pose(env.robots[0].calc_state(), floor_map.shape)
     assert list(old_pose.shape) == [3]
     true_poses.append(old_pose)
 
     for _ in range(trajlen - 1):
         if agent == 'manual':
             action = get_discrete_action()
-        elif agent == 'pretrained':
-            action, _ = action_model.predict(obs)
         else:
             # default random action
             action = env.action_space.sample()
@@ -218,7 +212,7 @@ def gather_episode_stats(env, params, action_model, sample_particles=False):
         observation.append(obs)
 
         # get new robot state after taking action
-        new_pose = env.get_robot_state()['pose']
+        new_pose = env.get_robot_pose(env.robots[0].calc_state(), floor_map.shape)
         assert list(new_pose.shape) == [3]
         true_poses.append(new_pose)
 
@@ -233,6 +227,9 @@ def gather_episode_stats(env, params, action_model, sample_particles=False):
     odometry.append(odom)
 
     if sample_particles:
+        num_particles = params.num_particles
+        particles_cov = params.init_particles_cov
+        particles_distr = params.init_particles_distr
         # sample random particles and corresponding weights
         init_particles = env.get_random_particles(num_particles, particles_distr, true_poses[0], particles_cov).squeeze(
             axis=0)
@@ -256,11 +253,10 @@ def gather_episode_stats(env, params, action_model, sample_particles=False):
     return episode_data
 
 
-def get_batch_data(env, params, action_model):
+def get_batch_data(env, params):
     """
     Gather batch of episode stats
     :param params: parsed parameters
-    :param action_model: pretrained action sampler model
     :return dict: episode stats data containing:
         odometry, true poses, observation, particles, particles weights, floor map
     """
@@ -279,7 +275,7 @@ def get_batch_data(env, params, action_model):
     init_particle_weights = []
 
     for _ in range(batch_size):
-        episode_data = gather_episode_stats(env, params, action_model, True)
+        episode_data = gather_episode_stats(env, params, sample_particles=True)
 
         odometry.append(episode_data['odometry'])
         floor_map.append(episode_data['floor_map'])
