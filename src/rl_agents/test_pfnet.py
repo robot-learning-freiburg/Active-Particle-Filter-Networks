@@ -299,6 +299,7 @@ def pfnet_test(arg_params):
     batch_size = arg_params.batch_size
     num_particles = arg_params.num_particles
 
+    print(arg_params)
     test_summary_writer = tf.summary.create_file_writer(log_dir)
     with test_summary_writer.as_default():
         # run over all evaluation samples in an epoch
