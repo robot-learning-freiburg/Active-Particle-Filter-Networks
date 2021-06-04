@@ -113,7 +113,7 @@ def parse_args():
         help='Trade-off parameter for soft-resampling in PF-net. Only effective if resample == true.'
              'Assumes values 0.0 < alpha <= 1.0. Alpha equal to 1.0 corresponds to hard-resampling'
     )
-    argparser.add_argument(
+    arg_parser.add_argument(
         '--bptt_steps',
         type=int,
         default=1,
@@ -173,6 +173,7 @@ def parse_args():
     params.global_map_size = [1000, 1000, 1]
     params.window_scaler = 8.0
 
+    params.use_tf_function = True
     params.use_pfnet = False
     params.store_results = False
 
@@ -283,7 +284,7 @@ def pfnet_test(arg_params):
         config_file=arg_params.config_file,
         scene_id=None,
         mode='headless',
-        use_tf_function=True,
+        use_tf_function=arg_params.use_tf_function,
         use_pfnet=arg_params.use_pfnet,
         action_timestep=arg_params.action_timestep,
         physics_timestep=arg_params.physics_timestep,
@@ -300,6 +301,10 @@ def pfnet_test(arg_params):
     if arg_params.pfnet_loadpath:
         pfnet_model.load_weights(arg_params.pfnet_loadpath)
         print("=====> Loaded pf model from: " + arg_params.pfnet_loadpath)
+
+    if arg_params.use_tf_function:
+        pfnet_model = tf.function(pfnet_model)
+        print("=====> wrapped pfnet in tf.graph")
 
     trajlen = arg_params.trajlen
     bptt_steps = arg_params.bptt_steps
