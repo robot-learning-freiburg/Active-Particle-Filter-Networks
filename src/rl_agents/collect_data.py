@@ -222,37 +222,38 @@ def main(_):
     os.environ['CUDA_VISIBLE_DEVICES'] = str(FLAGS.gpu_num)
     os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 
-    print('==================================================')
-    for k, v in FLAGS.flag_values_dict().items():
-        print(k, v)
-    print('==================================================')
-
     # set random seeds
     random.seed(FLAGS.seed)
     np.random.seed(FLAGS.seed)
     tf.random.set_seed(FLAGS.seed)
 
-    if not os.path.isfile(FLAGS.filename):
-        env = LocalizeGibsonEnv(
-            config_file=FLAGS.config_file,
-            scene_id=None,
-            mode='gui',
-            use_tf_function=True,
-            action_timestep=FLAGS.action_timestep,
-            physics_timestep=FLAGS.physics_timestep,
-            device_idx=FLAGS.gpu_num
-        )
-        FLAGS.max_step = env.config.get('max_step', 500)
-        FLAGS.is_discrete = env.config.get("is_discrete", False),
-        FLAGS.velocity = env.config.get("velocity", 1.0)
+    if not os.path.exists(FLAGS.filename):
+        os.makedirs(FLAGS.filename)
+    env = LocalizeGibsonEnv(
+        config_file=FLAGS.config_file,
+        scene_id=None,
+        mode='gui',
+        use_tf_function=True,
+        action_timestep=FLAGS.action_timestep,
+        physics_timestep=FLAGS.physics_timestep,
+        device_idx=FLAGS.gpu_num
+    )
+    FLAGS.max_step = env.config.get('max_step', 500)
+    FLAGS.is_discrete = env.config.get("is_discrete", False)
+    FLAGS.velocity = env.config.get("velocity", 1.0)
 
-        collect_data(env)
+    print('==================================================')
+    for k, v in FLAGS.flag_values_dict().items():
+        print(k, v)
+    print('==================================================')
 
-    test_ds = get_dataflow([FLAGS.filename])
-    itr = test_ds.as_numpy_iterator()
-    parsed_record = next(itr)
-    data_sample = transform_raw_record(parsed_record)
-    print(data_sample['actions'])
+    collect_data(env)
+
+    # test_ds = get_dataflow([FLAGS.filename])
+    # itr = test_ds.as_numpy_iterator()
+    # parsed_record = next(itr)
+    # data_sample = transform_raw_record(parsed_record)
+    # print(data_sample['actions'])
 
 
 if __name__ == '__main__':
