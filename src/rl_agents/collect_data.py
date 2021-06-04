@@ -34,7 +34,7 @@ flags.DEFINE_integer(
 )
 flags.DEFINE_string(
     name='agent',
-    default='random',
+    default='manual',
     help='Agent Behavior'
 )
 
@@ -67,6 +67,11 @@ flags.DEFINE_boolean(
     name='is_discrete',
     default=False,
     help='Whether to use discrete/continuous actions'
+)
+flags.DEFINE_float(
+    name='velocity',
+    default=1.0,
+    help='Velocity of Robot'
 )
 
 # define pfNet env parameters
@@ -124,32 +129,33 @@ def deserialize_tf_record(raw_record):
     return tf.io.parse_single_example(raw_record, tfrecord_format)
 
 
-def get_discrete_action():
+def get_discrete_action(velocity):
     """
     Get manual keyboard action
     :return int: discrete action for moving forward/backward/left/right
     """
     key = input('Enter Key: ')
     # default stay still
-    action = 4
     if key == 'w':
-        action = 0  # forward
+        action = [velocity, velocity]  # forward
     elif key == 's':
-        action = 1  # backward
+        action = [-velocity, -velocity]  # backward
     elif key == 'd':
-        action = 2  # right
+        action = [velocity * 0.5, -velocity * 0.5]  # right
     elif key == 'a':
-        action = 3  # left
+        action = [-velocity * 0.5, velocity * 0.5]  # left
+    else:
+        action = [0., 0.]
     return action
 
 
 def get_continuous_action():
-    pass
+    raise NotImplementedError
 
 
 def get_manual_action():
     if FLAGS.is_discrete:
-        return get_discrete_action()
+        return get_discrete_action(FLAGS.velocity)
     else:
         return get_continuous_action()
 
@@ -238,6 +244,7 @@ def main(_):
         )
         FLAGS.max_step = env.config.get('max_step', 500)
         FLAGS.is_discrete = env.config.get("is_discrete", False),
+        FLAGS.velocity = env.config.get("velocity", 1.0)
 
         collect_data(env)
 
