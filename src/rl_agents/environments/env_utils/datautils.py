@@ -68,7 +68,7 @@ def sample_motion_odometry(old_pose, odometry):
 def decode_image(img, resize=None):
     """
     Decode image
-    :param img_str: image encoded as a png in a string
+    :param img: image encoded as a png in a string
     :param resize: tuple of width, height, new size of image (optional)
     :return np.ndarray: image (k, H, W, 1)
     """
@@ -241,14 +241,15 @@ def gather_episode_stats(env, params, sample_particles=False):
         init_particles = None
         init_particle_weights = None
 
-    episode_data = {}
-    episode_data['floor_map'] = floor_map  # (height, width, 1)
-    episode_data['obstacle_map'] = obstacle_map  # (height, width, 1)
-    episode_data['odometry'] = np.stack(odometry)  # (trajlen, 3)
-    episode_data['true_states'] = np.stack(true_poses)  # (trajlen, 3)
-    episode_data['observation'] = np.stack(observation)  # (trajlen, height, width, 3)
-    episode_data['init_particles'] = init_particles  # (num_particles, 3)
-    episode_data['init_particle_weights'] = init_particle_weights  # (num_particles,)
+    episode_data = {
+        'floor_map': floor_map,  # (height, width, 1)
+        'obstacle_map': obstacle_map,  # (height, width, 1)
+        'odometry': np.stack(odometry),  # (trajlen, 3)
+        'true_states': np.stack(true_poses),  # (trajlen, 3)
+        'observation': np.stack(observation),  # (trajlen, height, width, 3)
+        'init_particles': init_particles,  # (num_particles, 3)
+        'init_particle_weights': init_particle_weights,  # (num_particles,)
+    }
 
     return episode_data
 
@@ -256,6 +257,7 @@ def gather_episode_stats(env, params, sample_particles=False):
 def get_batch_data(env, params):
     """
     Gather batch of episode stats
+    :param env: igibson env instance
     :param params: parsed parameters
     :return dict: episode stats data containing:
         odometry, true poses, observation, particles, particles weights, floor map
@@ -410,7 +412,8 @@ def transform_raw_record(env, parsed_record, params):
 
     # sample random particles and corresponding weights
     trans_record['init_particles'] = env.get_random_particles(num_particles, particles_distr,
-                                                              trans_record['true_states'][:, 0, :], trans_record['floor_map'][0],particles_cov)
+                                                              trans_record['true_states'][:, 0, :],
+                                                              trans_record['floor_map'][0], particles_cov)
 
     # sanity check
     assert list(trans_record['odometry'].shape) == [batch_size, trajlen, 3]

@@ -94,7 +94,10 @@ FLAGS = flags.FLAGS
 def collect_data(env, params, filename='./test.tfrecord', num_records=10):
     """
     Run the gym environment and collect the required stats
+    :param env: igibson env instance
     :param params: parsed parameters
+    :param filename: tf record file name
+    :param num_records: number of records(episodes) to collect
     :return dict: episode stats data containing:
         odometry, true poses, observation, particles, particles weights, floor map
     """
@@ -151,7 +154,6 @@ def main(_):
     params.agent = FLAGS.agent
     params.trajlen = FLAGS.max_step
     params.global_map_size = [1000, 1000, 1]
-
 
     collect_data(env, params, FLAGS.filename, FLAGS.num_records)
 
