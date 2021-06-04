@@ -33,7 +33,7 @@ def parse_args():
         type=str,
         default=os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            'pfnetwork/checkpoints/checkpoint_87_5.830',
+            'pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_87_5.830',
             'pfnet_checkpoint'),
         help='Load a previously trained pfnet model from a checkpoint file.'
     )

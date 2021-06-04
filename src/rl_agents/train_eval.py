@@ -119,6 +119,8 @@ flags.DEFINE_integer('gpu_g', 0,
                      'GPU id for graphics, e.g. Gibson.')
 
 # Added for Particle Filter
+flags.DEFINE_boolean('use_pfnet', False,
+                     'Whether to use particle filter net')
 flags.DEFINE_string('init_particles_distr', 'gaussian',
                     'Distribution of initial particles. Possible values: gaussian / uniform.')
 flags.DEFINE_list('init_particles_std', [15, 0.523599],
@@ -135,7 +137,7 @@ flags.DEFINE_float('alpha_resample_ratio', 0.5,
 flags.DEFINE_list('transition_std', [0.0, 0.0],
                   'Standard deviations for transition model. Values: translation std (meters), rotation std (radians)')
 flags.DEFINE_string('pfnet_load',
-                    os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pfnetwork/checkpoints',
+                    os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pfnetwork/checkpoints/pfnet_igibson_data',
                                  'checkpoint_87_5.830/pfnet_checkpoint'),
                     'Load a previously trained pfnet model from a checkpoint file.')
 flags.DEFINE_boolean('use_plot', False,

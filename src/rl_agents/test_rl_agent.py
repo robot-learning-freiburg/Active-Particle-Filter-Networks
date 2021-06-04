@@ -76,6 +76,11 @@ flags.DEFINE_integer(
 )
 
 # define pfNet env parameters
+flags.DEFINE_boolean(
+    name='use_pfnet',
+    default=False,
+    help='Whether to use particle filter net'
+)
 flags.DEFINE_string(
     name='init_particles_distr',
     default='gaussian',
@@ -113,7 +118,7 @@ flags.DEFINE_string(
     name='pfnet_load',
     default=os.path.join(
         os.path.dirname(os.path.realpath(__file__)),
-        'pfnetwork/checkpoints',
+        'pfnetwork/checkpoints/pfnet_igibson_data',
         'checkpoint_87_5.830/pfnet_checkpoint'
     ),
     help='Load a previously trained pfnet model from a checkpoint file.'
@@ -306,21 +311,22 @@ def test_agent(arg_params):
             buffer_size=100, batch_size=tf_env.batch_size),
     ]
 
-    train_checkpointer = common.Checkpointer(
-        ckpt_dir=train_dir,
-        agent=tf_agent,
-        global_step=global_step,
-        metrics=metric_utils.MetricsGroup(train_metrics, 'train_metrics'))
-    policy_checkpointer = common.Checkpointer(
-        ckpt_dir=os.path.join(train_dir, 'policy'),
-        policy=eval_policy,
-        global_step=global_step)
-
-    train_checkpointer.initialize_or_restore()
-
     if arg_params.agent == 'sac_agent':
         policy = eval_policy
         log_dir = os.path.join(arg_params.root_dir, 'sac_agent')
+
+        # load checkpoint
+        train_checkpointer = common.Checkpointer(
+            ckpt_dir=train_dir,
+            agent=tf_agent,
+            global_step=global_step,
+            metrics=metric_utils.MetricsGroup(train_metrics, 'train_metrics'))
+        policy_checkpointer = common.Checkpointer(
+            ckpt_dir=os.path.join(train_dir, 'policy'),
+            policy=eval_policy,
+            global_step=global_step)
+
+        train_checkpointer.initialize_or_restore()
     else:
         policy = random_policy
         log_dir = os.path.join(arg_params.root_dir, 'rnd_agent')

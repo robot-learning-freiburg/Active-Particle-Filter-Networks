@@ -63,9 +63,17 @@ class LocalizeGibsonEnv(iGibsonEnv):
         del self.task.termination_conditions[-1]
         del self.task.reward_functions[-1]
 
-        # override observation_space
-        # task_obs_dim = robot_prorpio_state (18) + est_pose (3)
-        task_obs_dim = 18 + 3
+        argparser = argparse.ArgumentParser()
+        self.pf_params = argparser.parse_args([])
+        self.use_pfnet = flags.FLAGS.use_pfnet
+        self.use_tf_function = use_tf_function
+        if self.use_pfnet:
+            self.init_pfnet(flags.FLAGS)
+            task_obs_dim = 18 + 3 # robot_prorpio_state (18) + est_pose (3)
+        else:
+            task_obs_dim = 18 # robot_prorpio_state (18)
+            self.pf_params.use_plot = False
+            self.pf_params.store_plot = False
 
         # custom tf_agents we are using supports dict() type observations
         observation_space = OrderedDict()
@@ -86,10 +94,13 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         self.observation_space = gym.spaces.Dict(observation_space)
 
-        argparser = argparse.ArgumentParser()
-        self.pf_params = argparser.parse_args([])
+        print("=====> LocalizeGibsonEnv initialized")
 
-        FLAGS = flags.FLAGS
+    def init_pfnet(self, FLAGS):
+        """
+        Initialize Particle Filter
+        """
+
         assert 0.0 <= FLAGS.alpha_resample_ratio <= 1.0
         assert FLAGS.init_particles_distr in ['gaussian', 'uniform']
         assert len(FLAGS.transition_std) == len(FLAGS.init_particles_std) == 2
@@ -125,7 +136,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             self.pfnet_model.load_weights(self.pf_params.pfnet_load)
             print("=====> loaded pf model checkpoint " + self.pf_params.pfnet_load)
 
-        if use_tf_function:
+        if self.use_tf_function:
             print("=====> wrapped pfnet in tf.graph")
             self.pfnet_model = tf.function(self.pfnet_model)
 
@@ -155,7 +166,6 @@ class LocalizeGibsonEnv(iGibsonEnv):
             else:
                 plt.ion()
                 plt.show()
-        print("=====> LocalizeGibsonEnv initialized")
 
     def load_miscellaneous_variables(self):
         """
@@ -204,9 +214,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
         """
 
         state, reward, done, info = super(LocalizeGibsonEnv, self).step(action)
-        new_rgb_obs = copy.deepcopy(state['rgb'])
-
-        reward = self.step_pfnet(new_rgb_obs, reward)
+        if self.use_pfnet:
+            new_rgb_obs = copy.deepcopy(state['rgb'])
+            reward = self.step_pfnet(new_rgb_obs, reward)
 
         custom_state = self.process_state(state)
         return custom_state, reward, done, info
@@ -219,9 +229,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
         """
 
         state = super(LocalizeGibsonEnv, self).reset()
-        new_rgb_obs = state['rgb']
-
-        self.reset_pfnet(new_rgb_obs)
+        if self.use_pfnet:
+            new_rgb_obs = copy.deepcopy(state['rgb'])
+            self.reset_pfnet(new_rgb_obs)
 
         custom_state = self.process_state(state)
         return custom_state
@@ -238,10 +248,15 @@ class LocalizeGibsonEnv(iGibsonEnv):
         # process and return only output we are expecting to
         processed_state = OrderedDict()
         if 'task_obs' in self.custom_output:
-            processed_state['task_obs'] = np.concatenate([
-                self.robots[0].calc_state(),  # robot proprioceptive state
-                self.curr_est_pose[0].numpy()  # gaussian mean of particles (x,y, theta)
-            ])
+            if self.use_pfnet:
+                processed_state['task_obs'] = np.concatenate([
+                    self.robots[0].calc_state(),  # robot proprioceptive state
+                    self.curr_est_pose[0].numpy()  # gaussian mean of particles (x,y, theta)
+                ])
+            else:
+                processed_state['task_obs'] = np.concatenate([
+                    self.robots[0].calc_state(),  # robot proprioceptive state
+                ])
             # print(np.min(processed_state['task_obs']), np.max(processed_state['task_obs']))
         if 'rgb_obs' in self.custom_output:
             processed_state['rgb_obs'] = state['rgb']  # [0, 1] range rgb image
@@ -577,7 +592,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         """
         # super(LocalizeGibsonEnv, self).render(mode)
 
-        if self.pf_params.use_plot:
+        if self.use_pfnet and self.pf_params.use_plot:
             # environment map
             floor_map = self.floor_map[0].numpy()
             map_plt = self.env_plts['map_plt']
@@ -651,7 +666,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         """
         super(LocalizeGibsonEnv, self).close()
 
-        if self.pf_params.use_plot:
+        if self.use_pfnet and self.pf_params.use_plot:
             if self.pf_params.store_plot:
                 self.store_results()
             else:
