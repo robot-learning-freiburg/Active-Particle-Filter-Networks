@@ -323,8 +323,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         # TODO: may need better reward
         # compute reward and normalize to range [-10, 0]
         reward = reward - tf.squeeze(loss_dict['coords']).numpy()
-        reward = reward / 10 if -reward <= 100 else reward / 100
-        reward = np.clip(reward, -10, 0)
+        reward = np.clip(reward / 100, -10, 0)
 
         self.curr_pfnet_state = new_pfnet_state
         self.curr_gt_pose = new_pose

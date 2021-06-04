@@ -36,3 +36,14 @@ goal: better gaussian with noise
   c) with and without transition noise
   d) different init covariance
 4. try with large and smaller  [e-3, e-5] learning rates for sac
+
+June 2nd 2021
+-------------
+0. plot avg mse per episode and end mse (> 50 eval eps, 150 eps steps plot unnormalized mse)
+1. collect manual trajectory to cross check pfnet (discrete/continuous)
+	- fine tuned vs non-finetuned
+2. for rnd_agent
+   a) fine tuned vs non-finetuned pfnet
+   b) random starting position (say >100) with random maps/rooms
+   c) different num_particles (500, 1000, 2000)
+   d) different init distribution (gaussian, uniform)
