@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 
 import argparse
+import glob
 import numpy as np
 import os
 import random
 import tensorflow as tf
 
 from pfnetwork.pfnet import pfnet_model
-from environments import suite_gibson
-
+from environments.env_utils import datautils
+from environments.envs.localize_env import LocalizeGibsonEnv
 
 def parse_args():
     """
@@ -21,7 +22,13 @@ def parse_args():
     # initialize parser
     arg_parser = argparse.ArgumentParser()
 
-    # define training parameters
+    # define testing parameters
+    arg_parser.add_argument(
+        '--testfiles',
+        nargs='*',
+        default=['./test.tfrecord'],
+        help='Data file(s) for validation or evaluation (tfrecord).'
+    )
     arg_parser.add_argument(
         '--batch_size',
         type=int,
@@ -128,7 +135,7 @@ def parse_args():
     params.global_map_size = [1000, 1000, 1]
     params.window_scaler = 8.0
 
-    params.is_localize_env = True
+    params.use_pfnet = False
 
     gpu_num = 0
     os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu_num)
@@ -151,6 +158,24 @@ def pfnet_test(arg_params):
     :return:
     """
 
+    # evaluation data
+    filenames = list(glob.glob(arg_params.testfiles[0]))
+    test_ds = datautils.get_dataflow(filenames, arg_params.batch_size, is_training=False)
+    print(f'test data: {filenames}')
+
+    # create igibson env which is used "only" to sample particles
+    env = LocalizeGibsonEnv(
+        config_file=arg_params.config_file,
+        scene_id=None,
+        mode='headless',
+        use_tf_function=True,
+        use_pfnet=arg_params.use_pfnet,
+        action_timestep=arg_params.action_timestep,
+        physics_timestep=arg_params.physics_timestep,
+        device_idx=arg_params.device_idx
+    )
+    env.reset()
+
     # create particle filter net model
     pfnet = pfnet_model(arg_params)
     print("=====> Created pf model ")
@@ -159,18 +184,6 @@ def pfnet_test(arg_params):
     if arg_params.pfnet_loadpath:
         pfnet.load_weights(arg_params.pfnet_loadpath)
         print("=====> Loaded pf model from: " + arg_params.pfnet_loadpath)
-
-        # create igibson env
-        env = suite_gibson.load(
-            config_file=arg_params.config_file,
-            model_id=None,
-            env_mode='headless',
-            is_localize_env=arg_params.is_localize_env,
-            action_timestep=arg_params.action_timestep,
-            physics_timestep=arg_params.physics_timestep,
-            device_idx=arg_params.device_idx,
-        )
-        env.reset()
 
 
 if __name__ == '__main__':

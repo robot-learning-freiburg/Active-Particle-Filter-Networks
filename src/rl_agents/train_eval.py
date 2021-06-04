@@ -555,6 +555,7 @@ def main(_):
     assert FLAGS.num_parallel_environments == 1
     assert FLAGS.num_parallel_environments_eval == 1
 
+    use_pfnet = FLAGS.FLAGS
     config_file = FLAGS.config_file
     action_timestep = FLAGS.action_timestep
     physics_timestep = FLAGS.physics_timestep
@@ -573,6 +574,7 @@ def main(_):
             model_id=model_id,
             env_mode=mode,
             use_tf_function=use_tf_function,
+            use_pfnet=use_pfnet,
             is_localize_env=is_localize_env,
             action_timestep=action_timestep,
             physics_timestep=physics_timestep,

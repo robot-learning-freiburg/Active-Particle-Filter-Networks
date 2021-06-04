@@ -32,6 +32,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             scene_id=None,
             mode='headless',
             use_tf_function=True,
+            use_pfnet=False,
             action_timestep=1 / 10.0,
             physics_timestep=1 / 240.0,
             device_idx=0,
@@ -65,7 +66,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         argparser = argparse.ArgumentParser()
         self.pf_params = argparser.parse_args([])
-        self.use_pfnet = flags.FLAGS.use_pfnet
+        self.use_pfnet = use_pfnet
         self.use_tf_function = use_tf_function
         if self.use_pfnet:
             self.init_pfnet(flags.FLAGS)
@@ -244,6 +245,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         :return: processed_state: processed env observations
         """
+
+        # HACK: to collect data
+        return datautils.process_raw_image(state['rgb']) # [-1, +1] range rgb image
 
         # process and return only output we are expecting to
         processed_state = OrderedDict()

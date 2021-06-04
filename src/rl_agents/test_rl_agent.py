@@ -189,6 +189,7 @@ def test_agent(arg_params):
         model_id=model_id,
         env_mode=mode,
         use_tf_function=use_tf_function,
+        use_pfnet=arg_params.use_pfnet,
         is_localize_env=arg_params.is_localize_env,
         action_timestep=arg_params.action_timestep,
         physics_timestep=arg_params.physics_timestep,

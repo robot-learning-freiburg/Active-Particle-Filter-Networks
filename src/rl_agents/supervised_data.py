@@ -131,6 +131,7 @@ def main(_):
         scene_id=None,
         mode=FLAGS.env_mode,
         use_tf_function=True,
+        use_pfnet=FLAGS.use_pfnet,
         action_timestep=FLAGS.action_timestep,
         physics_timestep=FLAGS.physics_timestep,
         device_idx=FLAGS.gpu_num
