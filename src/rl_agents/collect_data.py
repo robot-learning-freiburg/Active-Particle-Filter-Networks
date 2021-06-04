@@ -23,11 +23,6 @@ flags.DEFINE_integer(
     help='The number of episode data.'
 )
 flags.DEFINE_integer(
-    name='max_step',
-    default=10,
-    help='The maimum number of episode steps.'
-)
-flags.DEFINE_integer(
     name='seed',
     default=100,
     help='Fix the random seed'
@@ -44,7 +39,7 @@ flags.DEFINE_string(
     default=os.path.join(
         os.path.dirname(os.path.realpath(__file__)),
         'configs',
-        'turtlebot_point_nav.yaml'
+        'turtlebot_random_nav.yaml'
     ),
     help='Config file for the experiment'
 )
@@ -72,6 +67,11 @@ flags.DEFINE_float(
     name='velocity',
     default=1.0,
     help='Velocity of Robot'
+)
+flags.DEFINE_integer(
+    name='max_step',
+    default=10,
+    help='The maimum number of episode steps.'
 )
 
 # define pfNet env parameters
@@ -227,8 +227,10 @@ def main(_):
     np.random.seed(FLAGS.seed)
     tf.random.set_seed(FLAGS.seed)
 
-    if not os.path.exists(FLAGS.filename):
-        os.makedirs(FLAGS.filename)
+    if os.path.exists(FLAGS.filename):
+        print('File Already Exists !!!')
+        return
+
     env = LocalizeGibsonEnv(
         config_file=FLAGS.config_file,
         scene_id=None,
