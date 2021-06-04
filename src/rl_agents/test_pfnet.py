@@ -7,8 +7,8 @@ import os
 import random
 import tensorflow as tf
 
-from pfnetwork.pfnet import pfnet_model
-from environments.env_utils import datautils
+from pfnetwork import pfnet
+from environments.env_utils import datautils, pfnet_loss
 from environments.envs.localize_env import LocalizeGibsonEnv
 
 def parse_args():
@@ -59,10 +59,16 @@ def parse_args():
 
     # define particle parameters
     arg_parser.add_argument(
-        '--trajlen',
-        type=int,
-        default=1,
-        help='Total length of trajectory'
+        '--init_particles_distr',
+        type=str,
+        default='gaussian',
+        help='Distribution of initial particles. Possible values: gaussian / uniform.'
+    )
+    arg_parser.add_argument(
+        '--init_particles_std',
+        nargs='*',
+        default=["15", "0.523599"],
+        help='Standard deviations for generated initial particles for tracking distribution. Values: translation std (meters), rotation std (radians)'
     )
     arg_parser.add_argument(
         '--num_particles',
@@ -97,7 +103,7 @@ def parse_args():
         default=os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             'configs',
-            'turtlebot_point_nav.yaml'
+            'turtlebot_random_nav.yaml'
         ),
         help='Config file for the experiment'
     )
@@ -121,6 +127,13 @@ def parse_args():
 
     # convert multi-input fields to numpy arrays
     params.transition_std = np.array(params.transition_std, np.float32)
+    params.init_particles_std = np.array(params.init_particles_std, np.float32)
+
+    # build initial covariance matrix of particles, in pixels and radians
+    particle_std = params.init_particles_std.copy()
+    # particle_std[0] = particle_std[0] / params.map_pixel_in_meters  # convert meters to pixels
+    particle_std2 = np.square(particle_std)  # variance
+    params.init_particles_cov = np.diag(particle_std2[(0, 0, 1),])
 
     if params.resample not in ['false', 'true']:
         raise ValueError
@@ -132,10 +145,13 @@ def parse_args():
     params.return_state = True
 
     # HACK: hardcoded values for floor map/obstacle map
+    params.map_pixel_in_meters = 0.1
     params.global_map_size = [1000, 1000, 1]
     params.window_scaler = 8.0
 
     params.use_pfnet = False
+    params.trajlen = 1
+    params.bptt_steps = 1
 
     gpu_num = 0
     os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu_num)
@@ -175,15 +191,81 @@ def pfnet_test(arg_params):
         device_idx=arg_params.device_idx
     )
     env.reset()
+    arg_params.trajlen = env.config.get('max_step', 500)
 
     # create particle filter net model
-    pfnet = pfnet_model(arg_params)
+    pfnet_model = pfnet.pfnet_model(arg_params)
     print("=====> Created pf model ")
 
     # load model from checkpoint file
     if arg_params.pfnet_loadpath:
-        pfnet.load_weights(arg_params.pfnet_loadpath)
+        pfnet_model.load_weights(arg_params.pfnet_loadpath)
         print("=====> Loaded pf model from: " + arg_params.pfnet_loadpath)
+
+    trajlen = arg_params.trajlen
+    bptt_steps = arg_params.bptt_steps
+    batch_size = arg_params.batch_size
+    num_particles = arg_params.num_particles
+
+    num_test_batches = 1
+    mse_list = []
+
+    # run over all evaluation samples in an epoch
+    itr = test_ds.as_numpy_iterator()
+    for idx in range(num_test_batches):
+        parsed_record = next(itr)
+        batch_sample = datautils.transform_raw_record(env, parsed_record, arg_params)
+
+        observation = tf.convert_to_tensor(batch_sample['observation'], dtype=tf.float32)
+        odometry = tf.convert_to_tensor(batch_sample['odometry'], dtype=tf.float32)
+        true_states = tf.convert_to_tensor(batch_sample['true_states'], dtype=tf.float32)
+        floor_map = tf.convert_to_tensor(batch_sample['floor_map'], dtype=tf.float32)
+        obstacle_map = tf.convert_to_tensor(batch_sample['obstacle_map'], dtype=tf.float32)
+        init_particles = tf.convert_to_tensor(batch_sample['init_particles'], dtype=tf.float32)
+        init_particle_weights = tf.constant(np.log(1.0/float(num_particles)),
+                                    shape=(batch_size, num_particles), dtype=tf.float32)
+
+        # start trajectory with initial particles and weights
+        state = [init_particles, init_particle_weights, obstacle_map]
+
+        particle_states = []
+        particle_weights = []
+        for idx in np.arange(0, trajlen, bptt_steps):
+            # if stateful: reset RNN s.t. initial_state is set to initial particles and weights
+            # if non-stateful: pass the state explicity every step
+            if arg_params.stateful:
+                pfnet_model.layers[-1].reset_states(state)    # RNN layer
+
+            obs = observation[:, idx:idx+bptt_steps]
+            odom = odometry[:, idx:idx+bptt_steps]
+            # sanity check
+            assert list(obs.shape) == [batch_size, bptt_steps, 56, 56, 3]
+            assert list(odom.shape) == [batch_size, bptt_steps, 3]
+
+            input = [obs, odom]
+            model_input = (input, state)
+
+            # forward pass
+            output, state = pfnet_model(model_input, training=False)
+
+            particle_states.append(output[0])
+            particle_weights.append(output[1])
+
+        # compute loss
+        particle_states = tf.concat(particle_states, axis=1)    # [batch_size, trajlen, num_particles, 3]
+        particle_weights = tf.concat(particle_weights, axis=1)  # [batch_size, trajlen, num_particles]
+
+        # sanity check
+        assert list(particle_states.shape) == [batch_size, trajlen, num_particles, 3]
+        assert list(particle_weights.shape) == [batch_size, trajlen, num_particles]
+        assert list(true_states.shape) == [batch_size, trajlen, 3]
+
+        loss_dict = pfnet_loss.compute_loss(particle_states, particle_weights, true_states, arg_params.map_pixel_in_meters)
+        loss_pred = loss_dict['pred']
+
+        # we have squared differences along the trajectory
+        mse = np.mean(loss_dict['coords'])
+        mse_list.append(mse)
 
 
 if __name__ == '__main__':
