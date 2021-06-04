@@ -129,7 +129,7 @@ def deserialize_tf_record(raw_record):
     return tf.io.parse_single_example(raw_record, tfrecord_format)
 
 
-def get_discrete_action(velocity):
+def get_discrete_action():
     """
     Get manual keyboard action
     :return int: discrete action for moving forward/backward/left/right
@@ -137,15 +137,15 @@ def get_discrete_action(velocity):
     key = input('Enter Key: ')
     # default stay still
     if key == 'w':
-        action = [velocity, velocity]  # forward
+        action = 0  # forward
     elif key == 's':
-        action = [-velocity, -velocity]  # backward
+        action = 1  # backward
     elif key == 'd':
-        action = [velocity * 0.5, -velocity * 0.5]  # right
+        action = 2  # right
     elif key == 'a':
-        action = [-velocity * 0.5, velocity * 0.5]  # left
+        action = 3  # left
     else:
-        action = [0., 0.]
+        action = 4
     return action
 
 
@@ -155,7 +155,7 @@ def get_continuous_action():
 
 def get_manual_action():
     if FLAGS.is_discrete:
-        return get_discrete_action(FLAGS.velocity)
+        return get_discrete_action()
     else:
         return get_continuous_action()
 
