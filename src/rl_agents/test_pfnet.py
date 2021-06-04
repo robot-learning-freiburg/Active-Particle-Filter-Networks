@@ -113,6 +113,12 @@ def parse_args():
         help='Trade-off parameter for soft-resampling in PF-net. Only effective if resample == true.'
              'Assumes values 0.0 < alpha <= 1.0. Alpha equal to 1.0 corresponds to hard-resampling'
     )
+    argparser.add_argument(
+        '--bptt_steps',
+        type=int,
+        default=1,
+        help='Number of backpropagation steps for training with backpropagation through time (BPTT).'
+    )
 
     # define igibson env parameters
     arg_parser.add_argument(
@@ -296,6 +302,7 @@ def pfnet_test(arg_params):
         print("=====> Loaded pf model from: " + arg_params.pfnet_loadpath)
 
     trajlen = arg_params.trajlen
+    bptt_steps = arg_params.bptt_steps
     batch_size = arg_params.batch_size
     num_particles = arg_params.num_particles
 
@@ -322,19 +329,37 @@ def pfnet_test(arg_params):
             # start trajectory with initial particles and weights
             state = [init_particles, init_particle_weights, obstacle_map]
 
-            # if stateful: reset RNN s.t. initial_state is set to initial particles and weights
-            # if non-stateful: pass the state explicity every step
-            if arg_params.stateful:
-                pfnet_model.layers[-1].reset_states(state)  # RNN layer
+            particle_states = []
+            particle_weights = []
+            for idx in np.arange(0, trajlen, bptt_steps):
+                # if stateful: reset RNN s.t. initial_state is set to initial particles and weights
+                # if non-stateful: pass the state explicity every step
+                if arg_params.stateful:
+                    pfnet_model.layers[-1].reset_states(state)  # RNN layer
 
-            pf_input = [observation, odometry]
-            model_input = (pf_input, state)
+                obs = observation[:, idx:idx+bptt_steps]
+                odom = odometry[:, idx:idx+bptt_steps]
+                # sanity check
+                assert list(obs.shape) == [batch_size, bptt_steps, 56, 56, 3]
+                assert list(odom.shape) == [batch_size, bptt_steps, 3]
 
-            # forward pass
-            output, state = pfnet_model(model_input, training=False)
+                pf_input = [obs, odom]
+                model_input = (pf_input, state)
+
+                # forward pass
+                output, state = pfnet_model(model_input, training=False)
+                particle_states.append(output[0])
+                particle_weights.append(output[1])
+
+            particle_states = tf.concat(particle_states, axis=1)    # [batch_size, trajlen, num_particles, 3]
+            particle_weights = tf.concat(particle_weights, axis=1)  # [batch_ize, trajlen, num_particles]
+
+            # sanity check
+            assert list(particle_states.shape) == [batch_size, trajlen, num_particles, 3]
+            assert list(particle_weights.shape) == [batch_size, trajlen, num_particles]
+            assert list(true_states.shape) == [batch_size, trajlen, 3]
 
             # compute loss
-            particle_states, particle_weights = output
             loss_dict = pfnet_loss.compute_loss(particle_states, particle_weights, true_states,
                                                 arg_params.map_pixel_in_meters)
 
@@ -343,6 +368,7 @@ def pfnet_test(arg_params):
             mse_list.append(mse)
 
             # log
+            print(f'eps:{idx} mean mse: {mse}')
             tf.summary.scalar('eps_mean_rmse', np.sqrt(mse), step=idx)
             tf.summary.scalar('eps_final_rmse', np.sqrt(loss_dict['coords'][0][-1]), step=idx)
 

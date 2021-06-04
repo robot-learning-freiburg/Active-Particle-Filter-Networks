@@ -63,6 +63,7 @@ $ nohup python -u test_pfnet.py \
 --num_eval_episodes=125 \
 --testfiles=./data/random/*.tfrecord \
 --batch_size=1 \
+--bptt_steps=1 \
 --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_87_5.830/pfnet_checkpoint \
 --init_particles_distr='gaussian' \
 --init_particles_std '15' '0.523599' \
