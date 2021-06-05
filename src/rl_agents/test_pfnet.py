@@ -169,7 +169,7 @@ def parse_args():
 
     params.use_tf_function = True
     params.use_pfnet = False
-    params.store_results = False
+    params.store_results = True
 
     gpu_num = 0
     os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu_num)
@@ -336,7 +336,7 @@ def pfnet_test(arg_params):
             model_input = (pf_input, state)
 
             # forward pass
-            output, state = pfnet_model(model_input, training=False))
+            output, state = pfnet_model(model_input, training=False)
             particle_states, particle_weights = output
 
             # sanity check
