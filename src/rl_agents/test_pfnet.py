@@ -354,7 +354,7 @@ def pfnet_test(arg_params):
             mse = np.mean(loss_dict['coords'])
             mse_list.append(mse)
 
-            # log
+            # log mse (in meters)
             print(f'eps:{eps_idx} mean mse: {mse}')
             tf.summary.scalar('eps_mean_rmse', np.sqrt(mse), step=eps_idx)
             tf.summary.scalar('eps_final_rmse', np.sqrt(loss_dict['coords'][0][-1]), step=eps_idx)

@@ -11,7 +11,7 @@ def compute_loss(particle_states, particle_weights, true_states, map_pixel_in_me
     :param true_states: true state of robot (batch, trajlen, 3)
     :param int map_pixel_in_meters: The width (and height) of a pixel of the map in meters
 
-    :return dict: total loss and coordinate loss
+    :return dict: total loss and coordinate loss (in meters)
     """
 
     assert particle_states.ndim == 4 and particle_weights.ndim == 3 and true_states.ndim == 3
