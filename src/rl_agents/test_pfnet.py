@@ -113,12 +113,6 @@ def parse_args():
         help='Trade-off parameter for soft-resampling in PF-net. Only effective if resample == true.'
              'Assumes values 0.0 < alpha <= 1.0. Alpha equal to 1.0 corresponds to hard-resampling'
     )
-    arg_parser.add_argument(
-        '--bptt_steps',
-        type=int,
-        default=1,
-        help='Number of backpropagation steps for training with backpropagation through time (BPTT).'
-    )
 
     # define igibson env parameters
     arg_parser.add_argument(
@@ -189,7 +183,7 @@ def parse_args():
     return params
 
 
-def store_results(idx, obstacle_map, particle_states, particle_weights, true_states, params):
+def store_results(eps_idx, obstacle_map, particle_states, particle_weights, true_states, params):
     trajlen = params.trajlen
 
     fig = plt.figure(figsize=(7, 7))
@@ -251,10 +245,10 @@ def store_results(idx, obstacle_map, particle_states, particle_weights, true_sta
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         images.append(img)
 
-    print(f'{idx} True Pose: {true_state[0]}, Estimated Pose: {est_state[0]}')
+    print(f'{eps_idx} True Pose: {true_state[0]}, Estimated Pose: {est_state[0]}')
 
     size = (images[0].shape[0], images[0].shape[1])
-    out = cv2.VideoWriter(params.out_folder + f'result_{idx}.avi', cv2.VideoWriter_fourcc(*'XVID'), 30, size)
+    out = cv2.VideoWriter(params.out_folder + f'result_{eps_idx}.avi', cv2.VideoWriter_fourcc(*'XVID'), 30, size)
 
     for i in range(len(images)):
         out.write(images[i])
@@ -307,7 +301,6 @@ def pfnet_test(arg_params):
         print("=====> wrapped pfnet in tf.graph")
 
     trajlen = arg_params.trajlen
-    bptt_steps = arg_params.bptt_steps
     batch_size = arg_params.batch_size
     num_particles = arg_params.num_particles
 
@@ -318,7 +311,7 @@ def pfnet_test(arg_params):
         mse_list = []
         success_list = []
         itr = test_ds.as_numpy_iterator()
-        for idx in range(arg_params.num_eval_episodes):
+        for eps_idx in range(arg_params.num_eval_episodes):
             parsed_record = next(itr)
             batch_sample = datautils.transform_raw_record(env, parsed_record, arg_params)
 
@@ -334,30 +327,17 @@ def pfnet_test(arg_params):
             # start trajectory with initial particles and weights
             state = [init_particles, init_particle_weights, obstacle_map]
 
-            particle_states = []
-            particle_weights = []
-            for idx in np.arange(0, trajlen, bptt_steps):
-                # if stateful: reset RNN s.t. initial_state is set to initial particles and weights
-                # if non-stateful: pass the state explicity every step
-                if arg_params.stateful:
-                    pfnet_model.layers[-1].reset_states(state)  # RNN layer
+            # if stateful: reset RNN s.t. initial_state is set to initial particles and weights
+            # if non-stateful: pass the state explicity every step
+            if arg_params.stateful:
+                pfnet_model.layers[-1].reset_states(state)  # RNN layer
 
-                obs = observation[:, idx:idx+bptt_steps]
-                odom = odometry[:, idx:idx+bptt_steps]
-                # sanity check
-                assert list(obs.shape) == [batch_size, bptt_steps, 56, 56, 3]
-                assert list(odom.shape) == [batch_size, bptt_steps, 3]
+            pf_input = [observation, odometry]
+            model_input = (pf_input, state)
 
-                pf_input = [obs, odom]
-                model_input = (pf_input, state)
-
-                # forward pass
-                output, state = pfnet_model(model_input, training=False)
-                particle_states.append(output[0])
-                particle_weights.append(output[1])
-
-            particle_states = tf.concat(particle_states, axis=1)    # [batch_size, trajlen, num_particles, 3]
-            particle_weights = tf.concat(particle_weights, axis=1)  # [batch_ize, trajlen, num_particles]
+            # forward pass
+            output, state = pfnet_model(model_input, training=False))
+            particle_states, particle_weights = output
 
             # sanity check
             assert list(particle_states.shape) == [batch_size, trajlen, num_particles, 3]
@@ -373,9 +353,9 @@ def pfnet_test(arg_params):
             mse_list.append(mse)
 
             # log
-            print(f'eps:{idx} mean mse: {mse}')
-            tf.summary.scalar('eps_mean_rmse', np.sqrt(mse), step=idx)
-            tf.summary.scalar('eps_final_rmse', np.sqrt(loss_dict['coords'][0][-1]), step=idx)
+            print(f'eps:{eps_idx} mean mse: {mse}')
+            tf.summary.scalar('eps_mean_rmse', np.sqrt(mse), step=eps_idx)
+            tf.summary.scalar('eps_final_rmse', np.sqrt(loss_dict['coords'][0][-1]), step=eps_idx)
 
             # localization is successfull if the rmse error is below 1m for the last 25% of the trajectory
             successful = np.all(loss_dict['coords'][-trajlen // 4:] < 1.0 ** 2)  # below 1 meter
@@ -383,9 +363,9 @@ def pfnet_test(arg_params):
 
             if arg_params.store_results:
                 # store results as video
-                params.out_folder = os.path.join(arg_params.root_dir, f'output_{idx}')
+                params.out_folder = os.path.join(arg_params.root_dir, f'output')
                 Path(params.out_folder).mkdir(parents=True, exist_ok=True)
-                store_results(idx, obstacle_map, particle_states, particle_weights, true_states, arg_params)
+                store_results(eps_idx, obstacle_map, particle_states, particle_weights, true_states, arg_params)
 
         # report results
         mean_rmse = np.mean(np.sqrt(mse_list)) * 100
