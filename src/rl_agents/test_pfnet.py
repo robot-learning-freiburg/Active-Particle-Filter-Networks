@@ -363,8 +363,8 @@ def pfnet_test(arg_params):
 
             if arg_params.store_results:
                 # store results as video
-                params.out_folder = os.path.join(arg_params.root_dir, f'output')
-                Path(params.out_folder).mkdir(parents=True, exist_ok=True)
+                arg_params.out_folder = os.path.join(arg_params.root_dir, f'output')
+                Path(arg_params.out_folder).mkdir(parents=True, exist_ok=True)
                 store_results(eps_idx, obstacle_map, particle_states, particle_weights, true_states, arg_params)
 
         # report results
