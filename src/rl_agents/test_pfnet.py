@@ -248,7 +248,9 @@ def store_results(eps_idx, obstacle_map, particle_states, particle_weights, true
     print(f'{eps_idx} True Pose: {true_state[0]}, Estimated Pose: {est_state[0]}')
 
     size = (images[0].shape[0], images[0].shape[1])
-    out = cv2.VideoWriter(params.out_folder + f'result_{eps_idx}.avi', cv2.VideoWriter_fourcc(*'XVID'), 30, size)
+    out = cv2.VideoWriter(
+            os.path.join(params.out_folder, f'result_{eps_idx}.avi'),
+            cv2.VideoWriter_fourcc(*'XVID'), 30, size)
 
     for i in range(len(images)):
         out.write(images[i])
