@@ -30,7 +30,7 @@
 </details>
 
 
-<details open>
+<details close>
   <summary>May 26th - June 2nd Summary</summary>
 
   ### Results
@@ -42,5 +42,23 @@
   |------------|------------|------------|------------|
   |![Eval_WithOut_Noise](2021-05-29_11-11-00/images/eval_wo_noise.svg)|![Eval_With_Noise](2021-05-29_11-11-00/images/eval_w_noise.svg)|![Eval_Low_Init_Covariance](2021-05-29_11-11-00/images/eval_low_init_covariance.svg)|![Eval_More_Particles](2021-05-29_11-11-00/images/eval_more_particles.svg)|
   |transition_std: ['0', '0']<br/>init_particles_std: ['30', '0.523599']<br/>init_particles_distr: gaussian<br/>num_particles: 1000<br/>alpha_resample_ratio 0.8|transition_std: ['1', '0']<br/>init_particles_std ['30', '0.523599']<br/>init_particles_distr: gaussian<br/>num_particles: 1000<br/>alpha_resample_ratio 0.8|transition_std: ['0.2', '0']<br/>init_particles_std ['15', '0.523599']<br/>init_particles_distr: gaussian<br/>num_particles: 1500<br/>alpha_resample_ratio 0.8|transition_std: ['0.5', '0']<br/>init_particles_std ['30', '0.523599']<br/>init_particles_distr: gaussian<br/>num_particles: 2500<br/>alpha_resample_ratio 0.8|
+
+</details>
+
+
+<details open>
+  <summary>June 3rd - June 9th Summary</summary>
+
+  ### Results
+
+  Manual Trajectories - Episode Mean RMSE 
+  |Gauss W/O Transition Noise |Gauss With Transition Noise |Gauss W/O Noise + More Particles|Gauss With Noise + More Particles|
+  |------------|------------|------------|------------|
+  |![Eval_WithOut_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_0,0_0.8/eps_mean_rmse.svg) ![#1589F0](https://via.placeholder.com/15/1589F0/000000?text=+) - *original* ![#FF8C00](https://via.placeholder.com/15/FF8C00/000000?text=+) - *finetuned*|![Eval_With_Noise](2021-05-29_11-11-00/images/eval_w_noise.svg)|![Eval_Low_Init_Covariance](2021-05-29_11-11-00/images/eval_low_init_covariance.svg)||
+  
+  Manual Trajectories - Episode Final RMSE
+  |Gauss W/O Transition Noise |Gauss With Transition Noise |Gauss W/O Noise + More Particles|Gauss With Noise + More Particles|
+  |------------|------------|------------|------------|
+  |![Eval_WithOut_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_0,0_0.8/eps_final_rmse.svg) ![#1589F0](https://via.placeholder.com/15/1589F0/000000?text=+) - *original* ![#FF8C00](https://via.placeholder.com/15/FF8C00/000000?text=+) - *finetuned*|![Eval_With_Noise](2021-05-29_11-11-00/images/eval_w_noise.svg)|![Eval_Low_Init_Covariance](2021-05-29_11-11-00/images/eval_low_init_covariance.svg)||
 
 </details>
