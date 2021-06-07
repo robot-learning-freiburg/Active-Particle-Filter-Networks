@@ -50,7 +50,7 @@
   <summary>June 3rd - June 9th Summary</summary>
 
   ### Results
-  ![#1589F0](https://via.placeholder.com/15/1589F0/000000?text=+) - *original* ![#FF8C00](https://via.placeholder.com/15/FF8C00/000000?text=+) - *finetuned* 
+  RMSE vs #th episode ![#1589F0](https://via.placeholder.com/15/1589F0/000000?text=+) - *original* ![#FF8C00](https://via.placeholder.com/15/FF8C00/000000?text=+) - *finetuned* 
   * Episode Overall Mean RMSE - Manual Trajectories
     |Gauss W/O Transition Noise |Gauss With Transition Noise |Gauss W/O Noise + More Particles|Gauss With Noise + More Particles|
     |------------|------------|------------|------------|
