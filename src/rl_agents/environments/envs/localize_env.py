@@ -506,7 +506,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
                 # get bounding box for more efficient sampling
                 # rmin, rmax, cmin, cmax = self.bounding_box(scene_map)
-                rmin, rmax, cmin, cmax = self.bounding_box(scene_map, robot_pose[b_idx], lmt=100)
+                rmin, rmax, cmin, cmax = self.bounding_box(scene_map, robot_pose[b_idx], lmt=75)
 
                 while sample_i < num_particles:
                     particle = np.random.uniform(low=(cmin, rmin, 0.0), high=(cmax, rmax, 2.0 * np.pi), size=(3,))
