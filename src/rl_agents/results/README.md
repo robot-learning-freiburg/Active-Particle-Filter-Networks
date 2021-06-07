@@ -50,15 +50,14 @@
   <summary>June 3rd - June 9th Summary</summary>
 
   ### Results
-  ![#1589F0](https://via.placeholder.com/15/1589F0/000000?text=+) - *original* ![#FF8C00](https://via.placeholder.com/15/FF8C00/000000?text=+) - *finetuned* \
-  Manual Trajectories - Episode Mean RMSE 
-  |Gauss W/O Transition Noise |Gauss With Transition Noise |Gauss W/O Noise + More Particles|Gauss With Noise + More Particles|
-  |------------|------------|------------|------------|
-  |![Gauss_WithOut_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_0,0_0.8/eps_mean_rmse.svg)|![Gauss_With_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_1,0.087_0.8/eps_mean_rmse.svg)|![Gauss_WithOut_More_Particles](2021-06-07_08-00-00/manual_agent/images/gauss_1500_15,0.523_0,0_0.8/eps_mean_rmse.svg)||
-  
-  Manual Trajectories - Episode Final RMSE
-  |Gauss W/O Transition Noise |Gauss With Transition Noise |Gauss W/O Noise + More Particles|Gauss With Noise + More Particles|
-  |------------|------------|------------|------------|
-  |![Gauss_WithOut_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_0,0_0.8/eps_final_rmse.svg)|![Gauss_With_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_1,0.087_0.8/eps_final_rmse.svg)|![Gauss_WithOut_More_Particles](2021-06-07_08-00-00/manual_agent/images/gauss_1500_15,0.523_0,0_0.8/eps_final_rmse.svg)||
+  ![#1589F0](https://via.placeholder.com/15/1589F0/000000?text=+) - *original* ![#FF8C00](https://via.placeholder.com/15/FF8C00/000000?text=+) - *finetuned* 
+  * Episode Mean RMSE - Manual Trajectories
+    |Gauss W/O Transition Noise |Gauss With Transition Noise |Gauss W/O Noise + More Particles|Gauss With Noise + More Particles|
+    |------------|------------|------------|------------|
+    |![Gauss_WithOut_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_0,0_0.8/eps_mean_rmse.svg)|![Gauss_With_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_1,0.087_0.8/eps_mean_rmse.svg)|![Gauss_WithOut_More_Particles](2021-06-07_08-00-00/manual_agent/images/gauss_1500_15,0.523_0,0_0.8/eps_mean_rmse.svg)||
+  * Episode Final RMSE - Manual Trajectories 
+    |Gauss W/O Transition Noise |Gauss With Transition Noise |Gauss W/O Noise + More Particles|Gauss With Noise + More Particles|
+    |------------|------------|------------|------------|
+    |![Gauss_WithOut_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_0,0_0.8/eps_final_rmse.svg)|![Gauss_With_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_1,0.087_0.8/eps_final_rmse.svg)|![Gauss_WithOut_More_Particles](2021-06-07_08-00-00/manual_agent/images/gauss_1500_15,0.523_0,0_0.8/eps_final_rmse.svg)||
 
 </details>
