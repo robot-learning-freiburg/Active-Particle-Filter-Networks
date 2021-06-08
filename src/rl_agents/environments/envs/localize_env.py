@@ -124,6 +124,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.pf_params.global_map_size = [1000, 1000, 1]
         self.pf_params.window_scaler = 8.0
 
+        self.pf_params.transition_std[0] = self.pf_params.transition_std[0] / self.pf_params.map_pixel_in_meters  # convert meters to pixels
+        self.pf_params.init_particles_std[0] = self.pf_params.init_particles_std[0] / self.pf_params.map_pixel_in_meters  # convert meters to pixels
+
         # build initial covariance matrix of particles, in pixels and radians
         particle_std2 = np.square(self.pf_params.init_particles_std.copy())  # variance
         self.pf_params.init_particles_cov = np.diag(particle_std2[(0, 0, 1),])

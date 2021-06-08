@@ -15,7 +15,7 @@ from pfnetwork import pfnet
 from environments.env_utils import datautils, pfnet_loss, render
 from environments.envs.localize_env import LocalizeGibsonEnv
 
-
+np.set_printoptions(suppress=True)
 def parse_args():
     """
     Parse command line arguments
