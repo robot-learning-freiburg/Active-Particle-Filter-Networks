@@ -141,6 +141,11 @@ def parse_args():
     # parse parameters
     params = arg_parser.parse_args()
 
+    # HACK: hardcoded values for floor map/obstacle map
+    params.map_pixel_in_meters = 0.1
+    params.global_map_size = [1000, 1000, 1]
+    params.window_scaler = 8.0
+
     # post-processing
 
     # convert multi-input fields to numpy arrays
@@ -162,11 +167,6 @@ def parse_args():
     # use RNN as stateful/non-stateful
     params.stateful = False
     params.return_state = True
-
-    # HACK: hardcoded values for floor map/obstacle map
-    params.map_pixel_in_meters = 0.1
-    params.global_map_size = [1000, 1000, 1]
-    params.window_scaler = 8.0
 
     params.use_tf_function = True
     params.use_pfnet = False
