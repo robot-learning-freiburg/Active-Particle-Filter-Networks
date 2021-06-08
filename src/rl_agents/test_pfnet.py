@@ -84,7 +84,7 @@ def parse_args():
     arg_parser.add_argument(
         '--init_particles_std',
         nargs='*',
-        default=["15", "0.523599"],
+        default=["1.5", "0.523599"],
         help='Standard deviations for generated initial particles for tracking distribution.'
              'Values: translation std (meters), rotation std (radians)'
     )
@@ -97,7 +97,7 @@ def parse_args():
     arg_parser.add_argument(
         '--transition_std',
         nargs='*',
-        default=["0.0", "0.0"],
+        default=["0.1", "0.0872665"],
         help='Standard deviations for transition model. Values: translation std (meters), rotation std (radians)'
     )
     arg_parser.add_argument(
@@ -149,7 +149,8 @@ def parse_args():
 
     # build initial covariance matrix of particles, in pixels and radians
     particle_std = params.init_particles_std.copy()
-    # particle_std[0] = particle_std[0] / params.map_pixel_in_meters  # convert meters to pixels
+    params.transition_std[0] = params.transition_std[0] / params.map_pixel_in_meters  # convert meters to pixels
+    particle_std[0] = particle_std[0] / params.map_pixel_in_meters  # convert meters to pixels
     particle_std2 = np.square(particle_std)  # variance
     params.init_particles_cov = np.diag(particle_std2[(0, 0, 1), ])
 
