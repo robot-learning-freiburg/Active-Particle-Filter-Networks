@@ -50,16 +50,16 @@
   <summary>June 3rd - June 9th Summary</summary>
 
   ### Results
-  RMSE vs #th episode ![#1589F0](https://via.placeholder.com/15/1589F0/000000?text=+) - *original* ![#FF8C00](https://via.placeholder.com/15/FF8C00/000000?text=+) - *finetuned* 
+  RMSE vs #th episode ![#1589F0](https://via.placeholder.com/15/1589F0/000000?text=+) - *original* ![#FF8C00](https://via.placeholder.com/15/FF8C00/000000?text=+) - *finetuned*
   * Per Episode Overall Mean RMSE - Manual Trajectories
     |&nbsp; &nbsp; &nbsp; &nbsp; Gauss W/O Transition Noise &nbsp; &nbsp; &nbsp;|&nbsp; &nbsp; &nbsp; &nbsp; Gauss With Transition Noise &nbsp; &nbsp; &nbsp;|Gauss With Noise + Hard Resample|
     |------------|------------|------------|
     |![Gauss_WithOut_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_0,0_0.8/eps_mean_rmse.svg)|![Gauss_With_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_1,0.087_0.8/eps_mean_rmse.svg)|![Gauss_Noise_Hard_Resample](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_1,0.087_1.0/eps_mean_rmse.svg)|
-  
+
     |Gauss W/O Noise + More Particles &nbsp; &nbsp;|Uniform W/O Noise + More Particles &nbsp;|&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
     |------------|------------|------------|
     |![Gauss_WithOut_More_Particles](2021-06-07_08-00-00/manual_agent/images/gauss_1500_15,0.523_0,0_0.8/eps_mean_rmse.svg)|![Uniform_WithOut_More_Particles](2021-06-07_08-00-00/manual_agent/images/uniform_1500_75_0,0_0.8/eps_mean_rmse.svg)||
-  * Per Episode End RMSE - Manual Trajectories 
+  * Per Episode End RMSE - Manual Trajectories
     |&nbsp; &nbsp; &nbsp; &nbsp; Gauss W/O Transition Noise &nbsp; &nbsp; &nbsp;|&nbsp; &nbsp; &nbsp; &nbsp; Gauss With Transition Noise &nbsp; &nbsp; &nbsp;|Gauss With Noise + Hard Resample|
     |------------|------------|------------|
     |![Gauss_WithOut_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_0,0_0.8/eps_final_rmse.svg)|![Gauss_With_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_1,0.087_0.8/eps_final_rmse.svg)|![Gauss_Noise_Hard_Resample](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_1,0.087_1.0/eps_final_rmse.svg)|
@@ -75,7 +75,7 @@
     |Gauss W/O Noise + More Particles &nbsp; &nbsp;|Uniform W/O Noise + More Particles &nbsp;|&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
     |------------|------------|------------|
     |![Gauss_WithOut_More_Particles](2021-06-07_08-00-00/rnd_agent/images/gauss_1500_15,0.523_0,0_0.8/eps_mean_rmse.svg)|![Uniform_WithOut_More_Particles](2021-06-07_08-00-00/rnd_agent/images/uniform_1500_75_0,0_0.8/eps_mean_rmse.svg)||
-  * Per Episode End RMSE - Random Action Trajectories 
+  * Per Episode End RMSE - Random Action Trajectories
     |&nbsp; &nbsp; &nbsp; &nbsp; Gauss W/O Transition Noise &nbsp; &nbsp; &nbsp;|&nbsp; &nbsp; &nbsp; &nbsp; Gauss With Transition Noise &nbsp; &nbsp; &nbsp;|Gauss With Noise + Hard Resample|
     |------------|------------|------------|
     |![Gauss_WithOut_Noise](2021-06-07_08-00-00/rnd_agent/images/gauss_500_15,0.523_0,0_0.8/eps_final_rmse.svg)|![Gauss_With_Noise](2021-06-07_08-00-00/rnd_agent/images/gauss_500_15,0.523_1,0.087_0.8/eps_final_rmse.svg)|![Gauss_Noise_Hard_Resample](2021-06-07_08-00-00/rnd_agent/images/gauss_500_15,0.523_1,0.087_1.0/eps_final_rmse.svg)|
@@ -87,16 +87,16 @@
     |Manual Agent w.r.t Original PFNet |Manual Agent w.r.t Finetuned PFNet |
     |------------|------------|
     |![Manual_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/manual_agent/images/overall/manual_agent_house_pfnet_eps_mean_rmse.png)|![Manual_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/manual_agent/images/overall/manual_agent_igibson_pfnet_eps_mean_rmse.png)|
-  
+
     |Random Agent w.r.t Original PFNet |Random Agent w.r.t Finetuned PFNet |
     |------------|------------|
-    |![Random_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/overall/manual_agent_house_pfnet_eps_mean_rmse.png)|![Random_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/overall/manual_agent_igibson_pfnet_eps_mean_rmse.png)|
+    |![Random_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/overall/rnd_agent_house_pfnet_eps_mean_rmse.png)|![Random_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/overall/rnd_agent_igibson_pfnet_eps_mean_rmse.png)|
   * Per Episode End Mean RMSE
     |Manual Agent w.r.t Original PFNet |Manual Agent w.r.t Finetuned PFNet |
     |------------|------------|
     |![Manual_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/manual_agent/images/overall/manual_agent_house_pfnet_eps_final_rmse.png)|![Manual_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/manual_agent/images/overall/manual_agent_igibson_pfnet_eps_final_rmse.png)|
-  
+
     |Random Agent w.r.t Original PFNet |Random Agent w.r.t Finetuned PFNet |
     |------------|------------|
-    |![Random_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/overall/manual_agent_house_pfnet_eps_final_rmse.png)|![Random_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/overall/manual_agent_igibson_pfnet_eps_final_rmse.png)|
+    |![Random_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/overall/rnd_agent_house_pfnet_eps_final_rmse.png)|![Random_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/overall/rnd_agent_igibson_pfnet_eps_final_rmse.png)|
 </details>

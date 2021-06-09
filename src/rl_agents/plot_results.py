@@ -52,6 +52,8 @@ def boxplot(metric, title, filename):
             events_data[4][metric]
     ])
     events = list(summary_dirs.keys())
+    plt.xlabel('Experiment', fontweight='bold')
+    plt.ylabel('RMSE (in meters)', fontweight='bold')
     plt.yticks(np.arange(-10, +100, 10.))
     plt.xticks(np.arange(1, len(events)+1), events)
     x1,x2,y1,y2 = plt.axis()
@@ -62,4 +64,4 @@ def boxplot(metric, title, filename):
     plt.savefig(filename)
 
 if __name__ == '__main__':
-    boxplot('eps_mean_rmse', 'Random Agent Performance w.r.t Original PFNet (Episode Mean RMSE)', 'manual_agent_house_pfnet_eps_mean_rmse.png')
+    boxplot('eps_mean_rmse', 'Random Agent Performance w.r.t Original PFNet (Episode Mean RMSE)', 'rnd_agent_house_pfnet_eps_mean_rmse.png')
