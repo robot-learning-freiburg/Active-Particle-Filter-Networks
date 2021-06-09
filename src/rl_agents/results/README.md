@@ -86,17 +86,17 @@
   * Per Episode Overall Mean RMSE
     |Manual Agent w.r.t Original PFNet |Manual Agent w.r.t Finetuned PFNet |
     |------------|------------|
-    |![Manual_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/manual_agent/images/overall/manual_agent_house_pfnet_eps_mean_rmse.png)|![Manual_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/manual_agent/images/overall/manual_agent_igibson_pfnet_eps_mean_rmse.png)|
+    |![Manual_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/manual_agent/images/box_plots_overall/manual_agent_house_pfnet_eps_mean_rmse.png)|![Manual_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/manual_agent/images/box_plots_overall/manual_agent_igibson_pfnet_eps_mean_rmse.png)|
 
     |Random Agent w.r.t Original PFNet |Random Agent w.r.t Finetuned PFNet |
     |------------|------------|
-    |![Random_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/overall/rnd_agent_house_pfnet_eps_mean_rmse.png)|![Random_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/overall/rnd_agent_igibson_pfnet_eps_mean_rmse.png)|
+    |![Random_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/box_plots_overall/rnd_agent_house_pfnet_eps_mean_rmse.png)|![Random_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/box_plots_overall/rnd_agent_igibson_pfnet_eps_mean_rmse.png)|
   * Per Episode End Mean RMSE
     |Manual Agent w.r.t Original PFNet |Manual Agent w.r.t Finetuned PFNet |
     |------------|------------|
-    |![Manual_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/manual_agent/images/overall/manual_agent_house_pfnet_eps_final_rmse.png)|![Manual_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/manual_agent/images/overall/manual_agent_igibson_pfnet_eps_final_rmse.png)|
+    |![Manual_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/manual_agent/images/box_plots_overall/manual_agent_house_pfnet_eps_final_rmse.png)|![Manual_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/manual_agent/images/box_plots_overall/manual_agent_igibson_pfnet_eps_final_rmse.png)|
 
     |Random Agent w.r.t Original PFNet |Random Agent w.r.t Finetuned PFNet |
     |------------|------------|
-    |![Random_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/overall/rnd_agent_house_pfnet_eps_final_rmse.png)|![Random_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/overall/rnd_agent_igibson_pfnet_eps_final_rmse.png)|
+    |![Random_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/box_plots_overall/rnd_agent_house_pfnet_eps_final_rmse.png)|![Random_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/box_plots_overall/rnd_agent_igibson_pfnet_eps_final_rmse.png)|
 </details>
