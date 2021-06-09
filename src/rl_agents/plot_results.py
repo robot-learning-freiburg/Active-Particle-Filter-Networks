@@ -41,7 +41,7 @@ def boxplot(metric, title, filename):
     for key, value in summary_dirs.items():
         events_data.append(read_events(value))
 
-    fig = plt.figure(figsize =(14, 10))
+    fig = plt.figure(figsize =(14, 7))
 
     # create boxplot
     plt.boxplot([
@@ -54,10 +54,10 @@ def boxplot(metric, title, filename):
     events = list(summary_dirs.keys())
     plt.xlabel('Experiment', fontweight='bold')
     plt.ylabel('RMSE (in meters)', fontweight='bold')
-    plt.yticks(np.arange(-10, +100, 10.))
+    plt.yticks(np.arange(0, 60, 5))
     plt.xticks(np.arange(1, len(events)+1), events)
     x1,x2,y1,y2 = plt.axis()
-    plt.axis([x1, x2, -10, +100])
+    plt.axis([x1, x2, 0, 60])
     plt.title(title, fontsize=16, fontweight='bold')
 
     # save figure
