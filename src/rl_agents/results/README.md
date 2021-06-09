@@ -83,4 +83,20 @@
     |Gauss W/O Noise + More Particles &nbsp; &nbsp;|Uniform W/O Noise + More Particles &nbsp;|&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
     |------------|------------|------------|
     |![Gauss_WithOut_More_Particles](2021-06-07_08-00-00/rnd_agent/images/gauss_1500_15,0.523_0,0_0.8/eps_final_rmse.svg)|![Uniform_WithOut_More_Particles](2021-06-07_08-00-00/rnd_agent/images/uniform_1500_75_0,0_0.8/eps_final_rmse.svg)||
+  * Per Episode Overall Mean RMSE
+    |Manual Agent w.r.t Original PFNet |Manual Agent w.r.t Finetuned PFNet |
+    |------------|------------|
+    |![Manual_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/manual_agent/images/overall/manual_agent_house_pfnet_eps_mean_rmse.png)|![Manual_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/manual_agent/images/overall/manual_agent_igibson_pfnet_eps_mean_rmse.png)|
+  
+    |Random Agent w.r.t Original PFNet |Random Agent w.r.t Finetuned PFNet |
+    |------------|------------|
+    |![Random_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/overall/manual_agent_house_pfnet_eps_mean_rmse.png)|![Random_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/overall/manual_agent_igibson_pfnet_eps_mean_rmse.png)|
+  * Per Episode End Mean RMSE
+    |Manual Agent w.r.t Original PFNet |Manual Agent w.r.t Finetuned PFNet |
+    |------------|------------|
+    |![Manual_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/manual_agent/images/overall/manual_agent_house_pfnet_eps_final_rmse.png)|![Manual_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/manual_agent/images/overall/manual_agent_igibson_pfnet_eps_final_rmse.png)|
+  
+    |Random Agent w.r.t Original PFNet |Random Agent w.r.t Finetuned PFNet |
+    |------------|------------|
+    |![Random_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/overall/manual_agent_house_pfnet_eps_final_rmse.png)|![Random_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/overall/manual_agent_igibson_pfnet_eps_final_rmse.png)|
 </details>
