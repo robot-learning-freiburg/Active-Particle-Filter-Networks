@@ -73,3 +73,10 @@ $ nohup python -u test_pfnet.py \
 --config_file=./configs/turtlebot_random_nav.yaml \
 --device_idx=0 \
 --seed=15 > nohup.out &
+
+June 9th 2021
+-------------
+1. collect random trajectories w.r.t discrete actions and train PFNet
+2. collect train/test for 200 houses with trajectory length 100, for 10,000 trajectories
+3. then re-eval after training PFNet
+4. K-mean representation of particles
