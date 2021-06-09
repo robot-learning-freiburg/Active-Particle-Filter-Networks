@@ -54,18 +54,18 @@
   * Per Episode Overall Mean RMSE - Manual Trajectories
     |Gauss W/O Transition Noise |Gauss With Transition Noise |Gauss W/O Noise + More Particles|Uniform W/O Noise + More Particles|
     |------------|------------|------------|------------|
-    |![Gauss_WithOut_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_0,0_0.8/eps_mean_rmse.svg)|![Gauss_With_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_1,0.087_0.8/eps_mean_rmse.svg)|![Gauss_WithOut_More_Particles](2021-06-07_08-00-00/manual_agent/images/gauss_1500_15,0.523_0,0_0.8/eps_mean_rmse.svg)||
+    |![Gauss_WithOut_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_0,0_0.8/eps_mean_rmse.svg)|![Gauss_With_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_1,0.087_0.8/eps_mean_rmse.svg)|![Gauss_WithOut_More_Particles](2021-06-07_08-00-00/manual_agent/images/gauss_1500_15,0.523_0,0_0.8/eps_mean_rmse.svg)|![Uniform_WithOut_More_Particles](2021-06-07_08-00-00/manual_agent/images/uniform_1500_75_0,0_0.8/eps_mean_rmse.svg)|
   * Per Episode End RMSE - Manual Trajectories 
     |Gauss W/O Transition Noise |Gauss With Transition Noise |Gauss W/O Noise + More Particles|Uniform W/O Noise + More Particles|
     |------------|------------|------------|------------|
-    |![Gauss_WithOut_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_0,0_0.8/eps_final_rmse.svg)|![Gauss_With_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_1,0.087_0.8/eps_final_rmse.svg)|![Gauss_WithOut_More_Particles](2021-06-07_08-00-00/manual_agent/images/gauss_1500_15,0.523_0,0_0.8/eps_final_rmse.svg)||
+    |![Gauss_WithOut_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_0,0_0.8/eps_final_rmse.svg)|![Gauss_With_Noise](2021-06-07_08-00-00/manual_agent/images/gauss_500_15,0.523_1,0.087_0.8/eps_final_rmse.svg)|![Gauss_WithOut_More_Particles](2021-06-07_08-00-00/manual_agent/images/gauss_1500_15,0.523_0,0_0.8/eps_final_rmse.svg)|![Uniform_WithOut_More_Particles](2021-06-07_08-00-00/manual_agent/images/uniform_1500_75_0,0_0.8/eps_final_rmse.svg)|
   * Per Episode Overall Mean RMSE - Random Action Trajectories
     |Gauss W/O Transition Noise |Gauss With Transition Noise |Gauss W/O Noise + More Particles|Uniform W/O Noise + More Particles|
     |------------|------------|------------|------------|
-    |![Gauss_WithOut_Noise](2021-06-07_08-00-00/rnd_agent/images/gauss_500_15,0.523_0,0_0.8/eps_mean_rmse.svg)|![Gauss_With_Noise](2021-06-07_08-00-00/rnd_agent/images/gauss_500_15,0.523_1,0.087_0.8/eps_mean_rmse.svg)|![Gauss_WithOut_More_Particles](2021-06-07_08-00-00/rnd_agent/images/gauss_1500_15,0.523_0,0_0.8/eps_mean_rmse.svg)||
+    |![Gauss_WithOut_Noise](2021-06-07_08-00-00/rnd_agent/images/gauss_500_15,0.523_0,0_0.8/eps_mean_rmse.svg)|![Gauss_With_Noise](2021-06-07_08-00-00/rnd_agent/images/gauss_500_15,0.523_1,0.087_0.8/eps_mean_rmse.svg)|![Gauss_WithOut_More_Particles](2021-06-07_08-00-00/rnd_agent/images/gauss_1500_15,0.523_0,0_0.8/eps_mean_rmse.svg)|![Uniform_WithOut_More_Particles](2021-06-07_08-00-00/rnd_agent/images/uniform_1500_75_0,0_0.8/eps_mean_rmse.svg)|
   * Per Episode End RMSE - Random Action Trajectories 
     |Gauss W/O Transition Noise |Gauss With Transition Noise |Gauss W/O Noise + More Particles|Uniform W/O Noise + More Particles|
     |------------|------------|------------|------------|
-    |![Gauss_WithOut_Noise](2021-06-07_08-00-00/rnd_agent/images/gauss_500_15,0.523_0,0_0.8/eps_final_rmse.svg)|![Gauss_With_Noise](2021-06-07_08-00-00/rnd_agent/images/gauss_500_15,0.523_1,0.087_0.8/eps_final_rmse.svg)|![Gauss_WithOut_More_Particles](2021-06-07_08-00-00/rnd_agent/images/gauss_1500_15,0.523_0,0_0.8/eps_final_rmse.svg)||
+    |![Gauss_WithOut_Noise](2021-06-07_08-00-00/rnd_agent/images/gauss_500_15,0.523_0,0_0.8/eps_final_rmse.svg)|![Gauss_With_Noise](2021-06-07_08-00-00/rnd_agent/images/gauss_500_15,0.523_1,0.087_0.8/eps_final_rmse.svg)|![Gauss_WithOut_More_Particles](2021-06-07_08-00-00/rnd_agent/images/gauss_1500_15,0.523_0,0_0.8/eps_final_rmse.svg)|![Uniform_WithOut_More_Particles](2021-06-07_08-00-00/rnd_agent/images/uniform_1500_75_0,0_0.8/eps_final_rmse.svg)|
 
 </details>
