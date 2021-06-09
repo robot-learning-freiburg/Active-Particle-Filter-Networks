@@ -48,3 +48,4 @@ AUTHOR Suresh Guttikonda
     # download the required assets
     python -m gibson2.utils.assets_utils --download_assets
     python -m gibson2.utils.assets_utils --download_demo_data
+    python -m gibson2.utils.assets_utils --download_dataset https://storage.googleapis.com/gibson_scenes/gibson_v2_4+.tar.gz
