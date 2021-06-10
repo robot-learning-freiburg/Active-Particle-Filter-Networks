@@ -141,8 +141,10 @@ def parse_args():
     # parse parameters
     params = arg_parser.parse_args()
 
+    # For the igibson maps, each pixel represents 0.01m, and the center of the image correspond to (0,0)
+    params.map_pixel_in_meters = 0.01
+
     # HACK: hardcoded values for floor map/obstacle map
-    params.map_pixel_in_meters = 0.1
     params.global_map_size = [1000, 1000, 1]
     params.window_scaler = 8.0
 
@@ -205,6 +207,11 @@ def store_results(eps_idx, obstacle_map, particle_states, particle_weights, true
 
     # plot map
     floor_map = obstacle_map[0].numpy()  # [H, W, 1]
+
+    # HACK:
+    plt_ax.set_yticks(np.arange(0, floor_map.shape[0], 100))
+    plt_ax.set_xticks(np.arange(0, floor_map.shape[1], 100))
+
     map_plt = render.draw_floor_map(floor_map, plt_ax, None)
 
     images = []
@@ -248,7 +255,9 @@ def store_results(eps_idx, obstacle_map, particle_states, particle_weights, true
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         images.append(img)
 
-    print(f'{eps_idx} True Pose: {true_state[0]}, Estimated Pose: {est_state[0]}')
+    end_gt_pose = datautils.inv_transform_pose(true_state[0], floor_map.shape, params.map_pixel_in_meters)
+    end_est_pose = datautils.inv_transform_pose(est_state[0], floor_map.shape, params.map_pixel_in_meters)
+    print(f'{eps_idx} End True Pose: {end_gt_pose}, End Estimated Pose: {end_est_pose} in mts')
 
     size = (images[0].shape[0], images[0].shape[1])
     out = cv2.VideoWriter(

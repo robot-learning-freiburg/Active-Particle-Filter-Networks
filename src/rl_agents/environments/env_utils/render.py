@@ -39,8 +39,7 @@ def draw_floor_map(floor_map, plt_ax, map_plt):
     origin_x, origin_y = floor_map.shape[1]/2, floor_map.shape[0]/2
     if map_plt is None:
         # draw floor map
-        floor_map = cv2.flip(floor_map, 0)  # flip image
-        map_plt = plt_ax.imshow(floor_map, cmap='gray')
+        map_plt = plt_ax.imshow(floor_map, cmap='gray', origin='lower')
         plt.scatter(origin_x, origin_y, s=10, c='black', marker='x', alpha=1)
     else:
         # do nothing
@@ -64,9 +63,6 @@ def draw_particles_pose(particles, weights, map_shape, particles_plt, scale=1):
     # rescale
     part_x = part_x / scale
     part_y = part_y / scale
-
-    # flip image changes
-    part_y = height - part_y
 
     color = cm.rainbow(weights)
 
@@ -99,10 +95,6 @@ def draw_robot_pose(robot_pose, color, map_shape, plt_ax, position_plt, heading_
     # rescale
     x = x / scale
     y = y / scale
-
-    # flip image changes
-    y = height - y
-    heading = -heading
 
     heading_len  = robot_radius = 10.0
     xdata = [x, x + (robot_radius + heading_len) * np.cos(heading)]

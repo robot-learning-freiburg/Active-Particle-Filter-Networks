@@ -64,6 +64,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
         del self.task.termination_conditions[-1]
         del self.task.reward_functions[-1]
 
+        # For the igibson maps, each pixel represents 0.01m, and the center of the image correspond to (0,0)
+        self.map_pixel_in_meters = 0.01
+
         argparser = argparse.ArgumentParser()
         self.pf_params = argparser.parse_args([])
         self.use_pfnet = init_pfnet
@@ -116,7 +119,6 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.pf_params.use_plot = FLAGS.use_plot
         self.pf_params.store_plot = FLAGS.store_plot
 
-        self.pf_params.map_pixel_in_meters = 0.1
         self.pf_params.batch_size = 1
         self.pf_params.trajlen = 1
         self.pf_params.return_state = True
@@ -124,8 +126,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.pf_params.global_map_size = [1000, 1000, 1]
         self.pf_params.window_scaler = 8.0
 
-        self.pf_params.transition_std[0] = self.pf_params.transition_std[0] / self.pf_params.map_pixel_in_meters  # convert meters to pixels
-        self.pf_params.init_particles_std[0] = self.pf_params.init_particles_std[0] / self.pf_params.map_pixel_in_meters  # convert meters to pixels
+        self.pf_params.transition_std[0] = self.pf_params.transition_std[0] / self.map_pixel_in_meters  # convert meters to pixels
+        self.pf_params.init_particles_std[0] = self.pf_params.init_particles_std[0] / self.map_pixel_in_meters  # convert meters to pixels
 
         # build initial covariance matrix of particles, in pixels and radians
         particle_std2 = np.square(self.pf_params.init_particles_std.copy())  # variance
@@ -279,7 +281,6 @@ class LocalizeGibsonEnv(iGibsonEnv):
         batch_size = self.pf_params.batch_size
         num_particles = self.pf_params.num_particles
         pfnet_stateful = self.pf_params.stateful
-        map_pixel_in_meters = self.pf_params.map_pixel_in_meters
 
         floor_map = self.floor_map[0]
         old_rgb_obs = self.curr_rgb_obs
@@ -340,7 +341,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         assert list(true_old_pose.shape) == [batch_size, trajlen, 3]
         assert list(particles.shape) == [batch_size, trajlen, num_particles, 3]
         assert list(particle_weights.shape) == [batch_size, trajlen, num_particles]
-        loss_dict = pfnet_loss.compute_loss(particles, particle_weights, true_old_pose, map_pixel_in_meters)
+        loss_dict = pfnet_loss.compute_loss(particles, particle_weights, true_old_pose, self.map_pixel_in_meters)
 
         # TODO: may need better reward
         # compute reward and normalize to range [-10, 0]
@@ -565,8 +566,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         robot_orn = robot_state[3:6]  # [r, p, y]
 
         # transform from co-ordinate space to pixel space
-        robot_pos_xy = datautils.transform_pose(robot_pos[:2], floor_map_shape,
-                                                self.scene.trav_map_resolution ** 2)  # [x, y]
+        robot_pos_xy = datautils.transform_position(robot_pos[:2], floor_map_shape, self.map_pixel_in_meters)  # [x, y]
         robot_pose = np.array([robot_pos_xy[0], robot_pos_xy[1], robot_orn[2]])  # [x, y, theta]
 
         return robot_pose

@@ -152,21 +152,38 @@ def get_discrete_action():
     return action
 
 
-def transform_pose(position, map_shape, map_resolution):
+def transform_position(position, map_shape, map_pixel_in_meters):
     """
-    Transform pose from 2D co-ordinate space to pixel space
-    :param ndarray position: pose [x, y] in co-ordinate space
+    Transform position from 2D co-ordinate space to pixel space
+    :param ndarray position: [x, y] in co-ordinate space
     :param tuple map_shape: [height, width, channel] of the map the co-ordinated need to be transformed
-    :param int map_resolution: The width (and height) of a pixel of the map in meters
-    :return ndarray: pose [x, y, theta] in pixel space of map
+    :param float map_pixel_in_meters: The width (and height) of a pixel of the map in meters
+    :return ndarray: position [x, y] in pixel space of map
     """
     x, y = position
     height, width, channel = map_shape
 
-    x = (x / map_resolution) + width / 2
-    y = (y / map_resolution) + height / 2
+    x = (x / map_pixel_in_meters) + width / 2
+    y = (y / map_pixel_in_meters) + height / 2
 
     return np.array([x, y])
+
+
+def inv_transform_pose(pose, map_shape, map_pixel_in_meters):
+    """
+    Transform pose from pixel space to 2D co-ordinate space
+    :param ndarray pose: [x, y, theta] in pixel space of map
+    :param tuple map_shape: [height, width, channel] of the map the co-ordinated need to be transformed
+    :param float map_pixel_in_meters: The width (and height) of a pixel of the map in meters
+    :return ndarray: pose [x, y, theta] in co-ordinate space
+    """
+    x, y, theta = pose
+    height, width, channel = map_shape
+
+    x = (x - width / 2) * map_pixel_in_meters
+    y = (y - height / 2) * map_pixel_in_meters
+
+    return np.array([x, y, theta])
 
 
 def gather_episode_stats(env, params, sample_particles=False):
