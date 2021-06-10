@@ -258,6 +258,7 @@ def store_results(eps_idx, obstacle_map, particle_states, particle_weights, true
     end_gt_pose = datautils.inv_transform_pose(true_state[0], floor_map.shape, params.map_pixel_in_meters)
     end_est_pose = datautils.inv_transform_pose(est_state[0], floor_map.shape, params.map_pixel_in_meters)
     print(f'{eps_idx} End True Pose: {end_gt_pose}, End Estimated Pose: {end_est_pose} in mts')
+    print(f'{eps_idx} End True Pose: {true_state[0]}, End Estimated Pose: {est_state[0]} in px')
 
     size = (images[0].shape[0], images[0].shape[1])
     out = cv2.VideoWriter(
