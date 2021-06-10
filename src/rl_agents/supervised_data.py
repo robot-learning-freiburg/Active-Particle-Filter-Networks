@@ -46,6 +46,11 @@ flags.DEFINE_string(
     help='Config file for the experiment'
 )
 flags.DEFINE_string(
+    name='scene_id',
+    default=None,
+    help='Environment scene'
+)
+flags.DEFINE_string(
     name='env_mode',
     default='headless',
     help='Environment render mode'
@@ -83,9 +88,9 @@ flags.DEFINE_integer(
 
 # define pfNet env parameters
 flags.DEFINE_boolean(
-    name='use_pfnet',
+    name='init_pfnet',
     default=False,
-    help='Whether to use particle filter net'
+    help='Whether to initialize particle filter net'
 )
 
 FLAGS = flags.FLAGS
@@ -131,10 +136,10 @@ def main(_):
 
     env = LocalizeGibsonEnv(
         config_file=FLAGS.config_file,
-        scene_id=None,
+        scene_id=FLAGS.scene_id,
         mode=FLAGS.env_mode,
         use_tf_function=True,
-        use_pfnet=FLAGS.use_pfnet,
+        init_pfnet=FLAGS.init_pfnet,
         action_timestep=FLAGS.action_timestep,
         physics_timestep=FLAGS.physics_timestep,
         device_idx=FLAGS.gpu_num

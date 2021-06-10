@@ -119,8 +119,8 @@ flags.DEFINE_integer('gpu_g', 0,
                      'GPU id for graphics, e.g. Gibson.')
 
 # Added for Particle Filter
-flags.DEFINE_boolean('use_pfnet', False,
-                     'Whether to use particle filter net')
+flags.DEFINE_boolean('init_pfnet', False,
+                     'Whether to initialize particle filter net')
 flags.DEFINE_string('init_particles_distr', 'gaussian',
                     'Distribution of initial particles. Possible values: gaussian / uniform.')
 flags.DEFINE_list('init_particles_std', [15, 0.523599],
@@ -555,7 +555,7 @@ def main(_):
     assert FLAGS.num_parallel_environments == 1
     assert FLAGS.num_parallel_environments_eval == 1
 
-    use_pfnet = FLAGS.FLAGS
+    init_pfnet = FLAGS.init_pfnet
     config_file = FLAGS.config_file
     action_timestep = FLAGS.action_timestep
     physics_timestep = FLAGS.physics_timestep
@@ -574,7 +574,7 @@ def main(_):
             model_id=model_id,
             env_mode=mode,
             use_tf_function=use_tf_function,
-            use_pfnet=use_pfnet,
+            init_pfnet=init_pfnet,
             is_localize_env=is_localize_env,
             action_timestep=action_timestep,
             physics_timestep=physics_timestep,

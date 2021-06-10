@@ -77,9 +77,9 @@ flags.DEFINE_integer(
 
 # define pfNet env parameters
 flags.DEFINE_boolean(
-    name='use_pfnet',
+    name='init_pfnet',
     default=False,
-    help='Whether to use particle filter net'
+    help='Whether to initialize particle filter net'
 )
 flags.DEFINE_string(
     name='init_particles_distr',
@@ -189,7 +189,7 @@ def test_agent(arg_params):
         model_id=model_id,
         env_mode=mode,
         use_tf_function=use_tf_function,
-        use_pfnet=arg_params.use_pfnet,
+        init_pfnet=arg_params.init_pfnet,
         is_localize_env=arg_params.is_localize_env,
         action_timestep=arg_params.action_timestep,
         physics_timestep=arg_params.physics_timestep,

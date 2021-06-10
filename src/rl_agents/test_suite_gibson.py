@@ -9,6 +9,8 @@ tf_env = suite_gibson.load(
     config_file=os.path.join('./configs', 'turtlebot_random_nav.yaml'),
     model_id='Adrian',
     env_mode='gui',
+    use_tf_function=True,
+    init_pfnet=False,
     is_localize_env=False,
     device_idx=0,
 )

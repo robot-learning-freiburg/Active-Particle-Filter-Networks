@@ -32,7 +32,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             scene_id=None,
             mode='headless',
             use_tf_function=True,
-            use_pfnet=False,
+            init_pfnet=False,
             action_timestep=1 / 10.0,
             physics_timestep=1 / 240.0,
             device_idx=0,
@@ -66,7 +66,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         argparser = argparse.ArgumentParser()
         self.pf_params = argparser.parse_args([])
-        self.use_pfnet = use_pfnet
+        self.use_pfnet = init_pfnet
         self.use_tf_function = use_tf_function
         if self.use_pfnet:
             self.init_pfnet(flags.FLAGS)
