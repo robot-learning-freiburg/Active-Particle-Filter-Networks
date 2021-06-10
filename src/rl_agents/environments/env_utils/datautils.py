@@ -203,8 +203,9 @@ def gather_episode_stats(env, params, sample_particles=False):
         if agent == 'manual':
             action = get_discrete_action()
         else:
-            # default random action
-            action = env.action_space.sample()
+            # default random action forward: 0.7, turn: 0.3, backward:0., do_nothing:0.0
+            action = np.random.choice(5, p=[0.7, 0.0, 0.15, 0.15, 0.0])
+            # action = env.action_space.sample()
 
         # take action and get new observation
         obs, reward, done, _ = env.step(action)
