@@ -88,7 +88,7 @@ flags.DEFINE_integer(
 
 # define pfNet env parameters
 flags.DEFINE_boolean(
-    name='init_pfnet',
+    name='init_env_pfnet',
     default=False,
     help='Whether to initialize particle filter net'
 )
@@ -139,11 +139,12 @@ def main(_):
         scene_id=FLAGS.scene_id,
         mode=FLAGS.env_mode,
         use_tf_function=True,
-        init_pfnet=FLAGS.init_pfnet,
+        init_pfnet=FLAGS.init_env_pfnet,
         action_timestep=FLAGS.action_timestep,
         physics_timestep=FLAGS.physics_timestep,
         device_idx=FLAGS.gpu_num
     )
+    # HACK: override value from config file
     FLAGS.max_step = env.config.get('max_step', 500)
     FLAGS.is_discrete = env.config.get("is_discrete", False)
     FLAGS.velocity = env.config.get("velocity", 1.0)

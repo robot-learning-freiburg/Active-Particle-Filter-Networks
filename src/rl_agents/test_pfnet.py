@@ -169,8 +169,9 @@ def parse_args():
     params.stateful = False
     params.return_state = True
 
+    # HACK:
     params.use_tf_function = True
-    params.init_pfnet = False
+    params.init_env_pfnet = False
     params.store_results = True
 
     gpu_num = 0
@@ -283,7 +284,7 @@ def pfnet_test(arg_params):
         scene_id=None,
         mode='headless',
         use_tf_function=arg_params.use_tf_function,
-        init_pfnet=arg_params.init_pfnet,
+        init_pfnet=arg_params.init_env_pfnet,
         action_timestep=arg_params.action_timestep,
         physics_timestep=arg_params.physics_timestep,
         device_idx=arg_params.device_idx

@@ -55,7 +55,7 @@ python supervised_data.py \
 --config_file=./configs/turtlebot_random_nav.yaml \
 --env_mode='headless' \
 --gpu_num=0 \
---use_pfnet=False \
+--init_env_pfnet=False \
 --seed=90
 
 $ nohup python -u test_pfnet.py \
