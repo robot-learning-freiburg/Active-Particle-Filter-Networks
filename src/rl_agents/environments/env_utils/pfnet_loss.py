@@ -14,7 +14,7 @@ def compute_loss(particle_states, particle_weights, true_states, map_pixel_in_me
     :return dict: total loss and coordinate loss (in meters)
     """
 
-    assert particle_states.ndim == 4 and particle_weights.ndim == 3 and true_states.ndim == 3
+    # assert particle_states.ndim == 4 and particle_weights.ndim == 3 and true_states.ndim == 3
     lin_weights = tf.nn.softmax(particle_weights, axis=-1)
 
     true_coords = true_states[:, :, :2]

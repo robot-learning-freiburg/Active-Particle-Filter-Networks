@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 
 import argparse
-import cv2
 import glob
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_agg import FigureCanvasAgg
 import numpy as np
 import os
-from pathlib import Path
 import random
 import tensorflow as tf
+from tensorflow import keras
+from tqdm import tqdm
 
 from pfnetwork import pfnet
 from environments.env_utils import datautils, pfnet_loss, render
@@ -27,30 +25,36 @@ def parse_args():
     # initialize parser
     arg_parser = argparse.ArgumentParser()
 
-    # define testing parameters
+    # define training parameters
     arg_parser.add_argument(
         '--root_dir',
         type=str,
-        default='./test_output',
+        default='./train_output',
         help='Root directory for logs/summaries/checkpoints.'
     )
     arg_parser.add_argument(
-        '--num_eval_episodes',
-        type=int,
-        default=1,
-        help='The number of episodes to run eval on.'
+        '--tfrecordpath',
+        type=str,
+        default='./data',
+        help='Folder path to training/validation/testing (tfrecord).'
     )
     arg_parser.add_argument(
-        '--testfiles',
-        nargs='*',
-        default=['./test.tfrecord'],
-        help='Data file(s) for validation or evaluation (tfrecord).'
+        '--epochs',
+        type=int,
+        default=1,
+        help='Number of epochs for training.'
     )
     arg_parser.add_argument(
         '--batch_size',
         type=int,
         default=1,
         help='Minibatch size for training'
+    )
+    arg_parser.add_argument(
+        '--s_buffer_size',
+        type=int,
+        default=500,
+        help='Buffer size for shuffling data'
     )
     arg_parser.add_argument(
         '--pfnet_loadpath',
@@ -62,6 +66,12 @@ def parse_args():
         help='Load a previously trained pfnet model from a checkpoint file.'
     )
     arg_parser.add_argument(
+        '--learning_rate',
+        type=float,
+        default=2.5e-3,
+        help='Learning rate for training'
+    )
+    arg_parser.add_argument(
         '--seed',
         type=int,
         default=1,
@@ -71,7 +81,7 @@ def parse_args():
         '--device_idx',
         type=int,
         default='0',
-        help='use gpu no. to test'
+        help='use gpu no. to train/eval'
     )
 
     # define particle parameters
@@ -121,7 +131,7 @@ def parse_args():
         default=os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             'configs',
-            'turtlebot_random_nav.yaml'
+            'turtlebot_pfnet_nav.yaml'
         ),
         help='Config file for the experiment'
     )
@@ -149,6 +159,8 @@ def parse_args():
     params.window_scaler = 8.0
 
     # post-processing
+    params.num_train_batches = 10
+    params.num_valid_batches = 10
 
     # convert multi-input fields to numpy arrays
     params.transition_std = np.array(params.transition_std, np.float32)
@@ -172,7 +184,7 @@ def parse_args():
     params.return_state = True
 
     # HACK:
-    params.use_tf_function = True
+    params.use_tf_function = False
     params.init_env_pfnet = False
     params.store_results = True
 
@@ -187,105 +199,27 @@ def parse_args():
     return params
 
 
-def store_results(eps_idx, obstacle_map, particle_states, particle_weights, true_states, params):
-    trajlen = params.trajlen
-
-    fig = plt.figure(figsize=(7, 7))
-    plt_ax = fig.add_subplot(111)
-    canvas = FigureCanvasAgg(fig)
-
-    lin_weights = tf.nn.softmax(particle_weights, axis=-1)
-    est_states = tf.math.reduce_sum(tf.math.multiply(
-        particle_states[:, :, :, :], lin_weights[:, :, :, None]
-    ), axis=2)
-
-    # normalize between [-pi, +pi]
-    part_x, part_y, part_th = tf.unstack(est_states, axis=-1, num=3)  # (k, 3)
-    part_th = tf.math.floormod(part_th + np.pi, 2 * np.pi) - np.pi
-    est_states = tf.stack([part_x, part_y, part_th], axis=-1)
-
-    # plot map
-    floor_map = obstacle_map[0].numpy()  # [H, W, 1]
-
-    # HACK:
-    plt_ax.set_yticks(np.arange(0, floor_map.shape[0], 100))
-    plt_ax.set_xticks(np.arange(0, floor_map.shape[1], 100))
-
-    map_plt = render.draw_floor_map(floor_map, plt_ax, None)
-
-    images = []
-    gt_plt = {
-        'robot_position': None,
-        'robot_heading': None,
-    }
-    est_plt = {
-        'robot_position': None,
-        'robot_heading': None,
-        'particles': None,
-    }
-    for traj in range(trajlen):
-        true_state = true_states[:, traj, :]
-        est_state = est_states[:, traj, :]
-        particle_state = particle_states[:, traj, :, :]
-        lin_weight = lin_weights[:, traj, :]
-
-        # plot true robot pose
-        position_plt, heading_plt = gt_plt['robot_position'], gt_plt['robot_heading']
-        gt_plt['robot_position'], gt_plt['robot_heading'] = render.draw_robot_pose(
-            true_state[0], '#7B241C', floor_map.shape, plt_ax,
-            position_plt, heading_plt)
-
-        # plot est robot pose
-        position_plt, heading_plt = est_plt['robot_position'], est_plt['robot_heading']
-        est_plt['robot_position'], est_plt['robot_heading'] = render.draw_robot_pose(
-            est_state[0], '#515A5A', floor_map.shape, plt_ax,
-            position_plt, heading_plt)
-
-        # plot est pose particles
-        particles_plt = est_plt['particles']
-        est_plt['particles'] = render.draw_particles_pose(
-            particle_state[0], lin_weight[0],
-            floor_map.shape, particles_plt)
-
-        plt_ax.legend([gt_plt['robot_position'], est_plt['robot_position']], ["gt_pose", "est_pose"])
-
-        canvas.draw()
-        img = np.array(canvas.renderer._renderer)
-        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-        images.append(img)
-
-    end_gt_pose = datautils.inv_transform_pose(true_state[0], floor_map.shape, params.map_pixel_in_meters)
-    end_est_pose = datautils.inv_transform_pose(est_state[0], floor_map.shape, params.map_pixel_in_meters)
-    print(f'{eps_idx} End True Pose: {end_gt_pose}, End Estimated Pose: {end_est_pose} in mts')
-    print(f'{eps_idx} End True Pose: {true_state[0]}, End Estimated Pose: {est_state[0]} in px')
-
-    size = (images[0].shape[0], images[0].shape[1])
-    out = cv2.VideoWriter(
-            os.path.join(params.out_folder, f'result_{eps_idx}.avi'),
-            cv2.VideoWriter_fourcc(*'XVID'), 30, size)
-
-    for i in range(len(images)):
-        out.write(images[i])
-        # cv2.imwrite(params.out_folder + f'result_img_{i}.png', images[i])
-    out.release()
-
-
-def pfnet_test(arg_params):
+def pfnet_train(arg_params):
     """
-    A simple test for particle filter network
+    A simple train for particle filter network
 
     :param arg_params:
         parsed command-line arguments
     :return:
     """
-
     root_dir = os.path.expanduser(arg_params.root_dir)
-    log_dir = os.path.join(root_dir, 'log_dir')
+    train_dir = os.path.join(root_dir, 'train')
+    eval_dir = os.path.join(root_dir, 'eval')
 
-    # evaluation data
-    filenames = list(glob.glob(arg_params.testfiles[0]))
-    test_ds = datautils.get_dataflow(filenames, arg_params.batch_size, is_training=False)
-    print(f'test data: {filenames}')
+    # training data
+    filenames = list(glob.glob(os.path.join(arg_params.tfrecordpath, 'train', '*.tfrecord')))
+    train_ds = datautils.get_dataflow(filenames, arg_params.batch_size, arg_params.s_buffer_size, is_training=True)
+    print(f'train data: {filenames}')
+
+    # validation(eval) data
+    filenames = list(glob.glob(os.path.join(arg_params.tfrecordpath, 'eval', '*.tfrecord')))
+    eval_ds = datautils.get_dataflow(filenames, arg_params.batch_size, arg_params.s_buffer_size, is_training=False)
+    print(f'eval data: {filenames}')
 
     # create igibson env which is used "only" to sample particles
     env = LocalizeGibsonEnv(
@@ -310,23 +244,89 @@ def pfnet_test(arg_params):
         pfnet_model.load_weights(arg_params.pfnet_loadpath)
         print("=====> Loaded pf model from: " + arg_params.pfnet_loadpath)
 
+    # Recommended: wrap to tf.graph for better performance
     if arg_params.use_tf_function:
         pfnet_model = tf.function(pfnet_model)
         print("=====> wrapped pfnet in tf.graph")
 
+    # Adam optimizer.
+    optimizer = tf.optimizers.Adam(learning_rate=arg_params.learning_rate)
+
+    # Define metrics
+    train_loss = keras.metrics.Mean('train_loss', dtype=tf.float32)
+    eval_loss = keras.metrics.Mean('eval_loss', dtype=tf.float32)
+
+    # Logging
+    summaries_flush_secs=10
+    train_summary_writer = tf.compat.v2.summary.create_file_writer(
+        train_dir, flush_millis=summaries_flush_secs * 1000)
+    eval_summary_writer = tf.compat.v2.summary.create_file_writer(
+        eval_dir, flush_millis=summaries_flush_secs * 1000)
+
     trajlen = arg_params.trajlen
     batch_size = arg_params.batch_size
     num_particles = arg_params.num_particles
-
     print(arg_params)
-    test_summary_writer = tf.summary.create_file_writer(log_dir)
-    with test_summary_writer.as_default():
-        # run over all evaluation samples in an epoch
-        mse_list = []
-        success_list = []
-        itr = test_ds.as_numpy_iterator()
-        for eps_idx in range(arg_params.num_eval_episodes):
-            parsed_record = next(itr)
+
+    # Recommended: wrap to tf.graph for better performance
+    @tf.function
+    def train_step(model_input):
+        """ Run one training step """
+
+        # enable auto-differentiation
+        with tf.GradientTape() as tape:
+            # forward pass
+            output, state = pfnet_model(model_input, training=True)
+            particle_states, particle_weights = output
+
+            # sanity check
+            assert list(particle_states.shape) == [batch_size, trajlen, num_particles, 3]
+            assert list(particle_weights.shape) == [batch_size, trajlen, num_particles]
+            assert list(true_states.shape) == [batch_size, trajlen, 3]
+
+            # compute loss
+            loss_dict = pfnet_loss.compute_loss(particle_states, particle_weights, true_states,
+                                                arg_params.map_pixel_in_meters)
+            loss_pred = loss_dict['pred']
+
+        # compute gradients of the trainable variables with respect to the loss
+        gradients = tape.gradient(loss_pred, pfnet_model.trainable_weights)
+        gradients = list(zip(gradients, pfnet_model.trainable_weights))
+
+        # run one step of gradient descent
+        optimizer.apply_gradients(gradients)
+        train_loss(loss_pred)  # overall trajectory loss
+
+    # Recommended: wrap to tf.graph for better performance
+    @tf.function
+    def eval_step(model_input):
+        """ Run one validation step """
+
+        # forward pass
+        output, state = pfnet_model(model_input, training=False)
+        particle_states, particle_weights = output
+
+        # sanity check
+        assert list(particle_states.shape) == [batch_size, trajlen, num_particles, 3]
+        assert list(particle_weights.shape) == [batch_size, trajlen, num_particles]
+        assert list(true_states.shape) == [batch_size, trajlen, 3]
+
+        # compute loss
+        loss_dict = pfnet_loss.compute_loss(particle_states, particle_weights, true_states,
+                                            arg_params.map_pixel_in_meters)
+        loss_pred = loss_dict['pred']
+
+        eval_loss(loss_pred)  # overall trajectory loss
+
+    # repeat for a fixed number of epochs train and eval loops
+    for epoch in range(arg_params.epochs):
+
+        #------------------------#
+        # run training over all training samples in an epoch
+        train_itr = train_ds.as_numpy_iterator()
+        for idx in tqdm(range(arg_params.num_train_batches)):
+
+            parsed_record = next(train_itr)
             batch_sample = datautils.transform_raw_record(env, parsed_record, arg_params)
 
             observation = tf.convert_to_tensor(batch_sample['observation'], dtype=tf.float32)
@@ -349,50 +349,73 @@ def pfnet_test(arg_params):
             pf_input = [observation, odometry]
             model_input = (pf_input, state)
 
-            # forward pass
-            output, state = pfnet_model(model_input, training=False)
-            particle_states, particle_weights = output
+            train_step(model_input)
 
-            # sanity check
-            assert list(particle_states.shape) == [batch_size, trajlen, num_particles, 3]
-            assert list(particle_weights.shape) == [batch_size, trajlen, num_particles]
-            assert list(true_states.shape) == [batch_size, trajlen, 3]
+        # log epoch training stats
+        with train_summary_writer.as_default():
+            tf.summary.scalar('loss', train_loss.result(), step=epoch)
 
-            # compute loss
-            loss_dict = pfnet_loss.compute_loss(particle_states, particle_weights, true_states,
-                                                arg_params.map_pixel_in_meters)
+        # Save the weights
+        print("=====> saving trained model ")
+        pfnet_model.save_weights(
+            os.path.join(
+                train_dir,
+                f'chks/checkpoint_{epoch}_{train_loss.result():03.3f}/pfnet_checkpoint'
+            )
+        )
 
-            # we have squared differences along the trajectory
-            mse = np.mean(loss_dict['coords'])
-            mse_list.append(mse)
+        #------------------------#
+        # run validation over all validation samples in an epoch
+        eval_itr = eval_ds.as_numpy_iterator()
+        for idx in tqdm(range(arg_params.num_valid_batches)):
 
-            # log mse (in meters)
-            print(f'eps:{eps_idx} mean mse: {mse}')
-            tf.summary.scalar('eps_mean_rmse', np.sqrt(mse), step=eps_idx)
-            tf.summary.scalar('eps_final_rmse', np.sqrt(loss_dict['coords'][0][-1]), step=eps_idx)
+            parsed_record = next(eval_itr)
+            batch_sample = datautils.transform_raw_record(env, parsed_record, arg_params)
 
-            # localization is successfull if the rmse error is below 1m for the last 25% of the trajectory
-            successful = np.all(loss_dict['coords'][-trajlen // 4:] < 1.0 ** 2)  # below 1 meter
-            success_list.append(successful)
+            observation = tf.convert_to_tensor(batch_sample['observation'], dtype=tf.float32)
+            odometry = tf.convert_to_tensor(batch_sample['odometry'], dtype=tf.float32)
+            true_states = tf.convert_to_tensor(batch_sample['true_states'], dtype=tf.float32)
+            floor_map = tf.convert_to_tensor(batch_sample['floor_map'], dtype=tf.float32)
+            obstacle_map = tf.convert_to_tensor(batch_sample['obstacle_map'], dtype=tf.float32)
+            init_particles = tf.convert_to_tensor(batch_sample['init_particles'], dtype=tf.float32)
+            init_particle_weights = tf.constant(np.log(1.0 / float(num_particles)),
+                                                shape=(batch_size, num_particles), dtype=tf.float32)
 
-            if arg_params.store_results:
-                # store results as video
-                arg_params.out_folder = os.path.join(arg_params.root_dir, f'output')
-                Path(arg_params.out_folder).mkdir(parents=True, exist_ok=True)
-                store_results(eps_idx, obstacle_map, particle_states, particle_weights, true_states, arg_params)
+            # start trajectory with initial particles and weights
+            state = [init_particles, init_particle_weights, obstacle_map]
 
-        # report results
-        mean_rmse = np.mean(np.sqrt(mse_list)) * 100
-        total_rmse = np.sqrt(np.mean(mse_list)) * 100
-        mean_success = np.mean(np.array(success_list, 'i')) * 100
-        print(f'Mean RMSE (average RMSE per trajectory) = {mean_rmse:03.3f} cm')
-        print(f'Overall RMSE (reported value) = {total_rmse:03.3f} cm')
-        print(f'Success rate = {mean_success:03.3f} %')
+            # if stateful: reset RNN s.t. initial_state is set to initial particles and weights
+            # if non-stateful: pass the state explicity every step
+            if arg_params.stateful:
+                pfnet_model.layers[-1].reset_states(state)  # RNN layer
 
-    # close gym env
-    env.close()
+            pf_input = [observation, odometry]
+            model_input = (pf_input, state)
+
+            eval_step(model_input)
+
+        # log epoch validation stats
+        with eval_summary_writer.as_default():
+            tf.summary.scalar('loss', eval_loss.result(), step=epoch)
+
+        # Save the weights
+        print("=====> saving evaluation model ")
+        pfnet_model.save_weights(
+            os.path.join(
+                eval_dir,
+                f'chks/checkpoint_{epoch}_{eval_loss.result():03.3f}/pfnet_checkpoint'
+            )
+        )
+
+        print(f'Epoch {epoch}, train loss: {train_loss.result():03.3f}, eval loss: {eval_loss.result():03.3f}')
+
+        # Reset the metrics at the start of the next epoch
+        train_loss.reset_states()
+        eval_loss.reset_states()
+
+    print('training finished')
 
 
 if __name__ == '__main__':
     parsed_params = parse_args()
-    pfnet_test(parsed_params)
+    pfnet_train(parsed_params)
