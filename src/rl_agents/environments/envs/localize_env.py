@@ -541,7 +541,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         :param img: numpy array
         :param robot_pose: numpy array of robot pose
-        :param lmt: integer representing width/length of bounding box
+        :param lmt: integer representing width/length of bounding box in pixels
 
         :return (int, int, int, int): bounding box indices top_row, bottom_row, left_column, right_column
         """
