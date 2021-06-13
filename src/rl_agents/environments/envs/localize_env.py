@@ -125,6 +125,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.pf_params.stateful = False
         self.pf_params.global_map_size = [1000, 1000, 1]
         self.pf_params.window_scaler = 8.0
+        self.pf_params.max_step = self.config.get('max_step', 500)
 
         self.pf_params.transition_std[0] = self.pf_params.transition_std[0] / self.map_pixel_in_meters  # convert meters to pixels
         self.pf_params.init_particles_std[0] = self.pf_params.init_particles_std[0] / self.map_pixel_in_meters  # convert meters to pixels
@@ -350,7 +351,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         # TODO: may need better reward
         # compute reward and normalize to range [-10, 0]
         reward = reward - tf.squeeze(loss_dict['coords']).numpy()
-        reward = np.clip(reward / 100, -10, 0)
+        reward = np.clip(reward, -10, 0)
 
         self.curr_pfnet_state = new_pfnet_state
         self.curr_gt_pose = new_pose
