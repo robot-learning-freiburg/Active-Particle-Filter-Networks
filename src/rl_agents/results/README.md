@@ -114,4 +114,8 @@
     |Manual Agent w.r.t Finetuned PFNet |Random Agent w.r.t Finetuned PFNet |
     |------------|------------|
     |![Manual_Agent_Finetuned_PFNet_EpsEnd](2021-06-13_22-00-00/manual_agent/images/manual_agent_igibson_pfnet_eps_final_rmse.png)|![Random_Agent_Finetuned_PFNet_EpsEnd](2021-06-13_22-00-00/rnd_agent/images/rnd_agent_igibson_pfnet_eps_final_rmse.png)|
+  * Episode Success Percentage (success: when last %25 steps has error < 1 meter)
+    |Manual Agent w.r.t Finetuned PFNet |Random Agent w.r.t Finetuned PFNet |
+    |------------|------------|
+    |![Manual_Agent_Finetuned_PFNet_EpsSuccess](2021-06-13_22-00-00/manual_agent/images/manual_agent_igibson_pfnet_eps_success_rate.png)|![Random_Agent_Finetuned_PFNet_EpsSuccess](2021-06-13_22-00-00/rnd_agent/images/rnd_agent_igibson_pfnet_eps_success_rate.png)|
 </details>
