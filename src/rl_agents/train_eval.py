@@ -123,7 +123,7 @@ flags.DEFINE_boolean('init_env_pfnet', False,
                      'Whether to initialize particle filter net')
 flags.DEFINE_string('init_particles_distr', 'gaussian',
                     'Distribution of initial particles. Possible values: gaussian / uniform.')
-flags.DEFINE_list('init_particles_std', [15, 0.523599],
+flags.DEFINE_list('init_particles_std', [0.15, 0.523599],
                   'Standard deviations for generated initial particles for tracking distribution. '
                   'Values: translation std (meters), rotation std (radians)')
 flags.DEFINE_integer('num_particles', 500,
@@ -134,7 +134,7 @@ flags.DEFINE_float('alpha_resample_ratio', 0.5,
                    'Trade-off parameter for soft-resampling in PF-net. '
                    'Only effective if resample == true. Assumes values 0.0 < alpha <= 1.0. '
                    'Alpha equal to 1.0 corresponds to hard-resampling.')
-flags.DEFINE_list('transition_std', [0.0, 0.0],
+flags.DEFINE_list('transition_std', [0.02, 0.0872665],
                   'Standard deviations for transition model. Values: translation std (meters), rotation std (radians)')
 flags.DEFINE_string('pfnet_load',
                     os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pfnetwork/checkpoints/pfnet_igibson_data',

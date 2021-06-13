@@ -135,6 +135,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         # Create a new pfnet model instance
         self.pfnet_model = pfnet.pfnet_model(self.pf_params)
+        print(self.pf_params)
         print("=====> pfnet initialized")
 
         # load model from checkpoint file

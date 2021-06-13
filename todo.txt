@@ -111,3 +111,39 @@ $ nohup python -u train_pfnet.py \
 --config_file=./configs/turtlebot_pfnet_nav.yaml \
 --device_idx=1 \
 --seed=42 > nohup.out &
+
+max_step: 100
+task_obs_dim: 18 # proprio + 3 (est_pose)
+
+$ nohup python -u train_eval.py \
+--root_dir=train_eval_output \
+--num_iterations=250000 \
+--initial_collect_steps=500 \
+--collect_steps_per_iteration=1 \
+--num_parallel_environments=1 \
+--num_parallel_environments_eval=1 \
+--replay_buffer_capacity=250000 \
+--train_steps_per_iteration=1 \
+--batch_size=1 \
+--use_tf_functions=False \
+--use_parallel_envs=False \
+--num_eval_episodes=5 \
+--eval_interval=1000 \
+--eval_only=False \
+--eval_deterministic=False \
+--gpu_c=0 \
+--is_localize_env=True \
+--config_file=./configs/turtlebot_point_nav.yaml \
+--env_mode=headless \
+--gpu_g=0 \
+--init_env_pfnet=True \
+--init_particles_distr='gaussian' \
+--init_particles_std=0.30,0.523599 \
+--num_particles=1000 \
+--resample=True \
+--alpha_resample_ratio=1.0 \
+--transition_std='0.04' '0.0872665' \
+--pfnet_load=./pfnetwork/checkpoints/checkpoint_87_5.830/pfnet_checkpoint
+--use_plot=False \
+--store_plot=False \
+--seed=100 & > nohup.out
