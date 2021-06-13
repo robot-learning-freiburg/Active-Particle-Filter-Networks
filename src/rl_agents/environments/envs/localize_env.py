@@ -221,7 +221,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         state, reward, done, info = super(LocalizeGibsonEnv, self).step(action)
         if self.use_pfnet:
-            new_rgb_obs = copy.deepcopy(state['rgb'])
+            new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 255]
             reward = self.step_pfnet(new_rgb_obs, reward)
 
         custom_state = self.process_state(state)
@@ -236,7 +236,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         state = super(LocalizeGibsonEnv, self).reset()
         if self.use_pfnet:
-            new_rgb_obs = copy.deepcopy(state['rgb'])
+            new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 255]
             self.reset_pfnet(new_rgb_obs)
 
         custom_state = self.process_state(state)
@@ -252,7 +252,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
         """
 
         # HACK: to collect data
-        return datautils.process_raw_image(state['rgb']) # [-1, +1] range rgb image
+        new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 255]
+        # process new rgb observation: convert [0, 255] to [-1, +1] range
+        return datautils.process_raw_image(new_rgb_obs)
 
         # process and return only output we are expecting to
         processed_state = OrderedDict()
@@ -290,7 +292,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         # get new robot state
         new_robot_state = self.robots[0].calc_state()
 
-        # process new rgb observation: convert to [-1, +1] range
+        # process new rgb observation: convert [0, 255] to [-1, +1] range
         new_rgb_obs = datautils.process_raw_image(new_rgb_obs)
 
         # process new robot state: convert coords to pixel space
@@ -394,7 +396,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         floor_map = self.get_floor_map()
         obstacle_map = self.get_obstacle_map()
 
-        # process new rgb observation: convert to [-1, +1] range
+        # process new rgb observation: convert [0, 255] to [-1, +1] range
         new_rgb_obs = datautils.process_raw_image(new_rgb_obs)
 
         # process new robot state: convert coords to pixel space

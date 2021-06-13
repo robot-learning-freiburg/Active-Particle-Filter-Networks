@@ -119,6 +119,20 @@ def normalize_observation(x):
         return x * (2.0 / 255.0) - 1.0
 
 
+def denormalize_observation(x):
+    """
+    Denormalize observation input to store efficiently
+    :param x: observation input (56, 56, ch)
+    :return np.ndarray: denormalized observation (56, 56, ch)
+    """
+    # resale to [0, 255]
+    if x.ndim == 2 or x.shape[2] == 1:  # depth
+        x = (x + 1.0) * (100.0 / 2.0)
+    else:  # rgb
+        x = (x + 1.0) * (255.0 / 2.0)
+    return x.astype(np.int32)
+
+
 def process_raw_image(image, resize=(56, 56)):
     """
     Decode and normalize image
@@ -127,6 +141,7 @@ def process_raw_image(image, resize=(56, 56)):
     :return np.ndarray: images (new_H, new_W, ch) normalized for training
     """
 
+    assert np.min(image)>=0. and np.max(image)<=255.
     image = decode_image(image, resize)
     image = normalize_observation(np.atleast_3d(image.astype(np.float32)))
 
@@ -334,9 +349,10 @@ def serialize_tf_record(episode_data):
     :param dict episode_data: episode data
     :return tf.train.Example: serialized tf record
     """
+    # HACK: rescale to [0, 255]
+    observation = denormalize_observation(episode_data['observation'])
     states = episode_data['true_states']
     odometry = episode_data['odometry']
-    observation = episode_data['observation']
     scene_id = episode_data['scene_id']
     floor_num = episode_data['floor_num']
     # floor_map = episode_data['floor_map']
@@ -349,7 +365,7 @@ def serialize_tf_record(episode_data):
         'state_shape': tf.train.Feature(int64_list=tf.train.Int64List(value=states.shape)),
         'odometry': tf.train.Feature(float_list=tf.train.FloatList(value=odometry.flatten())),
         'odometry_shape': tf.train.Feature(int64_list=tf.train.Int64List(value=odometry.shape)),
-        'observation': tf.train.Feature(float_list=tf.train.FloatList(value=observation.flatten())),
+        'observation': tf.train.Feature(int64_list=tf.train.Int64List(value=observation.flatten())),
         'observation_shape': tf.train.Feature(int64_list=tf.train.Int64List(value=observation.shape)),
         'scene_id': tf.train.Feature(bytes_list=tf.train.BytesList(value=[scene_id.encode('utf-8')])),
         'floor_num': tf.train.Feature(int64_list=tf.train.Int64List(value=[floor_num])),
@@ -377,7 +393,7 @@ def deserialize_tf_record(raw_record):
         'state_shape': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
         'odometry': tf.io.FixedLenSequenceFeature((), dtype=tf.float32, allow_missing=True),
         'odometry_shape': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
-        'observation': tf.io.FixedLenSequenceFeature((), dtype=tf.float32, allow_missing=True),
+        'observation': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
         'observation_shape': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
         'scene_id': tf.io.FixedLenSequenceFeature((), dtype=tf.string, allow_missing=True),
         'floor_num': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
@@ -452,8 +468,12 @@ def transform_raw_record(env, parsed_record, params):
     particles_cov = params.init_particles_cov
     particles_distr = params.init_particles_distr
 
-    trans_record['observation'] = parsed_record['observation'].reshape(
+    # Required rescale to [-1, 1]
+    observation = parsed_record['observation'].reshape(
         [batch_size] + list(parsed_record['observation_shape'][0]))[:, :trajlen]
+    assert np.min(observation)>=0. and np.max(observation)<=255.
+    trans_record['observation'] = normalize_observation(observation.astype(np.float32))
+
     trans_record['odometry'] = parsed_record['odometry'].reshape(
         [batch_size] + list(parsed_record['odometry_shape'][0]))[:, :trajlen]
     trans_record['true_states'] = parsed_record['state'].reshape(
