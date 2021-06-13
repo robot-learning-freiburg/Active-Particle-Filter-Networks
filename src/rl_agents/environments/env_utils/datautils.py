@@ -449,14 +449,14 @@ def transform_raw_record(env, parsed_record, params):
     trans_record['true_states'] = parsed_record['state'].reshape(
         [batch_size] + list(parsed_record['state_shape'][0]))[:, :trajlen]
 
-    if len(list(parsed_record['floor_map_shape'])) > 0:
+    if list(parsed_record['floor_map_shape'].shape) == [1, 3]:
         # get stored floor and obstance map from *.tfrecord
         trans_record['obstacle_map'] = parsed_record['obstacle_map'].reshape(
             [batch_size] + list(parsed_record['obstacle_map_shape'][0]))
         trans_record['floor_map'] = parsed_record['floor_map'].reshape(
             [batch_size] + list(parsed_record['floor_map_shape'][0]))
     else:
-        # get floor and obstance map from environment instance for the scene
+        # HACK: get floor and obstance map from environment instance for the scene
         trans_record['obstacle_map'] = tf.tile(tf.expand_dims(env.get_obstacle_map(), axis=0), [batch_size, 1, 1, 1])
         trans_record['floor_map'] = tf.tile(tf.expand_dims(env.get_floor_map(), axis=0), [batch_size, 1, 1, 1])
 
