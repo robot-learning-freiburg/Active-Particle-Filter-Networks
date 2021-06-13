@@ -467,8 +467,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
                          f'floor_{self.task.floor_num}.png')
         ))
 
-        # process image for training
-        obstacle_map = datautils.process_floor_map(obstacle_map)
+        # process new obstacle map: convert [0, 255] to [0, 2] range
+        obstacle_map = datautils.process_raw_map(obstacle_map)
 
         return obstacle_map
 
@@ -499,8 +499,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
         trav_map = cv2.erode(trav_map, np.ones((trav_map_erosion, trav_map_erosion)))
         trav_map[trav_map < 255] = 0
 
-        # process image for training
-        floor_map = datautils.process_floor_map(trav_map)
+        # process new obstacle map: convert [0, 255] to [0, 2] range
+        floor_map = datautils.process_raw_map(trav_map)
 
         return floor_map
 

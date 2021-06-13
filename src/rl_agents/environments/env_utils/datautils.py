@@ -79,21 +79,19 @@ def decode_image(img, resize=None):
     return img
 
 
-def process_floor_map(floormap):
+def process_raw_map(image):
     """
-    Decode floormap
-    :param floormap: floor map image as ndarray (H, W)
+    Decode and normalize image
+    :param image: floor map image as ndarray (H, W)
     :return np.ndarray: image (H, W, 1)
         white: empty space, black: occupied space
     """
-    floormap = np.atleast_3d(decode_image(floormap))
 
-    # # floor map image need to be transposed and inverted here
-    # floormap = 255 - np.transpose(floormap, axes=[1, 0, 2])
+    assert np.min(image)>=0. and np.max(image)>=1. and np.max(image)<=255.
+    image = normalize_map(np.atleast_3d(image.astype(np.float32)))
+    assert np.min(image)>=0. and np.max(image)<=2.
 
-    # floor map image is already transposed and inverted
-    floormap = normalize_map(floormap.astype(np.float32))
-    return floormap
+    return image
 
 
 def normalize_map(x):
@@ -141,9 +139,10 @@ def process_raw_image(image, resize=(56, 56)):
     :return np.ndarray: images (new_H, new_W, ch) normalized for training
     """
 
-    assert np.min(image)>=0. and np.max(image)<=255.
+    assert np.min(image)>=0. and np.max(image)>=1. and np.max(image)<=255.
     image = decode_image(image, resize)
     image = normalize_observation(np.atleast_3d(image.astype(np.float32)))
+    assert np.min(image)>=-1. and np.max(image)<=1.
 
     return image
 
