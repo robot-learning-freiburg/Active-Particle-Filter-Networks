@@ -448,18 +448,21 @@ def transform_raw_record(env, parsed_record, params):
         [batch_size] + list(parsed_record['odometry_shape'][0]))[:, :trajlen]
     trans_record['true_states'] = parsed_record['state'].reshape(
         [batch_size] + list(parsed_record['state_shape'][0]))[:, :trajlen]
-    trans_record['obstacle_map'] = parsed_record['obstacle_map'].reshape(
-        [batch_size] + list(parsed_record['obstacle_map_shape'][0]))
-    trans_record['floor_map'] = parsed_record['floor_map'].reshape(
-        [batch_size] + list(parsed_record['floor_map_shape'][0]))
+
+    if len(list(parsed_record['floor_map_shape'])) > 0:
+        # get stored floor and obstance map from *.tfrecord
+        trans_record['obstacle_map'] = parsed_record['obstacle_map'].reshape(
+            [batch_size] + list(parsed_record['obstacle_map_shape'][0]))
+        trans_record['floor_map'] = parsed_record['floor_map'].reshape(
+            [batch_size] + list(parsed_record['floor_map_shape'][0]))
+    else:
+        # get floor and obstance map from environment instance for the scene
+        trans_record['obstacle_map'] = tf.tile(tf.expand_dims(env.get_obstacle_map(), axis=0), [batch_size, 1, 1, 1])
+        trans_record['floor_map'] = tf.tile(tf.expand_dims(env.get_floor_map(), axis=0), [batch_size, 1, 1, 1])
 
     # HACK: center zero-pad floor/obstacle map
     trans_record['obstacle_map'] = pad_images(trans_record['obstacle_map'], map_size)
     trans_record['floor_map'] = pad_images(trans_record['floor_map'], map_size)
-
-    # # get floor and obstance map of environment scene
-    # trans_record['obstacle_map'] = tf.tile(tf.expand_dims(env.get_obstacle_map(), axis=0), [batch_size, 1, 1, 1])
-    # trans_record['floor_map'] = tf.tile(tf.expand_dims(env.get_floor_map(), axis=0), [batch_size, 1, 1, 1])
 
     # sample random particles and corresponding weights
     trans_record['init_particles'] = env.get_random_particles(num_particles, particles_distr,
