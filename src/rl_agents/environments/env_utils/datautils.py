@@ -206,6 +206,8 @@ def gather_episode_stats(env, params, sample_particles=False):
     obs = env.reset()  # already processed
     observation.append(obs)
 
+    scene_id = env.config.get('scene_id')
+    floor_num = env.task.floor_num
     floor_map = env.get_floor_map()  # already processed
     obstacle_map = env.get_obstacle_map()  # already processed
     assert list(floor_map.shape) == list(obstacle_map.shape)
@@ -258,6 +260,8 @@ def gather_episode_stats(env, params, sample_particles=False):
         init_particle_weights = None
 
     episode_data = {
+        'scene_id': scene_id, # str
+        'floor_num': floor_num, # int
         'floor_map': floor_map,  # (height, width, 1)
         'obstacle_map': obstacle_map,  # (height, width, 1)
         'odometry': np.stack(odometry),  # (trajlen, 3)
@@ -333,8 +337,10 @@ def serialize_tf_record(episode_data):
     states = episode_data['true_states']
     odometry = episode_data['odometry']
     observation = episode_data['observation']
-    floor_map = episode_data['floor_map']
-    obstacle_map = episode_data['obstacle_map']
+    scene_id = episode_data['scene_id']
+    floor_num = episode_data['floor_num']
+    # floor_map = episode_data['floor_map']
+    # obstacle_map = episode_data['obstacle_map']
     # init_particles = episode_data['init_particles']
     # init_particle_weights = episode_data['init_particle_weights']
 
@@ -345,10 +351,12 @@ def serialize_tf_record(episode_data):
         'odometry_shape': tf.train.Feature(int64_list=tf.train.Int64List(value=odometry.shape)),
         'observation': tf.train.Feature(float_list=tf.train.FloatList(value=observation.flatten())),
         'observation_shape': tf.train.Feature(int64_list=tf.train.Int64List(value=observation.shape)),
-        'floor_map': tf.train.Feature(float_list=tf.train.FloatList(value=floor_map.flatten())),
-        'floor_map_shape': tf.train.Feature(int64_list=tf.train.Int64List(value=floor_map.shape)),
-        'obstacle_map': tf.train.Feature(float_list=tf.train.FloatList(value=obstacle_map.flatten())),
-        'obstacle_map_shape': tf.train.Feature(int64_list=tf.train.Int64List(value=obstacle_map.shape)),
+        'scene_id': tf.train.Feature(bytes_list=tf.train.BytesList(value=[scene_id.encode('utf-8')])),
+        'floor_num': tf.train.Feature(int64_list=tf.train.Int64List(value=[floor_num])),
+        # 'floor_map': tf.train.Feature(float_list=tf.train.FloatList(value=floor_map.flatten())),
+        # 'floor_map_shape': tf.train.Feature(int64_list=tf.train.Int64List(value=floor_map.shape)),
+        # 'obstacle_map': tf.train.Feature(float_list=tf.train.FloatList(value=obstacle_map.flatten())),
+        # 'obstacle_map_shape': tf.train.Feature(int64_list=tf.train.Int64List(value=obstacle_map.shape)),
         # 'init_particles': tf.train.Feature(float_list=tf.train.FloatList(value=init_particles.flatten())),
         # 'init_particles_shape': tf.train.Feature(int64_list=tf.train.Int64List(value=init_particles.shape)),
         # 'init_particle_weights': tf.train.Feature(float_list=tf.train.FloatList(value=init_particle_weights.flatten())),
@@ -371,10 +379,12 @@ def deserialize_tf_record(raw_record):
         'odometry_shape': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
         'observation': tf.io.FixedLenSequenceFeature((), dtype=tf.float32, allow_missing=True),
         'observation_shape': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
-        'floor_map': tf.io.FixedLenSequenceFeature((), dtype=tf.float32, allow_missing=True),
-        'floor_map_shape': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
-        'obstacle_map': tf.io.FixedLenSequenceFeature((), dtype=tf.float32, allow_missing=True),
-        'obstacle_map_shape': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
+        'scene_id': tf.io.FixedLenSequenceFeature((), dtype=tf.string, allow_missing=True),
+        'floor_num': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
+        # 'floor_map': tf.io.FixedLenSequenceFeature((), dtype=tf.float32, allow_missing=True),
+        # 'floor_map_shape': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
+        # 'obstacle_map': tf.io.FixedLenSequenceFeature((), dtype=tf.float32, allow_missing=True),
+        # 'obstacle_map_shape': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
         # 'init_particles': tf.io.FixedLenSequenceFeature((), dtype=tf.float32, allow_missing=True),
         # 'init_particles_shape': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
         # 'init_particle_weights': tf.io.FixedLenSequenceFeature((), dtype=tf.float32, allow_missing=True),
@@ -449,16 +459,26 @@ def transform_raw_record(env, parsed_record, params):
     trans_record['true_states'] = parsed_record['state'].reshape(
         [batch_size] + list(parsed_record['state_shape'][0]))[:, :trajlen]
 
-    if list(parsed_record['floor_map_shape'].shape) == [1, 3]:
-        # get stored floor and obstance map from *.tfrecord
-        trans_record['obstacle_map'] = parsed_record['obstacle_map'].reshape(
-            [batch_size] + list(parsed_record['obstacle_map_shape'][0]))
-        trans_record['floor_map'] = parsed_record['floor_map'].reshape(
-            [batch_size] + list(parsed_record['floor_map_shape'][0]))
-    else:
-        # HACK: get floor and obstance map from environment instance for the scene
-        trans_record['obstacle_map'] = tf.tile(tf.expand_dims(env.get_obstacle_map(), axis=0), [batch_size, 1, 1, 1])
-        trans_record['floor_map'] = tf.tile(tf.expand_dims(env.get_floor_map(), axis=0), [batch_size, 1, 1, 1])
+    # HACK: get floor and obstance map from environment instance for the scene
+    trans_record['obstacle_map'] = []
+    trans_record['floor_map'] = []
+    for b_idx in range(batch_size):
+        # iterate per batch_size
+        if parsed_record['scene_id'].size > 0:
+            scene_id = parsed_record['scene_id'][b_idx][0].decode('utf-8')
+            floor_num = parsed_record['floor_num'][b_idx][0]
+        else:
+            scene_id = None
+            floor_num = None
+
+        trans_record['obstacle_map'].append(
+            env.get_obstacle_map(scene_id, floor_num)
+        )
+        trans_record['floor_map'].append(
+            env.get_floor_map(scene_id, floor_num)
+        )
+    trans_record['obstacle_map'] = np.stack(trans_record['obstacle_map'])  # [batch_size, H, W, C]
+    trans_record['floor_map'] = np.stack(trans_record['floor_map'])  # [batch_size, H, W, C]
 
     # HACK: center zero-pad floor/obstacle map
     trans_record['obstacle_map'] = pad_images(trans_record['obstacle_map'], map_size)

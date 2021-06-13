@@ -438,12 +438,28 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.curr_est_pose = self.get_est_pose()
         self.curr_rgb_obs = new_rgb_obs
 
-    def get_obstacle_map(self):
+
+    def set_scene(self, scene_id, floor_num):
+        """
+        Override the task floor number
+
+        :param str: scene id
+        :param int: task floor number
+        """
+        self.config['scene_id'] = scene_id
+        self.task.floor_num = floor_num
+
+    def get_obstacle_map(self, scene_id=None, floor_num=None):
         """
         Get the scene obstacle map
 
+        :param str: scene id
+        :param int: task floor number
         :return ndarray: obstacle map of current scene (H, W, 1)
         """
+        if scene_id is not None and floor_num is not None:
+            self.set_scene(scene_id, floor_num)
+
         obstacle_map = np.array(Image.open(
             os.path.join(get_scene_path(self.config.get('scene_id')),
                          f'floor_{self.task.floor_num}.png')
@@ -454,12 +470,16 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         return obstacle_map
 
-    def get_floor_map(self):
+    def get_floor_map(self, scene_id=None, floor_num=None):
         """
         Get the scene floor map (traversability map + obstacle map)
 
+        :param str: scene id
+        :param int: task floor number
         :return ndarray: floor map of current scene (H, W, 1)
         """
+        if scene_id is not None and floor_num is not None:
+            self.set_scene(scene_id, floor_num)
 
         obstacle_map = np.array(Image.open(
             os.path.join(get_scene_path(self.config.get('scene_id')),
