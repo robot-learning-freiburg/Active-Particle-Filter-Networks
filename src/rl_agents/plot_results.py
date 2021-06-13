@@ -65,5 +65,34 @@ def boxplot(metric, title, filename):
     # save figure
     plt.savefig(filename)
 
+def barplot(title, filename):
+
+    summary_details = {
+        "gauss_500_less_noise_0.8": 0.46,
+        "gauss_500_no_noise_0.8": 0.30,
+        "gauss_500_with_noise_0.8": 0.28,
+        "gauss_500_with_noise_1.0": 0.24,
+        "gauss_1500_with_noise_0.8": 0.40,
+        "uniform_1500_with_noise_0.8": 0.08,
+    }
+    fig = plt.figure(figsize =(18, 7))
+
+    # create boxplot
+    events = list(summary_details.keys())
+    values = list(summary_details.values())
+    plt.bar(events, values)
+
+    plt.xlabel('Experiment', fontweight='bold')
+    plt.ylabel('Success rate (in %)', fontweight='bold')
+    plt.yticks(np.arange(0, 1, 0.1))
+    plt.xticks(np.arange(0, len(events)), events)
+    x1,x2,y1,y2 = plt.axis()
+    plt.axis([x1, x2, 0, 1])
+    plt.title(title, fontsize=16, fontweight='bold')
+
+    # save figure
+    plt.savefig(filename)
+
 if __name__ == '__main__':
-    boxplot('eps_final_rmse', 'Random Agent Performance w.r.t Finetuned PFNet (Episode End RMSE)', 'rnd_agent_igibson_pfnet_eps_final_rmse.png')
+    # boxplot('eps_final_rmse', 'Random Agent Performance w.r.t Finetuned PFNet (Episode End RMSE)', 'rnd_agent_igibson_pfnet_eps_final_rmse.png')
+    barplot('Random Agent Performance w.r.t Finetuned PFNet (last %25 steps error < 1 meter)', 'rnd_agent_igibson_pfnet_eps_success_rate.png')
