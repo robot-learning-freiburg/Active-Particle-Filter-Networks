@@ -1,0 +1,260 @@
+2021-06-13 14:34:45.244458: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+pybullet build time: May  2 2021 09:44:36
+INFO:root:Importing iGibson (gibson2 module)
+INFO:root:Assets path: /home/guttikon/activate-localization/igibson/gibson2/data/assets
+INFO:root:Gibson Dataset path: /home/guttikon/activate-localization/igibson/gibson2/data/g_dataset
+INFO:root:iG Dataset path: /home/guttikon/activate-localization/igibson/gibson2/data/ig_dataset
+INFO:root:3D-FRONT Dataset path: /home/guttikon/activate-localization/igibson/gibson2/data/threedfront_dataset
+INFO:root:CubiCasa5K Dataset path: /home/guttikon/activate-localization/igibson/gibson2/data/cubicasa_dataset
+INFO:root:Example path: /home/guttikon/activate-localization/igibson/gibson2/examples
+INFO:root:Example config path: /home/guttikon/activate-localization/igibson/gibson2/examples/configs
+torch is not available, falling back to rendering to memory(instead of tensor)
+2021-06-13 14:34:53.965140: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2021-06-13 14:34:53.968158: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcuda.so.1
+2021-06-13 14:34:54.008593: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-06-13 14:34:54.010312: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties: 
+pciBusID: 0000:01:00.0 name: TITAN X (Pascal) computeCapability: 6.1
+coreClock: 1.531GHz coreCount: 28 deviceMemorySize: 11.90GiB deviceMemoryBandwidth: 447.48GiB/s
+2021-06-13 14:34:54.010346: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2021-06-13 14:34:54.016631: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
+2021-06-13 14:34:54.016693: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
+2021-06-13 14:34:54.019522: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcufft.so.10
+2021-06-13 14:34:54.022004: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcurand.so.10
+2021-06-13 14:34:54.025881: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusolver.so.10
+2021-06-13 14:34:54.029703: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusparse.so.11
+2021-06-13 14:34:54.029883: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
+2021-06-13 14:34:54.029977: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-06-13 14:34:54.030723: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-06-13 14:34:54.031329: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0
+2021-06-13 14:34:54.031589: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-06-13 14:34:54.031790: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2021-06-13 14:34:54.031872: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-06-13 14:34:54.032558: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties: 
+pciBusID: 0000:01:00.0 name: TITAN X (Pascal) computeCapability: 6.1
+coreClock: 1.531GHz coreCount: 28 deviceMemorySize: 11.90GiB deviceMemoryBandwidth: 447.48GiB/s
+2021-06-13 14:34:54.032582: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2021-06-13 14:34:54.032597: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
+2021-06-13 14:34:54.032609: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
+2021-06-13 14:34:54.032621: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcufft.so.10
+2021-06-13 14:34:54.032632: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcurand.so.10
+2021-06-13 14:34:54.032644: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusolver.so.10
+2021-06-13 14:34:54.032655: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusparse.so.11
+2021-06-13 14:34:54.032667: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
+2021-06-13 14:34:54.032714: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-06-13 14:34:54.033396: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-06-13 14:34:54.033956: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0
+2021-06-13 14:34:54.033981: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2021-06-13 14:34:54.529669: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1261] Device interconnect StreamExecutor with strength 1 edge matrix:
+2021-06-13 14:34:54.529699: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1267]      0 
+2021-06-13 14:34:54.529706: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1280] 0:   N 
+2021-06-13 14:34:54.529869: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-06-13 14:34:54.530379: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-06-13 14:34:54.530846: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-06-13 14:34:54.531282: W tensorflow/core/common_runtime/gpu/gpu_bfc_allocator.cc:39] Overriding allow_growth setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was 0.
+2021-06-13 14:34:54.531305: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1406] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10796 MB memory) -> physical GPU (device: 0, name: TITAN X (Pascal), pci bus id: 0000:01:00.0, compute capability: 6.1)
+test data: ['./plots_data/random/test0.tfrecord', './plots_data/random/test1.tfrecord', './plots_data/random/test3.tfrecord', './plots_data/random/test2.tfrecord']
+INFO:root:Device 0 is available for rendering
+INFO:root:Device 1 is available for rendering
+INFO:root:Command '['/home/guttikon/activate-localization/igibson/gibson2/render/mesh_renderer/build/test_device', '2']' returned non-zero exit status 1.
+INFO:root:Device 2 is not available for rendering
+INFO:root:Command '['/home/guttikon/activate-localization/igibson/gibson2/render/mesh_renderer/build/test_device', '3']' returned non-zero exit status 1.
+INFO:root:Device 3 is not available for rendering
+INFO:root:Using device 0 for rendering
+WARNING:root:Environment texture not available, cannot use PBR.
+******************PyBullet Logging Information:
+PyBullet Logging Information******************
+INFO:root:IndoorScene model: Rs
+INFO:root:StaticIndoorScene scene: Rs
+INFO:root:Loading traversable graph
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/g_dataset/Rs/mesh_z_up.obj
+/home/guttikon/activate-localization/igibson/gibson2/render/mesh_renderer/mesh_renderer_cpu.py:464: RuntimeWarning: divide by zero encountered in true_divide
+  delta_uv1[:, 1] * delta_uv2[:, 0])
+/home/guttikon/activate-localization/igibson/gibson2/render/mesh_renderer/mesh_renderer_cpu.py:466: RuntimeWarning: invalid value encountered in multiply
+  delta_pos2 * delta_uv1[:, 1][:, None]) * r[:, None]
+/home/guttikon/activate-localization/igibson/gibson2/render/mesh_renderer/mesh_renderer_cpu.py:468: RuntimeWarning: invalid value encountered in multiply
+  delta_pos1 * delta_uv2[:, 0][:, None]) * r[:, None]
+INFO:root:Loading robot model file: turtlebot/turtlebot.urdf
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/kobuki_description/meshes/main_body.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/mjcf_primitives/cube.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/kobuki_description/meshes/wheel.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/mjcf_primitives/cube.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/mjcf_primitives/cube.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/pole_bottom.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/plate_bottom.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/pole_middle.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/plate_middle.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/pole_top.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/pole_kinect.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/stacks/hexagons/plate_top.obj
+INFO:root:Loading /home/guttikon/activate-localization/igibson/gibson2/data/assets/models/turtlebot/turtlebot_description/meshes/sensors/kinect.obj
+=====> LocalizeGibsonEnv initialized
+=====> Created pf model 
+=====> Loaded pf model from: ./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_87_5.830/pfnet_checkpoint
+=====> wrapped pfnet in tf.graph
+Namespace(action_timestep=0.1, alpha_resample_ratio=1.0, batch_size=4, config_file='./configs/turtlebot_random_nav.yaml', device_idx=0, global_map_size=[1000, 1000, 1], init_env_pfnet=False, init_particles_cov=array([[900.0001    ,   0.        ,   0.        ],
+       [  0.        , 900.0001    ,   0.        ],
+       [  0.        ,   0.        ,   0.27415594]], dtype=float32), init_particles_distr='gaussian', init_particles_std=array([30.000002,  0.523599], dtype=float32), map_pixel_in_meters=0.01, num_eval_batches=50, num_particles=500, pfnet_loadpath='./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_87_5.830/pfnet_checkpoint', physics_timestep=0.025, resample=True, return_state=True, root_dir='./random/igibson_pfnet/run3', seed=15, stateful=False, store_results=True, testfiles=['./plots_data/random/*.tfrecord'], trajlen=100, transition_std=array([4.       , 0.0872665], dtype=float32), use_tf_function=True, window_scaler=8.0)
+2021-06-13 14:37:05.501227: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:116] None of the MLIR optimization passes are enabled (registered 2)
+2021-06-13 14:37:05.519014: I tensorflow/core/platform/profile_utils/cpu_utils.cc:112] CPU Frequency: 3199980000 Hz
+2021-06-13 14:40:03.376719: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
+2021-06-13 14:40:03.590605: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
+2021-06-13 14:40:03.622546: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
+eps:0 mean mse: 0.22849197685718536
+0 End True Pose: [-0.6767822  1.2908331  1.4360443], End Estimated Pose: [-0.5177197  1.0405573  1.5893662] in mts
+0 End True Pose: [432.32178   629.0833      1.4360443], End Estimated Pose: [448.22803   604.0557      1.5893662] in px
+eps:1 mean mse: 0.8478306531906128
+1 End True Pose: [-2.8563228  0.388172  -1.7478445], End Estimated Pose: [-2.9405758   0.58738583 -1.1517192 ] in mts
+1 End True Pose: [214.3677    538.8172     -1.7478445], End Estimated Pose: [205.94241   558.7386     -1.1517192] in px
+eps:2 mean mse: 0.4788037836551666
+2 End True Pose: [ 1.1420208 -2.0114527  0.0068778], End Estimated Pose: [ 0.9634204 -1.4365948  0.5559623] in mts
+2 End True Pose: [614.2021    298.85474     0.0068778], End Estimated Pose: [596.34204   356.3405      0.5559623] in px
+eps:3 mean mse: 0.28094422817230225
+3 End True Pose: [-3.735327   0.4234442 -1.9448023], End Estimated Pose: [-3.4295244  0.6187665 -1.1569716] in mts
+3 End True Pose: [126.46727   542.3444     -1.9448023], End Estimated Pose: [157.04755   561.87665    -1.1569716] in px
+eps:4 mean mse: 1.219997525215149
+4 End True Pose: [ 1.145473   -1.3094265   0.01544469], End Estimated Pose: [ 1.187965  -3.1323009 -1.5126702] in mts
+4 End True Pose: [614.5473     369.05734      0.01544469], End Estimated Pose: [618.7965    186.76991    -1.5126702] in px
+eps:5 mean mse: 0.5136160850524902
+5 End True Pose: [-0.00595428  2.482641    1.565026  ], End Estimated Pose: [-0.11920623  2.2175255   1.2558124 ] in mts
+5 End True Pose: [499.40457  748.2641     1.565026], End Estimated Pose: [488.07938   721.75256     1.2558124] in px
+eps:6 mean mse: 0.14614666998386383
+6 End True Pose: [-0.86794096 -0.42512238 -1.6686769 ], End Estimated Pose: [-1.0585644 -0.5045297 -1.0483017] in mts
+6 End True Pose: [413.2059    457.48776    -1.6686769], End Estimated Pose: [394.14355   449.54703    -1.0483017] in px
+eps:7 mean mse: 0.8738632202148438
+7 End True Pose: [ 0.3712213 -3.4163983 -2.1366043], End Estimated Pose: [ 0.7689697 -3.5011382 -2.2665925] in mts
+7 End True Pose: [537.12213   158.36015    -2.1366043], End Estimated Pose: [576.897     149.88618    -2.2665925] in px
+eps:8 mean mse: 0.2563643455505371
+8 End True Pose: [-0.60369325  2.6420178   1.5177336 ], End Estimated Pose: [-0.90084594  3.3936267   0.95270705] in mts
+8 End True Pose: [439.63068   764.2018      1.5177336], End Estimated Pose: [409.9154     839.3627       0.95270705] in px
+eps:9 mean mse: 0.20232944190502167
+9 End True Pose: [-3.014087    0.38472167 -1.6216683 ], End Estimated Pose: [-2.826781   0.6321472 -1.1947318] in mts
+9 End True Pose: [198.59132   538.47217    -1.6216683], End Estimated Pose: [217.32188   563.2147     -1.1947318] in px
+eps:10 mean mse: 0.1816394031047821
+10 End True Pose: [-0.5943591  1.2830737  1.8152622], End Estimated Pose: [-0.13953796  0.37233275  1.40709   ] in mts
+10 End True Pose: [440.5641    628.3074      1.8152622], End Estimated Pose: [486.0462  537.2333    1.40709] in px
+eps:11 mean mse: 0.27856022119522095
+11 End True Pose: [-2.1976461   0.98513424  1.455333  ], End Estimated Pose: [-1.76238     0.89166075  1.8788145 ] in mts
+11 End True Pose: [280.23538  598.5134     1.455333], End Estimated Pose: [323.762     589.1661      1.8788145] in px
+eps:12 mean mse: 0.7854859828948975
+12 End True Pose: [-0.4216229  1.2878735  1.6910014], End Estimated Pose: [0.58074033 0.53317136 1.5986798 ] in mts
+12 End True Pose: [457.8377    628.78735     1.6910014], End Estimated Pose: [558.07404   553.31714     1.5986798] in px
+eps:13 mean mse: 0.29117798805236816
+13 End True Pose: [ 1.652395   -2.9034088   0.05253293], End Estimated Pose: [ 1.273255  -3.341564  -1.1355922] in mts
+13 End True Pose: [665.2395     209.6591       0.05253293], End Estimated Pose: [627.3255    165.8436     -1.1355922] in px
+eps:14 mean mse: 0.750413179397583
+14 End True Pose: [ 1.1387085  0.7745007 -1.4531941], End Estimated Pose: [0.55339354 1.991546   0.3356328 ] in mts
+14 End True Pose: [613.87085   577.4501     -1.4531941], End Estimated Pose: [555.33936   699.1546      0.3356328] in px
+eps:15 mean mse: 0.3810040354728699
+15 End True Pose: [-3.255294   0.4426898 -1.2280279], End Estimated Pose: [-2.4145503   0.43460754 -0.6505463 ] in mts
+15 End True Pose: [174.47058   544.269      -1.2280279], End Estimated Pose: [258.54495   543.46075    -0.6505463] in px
+eps:16 mean mse: 0.8229931592941284
+16 End True Pose: [ 0.09482208 -2.263992   -3.0674841 ], End Estimated Pose: [-0.29575896 -1.7426516   2.7783396 ] in mts
+16 End True Pose: [509.4822    273.6008     -3.0674841], End Estimated Pose: [470.4241    325.73483     2.7783396] in px
+eps:17 mean mse: 0.4918327033519745
+17 End True Pose: [1.1932757  1.3949963  0.00757508], End Estimated Pose: [ 0.51254576  0.4235162  -0.09517002] in mts
+17 End True Pose: [619.3276     639.49963      0.00757508], End Estimated Pose: [551.2546     542.3516      -0.09517002] in px
+eps:18 mean mse: 1.2598708868026733
+18 End True Pose: [0.796734   0.04874267 0.1531515 ], End Estimated Pose: [ 0.5253076  -0.0239621  -0.09948468] in mts
+18 End True Pose: [579.6734    504.87427     0.1531515], End Estimated Pose: [552.53076    497.6038      -0.09948468] in px
+eps:19 mean mse: 0.3189713656902313
+19 End True Pose: [-0.75824916 -3.4907043  -1.5630329 ], End Estimated Pose: [-0.31337005 -4.336334   -0.02152371] in mts
+19 End True Pose: [424.17508   150.92958    -1.5630329], End Estimated Pose: [468.663       66.36657     -0.02152371] in px
+eps:20 mean mse: 0.18151208758354187
+test_pfnet.py:193: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`).
+  fig = plt.figure(figsize=(7, 7))
+20 End True Pose: [1.2107587  0.02335419 0.196498  ], End Estimated Pose: [0.6040765  0.33522034 1.3372538 ] in mts
+20 End True Pose: [621.07587  502.33542    0.196498], End Estimated Pose: [560.40765   533.52203     1.3372538] in px
+eps:21 mean mse: 0.48346245288848877
+21 End True Pose: [0.38968566 2.4820251  1.4207278 ], End Estimated Pose: [-0.460885    2.2267187   0.51185846] in mts
+21 End True Pose: [538.96857   748.2025      1.4207278], End Estimated Pose: [453.9115     722.6719       0.51185846] in px
+eps:22 mean mse: 0.4017748236656189
+22 End True Pose: [ 1.1441619  -1.7386731   0.00677844], End Estimated Pose: [ 1.0079181  -1.3939737   0.70131826] in mts
+22 End True Pose: [614.4162     326.1327       0.00677844], End Estimated Pose: [600.7918     360.60263      0.70131826] in px
+eps:23 mean mse: 0.6245080828666687
+23 End True Pose: [-0.02017578 -1.7378988  -3.0936034 ], End Estimated Pose: [ 0.8270611 -1.1543286  1.1225522] in mts
+23 End True Pose: [497.98242   326.2101     -3.0936034], End Estimated Pose: [582.7061    384.56714     1.1225522] in px
+eps:24 mean mse: 0.1822827011346817
+24 End True Pose: [-0.00193329 -1.8391818  -2.8549643 ], End Estimated Pose: [ 0.40835938 -1.6089184  -2.7192614 ] in mts
+24 End True Pose: [499.80667   316.08182    -2.8549643], End Estimated Pose: [540.83594   339.10815    -2.7192614] in px
+eps:25 mean mse: 0.8813210129737854
+25 End True Pose: [-1.3211081 -3.446203  -2.8790457], End Estimated Pose: [-3.5440156 -3.4976642 -1.7179976] in mts
+25 End True Pose: [367.8892    155.37968    -2.8790457], End Estimated Pose: [145.59842   150.23357    -1.7179976] in px
+eps:26 mean mse: 0.3903849720954895
+26 End True Pose: [-1.8168426  -0.13379364 -3.074642  ], End Estimated Pose: [-1.6377777   0.20434631  2.5638702 ] in mts
+26 End True Pose: [318.31573  486.62064   -3.074642], End Estimated Pose: [336.22223   520.43463     2.5638702] in px
+eps:27 mean mse: 0.6020841002464294
+27 End True Pose: [-2.501025   2.2654943  0.0652895], End Estimated Pose: [-2.4495373   2.5965662   0.73893094] in mts
+27 End True Pose: [249.89749   726.54944     0.0652895], End Estimated Pose: [255.04626    759.6566       0.73893094] in px
+eps:28 mean mse: 0.294264018535614
+28 End True Pose: [-2.5090528   2.3359778  -0.05681782], End Estimated Pose: [-2.6399963   2.3823082   0.57507634] in mts
+28 End True Pose: [249.09471    733.5978      -0.05681782], End Estimated Pose: [236.00035    738.23083      0.57507634] in px
+eps:29 mean mse: 1.1852807998657227
+29 End True Pose: [-1.3948529  -0.44118744  3.1222637 ], End Estimated Pose: [-3.2967083  0.633963   2.699043 ] in mts
+29 End True Pose: [360.5147    455.88126     3.1222637], End Estimated Pose: [170.32918  563.3963     2.699043] in px
+eps:30 mean mse: 0.11797750741243362
+30 End True Pose: [-0.32440856  2.5379272   0.5370259 ], End Estimated Pose: [-0.51487637  2.3191423   0.9508498 ] in mts
+30 End True Pose: [467.55914   753.7927      0.5370259], End Estimated Pose: [448.51236   731.91425     0.9508498] in px
+eps:31 mean mse: 0.3324483036994934
+31 End True Pose: [-1.3217975 -3.4565532 -3.0417826], End Estimated Pose: [-1.0793142 -3.2819622 -1.2069185] in mts
+31 End True Pose: [367.82025   154.34467    -3.0417826], End Estimated Pose: [392.06857   171.80376    -1.2069185] in px
+eps:32 mean mse: 0.7726116180419922
+32 End True Pose: [-0.8544586  -0.43801513 -1.5499507 ], End Estimated Pose: [-0.8445776   0.98670834 -2.0706644 ] in mts
+32 End True Pose: [414.55414   456.1985     -1.5499507], End Estimated Pose: [415.54224   598.67084    -2.0706644] in px
+eps:33 mean mse: 0.9501900672912598
+33 End True Pose: [ 1.4920995 -2.4723482  1.468791 ], End Estimated Pose: [ 1.4061193 -3.6476955  0.5520241] in mts
+33 End True Pose: [649.20996  252.76517    1.468791], End Estimated Pose: [640.61194   135.23044     0.5520241] in px
+eps:34 mean mse: 0.40838682651519775
+34 End True Pose: [-0.27956787  1.2900385   1.7627976 ], End Estimated Pose: [-0.26425934  0.6783276   1.6819055 ] in mts
+34 End True Pose: [472.0432    629.00385     1.7627976], End Estimated Pose: [473.57407   567.83276     1.6819055] in px
+eps:35 mean mse: 0.733461320400238
+35 End True Pose: [-0.3049066  -0.40480375 -1.7572472 ], End Estimated Pose: [ 0.12264831  0.31811216 -2.798272  ] in mts
+35 End True Pose: [469.50934   459.51962    -1.7572472], End Estimated Pose: [512.26483  531.8112    -2.798272] in px
+eps:36 mean mse: 0.3946378827095032
+36 End True Pose: [0.11388122 1.2831256  1.8447673 ], End Estimated Pose: [0.60229737 1.3214343  1.295954  ] in mts
+36 End True Pose: [511.38812   628.31256     1.8447673], End Estimated Pose: [560.22974  632.14343    1.295954] in px
+eps:37 mean mse: 0.27433881163597107
+37 End True Pose: [-3.01414     0.38676146 -1.609248  ], End Estimated Pose: [-3.8008056  0.281709  -2.834159 ] in mts
+37 End True Pose: [198.58598  538.67615   -1.609248], End Estimated Pose: [119.91944  528.1709    -2.834159] in px
+eps:38 mean mse: 0.19407576322555542
+38 End True Pose: [-2.3633711   1.4208478   0.07289594], End Estimated Pose: [-2.299452    0.69250244 -0.3458109 ] in mts
+38 End True Pose: [263.66287    642.0848       0.07289594], End Estimated Pose: [270.05478   569.25024    -0.3458109] in px
+eps:39 mean mse: 0.44252651929855347
+39 End True Pose: [-1.3928598  -0.45298278 -2.994547  ], End Estimated Pose: [-0.9283462   0.51756895  2.0711653 ] in mts
+39 End True Pose: [360.71402  454.70172   -2.994547], End Estimated Pose: [407.16537   551.7569      2.0711653] in px
+eps:40 mean mse: 0.7568297386169434
+40 End True Pose: [ 1.0353143   2.171767   -0.35379097], End Estimated Pose: [ 0.41827637  1.9697894  -1.5452503 ] in mts
+40 End True Pose: [603.53143    717.1767      -0.35379097], End Estimated Pose: [541.82764   696.97894    -1.5452503] in px
+eps:41 mean mse: 0.3218159079551697
+41 End True Pose: [ 1.1388562 -1.2131287 -0.1830589], End Estimated Pose: [ 0.8373541  -1.213476    0.10619664] in mts
+41 End True Pose: [613.8856    378.68713    -0.1830589], End Estimated Pose: [583.7354     378.6524       0.10619664] in px
+eps:42 mean mse: 0.32500404119491577
+42 End True Pose: [-3.0215204  1.2956079  1.8909744], End Estimated Pose: [-3.312265   0.7835229  2.431339 ] in mts
+42 End True Pose: [197.84798   629.5608      1.8909744], End Estimated Pose: [168.77348  578.3523     2.431339] in px
+eps:43 mean mse: 0.485799103975296
+43 End True Pose: [ 0.19977355  1.7819214  -1.5527294 ], End Estimated Pose: [ 0.18896179  1.9171124  -1.3260974 ] in mts
+43 End True Pose: [519.97736   678.19214    -1.5527294], End Estimated Pose: [518.8962    691.71124    -1.3260974] in px
+eps:44 mean mse: 0.21345824003219604
+44 End True Pose: [ 1.1653278   2.672766   -0.51475924], End Estimated Pose: [0.9562793  2.790959   0.49170685] in mts
+44 End True Pose: [616.5328     767.2766      -0.51475924], End Estimated Pose: [595.6279     779.0959       0.49170685] in px
+eps:45 mean mse: 0.40108826756477356
+45 End True Pose: [ 0.39503905 -3.3813717  -2.143584  ], End Estimated Pose: [ 0.5014276 -3.4547772 -1.6257242] in mts
+45 End True Pose: [539.5039   161.86282   -2.143584], End Estimated Pose: [550.14276   154.5223     -1.6257242] in px
+eps:46 mean mse: 0.4715215265750885
+46 End True Pose: [0.37632874 1.2858722  1.6822841 ], End Estimated Pose: [0.57943296 0.25091064 1.1722434 ] in mts
+46 End True Pose: [537.6329    628.5872      1.6822841], End Estimated Pose: [557.9433    525.09106     1.1722434] in px
+eps:47 mean mse: 0.49450379610061646
+47 End True Pose: [-2.8551965  2.7490833 -2.9389856], End Estimated Pose: [-2.7205925  1.1613287 -2.4440238] in mts
+47 End True Pose: [214.48035   774.9083     -2.9389856], End Estimated Pose: [227.94072   616.1329     -2.4440238] in px
+eps:48 mean mse: 0.5195404887199402
+48 End True Pose: [-0.01642975 -1.3374808  -2.776258  ], End Estimated Pose: [0.11321197 0.16878784 2.0609772 ] in mts
+48 End True Pose: [498.35703  366.25192   -2.776258], End Estimated Pose: [511.3212    516.8788      2.0609772] in px
+eps:49 mean mse: 0.24565118551254272
+49 End True Pose: [-2.5192115  2.345497   0.311662 ], End Estimated Pose: [-2.8647225  2.875498   1.389272 ] in mts
+49 End True Pose: [248.07884  734.5497     0.311662], End Estimated Pose: [213.52774  787.5498     1.389272] in px
+Mean RMSE (average RMSE per trajectory) = 67.501 cm
+Overall RMSE (reported value) = 70.275 cm
+Success rate = 24.000 %
+******************PyBullet Logging Information:
+PyBullet Logging Information******************
+=====> iGibsonEnv closed

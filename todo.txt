@@ -138,12 +138,12 @@ $ nohup python -u train_eval.py \
 --gpu_g=0 \
 --init_env_pfnet=True \
 --init_particles_distr='gaussian' \
---init_particles_std=0.30,0.523599 \
+--init_particles_std=0.15,0.523599 \
 --num_particles=1000 \
 --resample=True \
 --alpha_resample_ratio=1.0 \
---transition_std='0.04' '0.0872665' \
---pfnet_load=./pfnetwork/checkpoints/checkpoint_87_5.830/pfnet_checkpoint
+--transition_std=0.02,0.0872665 \
+--pfnet_load=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_87_5.830/pfnet_checkpoint \
 --use_plot=False \
 --store_plot=False \
---seed=100 & > nohup.out
+--seed=100 > nohup.out &
