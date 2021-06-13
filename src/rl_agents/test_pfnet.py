@@ -35,10 +35,10 @@ def parse_args():
         help='Root directory for logs/summaries/checkpoints.'
     )
     arg_parser.add_argument(
-        '--num_eval_episodes',
+        '--num_eval_batches',
         type=int,
         default=1,
-        help='The number of episodes to run eval on.'
+        help='Number of batch samples to use for evaluation. Total evaluation samples will be num_eval_batches*batch_size'
     )
     arg_parser.add_argument(
         '--testfiles',
@@ -325,7 +325,7 @@ def pfnet_test(arg_params):
         mse_list = []
         success_list = []
         itr = test_ds.as_numpy_iterator()
-        for eps_idx in range(arg_params.num_eval_episodes):
+        for eps_idx in range(arg_params.num_eval_batches):
             parsed_record = next(itr)
             batch_sample = datautils.transform_raw_record(env, parsed_record, arg_params)
 

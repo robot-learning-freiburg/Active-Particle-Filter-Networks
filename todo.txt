@@ -61,18 +61,18 @@ python supervised_data.py \
 $ nohup python -u test_pfnet.py \
 --root_dir=./random/igibson_pfnet/run1 \
 --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_87_5.830/pfnet_checkpoint \
---num_eval_episodes=125 \
+--num_eval_batches=50 \
 --testfiles=./plots_data/random/*.tfrecord \
---batch_size=1 \
+--batch_size=4 \
 --init_particles_distr='gaussian' \
---init_particles_std '0.15' '0.523599' \
+--init_particles_std '0.3' '0.523599' \
 --num_particles=500 \
---transition_std '0.01' '0.0872665' \
+--transition_std '0.04' '0.0872665' \
 --resample=true \
 --alpha_resample_ratio=0.8 \
 --config_file=./configs/turtlebot_random_nav.yaml \
 --device_idx=0 \
---seed=15 > nohup.out &
+--seed=15 > nohup1.out &
 
 June 9th 2021
 -------------
