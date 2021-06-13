@@ -497,7 +497,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         :return ndarray: random particle poses  (batch_size, num_particles, 3) in pixel space
         """
 
-        assert list(robot_pose.shape) == [1, 3]
+        assert list(robot_pose.shape[1:]) == [3]
         assert list(particles_cov.shape) == [3, 3]
 
         particles = []

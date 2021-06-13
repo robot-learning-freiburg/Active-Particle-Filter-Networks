@@ -96,6 +96,8 @@ $ nohup python -u train_pfnet.py \
 --root_dir=./train_output \
 --tfrecordpath=./pfnet_data \
 --epochs=20 \
+--num_train_batches=5 \
+--num_eval_batches=5 \
 --batch_size=16 \
 --s_buffer_size=500 \
 --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_87_5.830/pfnet_checkpoint \

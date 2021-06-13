@@ -36,13 +36,25 @@ def parse_args():
         '--tfrecordpath',
         type=str,
         default='./data',
-        help='Folder path to training/validation/testing (tfrecord).'
+        help='Folder path to training/evaluation/testing (tfrecord).'
     )
     arg_parser.add_argument(
         '--epochs',
         type=int,
         default=1,
-        help='Number of epochs for training.'
+        help='Number of epochs for training'
+    )
+    arg_parser.add_argument(
+        '--num_train_batches',
+        type=int,
+        default=1,
+        help='Number of batch samples to use for training. Total training samples will be num_train_batches*batch_size'
+    )
+    arg_parser.add_argument(
+        '--num_eval_batches',
+        type=int,
+        default=1,
+        help='Number of batch samples to use for evaluation. Total evaluation samples will be num_eval_batches*batch_size'
     )
     arg_parser.add_argument(
         '--batch_size',
@@ -159,8 +171,6 @@ def parse_args():
     params.window_scaler = 8.0
 
     # post-processing
-    params.num_train_batches = 10
-    params.num_valid_batches = 10
 
     # convert multi-input fields to numpy arrays
     params.transition_std = np.array(params.transition_std, np.float32)
@@ -216,7 +226,7 @@ def pfnet_train(arg_params):
     train_ds = datautils.get_dataflow(filenames, arg_params.batch_size, arg_params.s_buffer_size, is_training=True)
     print(f'train data: {filenames}')
 
-    # validation(eval) data
+    # evaluation data
     filenames = list(glob.glob(os.path.join(arg_params.tfrecordpath, 'eval', '*.tfrecord')))
     eval_ds = datautils.get_dataflow(filenames, arg_params.batch_size, arg_params.s_buffer_size, is_training=False)
     print(f'eval data: {filenames}')
@@ -300,7 +310,7 @@ def pfnet_train(arg_params):
     # Recommended: wrap to tf.graph for better performance
     @tf.function
     def eval_step(model_input):
-        """ Run one validation step """
+        """ Run one evaluation step """
 
         # forward pass
         output, state = pfnet_model(model_input, training=False)
@@ -365,9 +375,9 @@ def pfnet_train(arg_params):
         )
 
         #------------------------#
-        # run validation over all validation samples in an epoch
+        # run evaluation over all eval samples in an epoch
         eval_itr = eval_ds.as_numpy_iterator()
-        for idx in tqdm(range(arg_params.num_valid_batches)):
+        for idx in tqdm(range(arg_params.num_eval_batches)):
 
             parsed_record = next(eval_itr)
             batch_sample = datautils.transform_raw_record(env, parsed_record, arg_params)
@@ -394,7 +404,7 @@ def pfnet_train(arg_params):
 
             eval_step(model_input)
 
-        # log epoch validation stats
+        # log epoch evaluation stats
         with eval_summary_writer.as_default():
             tf.summary.scalar('loss', eval_loss.result(), step=epoch)
 

@@ -198,7 +198,6 @@ def gather_episode_stats(env, params, sample_particles=False):
 
     agent = params.agent
     trajlen = params.trajlen
-    map_size = params.global_map_size
 
     odometry = []
     true_poses = []
@@ -209,8 +208,7 @@ def gather_episode_stats(env, params, sample_particles=False):
 
     floor_map = env.get_floor_map()  # already processed
     obstacle_map = env.get_obstacle_map()  # already processed
-    assert list(floor_map.shape) == list(map_size)
-    assert list(obstacle_map.shape) == list(map_size)
+    assert list(floor_map.shape) == list(obstacle_map.shape)
 
     old_pose = env.get_robot_pose(env.robots[0].calc_state(), floor_map.shape)
     assert list(old_pose.shape) == [3]
@@ -400,6 +398,33 @@ def get_dataflow(filenames, batch_size, s_buffer_size=100, is_training=False):
     return ds
 
 
+def pad_images(images, new_shape):
+    """
+    Center padded gray scale images
+    :param images: input gray images as a png (B, H, W, 1)
+    :param new_shape: output padded image shape (new_H, new_W, 1)
+    :return ndarray: padded gray images as a png (B, new_H, new_W, 1)
+    """
+    B, H, W, C = images.shape
+    new_H, new_W, new_C = new_shape
+    assert new_H>=H and new_W>=W and new_C>=C
+    if new_H==H and new_W==W and new_C==C:
+        return images
+
+    top = (new_H-H)//2
+    bottom = new_H-H-top
+    left = (new_W-W)//2
+    right = new_W-W-left
+
+    padded_images = np.pad(
+                        images,
+                        pad_width=[(0, 0),(top, bottom),(left, right),(0, 0)],
+                        mode='constant',
+                        constant_values=0)
+
+    return padded_images
+
+
 def transform_raw_record(env, parsed_record, params):
     """
     process de-serialized tfrecords data
@@ -428,6 +453,10 @@ def transform_raw_record(env, parsed_record, params):
     trans_record['floor_map'] = parsed_record['floor_map'].reshape(
         [batch_size] + list(parsed_record['floor_map_shape'][0]))
 
+    # HACK: center zero-pad floor/obstacle map
+    trans_record['obstacle_map'] = pad_images(trans_record['obstacle_map'], map_size)
+    trans_record['floor_map'] = pad_images(trans_record['floor_map'], map_size)
+
     # # get floor and obstance map of environment scene
     # trans_record['obstacle_map'] = tf.tile(tf.expand_dims(env.get_obstacle_map(), axis=0), [batch_size, 1, 1, 1])
     # trans_record['floor_map'] = tf.tile(tf.expand_dims(env.get_floor_map(), axis=0), [batch_size, 1, 1, 1])
@@ -442,7 +471,7 @@ def transform_raw_record(env, parsed_record, params):
     assert list(trans_record['true_states'].shape) == [batch_size, trajlen, 3]
     assert list(trans_record['observation'].shape) == [batch_size, trajlen, 56, 56, 3]
     assert list(trans_record['init_particles'].shape) == [batch_size, num_particles, 3]
-    assert list(trans_record['floor_map'].shape) == [batch_size, map_size[0], map_size[1], map_size[2]]
-    assert list(trans_record['obstacle_map'].shape) == [batch_size, map_size[0], map_size[1], map_size[2]]
+    assert list(trans_record['floor_map'].shape) == [batch_size, *map_size]
+    assert list(trans_record['obstacle_map'].shape) == [batch_size, *map_size]
 
     return trans_record
