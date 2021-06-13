@@ -250,6 +250,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         :return: processed_state: processed env observations
         """
+        assert np.min(state['rgb'])>=0. and np.max(state['rgb'])<=1.
 
         # HACK: to collect data
         new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 255]
