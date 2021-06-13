@@ -31,17 +31,18 @@ def read_events(summary_dir):
 def boxplot(metric, title, filename):
 
     summary_dirs = {
-        "gauss_500_no_noise_0.8": "./results/2021-06-07_08-00-00/rnd_agent/house_pfnet/gauss_500_15,0.523_0,0_0.8/log_dir/",
-        "gauss_500_with_noise_0.8": "./results/2021-06-07_08-00-00/rnd_agent/house_pfnet/gauss_500_15,0.523_1,0.087_0.8/log_dir/",
-        "gauss_500_with_noise_1.0": "./results/2021-06-07_08-00-00/rnd_agent/house_pfnet/gauss_500_15,0.523_1,0.087_1.0/log_dir/",
-        "gauss_1500_no_noise_0.8": "./results/2021-06-07_08-00-00/rnd_agent/house_pfnet/gauss_1500_15,0.523_0,0_0.8/log_dir/",
-        "uniform_1500_no_noise_0.8": "./results/2021-06-07_08-00-00/rnd_agent/house_pfnet/uniform_1500_75_0,0_0.8/log_dir/",
+        "gauss_500_less_noise_0.8": "./results/2021-06-13_22-00-00/rnd_agent/igibson_pfnet/gauss_500_0.15,0.5236_0.02,0.0873_0.8/log_dir/",
+        "gauss_500_no_noise_0.8": "./results/2021-06-13_22-00-00/rnd_agent/igibson_pfnet/gauss_500_0.30,0.5236_0.0,0.0_0.8/log_dir/",
+        "gauss_500_with_noise_0.8": "./results/2021-06-13_22-00-00/rnd_agent/igibson_pfnet/gauss_500_0.30,0.5236_0.04,0.0873_0.8/log_dir/",
+        "gauss_500_with_noise_1.0": "./results/2021-06-13_22-00-00/rnd_agent/igibson_pfnet/gauss_500_0.30,0.5236_0.04,0.0873_1.0/log_dir/",
+        "gauss_1500_with_noise_0.8": "./results/2021-06-13_22-00-00/rnd_agent/igibson_pfnet/gauss_1500_0.30,0.5236_0.04,0.0873_0.8/log_dir/",
+        "uniform_1500_with_noise_0.8": "./results/2021-06-13_22-00-00/rnd_agent/igibson_pfnet/uniform_1500_0.30,0.5236_0.04,0.0873_0.8/log_dir/",
     }
     events_data = []
     for key, value in summary_dirs.items():
         events_data.append(read_events(value))
 
-    fig = plt.figure(figsize =(14, 7))
+    fig = plt.figure(figsize =(16, 7))
 
     # create boxplot
     plt.boxplot([
@@ -49,19 +50,20 @@ def boxplot(metric, title, filename):
             events_data[1][metric],
             events_data[2][metric],
             events_data[3][metric],
-            events_data[4][metric]
+            events_data[4][metric],
+            events_data[5][metric]
     ])
     events = list(summary_dirs.keys())
     plt.xlabel('Experiment', fontweight='bold')
     plt.ylabel('RMSE (in meters)', fontweight='bold')
-    plt.yticks(np.arange(0, 60, 5))
+    plt.yticks(np.arange(0, 5, 0.5))
     plt.xticks(np.arange(1, len(events)+1), events)
     x1,x2,y1,y2 = plt.axis()
-    plt.axis([x1, x2, 0, 60])
+    plt.axis([x1, x2, 0, 5])
     plt.title(title, fontsize=16, fontweight='bold')
 
     # save figure
     plt.savefig(filename)
 
 if __name__ == '__main__':
-    boxplot('eps_mean_rmse', 'Random Agent Performance w.r.t Original PFNet (Episode Mean RMSE)', 'rnd_agent_house_pfnet_eps_mean_rmse.png')
+    boxplot('eps_final_rmse', 'Random Agent Performance w.r.t Finetuned PFNet (Episode End RMSE)', 'rnd_agent_igibson_pfnet_eps_final_rmse.png')
