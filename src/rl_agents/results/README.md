@@ -46,7 +46,7 @@
 </details>
 
 
-<details open>
+<details close>
   <summary>June 3rd - June 9th Summary</summary>
 
   ### Results
@@ -99,4 +99,19 @@
     |Random Agent w.r.t Original PFNet |Random Agent w.r.t Finetuned PFNet |
     |------------|------------|
     |![Random_Agent_Original_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/box_plots_overall/rnd_agent_house_pfnet_eps_final_rmse.png)|![Random_Agent_Finetuned_PFNet_EpsMean](2021-06-07_08-00-00/rnd_agent/images/box_plots_overall/rnd_agent_igibson_pfnet_eps_final_rmse.png)|
+</details>
+
+
+<details open>
+  <summary>June 10th - June 16th Summary</summary>
+
+  ### Results
+  * Per Episode Overall Mean RMSE
+    |Manual Agent w.r.t Finetuned PFNet |Random Agent w.r.t Finetuned PFNet |
+    |------------|------------|
+    |![Manual_Agent_Finetuned_PFNet_EpsMean](2021-06-13_22-00-00/manual_agent/images/manual_agent_igibson_pfnet_eps_mean_rmse.png)|![Random_Agent_Finetuned_PFNet_EpsMean](2021-06-13_22-00-00/rnd_agent/images/rnd_agent_igibson_pfnet_eps_mean_rmse.png)|
+  * Per Episode End Mean RMSE
+    |Manual Agent w.r.t Finetuned PFNet |Random Agent w.r.t Finetuned PFNet |
+    |------------|------------|
+    |![Manual_Agent_Finetuned_PFNet_EpsEnd](2021-06-13_22-00-00/manual_agent/images/manual_agent_igibson_pfnet_eps_final_rmse.png)|![Random_Agent_Finetuned_PFNet_EpsEnd](2021-06-13_22-00-00/rnd_agent/images/rnd_agent_igibson_pfnet_eps_final_rmse.png)|
 </details>
