@@ -83,23 +83,26 @@ June 9th 2021
 
 $ nohup python -u supervised_data.py \
 --filename=./pfnet_data/train/Rs0_floor0.tfrecord \
+--scene_id='Rs' \
 --agent='random' \
 --num_records=500 \
 --config_file=./configs/turtlebot_pfnet_nav.yaml \
---scene_id='Rs' \
 --env_mode='headless' \
 --gpu_num=0 \
 --init_env_pfnet=False \
 --seed=90 > nohup.out &
 
+
+params.global_map_size = [4000, 4000, 1]
+params.window_scaler = 16.0
 $ nohup python -u train_pfnet.py \
---root_dir=./train_output \
+--root_dir=./pfnet_output \
 --tfrecordpath=./pfnet_data \
 --epochs=20 \
---num_train_batches=5 \
---num_eval_batches=5 \
---batch_size=16 \
---s_buffer_size=500 \
+--num_train_batches=4600 \
+--num_eval_batches=300 \
+--batch_size=8 \
+--s_buffer_size=1000 \
 --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_87_5.830/pfnet_checkpoint \
 --learning_rate=2.5e-3 \
 --init_particles_distr='gaussian' \

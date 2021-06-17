@@ -490,18 +490,17 @@ def transform_raw_record(env, parsed_record, params):
             scene_id = None
             floor_num = None
 
-        trans_record['obstacle_map'].append(
-            env.get_obstacle_map(scene_id, floor_num)
-        )
-        trans_record['floor_map'].append(
-            env.get_floor_map(scene_id, floor_num)
-        )
+        obstacle_map = env.get_obstacle_map(scene_id, floor_num)
+        floor_map = env.get_floor_map(scene_id, floor_num)
+
+        # HACK: center zero-pad floor/obstacle map
+        obstacle_map = pad_images(obstacle_map, map_size)
+        floor_map = pad_images(floor_map, map_size)
+
+        trans_record['obstacle_map'].append(obstacle_map)
+        trans_record['floor_map'].append(floor_map)
     trans_record['obstacle_map'] = np.stack(trans_record['obstacle_map'])  # [batch_size, H, W, C]
     trans_record['floor_map'] = np.stack(trans_record['floor_map'])  # [batch_size, H, W, C]
-
-    # HACK: center zero-pad floor/obstacle map
-    trans_record['obstacle_map'] = pad_images(trans_record['obstacle_map'], map_size)
-    trans_record['floor_map'] = pad_images(trans_record['floor_map'], map_size)
 
     # sample random particles and corresponding weights
     trans_record['init_particles'] = env.get_random_particles(num_particles, particles_distr,
