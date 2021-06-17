@@ -96,13 +96,13 @@ $ nohup python -u supervised_data.py \
 params.global_map_size = [4000, 4000, 1]
 params.window_scaler = 16.0
 $ nohup python -u train_pfnet.py \
---root_dir=./pfnet_output \
+--root_dir=./run1 \
 --tfrecordpath=./pfnet_data \
 --epochs=20 \
---num_train_batches=4600 \
---num_eval_batches=300 \
---batch_size=8 \
---s_buffer_size=1000 \
+--num_train_samples=75*500 \
+--num_eval_samples=5*500 \
+--batch_size=4 \
+--s_buffer_size=500 \
 --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_87_5.830/pfnet_checkpoint \
 --learning_rate=2.5e-3 \
 --init_particles_distr='gaussian' \
@@ -111,6 +111,8 @@ $ nohup python -u train_pfnet.py \
 --transition_std '0.' '0.' \
 --resample=false \
 --alpha_resample_ratio=0.5 \
+--global_map_size '4000' '4000' '1' \
+--window_scaler=16.0 \
 --config_file=./configs/turtlebot_pfnet_nav.yaml \
 --device_idx=1 \
 --seed=42 > nohup.out &
