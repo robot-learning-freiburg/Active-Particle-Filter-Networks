@@ -257,25 +257,20 @@ def pfnet_train(arg_params):
     arg_params.trajlen = env.config.get('max_step', 500)
 
     # create particle filter net model
-    strategy = tf.distribute.MirroredStrategy()
-    with strategy.scope():
-        pfnet_model = pfnet.pfnet_model(arg_params)
+    pfnet_model = pfnet.pfnet_model(arg_params)
     print("=====> Created pf model ")
 
     # load model from checkpoint file
     if arg_params.pfnet_loadpath:
-        with strategy.scope():
-            pfnet_model.load_weights(arg_params.pfnet_loadpath)
+        pfnet_model.load_weights(arg_params.pfnet_loadpath)
         print("=====> Loaded pf model from: " + arg_params.pfnet_loadpath)
 
     # Adam optimizer.
-    with strategy.scope():
-        optimizer = tf.optimizers.Adam(learning_rate=arg_params.learning_rate)
+    optimizer = tf.optimizers.Adam(learning_rate=arg_params.learning_rate)
 
     # Define metrics
-    with strategy.scope():
-        train_loss = keras.metrics.Mean('train_loss', dtype=tf.float32)
-        eval_loss = keras.metrics.Mean('eval_loss', dtype=tf.float32)
+    train_loss = keras.metrics.Mean('train_loss', dtype=tf.float32)
+    eval_loss = keras.metrics.Mean('eval_loss', dtype=tf.float32)
 
     # Logging
     summaries_flush_secs=10
