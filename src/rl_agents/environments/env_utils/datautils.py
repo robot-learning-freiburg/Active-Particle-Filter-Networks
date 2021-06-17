@@ -426,11 +426,11 @@ def get_dataflow(filenames, batch_size, s_buffer_size=100, is_training=False):
 def pad_images(images, new_shape):
     """
     Center padded gray scale images
-    :param images: input gray images as a png (B, H, W, 1)
+    :param images: input gray images as a png (H, W, 1)
     :param new_shape: output padded image shape (new_H, new_W, 1)
-    :return ndarray: padded gray images as a png (B, new_H, new_W, 1)
+    :return ndarray: padded gray images as a png (new_H, new_W, 1)
     """
-    B, H, W, C = images.shape
+    H, W, C = images.shape
     new_H, new_W, new_C = new_shape
     assert new_H>=H and new_W>=W and new_C>=C
     if new_H==H and new_W==W and new_C==C:
@@ -443,7 +443,7 @@ def pad_images(images, new_shape):
 
     padded_images = np.pad(
                         images,
-                        pad_width=[(0, 0),(top, bottom),(left, right),(0, 0)],
+                        pad_width=[(top, bottom),(left, right),(0, 0)],
                         mode='constant',
                         constant_values=0)
 
