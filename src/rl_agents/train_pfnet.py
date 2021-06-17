@@ -209,7 +209,7 @@ def parse_args():
     params.init_env_pfnet = False
     params.store_results = True
 
-    os.environ['CUDA_VISIBLE_DEVICES'] = '0,1'
+    os.environ['CUDA_VISIBLE_DEVICES'] = str(params.device_idx)
     os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 
     # set random seeds
