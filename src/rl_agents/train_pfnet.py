@@ -209,7 +209,7 @@ def parse_args():
     params.init_env_pfnet = False
     params.store_results = True
 
-    os.environ['CUDA_VISIBLE_DEVICES'] = str(params.device_idx)
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0,1'
     os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 
     # set random seeds
@@ -257,7 +257,9 @@ def pfnet_train(arg_params):
     arg_params.trajlen = env.config.get('max_step', 500)
 
     # create particle filter net model
-    pfnet_model = pfnet.pfnet_model(arg_params)
+    strategy = tf.distribute.MirroredStrategy()
+    with strategy.scope():
+        pfnet_model = pfnet.pfnet_model(arg_params)
     print("=====> Created pf model ")
 
     # load model from checkpoint file
