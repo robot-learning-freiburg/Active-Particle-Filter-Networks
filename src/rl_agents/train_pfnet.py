@@ -264,20 +264,18 @@ def pfnet_train(arg_params):
 
     # load model from checkpoint file
     if arg_params.pfnet_loadpath:
-        pfnet_model.load_weights(arg_params.pfnet_loadpath)
+        with strategy.scope():
+            pfnet_model.load_weights(arg_params.pfnet_loadpath)
         print("=====> Loaded pf model from: " + arg_params.pfnet_loadpath)
 
-    # Recommended: wrap to tf.graph for better performance
-    if arg_params.use_tf_function:
-        pfnet_model = tf.function(pfnet_model)
-        print("=====> wrapped pfnet in tf.graph")
-
     # Adam optimizer.
-    optimizer = tf.optimizers.Adam(learning_rate=arg_params.learning_rate)
+    with strategy.scope():
+        optimizer = tf.optimizers.Adam(learning_rate=arg_params.learning_rate)
 
     # Define metrics
-    train_loss = keras.metrics.Mean('train_loss', dtype=tf.float32)
-    eval_loss = keras.metrics.Mean('eval_loss', dtype=tf.float32)
+    with strategy.scope():
+        train_loss = keras.metrics.Mean('train_loss', dtype=tf.float32)
+        eval_loss = keras.metrics.Mean('eval_loss', dtype=tf.float32)
 
     # Logging
     summaries_flush_secs=10
