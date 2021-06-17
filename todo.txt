@@ -93,14 +93,12 @@ $ nohup python -u supervised_data.py \
 --seed=90 > nohup.out &
 
 
-params.global_map_size = [4000, 4000, 1]
-params.window_scaler = 16.0
 $ nohup python -u train_pfnet.py \
 --root_dir=./run1 \
 --tfrecordpath=./pfnet_data \
 --epochs=20 \
---num_train_samples=75*500 \
---num_eval_samples=5*500 \
+--num_train_samples=37500 \
+--num_eval_samples=2500 \
 --batch_size=4 \
 --s_buffer_size=500 \
 --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_87_5.830/pfnet_checkpoint \

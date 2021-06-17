@@ -179,8 +179,8 @@ def parse_args():
     params.map_pixel_in_meters = 0.01
 
     # post-processing
-    params.num_train_batches = params.num_train_samples/params.batch_size
-    params.num_eval_batches = params.num_eval_samples/params.batch_size
+    params.num_train_batches = params.num_train_samples//params.batch_size
+    params.num_eval_batches = params.num_eval_samples//params.batch_size
 
     # convert multi-input fields to numpy arrays
     params.transition_std = np.array(params.transition_std, np.float32)
