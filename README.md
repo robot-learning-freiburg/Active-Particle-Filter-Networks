@@ -7,7 +7,7 @@
 
 
 #### Steps to Install Singularity:
-1. Enable NeuroDebian repository by following instructions on [neuro-debian](http://neuro.debian.net/)
+1. Enable NeuroDebian repository by following instructions on [neuro-debian](http://neuro.debian.net/). Also refer [FAQ](http://neuro.debian.net/faq.html).
 2. Install Singularity-Container as follows:
    ```
    $ sudo apt-get install -y singularity-container

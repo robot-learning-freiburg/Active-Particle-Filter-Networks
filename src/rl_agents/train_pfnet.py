@@ -160,6 +160,12 @@ def parse_args():
         help='Config file for the experiment'
     )
     arg_parser.add_argument(
+        '--scene_id',
+        type=str,
+        default='Rs',
+        help='Environment scene'
+    )
+    arg_parser.add_argument(
         '--action_timestep',
         type=float,
         default=1.0 / 10.0,
@@ -209,6 +215,7 @@ def parse_args():
     params.init_env_pfnet = False
     params.store_results = True
 
+    params.env_mode = 'headless'
     os.environ['CUDA_VISIBLE_DEVICES'] = str(params.device_idx)
     os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 
@@ -245,8 +252,8 @@ def pfnet_train(arg_params):
     # create igibson env which is used "only" to sample particles
     env = LocalizeGibsonEnv(
         config_file=arg_params.config_file,
-        scene_id=None,
-        mode='headless',
+        scene_id=arg_params.scene_id,
+        mode=arg_params.env_mode,
         use_tf_function=arg_params.use_tf_function,
         init_pfnet=arg_params.init_env_pfnet,
         action_timestep=arg_params.action_timestep,

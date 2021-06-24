@@ -99,13 +99,13 @@ $ nohup python -u train_pfnet.py \
 --epochs=20 \
 --num_train_samples=37500 \
 --num_eval_samples=2500 \
---batch_size=4 \
+--batch_size=6 \
 --s_buffer_size=500 \
 --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_87_5.830/pfnet_checkpoint \
 --learning_rate=2.5e-3 \
 --init_particles_distr='gaussian' \
 --init_particles_std '0.3' '0.523599' \
---num_particles=100 \
+--num_particles=30 \
 --transition_std '0.' '0.' \
 --resample=false \
 --alpha_resample_ratio=0.5 \
@@ -150,3 +150,10 @@ $ nohup python -u train_eval.py \
 --use_plot=False \
 --store_plot=False \
 --seed=100 > nohup.out &
+
+June 23rd 2021
+--------------
+1. train from scratch for single sequence - to check anything works
+2. plot the trajectories on obstacle map to verify how diverse trajectories are
+3. cross check for original dataset
+4. different learning rate
