@@ -70,6 +70,8 @@ $ nohup python -u test_pfnet.py \
 --transition_std '0.04' '0.0872665' \
 --resample=true \
 --alpha_resample_ratio=0.8 \
+--global_map_size '4000' '4000' '1' \
+--window_scaler=8.0 \
 --config_file=./configs/turtlebot_random_nav.yaml \
 --device_idx=0 \
 --seed=15 > nohup1.out &
@@ -110,9 +112,10 @@ $ nohup python -u train_pfnet.py \
 --resample=false \
 --alpha_resample_ratio=0.5 \
 --global_map_size '4000' '4000' '1' \
---window_scaler=16.0 \
+--window_scaler=8.0 \
 --config_file=./configs/turtlebot_pfnet_nav.yaml \
 --device_idx=1 \
+--multiple_gpus=false \
 --seed=42 > nohup.out &
 
 max_step: 100

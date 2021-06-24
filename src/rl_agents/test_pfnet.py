@@ -113,6 +113,18 @@ def parse_args():
         help='Trade-off parameter for soft-resampling in PF-net. Only effective if resample == true.'
              'Assumes values 0.0 < alpha <= 1.0. Alpha equal to 1.0 corresponds to hard-resampling'
     )
+    arg_parser.add_argument(
+        '--global_map_size',
+        nargs='*',
+        default=["1000", "1000", "1"],
+        help='Global map size in pixels (H, W, C)'
+    )
+    arg_parser.add_argument(
+        '--window_scaler',
+        type=float,
+        default=8.0,
+        help='Rescale factor for extracing local map'
+    )
 
     # define igibson env parameters
     arg_parser.add_argument(
@@ -150,15 +162,12 @@ def parse_args():
     # For the igibson maps, each pixel represents 0.01m, and the center of the image correspond to (0,0)
     params.map_pixel_in_meters = 0.01
 
-    # HACK: hardcoded values for floor map/obstacle map
-    params.global_map_size = [1000, 1000, 1]
-    params.window_scaler = 8.0
-
     # post-processing
 
     # convert multi-input fields to numpy arrays
     params.transition_std = np.array(params.transition_std, np.float32)
     params.init_particles_std = np.array(params.init_particles_std, np.float32)
+    params.global_map_size = np.array(params.global_map_size, np.int32)
 
     params.transition_std[0] = params.transition_std[0] / params.map_pixel_in_meters  # convert meters to pixels
     params.init_particles_std[0] = params.init_particles_std[0] / params.map_pixel_in_meters  # convert meters to pixels

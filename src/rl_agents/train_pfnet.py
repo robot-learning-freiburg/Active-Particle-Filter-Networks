@@ -93,7 +93,13 @@ def parse_args():
         '--device_idx',
         type=int,
         default='0',
-        help='use gpu no. to train/eval'
+        help='Use gpu no. to train/eval'
+    )
+    arg_parser.add_argument(
+        '--multiple_gpus',
+        type=str,
+        default='false',
+        help='Use multiple GPUs'
     )
 
     # define particle parameters
@@ -201,10 +207,12 @@ def parse_args():
     particle_std2 = np.square(particle_std)  # variance
     params.init_particles_cov = np.diag(particle_std2[(0, 0, 1), ])
 
-    if params.resample not in ['false', 'true']:
+    if params.resample not in ['false', 'true'] or \
+        params.multiple_gpus not in ['false', 'true']:
         raise ValueError
     else:
         params.resample = (params.resample == 'true')
+        params.multiple_gpus = (params.multiple_gpus == 'true')
 
     # use RNN as stateful/non-stateful
     params.stateful = False
@@ -216,7 +224,10 @@ def parse_args():
     params.store_results = True
 
     params.env_mode = 'headless'
-    os.environ['CUDA_VISIBLE_DEVICES'] = str(params.device_idx)
+    if arg_params.multiple_gpus:
+        os.environ['CUDA_VISIBLE_DEVICES'] = '0,1'
+    else:
+        os.environ['CUDA_VISIBLE_DEVICES'] = str(params.device_idx)
     os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 
     # set random seeds
@@ -264,7 +275,12 @@ def pfnet_train(arg_params):
     arg_params.trajlen = env.config.get('max_step', 500)
 
     # create particle filter net model
-    pfnet_model = pfnet.pfnet_model(arg_params)
+    if arg_params.multiple_gpus:
+        strategy = tf.distribute.MirroredStrategy()
+        with strategy.scope():
+            pfnet_model = pfnet.pfnet_model(arg_params)
+    else:
+        pfnet_model = pfnet.pfnet_model(arg_params)
     print("=====> Created pf model ")
 
     # load model from checkpoint file
