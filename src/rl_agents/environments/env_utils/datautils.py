@@ -436,9 +436,9 @@ def pad_images(images, new_shape):
     if new_H==H and new_W==W and new_C==C:
         return images
 
-    top = (new_H-H)//2
+    top = 0
     bottom = new_H-H-top
-    left = (new_W-W)//2
+    left = 0
     right = new_W-W-left
 
     padded_images = np.pad(
