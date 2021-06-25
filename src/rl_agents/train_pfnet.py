@@ -309,7 +309,7 @@ def pfnet_train(arg_params):
 
     # Recommended: wrap to tf.graph for better performance
     @tf.function
-    def train_step(model_input):
+    def train_step(model_input, true_states):
         """ Run one training step """
 
         # enable auto-differentiation
@@ -338,7 +338,7 @@ def pfnet_train(arg_params):
 
     # Recommended: wrap to tf.graph for better performance
     @tf.function
-    def eval_step(model_input):
+    def eval_step(model_input, true_states):
         """ Run one evaluation step """
 
         # forward pass
@@ -388,7 +388,7 @@ def pfnet_train(arg_params):
             pf_input = [observation, odometry]
             model_input = (pf_input, state)
 
-            train_step(model_input)
+            train_step(model_input, true_states)
 
         # log epoch training stats
         with train_summary_writer.as_default():
@@ -431,7 +431,7 @@ def pfnet_train(arg_params):
             pf_input = [observation, odometry]
             model_input = (pf_input, state)
 
-            eval_step(model_input)
+            eval_step(model_input, true_states)
 
         # log epoch evaluation stats
         with eval_summary_writer.as_default():
