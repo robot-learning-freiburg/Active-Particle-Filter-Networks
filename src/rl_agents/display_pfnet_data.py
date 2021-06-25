@@ -40,6 +40,12 @@ def parse_args():
         help='Folder path to training/evaluation/testing (tfrecord).'
     )
     arg_parser.add_argument(
+        '--num_train_samples',
+        type=int,
+        default=1,
+        help='Total number of samples to use for training. Total training samples will be num_train_samples=num_train_batches*batch_size'
+    )
+    arg_parser.add_argument(
         '--batch_size',
         type=int,
         default=1,
@@ -153,7 +159,7 @@ def parse_args():
     params.map_pixel_in_meters = 0.01
 
     # post-processing
-    params.num_train_batches = 5
+    params.num_train_batches = params.num_train_samples//params.batch_size
 
     # convert multi-input fields to numpy arrays
     params.transition_std = np.array(params.transition_std, np.float32)
@@ -214,13 +220,18 @@ def draw_floor_map(floor_map, map_shape, plt_ax, map_plt):
 
 def draw_robot_pose(true_states, plt_ax):
 
-    start_pose = true_states[0]
-    for idx in np.arange(1, len(true_states)):
-        end_pose = true_states[idx]
-        plt_ax.arrow(
-            start_pose[0], start_pose[1],
-            end_pose[0]-start_pose[0], end_pose[1]-start_pose[1],
-            head_width=0.05, head_length=0.1, fc='blue', ec='blue')
+    heading_len  = robot_radius = 10.0
+    heading_plt = None
+    for idx in range(true_states.shape[0]):
+        x, y, heading = true_states[idx]
+
+        xdata = [x, x + (robot_radius + heading_len) * np.cos(heading)]
+        ydata = [y, y + (robot_radius + heading_len) * np.sin(heading)]
+        if heading_plt == None:
+            heading_plt, = plt_ax.plot(xdata, ydata, color='blue', alpha=0.5)
+            heading_plt = None
+        else:
+            heading_plt.update({'xdata': xdata, 'ydata': ydata})
 
 def display_data(arg_params):
     """
@@ -247,10 +258,14 @@ def display_data(arg_params):
     )
     env.reset()
     arg_params.trajlen = env.config.get('max_step', 500)
+    arg_params.floors = 2
 
-    plts = {}
     b_idx = 0
     fig = plt.figure(figsize=(14, 14))
+    plts = {}
+    for idx in range(arg_params.floors):
+        plts[idx] = fig.add_subplot(1,arg_params.floors,idx+1)
+
     # run training over all training samples in an epoch
     train_itr = train_ds.as_numpy_iterator()
     for idx in tqdm(range(arg_params.num_train_batches)):
@@ -267,14 +282,7 @@ def display_data(arg_params):
         scene_id = parsed_record['scene_id'][b_idx][0].decode('utf-8')
         floor_num = parsed_record['floor_num'][b_idx][0]
         key = scene_id + '_' + str(floor_num)
-        if key not in plts:
-            if floor_num == 0:
-                plt_ax = fig.add_subplot(121)
-            else:
-                plt_ax = fig.add_subplot(122)
-            plts[key] = plt_ax
-        else:
-            plt_ax = plts[key]
+        plt_ax = plts[floor_num]
 
         map_plt = draw_floor_map(obstacle_map[b_idx].numpy(), org_map_shape[b_idx], plt_ax, None)
 
