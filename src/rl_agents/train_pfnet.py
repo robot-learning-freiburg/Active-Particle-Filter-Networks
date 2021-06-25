@@ -224,7 +224,7 @@ def parse_args():
     params.store_results = True
 
     params.env_mode = 'headless'
-    if arg_params.multiple_gpus:
+    if params.multiple_gpus:
         os.environ['CUDA_VISIBLE_DEVICES'] = '0,1'
     else:
         os.environ['CUDA_VISIBLE_DEVICES'] = str(params.device_idx)
