@@ -203,8 +203,9 @@ def parse_args():
     return params
 
 
-def store_results(eps_idx, obstacle_map, particle_states, particle_weights, true_states, params):
+def store_results(eps_idx, obstacle_map, org_map_shape, particle_states, particle_weights, true_states, params):
     trajlen = params.trajlen
+    b_idx = 0
 
     fig = plt.figure(figsize=(7, 7))
     plt_ax = fig.add_subplot(111)
@@ -221,13 +222,15 @@ def store_results(eps_idx, obstacle_map, particle_states, particle_weights, true
     est_states = tf.stack([part_x, part_y, part_th], axis=-1)
 
     # plot map
-    floor_map = obstacle_map[0].numpy()  # [H, W, 1]
+    floor_map = obstacle_map[b_idx].numpy()  # [H, W, 1]
+    pad_map_shape = floor_map.shape
+    o_map_shape = org_map_shape[b_idx]
 
     # HACK:
-    plt_ax.set_yticks(np.arange(0, floor_map.shape[0], 100))
-    plt_ax.set_xticks(np.arange(0, floor_map.shape[1], 100))
+    plt_ax.set_yticks(np.arange(0, pad_map_shape[0], pad_map_shape[0]//10))
+    plt_ax.set_xticks(np.arange(0, pad_map_shape[1], pad_map_shape[1]//10))
 
-    map_plt = render.draw_floor_map(floor_map, plt_ax, None)
+    map_plt = render.draw_floor_map(floor_map, o_map_shape, plt_ax, None)
 
     images = []
     gt_plt = {
@@ -248,20 +251,20 @@ def store_results(eps_idx, obstacle_map, particle_states, particle_weights, true
         # plot true robot pose
         position_plt, heading_plt = gt_plt['robot_position'], gt_plt['robot_heading']
         gt_plt['robot_position'], gt_plt['robot_heading'] = render.draw_robot_pose(
-            true_state[0], '#7B241C', floor_map.shape, plt_ax,
+            true_state[b_idx], '#7B241C', pad_map_shape, plt_ax,
             position_plt, heading_plt)
 
         # plot est robot pose
         position_plt, heading_plt = est_plt['robot_position'], est_plt['robot_heading']
         est_plt['robot_position'], est_plt['robot_heading'] = render.draw_robot_pose(
-            est_state[0], '#515A5A', floor_map.shape, plt_ax,
+            est_state[b_idx], '#515A5A', pad_map_shape, plt_ax,
             position_plt, heading_plt)
 
         # plot est pose particles
         particles_plt = est_plt['particles']
         est_plt['particles'] = render.draw_particles_pose(
-            particle_state[0], lin_weight[0],
-            floor_map.shape, particles_plt)
+            particle_state[b_idx], lin_weight[b_idx],
+            pad_map_shape, particles_plt)
 
         plt_ax.legend([gt_plt['robot_position'], est_plt['robot_position']], ["gt_pose", "est_pose"])
 
@@ -270,10 +273,10 @@ def store_results(eps_idx, obstacle_map, particle_states, particle_weights, true
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         images.append(img)
 
-    end_gt_pose = datautils.inv_transform_pose(true_state[0], floor_map.shape, params.map_pixel_in_meters)
-    end_est_pose = datautils.inv_transform_pose(est_state[0], floor_map.shape, params.map_pixel_in_meters)
+    end_gt_pose = datautils.inv_transform_pose(true_state[b_idx], o_map_shape, params.map_pixel_in_meters)
+    end_est_pose = datautils.inv_transform_pose(est_state[b_idx], o_map_shape, params.map_pixel_in_meters)
     print(f'{eps_idx} End True Pose: {end_gt_pose}, End Estimated Pose: {end_est_pose} in mts')
-    print(f'{eps_idx} End True Pose: {true_state[0]}, End Estimated Pose: {est_state[0]} in px')
+    print(f'{eps_idx} End True Pose: {true_state[b_idx]}, End Estimated Pose: {est_state[b_idx]} in px')
 
     size = (images[0].shape[0], images[0].shape[1])
     out = cv2.VideoWriter(
@@ -350,6 +353,7 @@ def pfnet_test(arg_params):
             true_states = tf.convert_to_tensor(batch_sample['true_states'], dtype=tf.float32)
             floor_map = tf.convert_to_tensor(batch_sample['floor_map'], dtype=tf.float32)
             obstacle_map = tf.convert_to_tensor(batch_sample['obstacle_map'], dtype=tf.float32)
+            org_map_shape = batch_sample['org_map_shape']
             init_particles = tf.convert_to_tensor(batch_sample['init_particles'], dtype=tf.float32)
             init_particle_weights = tf.constant(np.log(1.0 / float(num_particles)),
                                                 shape=(batch_size, num_particles), dtype=tf.float32)
@@ -395,7 +399,7 @@ def pfnet_test(arg_params):
                 # store results as video
                 arg_params.out_folder = os.path.join(arg_params.root_dir, f'output')
                 Path(arg_params.out_folder).mkdir(parents=True, exist_ok=True)
-                store_results(eps_idx, obstacle_map, particle_states, particle_weights, true_states, arg_params)
+                store_results(eps_idx, obstacle_map, org_map_shape, particle_states, particle_weights, true_states, arg_params)
 
         # report results
         mean_rmse = np.mean(np.sqrt(mse_list)) * 100

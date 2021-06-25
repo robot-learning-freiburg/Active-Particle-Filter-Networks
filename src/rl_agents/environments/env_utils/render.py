@@ -28,15 +28,16 @@ def draw_text(text, bgcolor, plt_ax, text_plt):
 
     return text_plt
 
-def draw_floor_map(floor_map, plt_ax, map_plt):
+def draw_floor_map(floor_map, map_shape, plt_ax, map_plt):
     """
     Render the scene floor map
     :param ndarray floor_map: environment scene floor map
+    :param ndarray map_shape: (unpadded) map shape [H, W, C]
     :param matplotlib.axes.Axes plt_ax: figure sub plot instance
     :return matplotlib.image.AxesImage: updated plot of scene floor map
     """
 
-    origin_x, origin_y = floor_map.shape[1]/2, floor_map.shape[0]/2
+    origin_x, origin_y = map_shape[1]/2, map_shape[0]/2
     if map_plt is None:
         # draw floor map
         map_plt = plt_ax.imshow(floor_map, cmap='gray', origin='lower')

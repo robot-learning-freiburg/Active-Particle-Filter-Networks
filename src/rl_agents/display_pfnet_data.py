@@ -193,15 +193,16 @@ def parse_args():
 
     return params
 
-def draw_floor_map(floor_map, plt_ax, map_plt):
+def draw_floor_map(floor_map, map_shape, plt_ax, map_plt):
     """
     Render the scene floor map
     :param ndarray floor_map: environment scene floor map
+    :param ndarray map_shape: (unpadded) map shape [H, W, C]
     :param matplotlib.axes.Axes plt_ax: figure sub plot instance
     :return matplotlib.image.AxesImage: updated plot of scene floor map
     """
 
-    origin_x, origin_y = floor_map.shape[1]/2, floor_map.shape[0]/2
+    origin_x, origin_y = map_shape[1]/2, map_shape[0]/2
     if map_plt is None:
         # draw floor map
         map_plt = plt_ax.imshow(floor_map, cmap='gray', origin='lower')
@@ -248,6 +249,7 @@ def display_data(arg_params):
     arg_params.trajlen = env.config.get('max_step', 500)
 
     plts = {}
+    b_idx = 0
     fig = plt.figure(figsize=(14, 14))
     # run training over all training samples in an epoch
     train_itr = train_ds.as_numpy_iterator()
@@ -260,9 +262,10 @@ def display_data(arg_params):
         odometry = tf.convert_to_tensor(batch_sample['odometry'], dtype=tf.float32)
         true_states = tf.convert_to_tensor(batch_sample['true_states'], dtype=tf.float32)
         obstacle_map = tf.convert_to_tensor(batch_sample['obstacle_map'], dtype=tf.float32)
+        org_map_shape = batch_sample['org_map_shape']
 
-        scene_id = parsed_record['scene_id'][0][0].decode('utf-8')
-        floor_num = parsed_record['floor_num'][0][0]
+        scene_id = parsed_record['scene_id'][b_idx][0].decode('utf-8')
+        floor_num = parsed_record['floor_num'][b_idx][0]
         key = scene_id + '_' + str(floor_num)
         if key not in plts:
             if floor_num == 0:
@@ -273,9 +276,9 @@ def display_data(arg_params):
         else:
             plt_ax = plts[key]
 
-        map_plt = draw_floor_map(obstacle_map[0].numpy(), plt_ax, None)
+        map_plt = draw_floor_map(obstacle_map[b_idx].numpy(), org_map_shape[b_idx], plt_ax, None)
 
-        draw_robot_pose(true_states[0].numpy(), plt_ax)
+        draw_robot_pose(true_states[b_idx].numpy(), plt_ax)
 
     plt.tight_layout()
     for key, plt_ax in plts.items():

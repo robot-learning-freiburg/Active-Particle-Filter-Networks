@@ -479,8 +479,10 @@ def transform_raw_record(env, parsed_record, params):
         [batch_size] + list(parsed_record['state_shape'][0]))[:, :trajlen]
 
     # HACK: get floor and obstance map from environment instance for the scene
+    trans_record['org_map_shape'] = []
     trans_record['obstacle_map'] = []
     trans_record['floor_map'] = []
+    trans_record['init_particles'] = []
     for b_idx in range(batch_size):
         # iterate per batch_size
         if parsed_record['scene_id'].size > 0:
@@ -492,20 +494,25 @@ def transform_raw_record(env, parsed_record, params):
 
         obstacle_map = env.get_obstacle_map(scene_id, floor_num)
         floor_map = env.get_floor_map(scene_id, floor_num)
+        org_map_shape = obstacle_map.shape
+
+        # sample random particles using gt_pose at start of trajectory
+        gt_first_pose = np.expand_dims(trans_record['true_states'][b_idx, 0, :], axis=0)
+        init_particles = env.get_random_particles(num_particles, particles_distr,
+                                        gt_first_pose, floor_map, particles_cov)
 
         # HACK: center zero-pad floor/obstacle map
         obstacle_map = pad_images(obstacle_map, map_size)
         floor_map = pad_images(floor_map, map_size)
 
+        trans_record['org_map_shape'].append(org_map_shape)
+        trans_record['init_particles'].append(init_particles)
         trans_record['obstacle_map'].append(obstacle_map)
         trans_record['floor_map'].append(floor_map)
-    trans_record['obstacle_map'] = np.stack(trans_record['obstacle_map'])  # [batch_size, H, W, C]
-    trans_record['floor_map'] = np.stack(trans_record['floor_map'])  # [batch_size, H, W, C]
-
-    # sample random particles and corresponding weights
-    trans_record['init_particles'] = env.get_random_particles(num_particles, particles_distr,
-                                                              trans_record['true_states'][:, 0, :],
-                                                              trans_record['floor_map'][0], particles_cov)
+    trans_record['org_map_shape'] = np.stack(trans_record['org_map_shape'], axis=0)  # [batch_size, 3]
+    trans_record['obstacle_map'] = np.stack(trans_record['obstacle_map'], axis=0)  # [batch_size, H, W, C]
+    trans_record['floor_map'] = np.stack(trans_record['floor_map'], axis=0)  # [batch_size, H, W, C]
+    trans_record['init_particles'] = np.concatenate(trans_record['init_particles'], axis=0)   # [batch_size, N, 3]
 
     # sanity check
     assert list(trans_record['odometry'].shape) == [batch_size, trajlen, 3]
