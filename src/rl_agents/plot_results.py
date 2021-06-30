@@ -31,12 +31,12 @@ def read_events(summary_dir):
 def boxplot(metric, title, filename):
 
     summary_dirs = {
-        "gauss_500_less_noise_0.8": "./results/2021-06-13_22-00-00/rnd_agent/igibson_pfnet/gauss_500_0.15,0.5236_0.02,0.0873_0.8/log_dir/",
-        "gauss_500_no_noise_0.8": "./results/2021-06-13_22-00-00/rnd_agent/igibson_pfnet/gauss_500_0.30,0.5236_0.0,0.0_0.8/log_dir/",
-        "gauss_500_with_noise_0.8": "./results/2021-06-13_22-00-00/rnd_agent/igibson_pfnet/gauss_500_0.30,0.5236_0.04,0.0873_0.8/log_dir/",
-        "gauss_500_with_noise_1.0": "./results/2021-06-13_22-00-00/rnd_agent/igibson_pfnet/gauss_500_0.30,0.5236_0.04,0.0873_1.0/log_dir/",
-        "gauss_1500_with_noise_0.8": "./results/2021-06-13_22-00-00/rnd_agent/igibson_pfnet/gauss_1500_0.30,0.5236_0.04,0.0873_0.8/log_dir/",
-        "uniform_1500_with_noise_0.8": "./results/2021-06-13_22-00-00/rnd_agent/igibson_pfnet/uniform_1500_0.30,0.5236_0.04,0.0873_0.8/log_dir/",
+        "gauss_500_less_noise_0.8": "./results/2021-06-30_12-00-00/manual_agent/igibson_pfnet/gauss_500_0.15,0.5236_0.02,0.0873_0.8/log_dir/",
+        "gauss_500_no_noise_0.8": "./results/2021-06-30_12-00-00/manual_agent/igibson_pfnet/gauss_500_0.30,0.5236_0.0,0.0_0.8/log_dir/",
+        "gauss_500_with_noise_0.8": "./results/2021-06-30_12-00-00/manual_agent/igibson_pfnet/gauss_500_0.30,0.5236_0.04,0.0873_0.8/log_dir/",
+        "gauss_500_with_noise_1.0": "./results/2021-06-30_12-00-00/manual_agent/igibson_pfnet/gauss_500_0.30,0.5236_0.04,0.0873_1.0/log_dir/",
+        "gauss_1500_with_noise_0.8": "./results/2021-06-30_12-00-00/manual_agent/igibson_pfnet/gauss_1500_0.30,0.5236_0.04,0.0873_0.8/log_dir/",
+        "uniform_1500_with_noise_0.8": "./results/2021-06-30_12-00-00/manual_agent/igibson_pfnet/uniform_1500_0.30,0.5236_0.04,0.0873_0.8/log_dir/",
     }
     events_data = []
     for key, value in summary_dirs.items():
@@ -68,12 +68,12 @@ def boxplot(metric, title, filename):
 def barplot(title, filename):
 
     summary_details = {
-        "gauss_500_less_noise_0.8": 0.46,
-        "gauss_500_no_noise_0.8": 0.30,
-        "gauss_500_with_noise_0.8": 0.28,
-        "gauss_500_with_noise_1.0": 0.24,
-        "gauss_1500_with_noise_0.8": 0.40,
-        "uniform_1500_with_noise_0.8": 0.08,
+        "gauss_500_less_noise_0.8": 0.20,
+        "gauss_500_no_noise_0.8": 0.12,
+        "gauss_500_with_noise_0.8": 0.16,
+        "gauss_500_with_noise_1.0": 0.18,
+        "gauss_1500_with_noise_0.8": 0.30,
+        "uniform_1500_with_noise_0.8": 0.00,
     }
     fig = plt.figure(figsize =(18, 7))
 
@@ -94,5 +94,6 @@ def barplot(title, filename):
     plt.savefig(filename)
 
 if __name__ == '__main__':
-    # boxplot('eps_final_rmse', 'Random Agent Performance w.r.t Finetuned PFNet (Episode End RMSE)', 'rnd_agent_igibson_pfnet_eps_final_rmse.png')
-    barplot('Random Agent Performance w.r.t Finetuned PFNet (last %25 steps error < 1 meter)', 'rnd_agent_igibson_pfnet_eps_success_rate.png')
+    # boxplot('eps_mean_rmse', 'Manual Agent Performance w.r.t Finetuned PFNet (Episode Mean RMSE)', 'manual_agent_igibson_pfnet_eps_mean_rmse.png')
+    # boxplot('eps_final_rmse', 'Manual Agent Performance w.r.t Finetuned PFNet (Episode End RMSE)', 'manual_agent_igibson_pfnet_eps_final_rmse.png')
+    barplot('Manual Agent Performance w.r.t Finetuned PFNet (last %25 steps error < 1 meter)', 'manual_agent_igibson_pfnet_eps_success_rate.png')
