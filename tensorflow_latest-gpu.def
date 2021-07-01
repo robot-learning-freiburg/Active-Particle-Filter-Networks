@@ -12,7 +12,7 @@ AUTHOR Suresh Guttikonda
     # basic packages install
     apt-get update # && apt-get -y upgrade
     apt-get -y install \
-    wget cmake git python3-venv vim\
+    wget cmake git python3-venv python3-tk vim\
     mesa-common-dev libglu1-mesa-dev freeglut3-dev
 
     # cleanup

@@ -38,6 +38,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             device_idx=0,
             render_to_tensor=False,
             automatic_reset=False,
+            pf_params=None,
     ):
         """
         :param config_file: config_file path
@@ -48,6 +49,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         :param device_idx: which GPU to run the simulation and rendering on
         :param render_to_tensor: whether to render directly to pytorch tensors
         :param automatic_reset: whether to automatic reset after an episode finishes
+        :param pf_params: argparse.Namespace parsed command-line arguments to initialize pfnet
         """
 
         super(LocalizeGibsonEnv, self).__init__(
@@ -72,7 +74,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.use_pfnet = init_pfnet
         self.use_tf_function = use_tf_function
         if self.use_pfnet:
-            self.init_pfnet(flags.FLAGS)
+            self.init_pfnet(pf_params)
             task_obs_dim = 18 + 3 # robot_prorpio_state (18) + est_pose (3)
         else:
             task_obs_dim = 18 # robot_prorpio_state (18)
@@ -100,9 +102,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         print("=====> LocalizeGibsonEnv initialized")
 
-    def init_pfnet(self, FLAGS):
+    def init_pf_params(self, FLAGS):
         """
-        Initialize Particle Filter
+        Initialize Particle Filter parameters
         """
 
         assert 0.0 <= FLAGS.alpha_resample_ratio <= 1.0
@@ -115,12 +117,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.pf_params.resample = FLAGS.resample
         self.pf_params.alpha_resample_ratio = FLAGS.alpha_resample_ratio
         self.pf_params.transition_std = np.array(FLAGS.transition_std, dtype=np.float32)
-        self.pf_params.pfnet_load = FLAGS.pfnet_load
+        self.pf_params.pfnet_loadpath = FLAGS.pfnet_load
         self.pf_params.use_plot = FLAGS.use_plot
         self.pf_params.store_plot = FLAGS.store_plot
 
-        self.pf_params.batch_size = 1
-        self.pf_params.trajlen = 1
         self.pf_params.return_state = True
         self.pf_params.stateful = False
         self.pf_params.global_map_size = [1000, 1000, 1]
@@ -134,15 +134,29 @@ class LocalizeGibsonEnv(iGibsonEnv):
         particle_std2 = np.square(self.pf_params.init_particles_std.copy())  # variance
         self.pf_params.init_particles_cov = np.diag(particle_std2[(0, 0, 1),])
 
+    def init_pfnet(self, pf_params):
+        """
+        Initialize Particle Filter
+        """
+
+        if pf_params is not None:
+            self.pf_params = pf_params
+        else:
+            self.init_pf_params(flags.FLAGS)
+
+        # HACK:
+        self.pf_params.batch_size = 1
+        self.pf_params.trajlen = 1
+
         # Create a new pfnet model instance
         self.pfnet_model = pfnet.pfnet_model(self.pf_params)
         print(self.pf_params)
-        print("=====> pfnet initialized")
+        print("=====> LocalizeGibsonEnv's pfnet initialized")
 
         # load model from checkpoint file
-        if self.pf_params.pfnet_load:
-            self.pfnet_model.load_weights(self.pf_params.pfnet_load)
-            print("=====> loaded pf model checkpoint " + self.pf_params.pfnet_load)
+        if self.pf_params.pfnet_loadpath:
+            self.pfnet_model.load_weights(self.pf_params.pfnet_loadpath)
+            print("=====> loaded pf model checkpoint " + self.pf_params.pfnet_loadpath)
 
         if self.use_tf_function:
             print("=====> wrapped pfnet in tf.graph")
@@ -629,7 +643,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             # environment map
             floor_map = self.floor_map[0].numpy()
             map_plt = self.env_plts['map_plt']
-            map_plt = render.draw_floor_map(floor_map, self.plt_ax, map_plt)
+            map_plt = render.draw_floor_map(floor_map, floor_map.shape, self.plt_ax, map_plt)
             self.env_plts['map_plt'] = map_plt
 
             # ground truth robot pose and heading
@@ -721,8 +735,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
             for img in self.curr_plt_images:
                 out.write(img)
             out.release()
-            print(f'stored img results {len(self.curr_plt_images)} to {file_path}')
+            print(f'stored img results {len(self.curr_plt_images)} eps steps to {file_path}')
             self.curr_plt_images = []
+        else:
+            print('no plots available to store, check if env.render() is being called')
 
     def __del__(self):
         if len(self.curr_plt_images) > 0:

@@ -315,7 +315,8 @@ def pfnet_test(arg_params):
         init_pfnet=arg_params.init_env_pfnet,
         action_timestep=arg_params.action_timestep,
         physics_timestep=arg_params.physics_timestep,
-        device_idx=arg_params.device_idx
+        device_idx=arg_params.device_idx,
+        pf_params=arg_params
     )
     env.reset()
     arg_params.trajlen = env.config.get('max_step', 500)
@@ -413,6 +414,51 @@ def pfnet_test(arg_params):
     env.close()
 
 
+def rt_pfnet_test(arg_params):
+    """
+    A simple test for particle filter network real-time for igibson
+
+    :param arg_params:
+        parsed command-line arguments
+    :return:
+    """
+
+    agent = 'manual'
+    trajlen = 250
+    arg_params.use_plot = True
+    arg_params.store_plot = False
+
+    # create igibson env which is used "only" to sample particles
+    env = LocalizeGibsonEnv(
+        config_file=arg_params.config_file,
+        scene_id=arg_params.scene_id,
+        mode=arg_params.env_mode,
+        use_tf_function=arg_params.use_tf_function,
+        init_pfnet=True,
+        action_timestep=arg_params.action_timestep,
+        physics_timestep=arg_params.physics_timestep,
+        device_idx=arg_params.device_idx,
+        pf_params=arg_params
+    )
+    env.reset()
+    env.render('human')
+
+    for _ in range(trajlen-1):
+        if agent == 'manual':
+            action = datautils.get_discrete_action()
+        else:
+            # default random action forward: 0.7, turn: 0.3, backward:0., do_nothing:0.0
+            action = np.random.choice(5, p=[0.7, 0.0, 0.15, 0.15, 0.0])
+            # action = env.action_space.sample()
+
+        # take action and get new observation
+        obs, reward, done, _ = env.step(action)
+        env.render('human')
+
+    env.close()
+
 if __name__ == '__main__':
     parsed_params = parse_args()
     pfnet_test(parsed_params)
+    
+    #rt_pfnet_test(parsed_params)
