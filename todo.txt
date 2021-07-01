@@ -178,3 +178,10 @@ $ nohup python -u display_pfnet_data.py \
 --config_file=./configs/turtlebot_pfnet_nav.yaml \
 --device_idx=0 \
 --seed=42 > nohup.out &
+
+June 30th 2021
+--------------
+1. interactively check trained pfnet performance in real-time
+2. check for over-fitting for train data
+3. k-means representation of particles for rl agent training
+4. reproduce pfnet paper results for RGB-D then proceed to igibson
