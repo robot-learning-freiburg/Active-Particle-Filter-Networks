@@ -283,7 +283,7 @@ if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
     params = argparser.parse_args()
 
-    filenames = list(glob.glob('/media/neo/robotics/deep-activate-localization/src/rl_agents/house3d_data/eval/valid.tfrecords'))
+    filenames = list(glob.glob('./house3d_data/eval/valid.tfrecords'))
     params.filenames = filenames
     params.batch_size = 8
     params.epochs = 1
@@ -311,13 +311,16 @@ if __name__ == '__main__':
                 trans_record['global_map'].shape,
                 trans_record['init_particles'].shape,
                 )
+
+            b_idx = 5
             rgb_depth = trans_record['observation']
-            rgb, depth = np.split(rgb_depth[-1], [3], axis=-1)
+            rgb, depth = np.split(rgb_depth[b_idx], [3], axis=-1)
             print(rgb.shape, depth.shape)
 
+            t_idx = 13
             rgb = denormalize_observation(rgb)
             depth = denormalize_observation(depth)
-            cv2.imwrite('rgb_after.png', rgb[-1])
-            cv2.imwrite('depth_after.png', depth[-1])
+            cv2.imwrite('rgb_after.png', rgb[t_idx])
+            cv2.imwrite('depth_after.png', depth[t_idx])
 
             break
