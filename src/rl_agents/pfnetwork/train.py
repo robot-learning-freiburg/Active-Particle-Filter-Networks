@@ -9,12 +9,6 @@ from tensorflow import keras
 from datetime import datetime
 import preprocess, arguments, pfnet_loss
 
-def train_dataset_size():
-    return 800
-
-def eval_dataset_size():
-    return 800
-
 def run_training(params):
     """
     run training with the parsed arguments
@@ -27,8 +21,8 @@ def run_training(params):
     batch_size = params.batch_size
     num_particles = params.num_particles
     trajlen = params.trajlen
-    num_train_batches = train_dataset_size() // batch_size
-    num_eval_batches = eval_dataset_size() // batch_size
+    num_train_batches = params.num_train_samples // batch_size
+    num_eval_batches = params.num_eval_samples // batch_size
 
     # training data
     train_ds = preprocess.get_dataflow(params.trainfiles, params.batch_size, params.s_buffer_size, is_training=True)
@@ -57,6 +51,45 @@ def run_training(params):
         train_dir, flush_millis=summaries_flush_secs * 1000)
     eval_summary_writer = tf.compat.v2.summary.create_file_writer(
         eval_dir, flush_millis=summaries_flush_secs * 1000)
+    print(params)
+
+    # Recommended: wrap to tf.graph for better performance
+    @tf.function
+    def train_step(model_input, true_states):
+        """ Run one training step """
+
+        # enable auto-differentiation
+        with tf.GradientTape() as tape:
+            # forward pass
+            output, state = model(model_input, training=True)
+
+            # compute loss
+            particle_states, particle_weights = output
+            loss_dict = pfnet_loss.compute_loss(particle_states, particle_weights, true_states, params.map_pixel_in_meters)
+            loss_pred = loss_dict['pred']
+
+        # compute gradients of the trainable variables with respect to the loss
+        gradients = tape.gradient(loss_pred, model.trainable_weights)
+        gradients = list(zip(gradients, model.trainable_weights))
+
+        # run one step of gradient descent
+        optimizer.apply_gradients(gradients)
+        train_loss(loss_pred)  # overall trajectory loss
+
+    # Recommended: wrap to tf.graph for better performance
+    @tf.function
+    def eval_step(model_input, true_states):
+        """ Run one evaluation step """
+        # forward pass
+        output, state = model(model_input, training=False)
+
+        # compute loss
+        particle_states, particle_weights = output
+        loss_dict = pfnet_loss.compute_loss(particle_states, particle_weights, true_states, params.map_pixel_in_meters)
+        loss_pred = loss_dict['pred']
+
+        eval_loss(loss_pred)  # overall trajectory loss
+
 
     # repeat for a fixed number of epochs
     for epoch in range(params.epochs):
@@ -86,23 +119,7 @@ def run_training(params):
             input = [observation, odometry]
             model_input = (input, state)
 
-            # enable auto-differentiation
-            with tf.GradientTape() as tape:
-                # forward pass
-                output, state = model(model_input, training=True)
-
-                # compute loss
-                particle_states, particle_weights = output
-                loss_dict = pfnet_loss.compute_loss(particle_states, particle_weights, true_states, params.map_pixel_in_meters)
-                loss_pred = loss_dict['pred']
-
-            # compute gradients of the trainable variables with respect to the loss
-            gradients = tape.gradient(loss_pred, model.trainable_weights)
-            gradients = list(zip(gradients, model.trainable_weights))
-
-            # run one step of gradient descent
-            optimizer.apply_gradients(gradients)
-            train_loss(loss_pred)  # overall trajectory loss
+            train_step(model_input, true_states)
 
         # log epoch training stats
         with train_summary_writer.as_default():
@@ -144,21 +161,14 @@ def run_training(params):
                 input = [observation, odometry]
                 model_input = (input, state)
 
-                # forward pass
-                output, state = model(model_input, training=False)
-
-                # compute loss
-                particle_states, particle_weights = output
-                loss_dict = pfnet_loss.compute_loss(particle_states, particle_weights, true_states, params.map_pixel_in_meters)
-                loss_pred = loss_dict['pred']
-
-                eval_loss(loss_pred)  # overall trajectory loss
+                eval_step(model_input, true_states)
 
             # log epoch evaluation stats
             with eval_summary_writer.as_default():
                 tf.summary.scalar('loss', eval_loss.result(), step=epoch)
 
             # Save the weights
+            print("=====> saving evaluation model ")
             model.save_weights(
                 os.path.join(
                     eval_dir,
@@ -178,7 +188,7 @@ if __name__ == '__main__':
     params = arguments.parse_args()
 
     current_time = datetime.now().strftime("%Y%m%d-%H%M%S")
-    params.root_dir = f'run_{current_time}'
+    params.root_dir = os.path.join(params.logpath, f'run_{current_time}')
 
     params.run_evaluation = True
     params.s_buffer_size = 500
