@@ -50,13 +50,13 @@ def parse_args():
     params.transition_std = np.array(params.transition_std, np.float32)
     params.init_particles_std = np.array(params.init_particles_std, np.float32)
 
+    params.transition_std[0] = params.transition_std[0] / params.map_pixel_in_meters  # convert meters to pixels
+    params.init_particles_std[0] = params.init_particles_std[0] / params.map_pixel_in_meters  # convert meters to pixels
+
     # build initial covariance matrix of particles, in pixels and radians
     particle_std = params.init_particles_std.copy()
-    particle_std[0] = particle_std[0] / params.map_pixel_in_meters  # convert meters to pixels
     particle_std2 = np.square(particle_std)  # variance
-    params.init_particles_cov = np.diag(particle_std2[(0, 0, 1),])
-
-    params.transition_std = np.array(params.transition_std[0] / params.map_pixel_in_meters, params.transition_std[1])   # in pixels & radians
+    params.init_particles_cov = np.diag(particle_std2[(0, 0, 1), ])
 
     # fix seed
     np.random.seed(params.seed)

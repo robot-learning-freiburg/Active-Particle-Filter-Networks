@@ -4,8 +4,12 @@ import argparse
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
-from .architecture import networks
-from .architecture.spatial_transformer import transformer
+try:
+    from .architecture import networks
+    from .architecture.spatial_transformer import transformer
+except:
+    from architecture import networks
+    from architecture.spatial_transformer import transformer
 
 class PFCell(keras.layers.AbstractRNNCell):
     """
