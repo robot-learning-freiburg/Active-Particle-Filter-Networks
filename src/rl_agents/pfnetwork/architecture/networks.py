@@ -51,9 +51,9 @@ def dense_layer(units, activation=None, use_bias=True):
     return result
 
 ##### custom fuctions for constructing models ####
-def map_encoder():
+def map_encoder(map_shape=[28, 28, 1]):
 
-    local_maps = keras.Input(shape=[28, 28, 1], name="local_maps")   # (bs*np, 28, 28, 1)
+    local_maps = keras.Input(shape=map_shape, name="local_maps")   # (bs*np, 28, 28, 1)
     assert local_maps.get_shape().as_list()[1:3] == [28, 28]
     x = local_maps
 
@@ -85,9 +85,9 @@ def map_encoder():
 
     return keras.Model(inputs=local_maps, outputs=x, name="map_encoder")
 
-def obs_encoder():
+def obs_encoder(obs_shape=[56, 56, 3]):
 
-    observations = keras.Input(shape=[56, 56, 3], name="observations")   # (bs, 56, 56, 3)
+    observations = keras.Input(shape=obs_shape, name="observations")   # (bs, 56, 56, 3)
     assert observations.get_shape().as_list()[1:3] == [56, 56]
     x = observations
 

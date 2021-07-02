@@ -22,6 +22,7 @@ def parse_args():
     argparser.add_argument('--testfiles', nargs='*', default=['./house3d_data/eval/valid.tfrecords'], help='Data file(s) for testing (tfrecord).')
 
     # input configuration
+    argparser.add_argument('--obsmode', type=str, default='rgb-depth', help='Observation input type. Possible values: rgb / depth / rgb-depth.')
     argparser.add_argument('--map_pixel_in_meters', type=float, default=0.02, help='The width (and height) of a pixel of the map in meters. Defaults to 0.02 for House3D data.')
 
     argparser.add_argument('--init_particles_distr', type=str, default='tracking', help='Distribution of initial particles. Possible values: tracking / one-room.')
@@ -45,6 +46,14 @@ def parse_args():
     argparser.add_argument('--gpu_num', type=int, default='0', help='use gpu no. to train')
 
     params = argparser.parse_args()
+
+    # compute observation channel dim
+    if params.obsmode == 'rgb-depth':
+        params.obs_ch = 4
+    elif params.obsmode == 'depth':
+        params.obs_ch = 1
+    else:
+        params.obs_ch = 3
 
     # convert multi-input fileds to numpy arrays
     params.transition_std = np.array(params.transition_std, np.float32)

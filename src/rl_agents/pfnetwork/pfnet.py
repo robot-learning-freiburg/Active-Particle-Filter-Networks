@@ -32,8 +32,8 @@ class PFCell(keras.layers.AbstractRNNCell):
         super(PFCell, self).__init__(**kwargs)
 
         # models
-        self.obs_model = networks.obs_encoder()
-        self.map_model = networks.map_encoder()
+        self.obs_model = networks.obs_encoder(obs_shape=[56, 56, params.obs_ch])
+        self.map_model = networks.map_encoder(map_shape=[28, 28, 1])
         self.joint_matrix_model = networks.map_obs_encoder()
         self.joint_vector_model = networks.likelihood_estimator()
 
@@ -314,7 +314,12 @@ def pfnet_model(params):
     num_particles = params.num_particles
     global_map_size = params.global_map_size
     trajlen = params.trajlen
-    observation = keras.Input(shape=[trajlen, 56, 56, 3], batch_size=batch_size)   # (bs, T, 56, 56, 3)
+    if hasattr(params, 'obs_ch'):
+        obs_ch = params.obs_ch
+    else:
+        obs_ch = params.obs_ch = 3
+
+    observation = keras.Input(shape=[trajlen, 56, 56, obs_ch], batch_size=batch_size)   # (bs, T, 56, 56, C)
     odometry = keras.Input(shape=[trajlen, 3], batch_size=batch_size)    # (bs, T, 3)
 
     global_map = keras.Input(shape=global_map_size, batch_size=batch_size)   # (bs, H, W, 1)

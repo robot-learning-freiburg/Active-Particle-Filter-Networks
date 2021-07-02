@@ -136,6 +136,7 @@ def transform_raw_record(raw_record, params):
     init_particles_cov = params.init_particles_cov
     init_particles_distr = params.init_particles_distr
     global_map_size = params.global_map_size
+    obsmode = params.obsmode
 
     # process true states
     states = []
@@ -170,8 +171,14 @@ def transform_raw_record(raw_record, params):
         depth = raw_images_to_array(depth_img[:trajlen])
         # rgbs.append([rgb[i:i+bptt_steps] for i in seq_indices])
         depths.append(depth)
-    # trans_record['observation'] = np.stack(rgbs)    # (batch_size, trajlen, 56, 56, 3)
-    trans_record['observation'] = np.concatenate((np.stack(rgbs), np.stack(depths)), axis=-1)   # (batch_size, trajlen, 56, 56, 4)
+
+    assert obsmode in ['rgb', 'depth', 'rgb-depth']
+    if obsmode == 'rgb-depth':
+        trans_record['observation'] = np.concatenate((np.stack(rgbs), np.stack(depths)), axis=-1)   # (batch_size, trajlen, 56, 56, 4)
+    elif obsmode == 'depth':
+        trans_record['observation'] = np.stack(depths)   # (batch_size, trajlen, 56, 56, 1)
+    else:
+        trans_record['observation'] = np.stack(rgbs)    # (batch_size, trajlen, 56, 56, 3)
 
     # process map room id
     map_roomids = []
