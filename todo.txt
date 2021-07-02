@@ -185,3 +185,26 @@ June 30th 2021
 2. check for over-fitting for train data
 3. k-means representation of particles for rl agent training
 4. reproduce pfnet paper results for RGB-D then proceed to igibson
+
+
+valid.tfrecords: 830 records
+test.tfrecords: 820 records
+train.tfrecords: 74800 records
+
+$ nohup python -u train.py \
+--trainfiles './house3d_data/eval/valid.tfrecords' \
+--evalfiles './house3d_data/eval/valid.tfrecords' \
+--num_train_samples=816 \
+--num_eval_samples=816 \
+--obsmode='rgb-depth' \
+--init_particles_distr='tracking' \
+--init_particles_std '0.3' '0.523599' \
+--trajlen=24 \
+--num_particles=30 \
+--transition_std '0.' '0.' \
+--resample=false \
+--batch_size=6 \
+--learningrate=1e-4 \
+--epochs=20 \
+--gpu_num=0 \
+--seed=42 > nohup2.out &
