@@ -61,6 +61,7 @@ python supervised_data.py \
 $ nohup python -u test_pfnet.py \
 --root_dir=./random/igibson_pfnet/run1 \
 --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_87_5.830/pfnet_checkpoint \
+--obs_mode='rgb-depth' \
 --num_eval_batches=50 \
 --testfiles=./plots_data/random/*.tfrecord \
 --batch_size=4 \
@@ -88,6 +89,7 @@ $ nohup python -u supervised_data.py \
 --scene_id='Rs' \
 --agent='random' \
 --num_records=500 \
+--obs_mode='rgb-depth' \
 --config_file=./configs/turtlebot_pfnet_nav.yaml \
 --env_mode='headless' \
 --gpu_num=0 \
@@ -99,6 +101,7 @@ $ nohup python -u train_pfnet.py \
 --root_dir=./run1 \
 --tfrecordpath=./pfnet_data \
 --epochs=20 \
+--obs_mode='rgb-depth' \
 --num_train_samples=37500 \
 --num_eval_samples=2500 \
 --batch_size=6 \
@@ -164,6 +167,7 @@ June 23rd 2021
 $ nohup python -u display_pfnet_data.py \
 --root_dir=./run1 \
 --tfrecordpath=./pfnet_data \
+--obs_mode='rgb-depth' \
 --num_train_samples=500 \
 --batch_size=1 \
 --s_buffer_size=50 \
@@ -196,7 +200,7 @@ $ nohup python -u train.py \
 --evalfiles './house3d_data/eval/valid.tfrecords' \
 --num_train_samples=816 \
 --num_eval_samples=816 \
---obsmode='rgb-depth' \
+--obs_mode='rgb-depth' \
 --init_particles_distr='tracking' \
 --init_particles_std '0.3' '0.523599' \
 --trajlen=24 \

@@ -28,6 +28,12 @@ def parse_args():
 
     # define training parameters
     arg_parser.add_argument(
+        '--obs_mode',
+        type=str,
+        default='rgb-depth',
+        help='Observation input type. Possible values: rgb / depth / rgb-depth.'
+    )
+    arg_parser.add_argument(
         '--root_dir',
         type=str,
         default='./train_output',
@@ -182,6 +188,14 @@ def parse_args():
     # use RNN as stateful/non-stateful
     params.stateful = False
     params.return_state = True
+
+    # compute observation channel dim
+    if params.obs_mode == 'rgb-depth':
+        params.obs_ch = 4
+    elif params.obs_mode == 'depth':
+        params.obs_ch = 1
+    else:
+        params.obs_ch = 3
 
     # HACK:
     params.use_tf_function = False

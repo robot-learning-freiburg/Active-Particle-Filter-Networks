@@ -27,6 +27,12 @@ def parse_args():
 
     # define training parameters
     arg_parser.add_argument(
+        '--obs_mode',
+        type=str,
+        default='rgb-depth',
+        help='Observation input type. Possible values: rgb / depth / rgb-depth.'
+    )
+    arg_parser.add_argument(
         '--root_dir',
         type=str,
         default='./train_output',
@@ -193,6 +199,14 @@ def parse_args():
     # post-processing
     params.num_train_batches = params.num_train_samples//params.batch_size
     params.num_eval_batches = params.num_eval_samples//params.batch_size
+
+    # compute observation channel dim
+    if params.obs_mode == 'rgb-depth':
+        params.obs_ch = 4
+    elif params.obs_mode == 'depth':
+        params.obs_ch = 1
+    else:
+        params.obs_ch = 3
 
     # convert multi-input fields to numpy arrays
     params.transition_std = np.array(params.transition_std, np.float32)

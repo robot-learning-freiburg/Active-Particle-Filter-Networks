@@ -29,6 +29,12 @@ def parse_args():
 
     # define testing parameters
     arg_parser.add_argument(
+        '--obs_mode',
+        type=str,
+        default='rgb-depth',
+        help='Observation input type. Possible values: rgb / depth / rgb-depth.'
+    )
+    arg_parser.add_argument(
         '--root_dir',
         type=str,
         default='./test_output',
@@ -163,6 +169,14 @@ def parse_args():
     params.map_pixel_in_meters = 0.01
 
     # post-processing
+
+    # compute observation channel dim
+    if params.obs_mode == 'rgb-depth':
+        params.obs_ch = 4
+    elif params.obs_mode == 'depth':
+        params.obs_ch = 1
+    else:
+        params.obs_ch = 3
 
     # convert multi-input fields to numpy arrays
     params.transition_std = np.array(params.transition_std, np.float32)
@@ -460,5 +474,5 @@ def rt_pfnet_test(arg_params):
 if __name__ == '__main__':
     parsed_params = parse_args()
     pfnet_test(parsed_params)
-    
+
     #rt_pfnet_test(parsed_params)
