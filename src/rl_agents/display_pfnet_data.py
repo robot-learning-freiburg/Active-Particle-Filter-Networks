@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import cv2
 import glob
 import matplotlib.pyplot as plt
 import numpy as np
@@ -234,18 +235,11 @@ def draw_floor_map(floor_map, map_shape, plt_ax, map_plt):
 
 def draw_robot_pose(true_states, plt_ax):
 
-    heading_len  = robot_radius = 10.0
-    heading_plt = None
-    for idx in range(true_states.shape[0]):
-        x, y, heading = true_states[idx]
-
-        xdata = [x, x + (robot_radius + heading_len) * np.cos(heading)]
-        ydata = [y, y + (robot_radius + heading_len) * np.sin(heading)]
-        if heading_plt == None:
-            heading_plt, = plt_ax.plot(xdata, ydata, color='blue', alpha=0.5)
-            heading_plt = None
-        else:
-            heading_plt.update({'xdata': xdata, 'ydata': ydata})
+    x1, y1, heading = true_states[0]
+    for t_idx in range(1, true_states.shape[0]):
+        x2, y2, _ = true_states[t_idx]
+        plt_ax.arrow(x1, y1, (x2-x1), (y2-y1), head_width=5, head_length=7, fc='blue', ec='blue')
+        x1, y1 = x2, y2
 
 def display_data(arg_params):
     """
@@ -275,6 +269,7 @@ def display_data(arg_params):
     arg_params.floors = 2
 
     b_idx = 0
+    t_idx = 5
     fig = plt.figure(figsize=(14, 14))
     plts = {}
     for idx in range(arg_params.floors):
@@ -287,20 +282,29 @@ def display_data(arg_params):
         parsed_record = next(train_itr)
         batch_sample = datautils.transform_raw_record(env, parsed_record, arg_params)
 
-        observation = tf.convert_to_tensor(batch_sample['observation'], dtype=tf.float32)
-        odometry = tf.convert_to_tensor(batch_sample['odometry'], dtype=tf.float32)
-        true_states = tf.convert_to_tensor(batch_sample['true_states'], dtype=tf.float32)
-        obstacle_map = tf.convert_to_tensor(batch_sample['obstacle_map'], dtype=tf.float32)
+        observation = batch_sample['observation']
+        odometry = batch_sample['odometry']
+        true_states = batch_sample['true_states']
+        obstacle_map = batch_sample['obstacle_map']
         org_map_shape = batch_sample['org_map_shape']
+
+        if arg_params.obs_mode == 'rgb-depth':
+            rgb, depth = np.split(observation[b_idx], [3], axis=-1)
+            cv2.imwrite('./rgb.png', datautils.denormalize_observation(rgb)[t_idx])
+            cv2.imwrite('./depth.png', datautils.denormalize_observation(depth[t_idx]))
+        elif arg_params.obs_mode == 'depth':
+            cv2.imwrite('./depth.png', datautils.denormalize_observation(observation[b_idx][t_idx]))
+        else:
+            cv2.imwrite('./rgb.png', datautils.denormalize_observation(observation[b_idx][t_idx]))
 
         scene_id = parsed_record['scene_id'][b_idx][0].decode('utf-8')
         floor_num = parsed_record['floor_num'][b_idx][0]
         key = scene_id + '_' + str(floor_num)
         plt_ax = plts[floor_num]
 
-        map_plt = draw_floor_map(obstacle_map[b_idx].numpy(), org_map_shape[b_idx], plt_ax, None)
+        map_plt = draw_floor_map(obstacle_map[b_idx], org_map_shape[b_idx], plt_ax, None)
 
-        draw_robot_pose(true_states[b_idx].numpy(), plt_ax)
+        draw_robot_pose(true_states[b_idx], plt_ax)
 
     plt.tight_layout()
     for key, plt_ax in plts.items():

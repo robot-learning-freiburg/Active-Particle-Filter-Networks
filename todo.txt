@@ -96,7 +96,10 @@ $ nohup python -u supervised_data.py \
 --init_env_pfnet=False \
 --seed=90 > nohup.out &
 
-
+0: --seed=136
+1: --seed=489
+2: --seed=1728
+3: --seed=910
 $ nohup python -u train_pfnet.py \
 --root_dir=./run1 \
 --tfrecordpath=./pfnet_data \
