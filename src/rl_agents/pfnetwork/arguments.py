@@ -25,7 +25,7 @@ def parse_args():
     argparser.add_argument('--num_eval_samples', type=int, default=80, help='Total number of samples to use for evaluation. Total evaluation samples will be num_eval_samples=num_eval_batches*batch_size')
 
     # input configuration
-    argparser.add_argument('--obsmode', type=str, default='rgb-depth', help='Observation input type. Possible values: rgb / depth / rgb-depth.')
+    argparser.add_argument('--obs_mode', type=str, default='rgb-depth', help='Observation input type. Possible values: rgb / depth / rgb-depth.')
     argparser.add_argument('--map_pixel_in_meters', type=float, default=0.02, help='The width (and height) of a pixel of the map in meters. Defaults to 0.02 for House3D data.')
 
     argparser.add_argument('--init_particles_distr', type=str, default='tracking', help='Distribution of initial particles. Possible values: tracking / one-room.')
@@ -51,9 +51,9 @@ def parse_args():
     params = argparser.parse_args()
 
     # compute observation channel dim
-    if params.obsmode == 'rgb-depth':
+    if params.obs_mode == 'rgb-depth':
         params.obs_ch = 4
-    elif params.obsmode == 'depth':
+    elif params.obs_mode == 'depth':
         params.obs_ch = 1
     else:
         params.obs_ch = 3

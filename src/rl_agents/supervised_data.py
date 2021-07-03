@@ -55,6 +55,11 @@ flags.DEFINE_string(
     default='headless',
     help='Environment render mode'
 )
+flags.DEFINE_string(
+    name='obs_mode',
+    default='rgb-depth',
+    help='Observation input type. Possible values: rgb / depth / rgb-depth.'
+)
 flags.DEFINE_float(
     name='action_timestep',
     default=1.0 / 10.0,
@@ -116,6 +121,12 @@ def collect_data(env, params, filename='./test.tfrecord', num_records=10):
 
     print(f'Collected successfully in {filename}')
 
+    # sanity check
+    ds = datautils.get_dataflow([filename], batch_size=1, s_buffer_size=100, is_training=False)
+    data_itr = ds.as_numpy_iterator()
+    for idx in range(num_records):
+        parsed_record = next(data_itr)
+        batch_sample = datautils.transform_raw_record(env, parsed_record, params)
 
 def main(_):
     logging.set_verbosity(logging.INFO)
@@ -159,7 +170,22 @@ def main(_):
 
     params.agent = FLAGS.agent
     params.trajlen = FLAGS.max_step
-    params.global_map_size = [1000, 1000, 1]
+    params.global_map_size = np.array([4000, 4000, 1])
+    params.obs_mode = FLAGS.obs_mode
+    params.batch_size = 1
+    params.num_particles = 10
+    params.init_particles_distr = 'gaussian'
+    particle_std = np.array([0.3, 0.523599])
+    particle_std2 = np.square(particle_std)  # variance
+    params.init_particles_cov = np.diag(particle_std2[(0, 0, 1), ])
+
+    # compute observation channel dim
+    if params.obs_mode == 'rgb-depth':
+        params.obs_ch = 4
+    elif params.obs_mode == 'depth':
+        params.obs_ch = 1
+    else:
+        params.obs_ch = 3
 
     collect_data(env, params, FLAGS.filename, FLAGS.num_records)
 

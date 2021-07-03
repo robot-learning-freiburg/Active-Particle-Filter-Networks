@@ -120,11 +120,11 @@ def normalize_observation(x):
 def denormalize_observation(x):
     """
     Denormalize observation input to store efficiently
-    :param x: observation input (56, 56, ch)
-    :return np.ndarray: denormalized observation (56, 56, ch)
+    :param x: observation input (B, 56, 56, ch)
+    :return np.ndarray: denormalized observation (B, 56, 56, ch)
     """
     # resale to [0, 255]
-    if x.ndim == 2 or x.shape[2] == 1:  # depth
+    if x.ndim == 2 or x.shape[-1] == 1:  # depth
         x = (x + 1.0) * (100.0 / 2.0)
     else:  # rgb
         x = (x + 1.0) * (255.0 / 2.0)
@@ -215,10 +215,12 @@ def gather_episode_stats(env, params, sample_particles=False):
 
     odometry = []
     true_poses = []
-    observation = []
+    rgb_observation = []
+    depth_observation = []
 
     obs = env.reset()  # already processed
-    observation.append(obs)
+    rgb_observation.append(obs[0])
+    depth_observation.append(obs[1])
 
     scene_id = env.config.get('scene_id')
     floor_num = env.task.floor_num
@@ -240,8 +242,10 @@ def gather_episode_stats(env, params, sample_particles=False):
 
         # take action and get new observation
         obs, reward, done, _ = env.step(action)
-        assert list(obs.shape) == [56, 56, 3]
-        observation.append(obs)
+        assert list(obs[0].shape) == [56, 56, 3]
+        assert list(obs[1].shape) == [56, 56, 1]
+        rgb_observation.append(obs[0])
+        depth_observation.append(obs[1])
 
         # get new robot state after taking action
         new_pose = env.get_robot_pose(env.robots[0].calc_state(), floor_map.shape)
@@ -280,7 +284,8 @@ def gather_episode_stats(env, params, sample_particles=False):
         'obstacle_map': obstacle_map,  # (height, width, 1)
         'odometry': np.stack(odometry),  # (trajlen, 3)
         'true_states': np.stack(true_poses),  # (trajlen, 3)
-        'observation': np.stack(observation),  # (trajlen, height, width, 3)
+        'rgb_observation': np.stack(rgb_observation),  # (trajlen, height, width, 3)
+        'depth_observation': np.stack(depth_observation),  # (trajlen, height, width, 1)
         'init_particles': init_particles,  # (num_particles, 3)
         'init_particle_weights': init_particle_weights,  # (num_particles,)
     }
@@ -348,8 +353,9 @@ def serialize_tf_record(episode_data):
     :param dict episode_data: episode data
     :return tf.train.Example: serialized tf record
     """
-    # HACK: rescale to [0, 255]
-    observation = denormalize_observation(episode_data['observation'])
+    # HACK: rescale to [0, 255] and [0, 100]
+    rgb_observation = denormalize_observation(episode_data['rgb_observation'])
+    depth_observation = denormalize_observation(episode_data['depth_observation'])
     states = episode_data['true_states']
     odometry = episode_data['odometry']
     scene_id = episode_data['scene_id']
@@ -364,8 +370,10 @@ def serialize_tf_record(episode_data):
         'state_shape': tf.train.Feature(int64_list=tf.train.Int64List(value=states.shape)),
         'odometry': tf.train.Feature(float_list=tf.train.FloatList(value=odometry.flatten())),
         'odometry_shape': tf.train.Feature(int64_list=tf.train.Int64List(value=odometry.shape)),
-        'observation': tf.train.Feature(int64_list=tf.train.Int64List(value=observation.flatten())),
-        'observation_shape': tf.train.Feature(int64_list=tf.train.Int64List(value=observation.shape)),
+        'rgb_observation': tf.train.Feature(int64_list=tf.train.Int64List(value=rgb_observation.flatten())),
+        'rgb_observation_shape': tf.train.Feature(int64_list=tf.train.Int64List(value=rgb_observation.shape)),
+        'depth_observation': tf.train.Feature(int64_list=tf.train.Int64List(value=depth_observation.flatten())),
+        'depth_observation_shape': tf.train.Feature(int64_list=tf.train.Int64List(value=depth_observation.shape)),
         'scene_id': tf.train.Feature(bytes_list=tf.train.BytesList(value=[scene_id.encode('utf-8')])),
         'floor_num': tf.train.Feature(int64_list=tf.train.Int64List(value=[floor_num])),
         # 'floor_map': tf.train.Feature(float_list=tf.train.FloatList(value=floor_map.flatten())),
@@ -392,8 +400,10 @@ def deserialize_tf_record(raw_record):
         'state_shape': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
         'odometry': tf.io.FixedLenSequenceFeature((), dtype=tf.float32, allow_missing=True),
         'odometry_shape': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
-        'observation': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
-        'observation_shape': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
+        'rgb_observation': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
+        'rgb_observation_shape': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
+        'depth_observation': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
+        'depth_observation_shape': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
         'scene_id': tf.io.FixedLenSequenceFeature((), dtype=tf.string, allow_missing=True),
         'floor_num': tf.io.FixedLenSequenceFeature((), dtype=tf.int64, allow_missing=True),
         # 'floor_map': tf.io.FixedLenSequenceFeature((), dtype=tf.float32, allow_missing=True),
@@ -460,18 +470,38 @@ def transform_raw_record(env, parsed_record, params):
     """
     trans_record = {}
 
+    obs_ch = params.obs_ch
+    obs_mode = params.obs_mode
     trajlen = params.trajlen
     batch_size = params.batch_size
-    map_size = params.global_map_size
+    pad_map_size = params.global_map_size
     num_particles = params.num_particles
     particles_cov = params.init_particles_cov
     particles_distr = params.init_particles_distr
 
     # Required rescale to [-1, 1]
-    observation = parsed_record['observation'].reshape(
-        [batch_size] + list(parsed_record['observation_shape'][0]))[:, :trajlen]
-    assert np.min(observation)>=0. and np.max(observation)<=255.
-    trans_record['observation'] = normalize_observation(observation.astype(np.float32))
+    assert obs_mode in ['rgb', 'depth', 'rgb-depth']
+    if obs_mode == 'rgb-depth':
+        rgb_observation = parsed_record['rgb_observation'].reshape(
+            [batch_size] + list(parsed_record['rgb_observation_shape'][0]))[:, :trajlen]
+        assert np.min(rgb_observation)>=0. and np.max(rgb_observation)<=255.
+        depth_observation = parsed_record['depth_observation'].reshape(
+            [batch_size] + list(parsed_record['depth_observation_shape'][0]))[:, :trajlen]
+        assert np.min(depth_observation)>=0. and np.max(depth_observation)<=100.
+        trans_record['observation'] = np.concatenate([
+            normalize_observation(rgb_observation.astype(np.float32)),
+            normalize_observation(depth_observation.astype(np.float32)),
+        ], axis=-1)
+    elif obs_mode == 'depth':
+        depth_observation = parsed_record['depth_observation'].reshape(
+            [batch_size] + list(parsed_record['depth_observation_shape'][0]))[:, :trajlen]
+        assert np.min(depth_observation)>=0. and np.max(depth_observation)<=100.
+        trans_record['observation'] = normalize_observation(depth_observation.astype(np.float32))
+    else:
+        rgb_observation = parsed_record['rgb_observation'].reshape(
+            [batch_size] + list(parsed_record['rgb_observation_shape'][0]))[:, :trajlen]
+        assert np.min(rgb_observation)>=0. and np.max(rgb_observation)<=255.
+        trans_record['observation'] = normalize_observation(rgb_observation.astype(np.float32))
 
     trans_record['odometry'] = parsed_record['odometry'].reshape(
         [batch_size] + list(parsed_record['odometry_shape'][0]))[:, :trajlen]
@@ -502,8 +532,8 @@ def transform_raw_record(env, parsed_record, params):
                                         gt_first_pose, floor_map, particles_cov)
 
         # HACK: center zero-pad floor/obstacle map
-        obstacle_map = pad_images(obstacle_map, map_size)
-        floor_map = pad_images(floor_map, map_size)
+        obstacle_map = pad_images(obstacle_map, pad_map_size)
+        floor_map = pad_images(floor_map, pad_map_size)
 
         trans_record['org_map_shape'].append(org_map_shape)
         trans_record['init_particles'].append(init_particles)
@@ -517,9 +547,9 @@ def transform_raw_record(env, parsed_record, params):
     # sanity check
     assert list(trans_record['odometry'].shape) == [batch_size, trajlen, 3]
     assert list(trans_record['true_states'].shape) == [batch_size, trajlen, 3]
-    assert list(trans_record['observation'].shape) == [batch_size, trajlen, 56, 56, 3]
+    assert list(trans_record['observation'].shape) == [batch_size, trajlen, 56, 56, obs_ch]
     assert list(trans_record['init_particles'].shape) == [batch_size, num_particles, 3]
-    assert list(trans_record['floor_map'].shape) == [batch_size, *map_size]
-    assert list(trans_record['obstacle_map'].shape) == [batch_size, *map_size]
+    assert list(trans_record['floor_map'].shape) == [batch_size, *pad_map_size]
+    assert list(trans_record['obstacle_map'].shape) == [batch_size, *pad_map_size]
 
     return trans_record

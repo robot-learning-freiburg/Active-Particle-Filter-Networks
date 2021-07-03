@@ -267,11 +267,17 @@ class LocalizeGibsonEnv(iGibsonEnv):
         :return: processed_state: processed env observations
         """
         assert np.min(state['rgb'])>=0. and np.max(state['rgb'])<=1.
+        assert np.min(state['depth'])>=0. and np.max(state['depth'])<=1.
 
         # HACK: to collect data
-        new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 255]
-        # process new rgb observation: convert [0, 255] to [-1, +1] range
-        return datautils.process_raw_image(new_rgb_obs)
+        new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 1] ->[0, 255]
+        new_depth_obs = copy.deepcopy(state['depth']*100) # [0, 1] ->[0, 100]
+
+        # process new rgb, depth observation: convert [0, 255] to [-1, +1] range
+        return [
+                datautils.process_raw_image(new_rgb_obs),
+                datautils.process_raw_image(new_depth_obs)
+            ]
 
         # process and return only output we are expecting to
         processed_state = OrderedDict()
