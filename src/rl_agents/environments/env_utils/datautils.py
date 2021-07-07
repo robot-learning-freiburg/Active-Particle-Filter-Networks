@@ -139,7 +139,7 @@ def process_raw_image(image, resize=(56, 56)):
     :return np.ndarray: images (new_H, new_W, ch) normalized for training
     """
 
-    assert np.min(image)>=0. and np.max(image)>=1. and np.max(image)<=255.
+    # assert np.min(image)>=0. and np.max(image)>=1. and np.max(image)<=255.
     image = decode_image(image, resize)
     image = normalize_observation(np.atleast_3d(image.astype(np.float32)))
     assert np.min(image)>=-1. and np.max(image)<=1.

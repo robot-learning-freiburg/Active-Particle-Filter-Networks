@@ -215,3 +215,13 @@ $ nohup python -u train.py \
 --epochs=20 \
 --gpu_num=0 \
 --seed=42 > nohup2.out &
+
+July 7th 2021
+--------------
+1. verify depth data for rgb+depth input
+2. change following values
+depth_low: 0.5
+depth_high: 10.0
+vertical_fov: 90
+increase camera height in urdf file
+3. use motion_planning to collect trajectory data
