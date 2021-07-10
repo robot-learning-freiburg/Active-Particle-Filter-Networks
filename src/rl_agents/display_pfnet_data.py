@@ -282,7 +282,7 @@ def display_data(arg_params):
 
         # init particles
         part_x, part_y, part_th = np.split(init_particles, 3, axis=-1)
-        plt_ax.scatter(part_x, part_y, s=10, c='green', alpha=.4)
+        plt_ax.scatter(part_x, part_y, s=10, c='red', alpha=.4)
 
         x1, y1, th1 = true_states[0]
         # gt init pose
