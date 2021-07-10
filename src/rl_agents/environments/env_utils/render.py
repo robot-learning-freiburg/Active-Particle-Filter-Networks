@@ -28,7 +28,7 @@ def draw_text(text, bgcolor, plt_ax, text_plt):
 
     return text_plt
 
-def draw_floor_map(floor_map, map_shape, plt_ax, map_plt):
+def draw_floor_map(floor_map, map_shape, plt_ax, map_plt, cmap='gray'):
     """
     Render the scene floor map
     :param ndarray floor_map: environment scene floor map
@@ -40,7 +40,7 @@ def draw_floor_map(floor_map, map_shape, plt_ax, map_plt):
     origin_x, origin_y = map_shape[1]/2, map_shape[0]/2
     if map_plt is None:
         # draw floor map
-        map_plt = plt_ax.imshow(floor_map, cmap='gray', origin='lower')
+        map_plt = plt_ax.imshow(floor_map, cmap=cmap, origin='lower')
         plt.scatter(origin_x, origin_y, s=10, c='black', marker='x', alpha=1)
     else:
         # do nothing

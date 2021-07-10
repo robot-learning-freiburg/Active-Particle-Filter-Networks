@@ -278,7 +278,7 @@ def display_data(arg_params):
         plt_ax = plts[floor_num]
 
         # floor map
-        map_plt = render.draw_floor_map(obstacle_map, org_map_shape, plt_ax, None)
+        map_plt = render.draw_floor_map(obstacle_map, org_map_shape, plt_ax, None, None)
 
         # init particles
         part_x, part_y, part_th = np.split(init_particles, 3, axis=-1)
@@ -302,7 +302,7 @@ def display_data(arg_params):
         # gt trajectory (w.r.t gt pose)
         for t_idx in range(0, odometry.shape[0]-1):
             x2, y2, th2 = datautils.sample_motion_odometry(np.array([x1, y1, th1]),odometry[t_idx])
-            plt_ax.arrow(x1, y1, (x2-x1), (y2-y1), head_width=5, head_length=7, fc='blue', ec='blue')
+            plt_ax.arrow(x1, y1, (x2-x1), (y2-y1), head_width=5, head_length=7, fc='black', ec='black')
             x1, y1, th1 = x2, y2, th2
 
     plt.tight_layout()

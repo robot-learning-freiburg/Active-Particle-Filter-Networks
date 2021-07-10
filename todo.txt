@@ -66,9 +66,9 @@ $ nohup python -u test_pfnet.py \
 --testfiles=./plots_data/random/*.tfrecord \
 --batch_size=4 \
 --init_particles_distr='gaussian' \
---init_particles_std '0.3' '0.523599' \
+--init_particles_std '0.15' '0.523599' \
 --num_particles=500 \
---transition_std '0.04' '0.0872665' \
+--transition_std '0.02' '0.0872665' \
 --resample=true \
 --alpha_resample_ratio=0.8 \
 --global_map_size '4000' '4000' '1' \
@@ -112,7 +112,7 @@ $ nohup python -u train_pfnet.py \
 --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_87_5.830/pfnet_checkpoint \
 --learning_rate=2.5e-3 \
 --init_particles_distr='gaussian' \
---init_particles_std '0.3' '0.523599' \
+--init_particles_std '0.15' '0.523599' \
 --num_particles=30 \
 --transition_std '0.' '0.' \
 --resample=false \
@@ -175,7 +175,7 @@ $ nohup python -u display_pfnet_data.py \
 --batch_size=1 \
 --s_buffer_size=50 \
 --init_particles_distr='gaussian' \
---init_particles_std '0.3' '0.523599' \
+--init_particles_std '0.15' '0.523599' \
 --num_particles=30 \
 --transition_std '0.' '0.' \
 --resample=false \
@@ -206,7 +206,7 @@ $ nohup python -u train.py \
 --num_eval_samples=816 \
 --obs_mode='rgb-depth' \
 --init_particles_distr='tracking' \
---init_particles_std '0.3' '0.523599' \
+--init_particles_std '0.15' '0.523599' \
 --trajlen=24 \
 --num_particles=30 \
 --transition_std '0.' '0.' \
@@ -221,7 +221,7 @@ $ nohup python -u display_data.py \
 --testfiles './house3d_data/eval/valid.tfrecords' \
 --obs_mode='rgb-depth' \
 --init_particles_distr='tracking' \
---init_particles_std '0.3' '0.523599' \
+--init_particles_std '0.15' '0.523599' \
 --trajlen=24 \
 --num_particles=30 \
 --transition_std '0.' '0.' \
