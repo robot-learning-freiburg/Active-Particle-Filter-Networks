@@ -55,13 +55,16 @@ def calc_velocity_commands(old_pose, new_pose, dt=0.1):
     x1, y1, th1 = old_pose
     x2, y2, th2 = new_pose
 
-    if x1!=x2 and np.tan(th1) == np.tan( (y1-y2)/(x1-x2) ):
+    if x1==x2 and y1==y2:
+        # only angular motion
+        linear_velocity = 0
+        angular_velocity = 0
+    elif x1!=x2 and np.tan(th1) == np.tan( (y1-y2)/(x1-x2) ):
         # only linear motion
         linear_velocity = (x2-x1)/dt
         angular_velocity = 0
     else:
         # both linear + angular motion
-
         mu = 0.5 * ( ((x1-x2)*np.cos(th1) + (y1-y2)*np.sin(th1))
                  / ((y1-y2)*np.cos(th1) - (x1-x2)*np.sin(th1)) )
         x_c = (x1+x2) * 0.5 + mu * (y1-y2)
