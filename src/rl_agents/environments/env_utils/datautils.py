@@ -285,6 +285,7 @@ def gather_episode_stats(env, params, sample_particles=False):
     obs = env.reset()  # already processed
     rgb_observation.append(obs[0])
     depth_observation.append(obs[1])
+    left, left_front, right_front, right = obs[2] # obstacle (not)present
 
     scene_id = env.config.get('scene_id')
     floor_num = env.task.floor_num
@@ -300,9 +301,18 @@ def gather_episode_stats(env, params, sample_particles=False):
         if agent == 'manual':
             action = get_discrete_action()
         else:
-            # default random action forward: 0.7, turn: 0.3, backward:0., do_nothing:0.0
-            action = np.random.choice(5, p=[0.7, 0.0, 0.15, 0.15, 0.0])
-            # action = env.action_space.sample()
+            if not left_front and not right_front:
+                # random action forward: 0.7, turn: 0.3, backward:0.0, do_nothing:0.0
+                action = np.random.choice(5, p=[0.7, 0.0, 0.15, 0.15, 0.0])
+            elif not left:
+                # turn left
+                action = 3
+            elif not right:
+                # turn right
+                action = 2
+            else:
+                # uniform random action
+                action = np.random.choice(5)
 
         # take action and get new observation
         obs, reward, done, _ = env.step(action)

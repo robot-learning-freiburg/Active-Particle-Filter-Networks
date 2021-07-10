@@ -273,10 +273,18 @@ class LocalizeGibsonEnv(iGibsonEnv):
         new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 1] ->[0, 255]
         new_depth_obs = copy.deepcopy(state['depth']*100) # [0, 1] ->[0, 100]
 
+        # check for close obstacles in 240/4 sector starting from right of robot
+        threshold = 0.1
+        right = (state['scan'][:57]<threshold).any()
+        right_front = (state['scan'][57:114]<threshold).any()
+        left_front = (state['scan'][114:171]<threshold).any()
+        left = (state['scan'][171:]<threshold).any()
+
         # process new rgb, depth observation: convert [0, 255] to [-1, +1] range
         return [
                 datautils.process_raw_image(new_rgb_obs),
                 datautils.process_raw_image(new_depth_obs)
+                np.array([left, left_front, right_front, right])
             ]
 
         # process and return only output we are expecting to
