@@ -53,8 +53,8 @@ image_width: 56
 image_height: 56
 vertical_fov: 90
 # depth
-depth_low: 0.35
-depth_high: 3.5
+depth_low: 0.1
+depth_high: 10.0
 # scan
 # Hokuyo URG-04LX-UG01
 # https://www.hokuyo-aut.jp/search/single.php?serial=166
