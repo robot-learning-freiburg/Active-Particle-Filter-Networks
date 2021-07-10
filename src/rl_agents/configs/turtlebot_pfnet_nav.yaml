@@ -6,7 +6,7 @@ load_texture: true
 pybullet_load_texture: true
 trav_map_type: no_obj
 trav_map_resolution: 0.1
-trav_map_erosion: 2
+trav_map_erosion: 3
 should_open_all_doors: true
 
 # domain randomization
@@ -44,16 +44,16 @@ initial_pos_z_offset: 0.1
 collision_ignore_link_a_ids: [1, 2, 3, 4]  # ignore collisions with these robot links
 
 # sensor spec
-output: [task_obs, rgb, depth, scan]
+output: [task_obs, rgb, depth, scan, occupancy_grid]
 # image
 # ASUS Xtion PRO LIVE
 # https://www.asus.com/us/3D-Sensor/Xtion_PRO_LIVE
 fisheye: false
 image_width: 56
 image_height: 56
-vertical_fov: 45
+vertical_fov: 90
 # depth
-depth_low: 0.8
+depth_low: 0.35
 depth_high: 3.5
 # scan
 # Hokuyo URG-04LX-UG01
