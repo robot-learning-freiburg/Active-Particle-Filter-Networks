@@ -43,6 +43,43 @@ def calc_odometry(old_pose, new_pose):
     return odometry
 
 
+def calc_velocity_commands(old_pose, new_pose, dt=0.1):
+    """
+    Calculate the velocity model command between two poses
+    :param ndarray old_pose: pose1 (x, y, theta)
+    :param ndarray new_pose: pose2 (x, y, theta)
+    :param float dt: time interval
+    :return ndarray: velocity command (linear_vel, angular_vel, final_rotation)
+    """
+
+    x1, y1, th1 = old_pose
+    x2, y2, th2 = new_pose
+
+    if x1!=x2 and np.tan(th1) == np.tan( (y1-y2)/(x1-x2) ):
+        # only linear motion
+        linear_velocity = (x2-x1)/dt
+        angular_velocity = 0
+    else:
+        # both linear + angular motion
+
+        mu = 0.5 * ( ((x1-x2)*np.cos(th1) + (y1-y2)*np.sin(th1))
+                 / ((y1-y2)*np.cos(th1) - (x1-x2)*np.sin(th1)) )
+        x_c = (x1+x2) * 0.5 + mu * (y1-y2)
+        y_c = (y1+y2) * 0.5 - mu * (x1-x2)
+        r_c = np.sqrt( (x1-x_c)**2 + (y1-y_c)**2 )
+        delta_th = np.arctan2(y2-y_c, x2-x_c) - np.arctan2(y1-y_c, x1-x_c)
+
+        angular_velocity = delta_th/dt
+        # HACK: to handle unambiguous postive/negative quadrants
+        if np.arctan2(y1-y_c, x1-x_c) < 0:
+            linear_velocity = angular_velocity * r_c
+        else:
+            linear_velocity = -angular_velocity * r_c
+
+    final_rotation = (th2-th1)/dt - angular_velocity
+    return np.array([linear_velocity, angular_velocity, final_rotation])
+
+
 def sample_motion_odometry(old_pose, odometry):
     """
     Sample new pose based on give pose and odometry
@@ -60,6 +97,30 @@ def sample_motion_odometry(old_pose, odometry):
     x2 = x1 + (cos * odom_x - sin * odom_y)
     y2 = y1 + (sin * odom_x + cos * odom_y)
     th2 = normalize(th1 + odom_th)
+
+    new_pose = np.array([x2, y2, th2])
+    return new_pose
+
+
+def sample_motion_velocity(old_pose, velocity, dt=0.1):
+    """
+    Sample new pose based on give pose and velocity commands
+    :param ndarray old_pose: given pose (x, y, theta)
+    :param ndarray velocity: velocity model (linear_vel, angular_vel, final_rotation)
+    :param float dt: time interval
+    :return ndarray: new pose (x, y, theta)
+    """
+    x1, y1, th1 = old_pose
+    linear_vel, angular_vel, final_rotation = velocity
+
+    if angular_vel == 0:
+        x2 = x1 + linear_vel*dt
+        y2 = y1
+    else:
+        r = linear_vel/angular_vel
+        x2 = x1 - r*np.sin(th1) + r*np.sin(th1 + angular_vel*dt)
+        y2 = y1 + r*np.cos(th1) - r*np.cos(th1 + angular_vel*dt)
+    th2 = th1 + angular_vel*dt + final_rotation*dt
 
     new_pose = np.array([x2, y2, th2])
     return new_pose
