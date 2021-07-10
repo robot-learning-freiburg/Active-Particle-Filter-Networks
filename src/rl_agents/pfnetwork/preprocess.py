@@ -4,7 +4,39 @@ import cv2
 import glob
 import argparse
 import numpy as np
+import pybullet as p
 import tensorflow as tf
+
+def normalize(angle):
+    """
+    Normalize the angle to [-pi, pi]
+    :param float angle: input angle to be normalized
+    :return float: normalized angle
+    """
+    quaternion = p.getQuaternionFromEuler(np.array([0, 0, angle]))
+    euler = p.getEulerFromQuaternion(quaternion)
+    return euler[2]
+
+def sample_motion_odometry(old_pose, odometry):
+    """
+    Sample new pose based on give pose and odometry
+    :param ndarray old_pose: given pose (x, y, theta)
+    :param ndarray odometry: given odometry (odom_x, odom_y, odom_th)
+    :return ndarray: new pose (x, y, theta)
+    """
+    x1, y1, th1 = old_pose
+    odom_x, odom_y, odom_th = odometry
+
+    th1 = normalize(th1)
+    sin = np.sin(th1)
+    cos = np.cos(th1)
+
+    x2 = x1 + (cos * odom_x - sin * odom_y)
+    y2 = y1 + (sin * odom_x + cos * odom_y)
+    th2 = normalize(th1 + odom_th)
+
+    new_pose = np.array([x2, y2, th2])
+    return new_pose
 
 def read_tfrecord(example_proto):
     """
