@@ -199,9 +199,10 @@ test.tfrecords: 820 records
 train.tfrecords: 74800 records
 
 $ nohup python -u train.py \
---trainfiles './house3d_data/eval/valid.tfrecords' \
+--logpath 'rgb_depth'\
+--trainfiles './house3d_data/train/train-001.tfrecords' \
 --evalfiles './house3d_data/eval/valid.tfrecords' \
---num_train_samples=816 \
+--num_train_samples=7500 \
 --num_eval_samples=816 \
 --obs_mode='rgb-depth' \
 --init_particles_distr='tracking' \
@@ -212,8 +213,8 @@ $ nohup python -u train.py \
 --resample=false \
 --batch_size=6 \
 --learningrate=1e-4 \
---epochs=20 \
---gpu_num=0 \
+--epochs=100 \
+--gpu_num=1 \
 --seed=42 > nohup2.out &
 
 July 7th 2021
