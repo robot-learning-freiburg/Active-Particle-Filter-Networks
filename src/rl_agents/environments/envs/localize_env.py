@@ -283,7 +283,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         # process new rgb, depth observation: convert [0, 255] to [-1, +1] range
         return [
                 datautils.process_raw_image(new_rgb_obs),
-                datautils.process_raw_image(new_depth_obs)
+                datautils.process_raw_image(new_depth_obs),
                 np.array([left, left_front, right_front, right])
             ]
 

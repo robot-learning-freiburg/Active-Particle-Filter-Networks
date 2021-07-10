@@ -4,6 +4,7 @@ import argparse
 import cv2
 import glob
 import matplotlib.pyplot as plt
+from matplotlib.patches import Wedge
 import numpy as np
 import os
 import random
@@ -214,33 +215,6 @@ def parse_args():
 
     return params
 
-def draw_floor_map(floor_map, map_shape, plt_ax, map_plt):
-    """
-    Render the scene floor map
-    :param ndarray floor_map: environment scene floor map
-    :param ndarray map_shape: (unpadded) map shape [H, W, C]
-    :param matplotlib.axes.Axes plt_ax: figure sub plot instance
-    :return matplotlib.image.AxesImage: updated plot of scene floor map
-    """
-
-    origin_x, origin_y = map_shape[1]/2, map_shape[0]/2
-    if map_plt is None:
-        # draw floor map
-        map_plt = plt_ax.imshow(floor_map, cmap='gray', origin='lower')
-        plt.scatter(origin_x, origin_y, s=10, c='black', marker='x', alpha=1)
-    else:
-        # do nothing
-        pass
-    return map_plt
-
-def draw_robot_pose(true_states, plt_ax):
-
-    x1, y1, heading = true_states[0]
-    for t_idx in range(1, true_states.shape[0]):
-        x2, y2, _ = true_states[t_idx]
-        plt_ax.arrow(x1, y1, (x2-x1), (y2-y1), head_width=5, head_length=7, fc='blue', ec='blue')
-        x1, y1 = x2, y2
-
 def display_data(arg_params):
     """
     """
@@ -266,10 +240,10 @@ def display_data(arg_params):
     )
     env.reset()
     arg_params.trajlen = env.config.get('max_step', 500)
-    arg_params.floors = 2
+    arg_params.floors = 1
 
     b_idx = 0
-    t_idx = 5
+    t_idx = 10
     fig = plt.figure(figsize=(14, 14))
     plts = {}
     for idx in range(arg_params.floors):
@@ -282,29 +256,54 @@ def display_data(arg_params):
         parsed_record = next(train_itr)
         batch_sample = datautils.transform_raw_record(env, parsed_record, arg_params)
 
-        observation = batch_sample['observation']
-        odometry = batch_sample['odometry']
-        true_states = batch_sample['true_states']
-        obstacle_map = batch_sample['obstacle_map']
-        org_map_shape = batch_sample['org_map_shape']
+        observation = batch_sample['observation'][b_idx]
+        odometry = batch_sample['odometry'][b_idx]
+        true_states = batch_sample['true_states'][b_idx]
+        init_particles = batch_sample['init_particles'][b_idx]
+        obstacle_map = batch_sample['obstacle_map'][b_idx]
+        org_map_shape = batch_sample['org_map_shape'][b_idx]
 
         if arg_params.obs_mode == 'rgb-depth':
-            rgb, depth = np.split(observation[b_idx], [3], axis=-1)
+            rgb, depth = np.split(observation, [3], axis=-1)
             cv2.imwrite('./rgb.png', datautils.denormalize_observation(rgb)[t_idx])
             cv2.imwrite('./depth.png', datautils.denormalize_observation(depth[t_idx]))
         elif arg_params.obs_mode == 'depth':
-            cv2.imwrite('./depth.png', datautils.denormalize_observation(observation[b_idx][t_idx]))
+            cv2.imwrite('./depth.png', datautils.denormalize_observation(observation[t_idx]))
         else:
-            cv2.imwrite('./rgb.png', datautils.denormalize_observation(observation[b_idx][t_idx]))
+            cv2.imwrite('./rgb.png', datautils.denormalize_observation(observation[t_idx]))
 
         scene_id = parsed_record['scene_id'][b_idx][0].decode('utf-8')
         floor_num = parsed_record['floor_num'][b_idx][0]
         key = scene_id + '_' + str(floor_num)
         plt_ax = plts[floor_num]
 
-        map_plt = draw_floor_map(obstacle_map[b_idx], org_map_shape[b_idx], plt_ax, None)
+        # floor map
+        map_plt = render.draw_floor_map(obstacle_map, org_map_shape, plt_ax, None)
 
-        draw_robot_pose(true_states[b_idx], plt_ax)
+        # init particles
+        part_x, part_y, part_th = np.split(init_particles, 3, axis=-1)
+        plt_ax.scatter(part_x, part_y, s=10, c='green', alpha=.4)
+
+        x1, y1, th1 = true_states[0]
+        # gt init pose
+        heading_len  = robot_radius = 10.0
+        xdata = [x1, x1 + (robot_radius + heading_len) * np.cos(th1)]
+        ydata = [y1, y1 + (robot_radius + heading_len) * np.sin(th1)]
+        position_plt = Wedge((x1, y1), r=robot_radius, theta1=0, theta2=360, color='blue', alpha=0.5)
+        plt_ax.add_artist(position_plt)
+        plt_ax.plot(xdata, ydata, color='blue', alpha=0.5)
+
+        # # gt trajectory (w.r.t odometry)
+        # for t_idx in range(1, true_states.shape[0]):
+        #     x2, y2, th2 = true_states[t_idx]
+        #     plt_ax.arrow(x1, y1, (x2-x1), (y2-y1), head_width=5, head_length=7, fc='blue', ec='blue')
+        #     x1, y1, th1 = x2, y2, th2
+
+        # gt trajectory (w.r.t gt pose)
+        for t_idx in range(0, odometry.shape[0]-1):
+            x2, y2, th2 = datautils.sample_motion_odometry(np.array([x1, y1, th1]),odometry[t_idx])
+            plt_ax.arrow(x1, y1, (x2-x1), (y2-y1), head_width=5, head_length=7, fc='blue', ec='blue')
+            x1, y1, th1 = x2, y2, th2
 
     plt.tight_layout()
     for key, plt_ax in plts.items():

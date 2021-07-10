@@ -301,9 +301,19 @@ def gather_episode_stats(env, params, sample_particles=False):
         if agent == 'manual':
             action = get_discrete_action()
         else:
-            if not left_front and not right_front:
-                # random action forward: 0.7, turn: 0.3, backward:0.0, do_nothing:0.0
-                action = np.random.choice(5, p=[0.7, 0.0, 0.15, 0.15, 0.0])
+            if not left_front:
+                if not right_front:
+                    # front is free
+                    # random action forward: 0.8, left/right turn: 0.2, backward:0.0, do_nothing:0.0
+                    action = np.random.choice(5, p=[0.8, 0.0, 0.1, 0.1, 0.0])
+                else:
+                    # mostly front-left is free
+                    # random action forward: 0.7, left_turn: 0.3
+                    action = np.random.choice(5, p=[0.7, 0.0, 0.0, 0.3, 0.0])
+            elif not right_front:
+                # mostly front-right is free
+                # random action forward: 0.7, right_turn: 0.3
+                action = np.random.choice(5, p=[0.7, 0.0, 0.3, 0.0, 0.0])
             elif not left:
                 # turn left
                 action = 3
