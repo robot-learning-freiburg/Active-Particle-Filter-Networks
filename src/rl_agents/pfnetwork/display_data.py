@@ -31,9 +31,13 @@ def display_data(params):
     if params.obs_mode == 'rgb-depth':
         rgb, depth = np.split(observation, [3], axis=-1)
         cv2.imwrite('./rgb.png', preprocess.denormalize_observation(rgb)[t_idx])
-        cv2.imwrite('./depth.png', preprocess.denormalize_observation(depth[t_idx]))
+        cv2.imwrite('./depth.png', cv2.applyColorMap(
+            preprocess.denormalize_observation(depth[t_idx]*255/100).astype(np.uint8),
+            cv2.COLORMAP_JET))
     elif params.obs_mode == 'depth':
-        cv2.imwrite('./depth.png', preprocess.denormalize_observation(observation[t_idx]))
+        cv2.imwrite('./depth.png', cv2.applyColorMap(
+            preprocess.denormalize_observation(observation[t_idx]*255/100).astype(np.uint8),
+            cv2.COLORMAP_JET))
     else:
         cv2.imwrite('./rgb.png', preprocess.denormalize_observation(observation[t_idx]))
 
