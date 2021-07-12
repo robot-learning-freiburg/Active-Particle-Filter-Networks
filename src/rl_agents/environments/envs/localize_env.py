@@ -68,6 +68,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         # For the igibson maps, each pixel represents 0.01m, and the center of the image correspond to (0,0)
         self.map_pixel_in_meters = 0.01
+        self.scan_th = 0.18
 
         argparser = argparse.ArgumentParser()
         self.pf_params = argparser.parse_args([])
@@ -274,10 +275,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
         new_depth_obs = copy.deepcopy(state['depth']*100) # [0, 1] ->[0, 100]
 
         # check for close obstacles in [90,60,90] degrees starting from right of robot
-        threshold = 0.2
-        right = np.min(state['scan'][:86]) > threshold
-        front = np.min(state['scan'][86:143]) > threshold
-        left = np.min(state['scan'][143:]) > threshold
+        right = np.min(state['scan'][:86]) > self.scan_th
+        front = np.min(state['scan'][86:143]) > self.scan_th
+        left = np.min(state['scan'][143:]) > self.scan_th
 
         # process new rgb, depth observation: convert [0, 255] to [-1, +1] range
         return [
