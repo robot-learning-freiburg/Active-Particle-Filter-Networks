@@ -261,6 +261,7 @@ def display_data(arg_params):
         true_states = batch_sample['true_states'][b_idx]
         init_particles = batch_sample['init_particles'][b_idx]
         obstacle_map = batch_sample['obstacle_map'][b_idx]
+        floor_map = batch_sample['floor_map'][b_idx]
         org_map_shape = batch_sample['org_map_shape'][b_idx]
 
         if arg_params.obs_mode == 'rgb-depth':
@@ -282,11 +283,11 @@ def display_data(arg_params):
         plt_ax = plts[floor_num]
 
         # floor map
-        map_plt = render.draw_floor_map(obstacle_map, org_map_shape, plt_ax, None, None)
+        map_plt = render.draw_floor_map(floor_map, org_map_shape, plt_ax, None, None)
 
         # init particles
         part_x, part_y, part_th = np.split(init_particles, 3, axis=-1)
-        plt_ax.scatter(part_x, part_y, s=10, c='red', alpha=.4)
+        #plt_ax.scatter(part_x, part_y, s=10, c='red', alpha=.4)
 
         x1, y1, th1 = true_states[0]
         # gt init pose
@@ -294,8 +295,8 @@ def display_data(arg_params):
         xdata = [x1, x1 + (robot_radius + heading_len) * np.cos(th1)]
         ydata = [y1, y1 + (robot_radius + heading_len) * np.sin(th1)]
         position_plt = Wedge((x1, y1), r=robot_radius, theta1=0, theta2=360, color='blue', alpha=0.5)
-        plt_ax.add_artist(position_plt)
-        plt_ax.plot(xdata, ydata, color='blue', alpha=0.5)
+        #plt_ax.add_artist(position_plt)
+        #plt_ax.plot(xdata, ydata, color='blue', alpha=0.5)
 
         # # gt trajectory (w.r.t odometry)
         # for t_idx in range(1, true_states.shape[0]):
