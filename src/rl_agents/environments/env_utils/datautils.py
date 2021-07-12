@@ -218,15 +218,27 @@ def get_discrete_action():
     """
     key = input('Enter Key: ')
     # default stay still
-    action = 4
     if key == 'w':
-        action = 0  # forward
+        # forward
+        lin_vel = 0.5
+        ang_vel = 0.
     elif key == 's':
-        action = 1  # backward
+        # backward
+        lin_vel = -0.5
+        ang_vel = 0.
     elif key == 'd':
-        action = 2  # right
+        # right
+        lin_vel = 0.
+        ang_vel = -1.5707
     elif key == 'a':
-        action = 3  # left
+        # left
+        lin_vel = 0.
+        ang_vel = 1.5708
+    else:
+        lin_vel = 0.
+        ang_vel = 0.
+
+    action = np.array([lin_vel, ang_vel])
     return action
 
 
@@ -285,7 +297,7 @@ def gather_episode_stats(env, params, sample_particles=False):
     obs = env.reset()  # already processed
     rgb_observation.append(obs[0])
     depth_observation.append(obs[1])
-    left, left_front, right_front, right = obs[2] # obstacle (not)present
+    # left, left_front, right_front, right = obs[2] # obstacle (not)present
 
     scene_id = env.config.get('scene_id')
     floor_num = env.task.floor_num
