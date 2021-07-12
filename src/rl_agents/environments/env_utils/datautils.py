@@ -285,7 +285,7 @@ def gather_episode_stats(env, params, sample_particles=False):
     obs = env.reset()  # already processed
     rgb_observation.append(obs[0])
     depth_observation.append(obs[1])
-    left, left_front, right_front, right = obs[2] # obstacle (not)present
+    left_free, front_free, right_free = obs[2] # obstacle (not)present
 
     scene_id = env.config.get('scene_id')
     floor_num = env.task.floor_num
@@ -301,28 +301,18 @@ def gather_episode_stats(env, params, sample_particles=False):
         if agent == 'manual':
             action = get_discrete_action()
         else:
-            if not left_front:
-                if not right_front:
-                    # front is free
-                    # random action forward: 0.8, left/right turn: 0.2, backward:0.0, do_nothing:0.0
-                    action = np.random.choice(5, p=[0.8, 0.0, 0.1, 0.1, 0.0])
-                else:
-                    # mostly front-left is free
-                    # random action forward: 0.7, left_turn: 0.3
-                    action = np.random.choice(5, p=[0.7, 0.0, 0.0, 0.3, 0.0])
-            elif not right_front:
-                # mostly front-right is free
-                # random action forward: 0.7, right_turn: 0.3
-                action = np.random.choice(5, p=[0.7, 0.0, 0.3, 0.0, 0.0])
-            elif not left:
+            if front_free:
+                # move forward
+                action = 0
+            elif left_free:
                 # turn left
                 action = 3
-            elif not right:
+            elif right_free:
                 # turn right
                 action = 2
             else:
-                # uniform random action
-                action = np.random.choice(5)
+                # uniform random [front, back, left, right, do_nothing]
+                action = np.random.choice(5, p=[0.25, 0.25, 0.25, 0.25, 0.0])
 
         # take action and get new observation
         obs, reward, done, _ = env.step(action)
