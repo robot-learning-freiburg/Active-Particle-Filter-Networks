@@ -233,6 +233,7 @@ def parse_args():
     params.return_state = True
 
     # HACK:
+    params.loop = 5
     params.use_tf_function = False
     params.init_env_pfnet = False
     params.store_results = True
@@ -286,7 +287,7 @@ def pfnet_train(arg_params):
         device_idx=arg_params.device_idx
     )
     env.reset()
-    arg_params.trajlen = env.config.get('max_step', 500)
+    arg_params.trajlen = env.config.get('max_step', 500)//arg_params.loop
 
     # create particle filter net model
     if arg_params.multiple_gpus:

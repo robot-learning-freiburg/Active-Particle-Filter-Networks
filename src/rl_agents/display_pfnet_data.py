@@ -200,6 +200,7 @@ def parse_args():
         params.obs_ch = 3
 
     # HACK:
+    params.loop = 5
     params.use_tf_function = False
     params.init_env_pfnet = False
     params.store_results = True
@@ -239,7 +240,7 @@ def display_data(arg_params):
         device_idx=arg_params.device_idx
     )
     env.reset()
-    arg_params.trajlen = env.config.get('max_step', 500)
+    arg_params.trajlen = env.config.get('max_step', 500)//arg_params.loop
     arg_params.floors = 1
 
     b_idx = 0

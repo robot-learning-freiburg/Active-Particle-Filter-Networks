@@ -283,6 +283,8 @@ def gather_episode_stats(env, params, sample_particles=False):
 
     agent = params.agent
     trajlen = params.trajlen
+    max_lin_vel = params.max_lin_vel
+    max_ang_vel = params.max_ang_vel
 
     odometry = []
     true_poses = []
@@ -292,7 +294,7 @@ def gather_episode_stats(env, params, sample_particles=False):
     obs = env.reset()  # already processed
     rgb_observation.append(obs[0])
     depth_observation.append(obs[1])
-    # left, left_front, right_front, right = obs[2] # obstacle (not)present
+    left, left_front, right_front, right = obs[2] # obstacle (not)present
 
     scene_id = env.config.get('scene_id')
     floor_num = env.task.floor_num
@@ -306,37 +308,29 @@ def gather_episode_stats(env, params, sample_particles=False):
 
     for _ in range(trajlen - 1):
         if agent == 'manual':
-            action = get_discrete_action(params.max_lin_vel, params.max_ang_vel)
+            action = get_discrete_action(max_lin_vel, max_ang_vel)
         else:
-            if not left_front:
-                if not right_front:
-                    # front is free
-                    # random action forward: 0.8, left/right turn: 0.2, backward:0.0, do_nothing:0.0
-                    action = np.random.choice(5, p=[0.8, 0.0, 0.1, 0.1, 0.0])
-                else:
-                    # mostly front-left is free
-                    # random action forward: 0.7, left_turn: 0.3
-                    action = np.random.choice(5, p=[0.7, 0.0, 0.0, 0.3, 0.0])
-            elif not right_front:
-                # mostly front-right is free
-                # random action forward: 0.7, right_turn: 0.3
-                action = np.random.choice(5, p=[0.7, 0.0, 0.3, 0.0, 0.0])
-            elif not left:
+            if not left_front and not right_front:
+                # move forward
+                action = np.array([max_lin_vel, 0.])
+            elif not left or not left_front:
                 # turn left
-                action = 3
-            elif not right:
+                action = np.array([0., max_ang_vel])
+            elif not right or not right_front:
                 # turn right
-                action = 2
+                action = np.array([0., -max_ang_vel])
             else:
-                # uniform random [front, back, left, right, do_nothing]
-                action = np.random.choice(5, p=[0.25, 0.25, 0.25, 0.25, 0.0])
+                # backward
+                action = np.array([-max_lin_vel, np.random.uniform(low=-max_ang_vel, high=max_ang_vel)])
 
-        # take action and get new observation
-        obs, reward, done, _ = env.step(action)
+        for _ in range(params.loop):
+            # take action and get new observation
+            obs, reward, done, _ = env.step(action)
         assert list(obs[0].shape) == [56, 56, 3]
         assert list(obs[1].shape) == [56, 56, 1]
         rgb_observation.append(obs[0])
         depth_observation.append(obs[1])
+        left, left_front, right_front, right = obs[2] # obstacle (not)present
 
         # get new robot state after taking action
         new_pose = env.get_robot_pose(env.robots[0].calc_state(), floor_map.shape)

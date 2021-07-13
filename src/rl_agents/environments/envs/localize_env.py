@@ -68,7 +68,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         # For the igibson maps, each pixel represents 0.01m, and the center of the image correspond to (0,0)
         self.map_pixel_in_meters = 0.01
-        self.scan_th = 0.1
+        self.depth_th = 3.
 
         argparser = argparse.ArgumentParser()
         self.pf_params = argparser.parse_args([])
@@ -274,17 +274,18 @@ class LocalizeGibsonEnv(iGibsonEnv):
         new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 1] ->[0, 255]
         new_depth_obs = copy.deepcopy(state['depth']*100) # [0, 1] ->[0, 100]
 
-        # # check for close obstacles in [60,60,60,60] degrees starting from right of robot
-        # right = np.min(state['scan'][:57]) < self.scan_th
-        # right_front = np.min(state['scan'][57:114]) < self.scan_th
-        # left_front = np.min(state['scan'][114:171]) < self.scan_th
-        # left = np.min(state['scan'][171:]) < self.scan_th
+        # check for close obstacles to robot
+        min_depth = np.min(new_depth_obs, axis=0)
+        left = np.min(min_depth[:64]) < self.depth_th
+        left_front = np.min(min_depth[64:128]) < self.depth_th
+        right_front = np.min(min_depth[128:192]) < self.depth_th
+        right = np.min(min_depth[192:]) < self.depth_th
 
         # process new rgb, depth observation: convert [0, 255] to [-1, +1] range
         return [
                 datautils.process_raw_image(new_rgb_obs),
                 datautils.process_raw_image(new_depth_obs),
-                #np.array([left, left_front, right_front, right])
+                np.array([left, left_front, right_front, right])
             ]
 
         # process and return only output we are expecting to

@@ -201,6 +201,7 @@ def parse_args():
     params.return_state = True
 
     # HACK:
+    params.loop = 5
     params.use_tf_function = True
     params.init_env_pfnet = False
     params.store_results = True
@@ -333,7 +334,7 @@ def pfnet_test(arg_params):
         pf_params=arg_params
     )
     env.reset()
-    arg_params.trajlen = env.config.get('max_step', 500)
+    arg_params.trajlen = env.config.get('max_step', 500)//arg_params.loop
 
     # create particle filter net model
     pfnet_model = pfnet.pfnet_model(arg_params)

@@ -37,8 +37,8 @@ discount_factor: 0.99
 
 # termination condition
 dist_tol: 0.36  # body width
-max_step: 25
-max_collisions_allowed: 25
+max_step: 125
+max_collisions_allowed: 125
 
 # misc config
 initial_pos_z_offset: 0.1
@@ -50,8 +50,8 @@ output: [task_obs, rgb, depth]
 # Intel Realsense Depth Camera D435
 # https://store.intelrealsense.com/buy-intel-realsense-depth-camera-d435.html
 fisheye: false
-image_width: 56
-image_height: 56
+image_width: 256
+image_height: 256
 vertical_fov: 90
 # depth
 depth_low : 0.1
