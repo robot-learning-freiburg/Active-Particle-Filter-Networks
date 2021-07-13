@@ -358,6 +358,7 @@ def pfnet_test(arg_params):
     with test_summary_writer.as_default():
         # run over all evaluation samples in an epoch
         mse_list = []
+        init_mse_list = []
         success_list = []
         itr = test_ds.as_numpy_iterator()
         for eps_idx in range(arg_params.num_eval_batches):
@@ -373,6 +374,14 @@ def pfnet_test(arg_params):
             init_particles = tf.convert_to_tensor(batch_sample['init_particles'], dtype=tf.float32)
             init_particle_weights = tf.constant(np.log(1.0 / float(num_particles)),
                                                 shape=(batch_size, num_particles), dtype=tf.float32)
+            # compute initial loss
+            init_loss_dict = pfnet_loss.compute_loss(tf.expand_dims(init_particles, axis=1),
+                            tf.expand_dims(init_particle_weights, axis=1),
+                            tf.expand_dims(true_states[:, 0], axis=1),
+                            arg_params.map_pixel_in_meters)
+            # we have squared differences along the trajectory
+            init_mse = np.mean(init_loss_dict['coords'])
+            init_mse_list.append(init_mse)
 
             # start trajectory with initial particles and weights
             state = [init_particles, init_particle_weights, obstacle_map]
@@ -418,6 +427,11 @@ def pfnet_test(arg_params):
                 store_results(eps_idx, obstacle_map, org_map_shape, particle_states, particle_weights, true_states, arg_params)
 
         # report results
+        init_mean_rmse = np.mean(np.sqrt(init_mse_list)) * 100
+        total_init_rmse = np.sqrt(np.mean(init_mse_list)) * 100
+        print(f'Initial Mean RMSE (average RMSE per trajectory) = {init_mean_rmse:03.3f} cm')
+        print(f'Overall Initial RMSE (reported value) = {total_init_rmse:03.3f} cm')
+
         mean_rmse = np.mean(np.sqrt(mse_list)) * 100
         total_rmse = np.sqrt(np.mean(mse_list)) * 100
         mean_success = np.mean(np.array(success_list, 'i')) * 100

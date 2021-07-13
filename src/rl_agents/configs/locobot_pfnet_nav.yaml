@@ -16,7 +16,7 @@ object_randomization_freq: null
 # robot
 robot: Locobot
 is_discrete: false
-linear_velocity: 1.0
+linear_velocity: 0.5
 angular_velocity: 1.5707963267948966
 
 # task
