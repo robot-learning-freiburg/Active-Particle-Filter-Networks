@@ -211,7 +211,7 @@ def process_raw_image(image, resize=(56, 56)):
     return image
 
 
-def get_discrete_action():
+def get_discrete_action(max_lin_vel, max_ang_vel):
     """
     Get manual keyboard action
     :return int: discrete action for moving forward/backward/left/right
@@ -220,25 +220,20 @@ def get_discrete_action():
     # default stay still
     if key == 'w':
         # forward
-        lin_vel = 0.5
-        ang_vel = 0.
+        action = np.array([max_lin_vel, 0.])
     elif key == 's':
         # backward
-        lin_vel = -0.5
-        ang_vel = 0.
+        action = np.array([-max_lin_vel, 0.])
     elif key == 'd':
         # right
-        lin_vel = 0.
-        ang_vel = -1.5707
+        action = np.array([0., -max_ang_vel])
     elif key == 'a':
         # left
-        lin_vel = 0.
-        ang_vel = 1.5708
+        action = np.array([0., max_ang_vel])
     else:
-        lin_vel = 0.
-        ang_vel = 0.
+        # do nothing
+        action = np.array([0., 0.])
 
-    action = np.array([lin_vel, ang_vel])
     return action
 
 
@@ -311,7 +306,7 @@ def gather_episode_stats(env, params, sample_particles=False):
 
     for _ in range(trajlen - 1):
         if agent == 'manual':
-            action = get_discrete_action()
+            action = get_discrete_action(params.max_lin_vel, params.max_ang_vel)
         else:
             if not left_front:
                 if not right_front:

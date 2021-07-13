@@ -159,6 +159,8 @@ def main(_):
     FLAGS.max_step = env.config.get('max_step', 500)
     FLAGS.is_discrete = env.config.get("is_discrete", False)
     FLAGS.velocity = env.config.get("velocity", 1.0)
+    FLAGS.max_lin_vel = env.config.get("linear_velocity", 0.5)
+    FLAGS.max_ang_vel = env.config.get("angular_velocity", np.pi/2)
 
     print('==================================================')
     for k, v in FLAGS.flag_values_dict().items():
@@ -170,6 +172,8 @@ def main(_):
 
     params.agent = FLAGS.agent
     params.trajlen = FLAGS.max_step
+    params.max_lin_vel = FLAGS.max_lin_vel
+    params.max_ang_vel = FLAGS.max_ang_vel
     params.global_map_size = np.array([4000, 4000, 1])
     params.obs_mode = FLAGS.obs_mode
     params.batch_size = 1

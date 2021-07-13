@@ -16,7 +16,7 @@ object_randomization_freq: null
 # robot
 robot: Locobot
 is_discrete: false
-linear_velocity: 0.5
+linear_velocity: 1.0
 angular_velocity: 1.5707963267948966
 
 # task
@@ -37,8 +37,8 @@ discount_factor: 0.99
 
 # termination condition
 dist_tol: 0.36  # body width
-max_step: 100
-max_collisions_allowed: 100
+max_step: 25
+max_collisions_allowed: 25
 
 # misc config
 initial_pos_z_offset: 0.1
@@ -50,8 +50,8 @@ output: [task_obs, rgb, depth]
 # Intel Realsense Depth Camera D435
 # https://store.intelrealsense.com/buy-intel-realsense-depth-camera-d435.html
 fisheye: false
-image_width: 512
-image_height: 512
+image_width: 56
+image_height: 56
 vertical_fov: 90
 # depth
 depth_low : 0.1
