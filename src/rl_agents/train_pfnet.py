@@ -233,7 +233,7 @@ def parse_args():
     params.return_state = True
 
     # HACK:
-    params.loop = 10
+    params.loop = 6
     params.use_tf_function = False
     params.init_env_pfnet = False
     params.store_results = True
