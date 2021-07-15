@@ -62,7 +62,7 @@ $ nohup python -u test_pfnet.py \
 --root_dir=./random/igibson_pfnet/run1 \
 --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_87_5.830/pfnet_checkpoint \
 --obs_mode='rgb-depth' \
---num_eval_batches=50 \
+--num_eval_samples=50 \
 --testfiles=./plots_data/random/*.tfrecord \
 --batch_size=4 \
 --init_particles_distr='gaussian' \

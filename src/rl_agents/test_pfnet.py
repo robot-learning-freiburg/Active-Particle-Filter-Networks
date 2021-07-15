@@ -41,10 +41,10 @@ def parse_args():
         help='Root directory for logs/summaries/checkpoints.'
     )
     arg_parser.add_argument(
-        '--num_eval_batches',
+        '--num_eval_samples',
         type=int,
         default=1,
-        help='Number of batch samples to use for evaluation. Total evaluation samples will be num_eval_batches*batch_size'
+        help='Total number of samples to use for evaluation. Total evaluation samples will be num_eval_samples=num_eval_batches*batch_size'
     )
     arg_parser.add_argument(
         '--testfiles',
@@ -169,6 +169,7 @@ def parse_args():
     params.map_pixel_in_meters = 0.01
 
     # post-processing
+    params.num_eval_batches = params.num_eval_samples//params.batch_size
 
     # compute observation channel dim
     if params.obs_mode == 'rgb-depth':
