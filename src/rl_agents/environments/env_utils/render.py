@@ -68,7 +68,8 @@ def draw_particles_pose(particles, weights, map_shape, particles_plt, scale=1):
 
     # HACK: display particles alpha proprtional to their weights
     lin_weights = softmax(weights)
-    alphas = np.where(lin_weights > np.mean(lin_weights), 1, 0) * lin_weights
+    th = np.mean(lin_weights)
+    alphas = np.where(lin_weights >= th, 1, 0) * lin_weights
     alphas = alphas/np.max(alphas)
 
     rgba_colors = cm.rainbow(weights-np.min(weights))

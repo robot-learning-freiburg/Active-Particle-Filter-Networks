@@ -54,7 +54,8 @@ def display_data(params):
     # init particles
     # HACK: display particles alpha proprtional to their weights
     init_lin_weights = softmax(init_particle_weights)
-    alphas = np.where(init_lin_weights > np.mean(init_lin_weights), 1, 0) * init_lin_weights
+    th = np.mean(init_lin_weights)
+    alphas = np.where(init_lin_weights >= th, 1, 0) * init_lin_weights
     alphas = alphas/np.max(alphas)
 
     part_x, part_y, part_th = np.split(init_particles, 3, axis=-1)
