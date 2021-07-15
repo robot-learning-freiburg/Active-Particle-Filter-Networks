@@ -239,3 +239,8 @@ depth_high: 10.0
 vertical_fov: 90
 increase camera height in urdf file
 3. use motion_planning to collect trajectory data
+
+July 15th 2021
+--------------
+1. train single trajectory for > 1000 backprop steps(epoch) without noise
+2. train for single apartment for > 1000 backprop steps(epoch) with and without noise

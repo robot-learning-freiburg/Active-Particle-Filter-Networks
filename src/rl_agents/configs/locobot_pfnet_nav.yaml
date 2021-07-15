@@ -37,8 +37,8 @@ discount_factor: 0.99
 
 # termination condition
 dist_tol: 0.36  # body width
-max_step: 125
-max_collisions_allowed: 125
+max_step: 250
+max_collisions_allowed: 250
 
 # misc config
 initial_pos_z_offset: 0.1

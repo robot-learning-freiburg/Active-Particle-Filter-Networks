@@ -168,7 +168,7 @@ def main(_):
     argparser = argparse.ArgumentParser()
     params = argparser.parse_args([])
 
-    params.loop = 5
+    params.loop = 10
     params.agent = FLAGS.agent
     params.trajlen = FLAGS.max_step//params.loop
     params.max_lin_vel = env.config.get("linear_velocity", 0.5)
