@@ -278,8 +278,9 @@ def store_results(eps_idx, obstacle_map, org_map_shape, particle_states, particl
 
         # plot est pose particles
         particles_plt = est_plt['particles']
+        weights = particle_weights[b_idx] - np.min(particle_weights[b_idx])
         est_plt['particles'] = render.draw_particles_pose(
-            particle_state[b_idx], particle_weights[b_idx],
+            particle_state[b_idx], weights,
             pad_map_shape, particles_plt)
 
         plt_ax.legend([gt_plt['robot_position'], est_plt['robot_position']], ["gt_pose", "est_pose"])

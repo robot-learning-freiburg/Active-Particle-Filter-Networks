@@ -293,8 +293,8 @@ def display_data(arg_params):
 
         # init particles
         part_x, part_y, part_th = np.split(init_particles, 3, axis=-1)
-        color = cm.rainbow(init_particle_weights)
-        # plt_ax.scatter(part_x, part_y, s=10, c=color, alpha=0.5)
+        weights = init_particle_weights - np.min(init_particle_weights)
+        # plt_ax.scatter(part_x, part_y, s=10, c=cm.rainbow(weights), alpha=0.5)
 
         # gt init pose
         x1, y1, th1 = true_states[0]
