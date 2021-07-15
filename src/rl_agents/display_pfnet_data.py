@@ -3,6 +3,7 @@
 import argparse
 import cv2
 import glob
+import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 from matplotlib.patches import Wedge
 import numpy as np
@@ -245,6 +246,8 @@ def display_data(arg_params):
 
     b_idx = 0
     t_idx = 10
+    batch_size = arg_params.batch_size
+    num_particles = arg_params.num_particles
     fig = plt.figure(figsize=(14, 14))
     plts = {}
     for idx in range(arg_params.floors):
@@ -261,6 +264,8 @@ def display_data(arg_params):
         odometry = batch_sample['odometry'][b_idx]
         true_states = batch_sample['true_states'][b_idx]
         init_particles = batch_sample['init_particles'][b_idx]
+        # init_particle_weights = np.full(shape=(batch_size, num_particles), fill_value=np.log(1.0 / float(num_particles)))[b_idx]
+        init_particle_weights = np.random.random(size=(batch_size, num_particles))[b_idx]
         obstacle_map = batch_sample['obstacle_map'][b_idx]
         floor_map = batch_sample['floor_map'][b_idx]
         org_map_shape = batch_sample['org_map_shape'][b_idx]
@@ -288,24 +293,27 @@ def display_data(arg_params):
 
         # init particles
         part_x, part_y, part_th = np.split(init_particles, 3, axis=-1)
-        #plt_ax.scatter(part_x, part_y, s=10, c='red', alpha=.4)
+        color = cm.rainbow(init_particle_weights)
+        # plt_ax.scatter(part_x, part_y, s=10, c=color, alpha=0.5)
 
-        x1, y1, th1 = true_states[0]
         # gt init pose
+        x1, y1, th1 = true_states[0]
         heading_len  = robot_radius = 10.0
         xdata = [x1, x1 + (robot_radius + heading_len) * np.cos(th1)]
         ydata = [y1, y1 + (robot_radius + heading_len) * np.sin(th1)]
         position_plt = Wedge((x1, y1), r=robot_radius, theta1=0, theta2=360, color='blue', alpha=0.5)
-        #plt_ax.add_artist(position_plt)
-        #plt_ax.plot(xdata, ydata, color='blue', alpha=0.5)
+        # plt_ax.add_artist(position_plt)
+        # plt_ax.plot(xdata, ydata, color='blue', alpha=0.5)
 
         # # gt trajectory (w.r.t odometry)
+        # x1, y1, th1 = true_states[0]
         # for t_idx in range(1, true_states.shape[0]):
         #     x2, y2, th2 = true_states[t_idx]
         #     plt_ax.arrow(x1, y1, (x2-x1), (y2-y1), head_width=5, head_length=7, fc='blue', ec='blue')
         #     x1, y1, th1 = x2, y2, th2
 
         # gt trajectory (w.r.t gt pose)
+        x1, y1, th1 = true_states[0]
         for t_idx in range(0, odometry.shape[0]-1):
             x2, y2, th2 = datautils.sample_motion_odometry(np.array([x1, y1, th1]),odometry[t_idx])
             plt_ax.arrow(x1, y1, (x2-x1), (y2-y1), head_width=5, head_length=7, fc='black', ec='black')

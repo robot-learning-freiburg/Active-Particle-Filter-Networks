@@ -20,11 +20,15 @@ def display_data(params):
 
     b_idx = 2
     t_idx = 10
+    batch_size = params.batch_size
+    num_particles = params.num_particles
     observation = data_sample['observation'][b_idx]
     odometry = data_sample['odometry'][b_idx]
     true_states = data_sample['true_states'][b_idx]
     global_map = data_sample['global_map'][b_idx]
     init_particles = data_sample['init_particles'][b_idx]
+    # init_particle_weights = np.full(shape=(batch_size, num_particles), fill_value=np.log(1.0 / float(num_particles)))[b_idx]
+    init_particle_weights = np.random.random(size=(batch_size, num_particles))[b_idx]
     org_map_shape = data_sample['org_map_shapes'][b_idx]
     org_map = global_map[:org_map_shape[0], :org_map_shape[1], :org_map_shape[2]]
 
@@ -48,7 +52,8 @@ def display_data(params):
 
     # init particles
     part_x, part_y, part_th = np.split(init_particles, 3, axis=-1)
-    plt_ax.scatter(part_x, part_y, s=10, c='red', alpha=.4)
+    color = cm.rainbow(init_particle_weights)
+    plt_ax.scatter(part_x, part_y, s=10, c=color, alpha=0.5)
 
     x1, y1, th1 = true_states[0]
     # gt init pose
