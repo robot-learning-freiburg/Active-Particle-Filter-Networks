@@ -6,6 +6,7 @@ import tensorflow as tf
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 from matplotlib.patches import Wedge
+from scipy.special import softmax
 
 def draw_text(text, bgcolor, plt_ax, text_plt):
     """
@@ -65,9 +66,13 @@ def draw_particles_pose(particles, weights, map_shape, particles_plt, scale=1):
     part_x = part_x / scale
     part_y = part_y / scale
 
-    weights = weights - np.min(weights)
-    rgba_colors = cm.rainbow(weights)
-    rgba_colors[:, 3] = weights/np.max(weights) #alpha
+    # HACK: display particles alpha proprtional to their weights
+    lin_weights = softmax(weights)
+    alphas = np.where(lin_weights > np.mean(lin_weights), 1, 0) * lin_weights
+    alphas = alphas/np.max(alphas)
+
+    rgba_colors = cm.rainbow(weights-np.min(weights))
+    rgba_colors[:, 3] = alphas
 
     if particles_plt is None:
         # render particles positions with color

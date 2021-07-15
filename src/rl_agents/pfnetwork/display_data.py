@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Wedge
 import numpy as np
 import preprocess, arguments
+from scipy.special import softmax
 
 def display_data(params):
     """
@@ -51,10 +52,14 @@ def display_data(params):
     plt_ax.imshow(org_map)
 
     # init particles
+    # HACK: display particles alpha proprtional to their weights
+    init_lin_weights = softmax(init_particle_weights)
+    alphas = np.where(init_lin_weights > np.mean(init_lin_weights), 1, 0) * init_lin_weights
+    alphas = alphas/np.max(alphas)
+
     part_x, part_y, part_th = np.split(init_particles, 3, axis=-1)
-    weights = init_particle_weights - np.min(init_particle_weights)
-    rgba_colors = cm.rainbow(weights)
-    rgba_colors[:, 3] = weights/np.max(weights) #alpha
+    rgba_colors = cm.rainbow(init_particle_weights-np.min(init_particle_weights))
+    rgba_colors[:, 3] = alphas
     plt_ax.scatter(part_x, part_y, s=10, c=rgba_colors)
 
     x1, y1, th1 = true_states[0]
