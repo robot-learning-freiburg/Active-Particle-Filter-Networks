@@ -23,6 +23,7 @@ def parse_args():
     argparser.add_argument('--testfiles', nargs='*', default=['./house3d_data/eval/valid.tfrecords'], help='Data file(s) for testing (tfrecord).')
     argparser.add_argument('--num_train_samples', type=int, default=80, help='Total number of samples to use for training. Total training samples will be num_train_samples=num_train_batches*batch_size')
     argparser.add_argument('--num_eval_samples', type=int, default=80, help='Total number of samples to use for evaluation. Total evaluation samples will be num_eval_samples=num_eval_batches*batch_size')
+    argparser.add_argument('--num_test_samples', type=int, default=80, help='Total number of samples to use for testing. Total testing samples will be num_test_samples=num_test_batches*batch_size')
 
     # input configuration
     argparser.add_argument('--obs_mode', type=str, default='rgb-depth', help='Observation input type. Possible values: rgb / depth / rgb-depth.')

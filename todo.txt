@@ -230,6 +230,24 @@ $ nohup python -u display_data.py \
 --gpu_num=0 \
 --seed=42 > nohup.out &
 
+$ nohup python -u test.py \
+--logpath='rgb_depth' \
+--testfiles './house3d_data/test/test.tfrecords' \
+--num_test_samples=816 \
+--obs_mode='rgb-depth' \
+--load='' \
+--init_particles_distr='tracking' \
+--init_particles_std '0.15' '0.523599' \
+--trajlen=24 \
+--num_particles=30 \
+--transition_std '0.' '0.' \
+--resample=false \
+--batch_size=6 \
+--learningrate=1e-4 \
+--epochs=100 \
+--gpu_num=1 \
+--seed=42 > rgb_depth.out &
+
 July 7th 2021
 --------------
 1. verify depth data for rgb+depth input
