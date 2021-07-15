@@ -65,15 +65,17 @@ def draw_particles_pose(particles, weights, map_shape, particles_plt, scale=1):
     part_x = part_x / scale
     part_y = part_y / scale
 
-    color = cm.rainbow(weights)
+    weights = weights - np.min(weights)
+    rgba_colors = cm.rainbow(weights)
+    rgba_colors[:, 3] = weights/np.max(weights) #alpha
 
     if particles_plt is None:
         # render particles positions with color
-        particles_plt = plt.scatter(part_x, part_y, s=10, c=color, alpha=.4)
+        particles_plt = plt.scatter(part_x, part_y, s=10, c=rgba_colors)
     else:
         # update existing particles positions and color
         particles_plt.set_offsets(tf.stack([part_x, part_y], axis=-1))
-        particles_plt.set_color(color)
+        particles_plt.set_color(rgba_colors)
 
     return particles_plt
 

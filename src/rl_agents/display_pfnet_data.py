@@ -294,7 +294,9 @@ def display_data(arg_params):
         # init particles
         part_x, part_y, part_th = np.split(init_particles, 3, axis=-1)
         weights = init_particle_weights - np.min(init_particle_weights)
-        # plt_ax.scatter(part_x, part_y, s=10, c=cm.rainbow(weights), alpha=0.5)
+        rgba_colors = cm.rainbow(weights)
+        rgba_colors[:, 3] = weights/np.max(weights) #alpha
+        plt_ax.scatter(part_x, part_y, s=10, c=rgba_colors)
 
         # gt init pose
         x1, y1, th1 = true_states[0]
