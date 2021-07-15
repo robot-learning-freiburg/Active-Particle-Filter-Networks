@@ -263,6 +263,7 @@ def store_results(eps_idx, obstacle_map, org_map_shape, particle_states, particl
         est_state = est_states[:, traj, :]
         particle_state = particle_states[:, traj, :, :]
         lin_weight = lin_weights[:, traj, :]
+        particle_weight = particle_weights[:, traj, :]
 
         # plot true robot pose
         position_plt, heading_plt = gt_plt['robot_position'], gt_plt['robot_heading']
@@ -278,9 +279,8 @@ def store_results(eps_idx, obstacle_map, org_map_shape, particle_states, particl
 
         # plot est pose particles
         particles_plt = est_plt['particles']
-        weights = particle_weights[b_idx] - np.min(particle_weights[b_idx])
         est_plt['particles'] = render.draw_particles_pose(
-            particle_state[b_idx], weights,
+            particle_state[b_idx], particle_weight[b_idx]- np.min(particle_weight[b_idx]),
             pad_map_shape, particles_plt)
 
         plt_ax.legend([gt_plt['robot_position'], est_plt['robot_position']], ["gt_pose", "est_pose"])
