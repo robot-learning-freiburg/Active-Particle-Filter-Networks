@@ -38,10 +38,11 @@ def draw_floor_map(floor_map, map_shape, plt_ax, map_plt, cmap='gray'):
     :return matplotlib.image.AxesImage: updated plot of scene floor map
     """
 
-    origin_x, origin_y = map_shape[1]/2, map_shape[0]/2
+    H, W = map_shape[:2]
+    origin_x, origin_y = W/2, H/2
     if map_plt is None:
         # draw floor map
-        map_plt = plt_ax.imshow(floor_map, cmap=cmap, origin='lower')
+        map_plt = plt_ax.imshow(floor_map[:H, :W], cmap=cmap, origin='lower')
         plt.scatter(origin_x, origin_y, s=10, c='black', marker='x', alpha=1)
     else:
         # do nothing

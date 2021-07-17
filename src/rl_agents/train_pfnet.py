@@ -272,7 +272,7 @@ def pfnet_train(arg_params):
 
     # evaluation data
     filenames = list(glob.glob(os.path.join(arg_params.tfrecordpath, 'eval', '*.tfrecord')))
-    eval_ds = datautils.get_dataflow(filenames, arg_params.batch_size, arg_params.s_buffer_size, is_training=False)
+    eval_ds = datautils.get_dataflow(filenames, arg_params.batch_size, arg_params.s_buffer_size, is_training=True)
     print(f'eval data: {filenames}')
 
     # create igibson env which is used "only" to sample particles
