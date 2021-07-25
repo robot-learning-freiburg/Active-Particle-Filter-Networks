@@ -783,9 +783,12 @@ class LocalizeGibsonEnv(iGibsonEnv):
             # pose mse in mts
             gt_pose_mts = datautils.inv_transform_pose(gt_pose, floor_map.shape, self.map_pixel_in_meters)
             est_pose_mts = datautils.inv_transform_pose(est_pose, floor_map.shape, self.map_pixel_in_meters)
+            pose_diff = gt_pose_mts-est_pose_mts
+            pose_diff[-1] = datautils.normalize(pose_diff[-1]) # normalize
+            
             step_txt_plt = self.env_plts['step_txt_plt']
             step_txt_plt = render.draw_text(
-                f'pose mse: {np.linalg.norm(gt_pose_mts-est_pose_mts):02.3f} ',
+                f'pose mse: {np.linalg.norm(pose_diff):02.3f} ',
                 '#7B241C', self.plt_ax, step_txt_plt)
             self.env_plts['step_txt_plt'] = step_txt_plt
             print(f'gt_pose: {gt_pose_mts}, est_pose: {est_pose_mts} in mts')

@@ -181,6 +181,7 @@ def main(_):
     particle_std = np.array([0.3, 0.523599])
     particle_std2 = np.square(particle_std)  # variance
     params.init_particles_cov = np.diag(particle_std2[(0, 0, 1), ])
+    params.particles_range = 100
 
     # compute observation channel dim
     if params.obs_mode == 'rgb-depth':
