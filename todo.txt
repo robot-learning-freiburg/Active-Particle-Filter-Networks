@@ -48,16 +48,6 @@ June 2nd 2021
    c) different num_particles (500, 1000, 2000)
    d) different init distribution (gaussian, uniform)
 
-python supervised_data.py \
---filename=./data/random/test0.tfrecord \
---agent='random' \
---num_records=25 \
---config_file=./configs/turtlebot_random_nav.yaml \
---env_mode='headless' \
---gpu_num=0 \
---init_env_pfnet=False \
---seed=90
-
 $ nohup python -u test_pfnet.py \
 --root_dir=./random/igibson_pfnet/run1 \
 --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_87_5.830/pfnet_checkpoint \
@@ -65,6 +55,23 @@ $ nohup python -u test_pfnet.py \
 --num_eval_samples=50 \
 --testfiles=./plots_data/random/*.tfrecord \
 --batch_size=4 \
+--init_particles_distr='gaussian' \
+--init_particles_std '0.15' '0.523599' \
+--num_particles=500 \
+--transition_std '0.02' '0.0872665' \
+--resample=true \
+--alpha_resample_ratio=0.8 \
+--global_map_size '4000' '4000' '1' \
+--window_scaler=8.0 \
+--config_file=./configs/turtlebot_random_nav.yaml \
+--device_idx=0 \
+--seed=15 > nohup1.out &
+
+# real-time
+$ nohup python -u test_pfnet.py \
+--pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_63_0.136/pfnet_checkpoint \
+--obs_mode='rgb-depth' \
+--scene_id='Rs' \
 --init_particles_distr='gaussian' \
 --init_particles_std '0.15' '0.523599' \
 --num_particles=500 \

@@ -15,7 +15,7 @@ from pfnetwork import pfnet
 from environments.env_utils import datautils, pfnet_loss, render
 from environments.envs.localize_env import LocalizeGibsonEnv
 
-np.set_printoptions(suppress=True)
+np.set_printoptions(suppress=True, precision=3)
 def parse_args():
     """
     Parse command line arguments
@@ -454,10 +454,11 @@ def rt_pfnet_test(arg_params):
     :return:
     """
 
+    # HACK:
     agent = 'manual'
-    trajlen = 250
     arg_params.use_plot = True
     arg_params.store_plot = False
+    arg_params.init_env_pfnet = True
 
     # create igibson env which is used "only" to sample particles
     env = LocalizeGibsonEnv(
@@ -465,7 +466,7 @@ def rt_pfnet_test(arg_params):
         scene_id=arg_params.scene_id,
         mode=arg_params.env_mode,
         use_tf_function=arg_params.use_tf_function,
-        init_pfnet=True,
+        init_pfnet=arg_params.init_env_pfnet,
         action_timestep=arg_params.action_timestep,
         physics_timestep=arg_params.physics_timestep,
         device_idx=arg_params.device_idx,
@@ -474,16 +475,20 @@ def rt_pfnet_test(arg_params):
     env.reset()
     env.render('human')
 
+    trajlen = env.config.get('max_step', 500)//arg_params.loop
+    max_lin_vel = env.config.get("linear_velocity", 0.5)
+    max_ang_vel = env.config.get("angular_velocity", np.pi/2)
     for _ in range(trajlen-1):
         if agent == 'manual':
-            action = datautils.get_discrete_action()
+            action = datautils.get_discrete_action(max_lin_vel, max_ang_vel)
         else:
             # default random action forward: 0.7, turn: 0.3, backward:0., do_nothing:0.0
             action = np.random.choice(5, p=[0.7, 0.0, 0.15, 0.15, 0.0])
             # action = env.action_space.sample()
 
-        # take action and get new observation
-        obs, reward, done, _ = env.step(action)
+        for _ in range(arg_params.loop):
+            # take action and get new observation
+            obs, reward, done, _ = env.step(action)
         env.render('human')
 
     env.close()
@@ -492,4 +497,4 @@ if __name__ == '__main__':
     parsed_params = parse_args()
     pfnet_test(parsed_params)
 
-    #rt_pfnet_test(parsed_params)
+    # rt_pfnet_test(parsed_params)
