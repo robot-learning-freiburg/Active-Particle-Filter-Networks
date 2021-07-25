@@ -602,7 +602,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         return floor_map
 
 
-    def get_random_particles(self, num_particles, particles_distr, robot_pose, scene_map, particles_cov):
+    def get_random_particles(self, num_particles, particles_distr, robot_pose, scene_map, particles_cov, particles_range=100):
         """
         Sample random particles based on the scene
 
@@ -613,6 +613,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         :param particles_cov: for tracking Gaussian covariance matrix (3, 3)
         :param num_particles: integer indicating the number of random particles per batch
         :param scene_map: floor map to sample valid random particles
+        :param particles_range: particles range in pixels for uniform distribution
 
         :return ndarray: random particle poses  (batch_size, num_particles, 3) in pixel space
         """
@@ -631,7 +632,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
                 # get bounding box for more efficient sampling
                 # rmin, rmax, cmin, cmax = self.bounding_box(scene_map)
-                rmin, rmax, cmin, cmax = self.bounding_box(scene_map, robot_pose[b_idx], lmt=75)
+                rmin, rmax, cmin, cmax = self.bounding_box(scene_map, robot_pose[b_idx], particles_range)
 
                 while sample_i < num_particles:
                     particle = np.random.uniform(low=(cmin, rmin, 0.0), high=(cmax, rmax, 2.0 * np.pi), size=(3,))

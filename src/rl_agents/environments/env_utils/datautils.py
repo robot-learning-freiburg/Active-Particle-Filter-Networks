@@ -563,6 +563,7 @@ def transform_raw_record(env, parsed_record, params):
     num_particles = params.num_particles
     particles_cov = params.init_particles_cov
     particles_distr = params.init_particles_distr
+    particles_range = params.particles_range
 
     # Required rescale to [-1, 1]
     assert obs_mode in ['rgb', 'depth', 'rgb-depth']
@@ -614,7 +615,7 @@ def transform_raw_record(env, parsed_record, params):
         # sample random particles using gt_pose at start of trajectory
         gt_first_pose = np.expand_dims(trans_record['true_states'][b_idx, 0, :], axis=0)
         init_particles = env.get_random_particles(num_particles, particles_distr,
-                                        gt_first_pose, floor_map, particles_cov)
+                                        gt_first_pose, floor_map, particles_cov, particles_range)
 
         # HACK: center zero-pad floor/obstacle map
         obstacle_map = pad_images(obstacle_map, pad_map_size)

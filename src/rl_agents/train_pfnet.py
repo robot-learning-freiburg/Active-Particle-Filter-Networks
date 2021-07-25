@@ -123,6 +123,12 @@ def parse_args():
              'Values: translation std (meters), rotation std (radians)'
     )
     arg_parser.add_argument(
+        '--particles_range',
+        type=int,
+        default=100,
+        help='Pixel range to limit uniform distribution sampling +/- box particles_range center at robot pose'
+    )
+    arg_parser.add_argument(
         '--num_particles',
         type=int,
         default=30,

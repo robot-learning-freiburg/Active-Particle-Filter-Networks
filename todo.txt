@@ -57,6 +57,7 @@ $ nohup python -u test_pfnet.py \
 --batch_size=4 \
 --init_particles_distr='gaussian' \
 --init_particles_std '0.15' '0.523599' \
+--particles_range=100 \
 --num_particles=500 \
 --transition_std '0.02' '0.0872665' \
 --resample=true \
@@ -74,6 +75,7 @@ $ nohup python -u test_pfnet.py \
 --scene_id='Rs' \
 --init_particles_distr='gaussian' \
 --init_particles_std '0.15' '0.523599' \
+--particles_range=100 \
 --num_particles=500 \
 --transition_std '0.02' '0.0872665' \
 --resample=true \
@@ -120,6 +122,7 @@ $ nohup python -u train_pfnet.py \
 --learning_rate=2.5e-3 \
 --init_particles_distr='gaussian' \
 --init_particles_std '0.15' '0.523599' \
+--particles_range=100 \
 --num_particles=30 \
 --transition_std '0.' '0.' \
 --resample=false \
@@ -183,6 +186,7 @@ $ nohup python -u display_pfnet_data.py \
 --s_buffer_size=50 \
 --init_particles_distr='gaussian' \
 --init_particles_std '0.15' '0.523599' \
+--particles_range=100 \
 --num_particles=30 \
 --transition_std '0.' '0.' \
 --resample=false \
