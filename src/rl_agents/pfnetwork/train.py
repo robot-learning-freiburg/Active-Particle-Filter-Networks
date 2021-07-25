@@ -92,10 +92,10 @@ def run_training(params):
 
 
     # repeat for a fixed number of epochs
-    for epoch in range(params.epochs):
+    for epoch in tqdm(range(params.epochs)):
         train_itr = train_ds.as_numpy_iterator()
         # run training over all training samples in an epoch
-        for train_idx in tqdm(range(num_train_batches)):
+        for train_idx in range(num_train_batches):
             raw_train_record = next(train_itr)
             data_sample = preprocess.transform_raw_record(raw_train_record, params)
 
@@ -137,7 +137,7 @@ def run_training(params):
         if params.run_evaluation:
             eval_itr = eval_ds.as_numpy_iterator()
             # run evaluation over all eval samples in an epoch
-            for eval_idx in tqdm(range(num_eval_batches)):
+            for eval_idx in range(num_eval_batches):
                 raw_eval_record = next(eval_itr)
                 data_sample = preprocess.transform_raw_record(raw_eval_record, params)
 

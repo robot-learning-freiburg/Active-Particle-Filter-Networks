@@ -379,12 +379,12 @@ def pfnet_train(arg_params):
         eval_loss(loss_pred)  # overall trajectory loss
 
     # repeat for a fixed number of epochs train and eval loops
-    for epoch in range(arg_params.epochs):
+    for epoch in tqdm(range(arg_params.epochs)):
 
         #------------------------#
         # run training over all training samples in an epoch
         train_itr = train_ds.as_numpy_iterator()
-        for idx in tqdm(range(arg_params.num_train_batches)):
+        for idx in range(arg_params.num_train_batches):
 
             parsed_record = next(train_itr)
             batch_sample = datautils.transform_raw_record(env, parsed_record, arg_params)
@@ -427,7 +427,7 @@ def pfnet_train(arg_params):
         #------------------------#
         # run evaluation over all eval samples in an epoch
         eval_itr = eval_ds.as_numpy_iterator()
-        for idx in tqdm(range(arg_params.num_eval_batches)):
+        for idx in range(arg_params.num_eval_batches):
 
             parsed_record = next(eval_itr)
             batch_sample = datautils.transform_raw_record(env, parsed_record, arg_params)
