@@ -212,10 +212,13 @@ def parse_args():
     params.use_tf_function = False
     params.init_env_pfnet = False
     params.store_results = True
+    params.num_clusters = 10
 
     params.env_mode = 'headless'
     os.environ['CUDA_VISIBLE_DEVICES'] = str(params.device_idx)
     os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+    tf.get_logger().setLevel('WARNING')
 
     # set random seeds
     random.seed(params.seed)

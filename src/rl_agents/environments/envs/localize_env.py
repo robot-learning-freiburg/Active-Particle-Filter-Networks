@@ -134,6 +134,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         self.pf_params.obs_ch = 3
         self.pf_params.obs_mode = 'rgb'
+        self.pf_params.num_clusters = 10
 
         # build initial covariance matrix of particles, in pixels and radians
         particle_std2 = np.square(self.pf_params.init_particles_std.copy())  # variance
@@ -211,6 +212,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.curr_obs = None
         self.curr_gt_pose = None
         self.curr_est_pose = None
+        self.curr_cluster = None
 
 
     def reset_variables(self):
@@ -228,6 +230,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.curr_obs = None
         self.curr_gt_pose = None
         self.curr_est_pose = None
+        self.curr_cluster = None
 
 
     def step(self, action):
@@ -251,7 +254,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             pose_mse = self.step_pfnet([
                 new_rgb_obs,
                 new_depth_obs
-            ])['pred'].numpy()
+            ])['pred'].cpu().numpy()
             # TODO: may need better reward
             # compute reward and normalize to range [-10, 0]
             reward = np.clip(reward-pose_mse, -10, 0)
@@ -274,7 +277,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             pose_mse = self.reset_pfnet([
                 new_rgb_obs,
                 new_depth_obs
-            ])['pred'].numpy()
+            ])['pred'].cpu().numpy()
 
         custom_state = self.process_state(state)
         return custom_state
@@ -315,7 +318,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             if self.use_pfnet:
                 processed_state['task_obs'] = np.concatenate([
                     self.robots[0].calc_state(),  # robot proprioceptive state
-                    self.curr_est_pose[0].numpy()  # gaussian mean of particles (x,y, theta)
+                    self.curr_est_pose[0].cpu().numpy()  # gaussian mean of particles (x,y, theta)
                 ])
             else:
                 processed_state['task_obs'] = np.concatenate([
@@ -343,7 +346,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         floor_map = self.floor_map[0]
         old_rgb_obs, old_depth_obs = self.curr_obs
-        old_pose = self.curr_gt_pose[0].numpy()
+        old_pose = self.curr_gt_pose[0].cpu().numpy()
         old_pfnet_state = self.curr_pfnet_state
 
         # get new robot state
@@ -425,6 +428,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             new_rgb_obs,
             new_depth_obs
         ]
+        self.curr_cluster = self.compute_kmeans()
 
         return loss_dict
 
@@ -496,7 +500,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             self.get_random_particles(
                 num_particles,
                 init_particles_distr,
-                new_pose.numpy(),
+                new_pose.cpu().numpy(),
                 floor_map[0],
                 init_particles_cov)), dtype=tf.float32)
         init_particle_weights = tf.constant(
@@ -532,9 +536,41 @@ class LocalizeGibsonEnv(iGibsonEnv):
             new_rgb_obs,
             new_depth_obs
         ]
+        self.curr_cluster = self.compute_kmeans()
 
         return loss_dict
 
+    def compute_kmeans(self, num_iterations=20):
+        num_clusters = self.pf_params.num_clusters
+        particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
+        lin_weights = tf.nn.softmax(particle_weights, axis=-1)[0].cpu().numpy()
+        particles = particles[0].cpu().numpy()
+
+        kmeans = tf.compat.v1.estimator.experimental.KMeans(
+            num_clusters=num_clusters,
+            use_mini_batch=False
+        )
+        def particles_ds():
+            return tf.compat.v1.data.Dataset.from_tensors(
+                tf.convert_to_tensor(particles, dtype=tf.float32)
+            )
+
+        previous_centers = np.zeros((num_clusters, 3))
+        for _ in range(num_iterations):
+            kmeans.train(particles_ds)
+            cluster_centers = kmeans.cluster_centers()
+            if np.linalg.norm(cluster_centers - previous_centers) < 1e-2:
+                break
+            else:
+                previous_centers = cluster_centers
+
+        cluster_centers = kmeans.cluster_centers()
+        cluster_indices = list(kmeans.predict_cluster_index(particles_ds))
+        cluster_weights = np.zeros(num_clusters)
+        for i, particle in enumerate(particles):
+            cluster_index = cluster_indices[i]
+            cluster_weights[cluster_index] += lin_weights[i]
+        return cluster_centers, cluster_weights
 
     def set_scene(self, scene_id, floor_num):
         """
@@ -727,14 +763,14 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         if self.use_pfnet and self.pf_params.use_plot:
             # environment map
-            floor_map = self.floor_map[0].numpy()
+            floor_map = self.floor_map[0].cpu().numpy()
             map_plt = self.env_plts['map_plt']
             map_plt = render.draw_floor_map(floor_map, floor_map.shape, self.plt_ax, map_plt)
             self.env_plts['map_plt'] = map_plt
 
             # ground truth robot pose and heading
             color = '#7B241C'
-            gt_pose = self.curr_gt_pose[0].numpy()
+            gt_pose = self.curr_gt_pose[0].cpu().numpy()
             position_plt = self.env_plts['robot_gt_plt']['position_plt']
             heading_plt = self.env_plts['robot_gt_plt']['heading_plt']
             position_plt, heading_plt = render.draw_robot_pose(
@@ -749,7 +785,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
             # estimated robot pose and heading
             color = '#515A5A'
-            est_pose = self.curr_est_pose[0].numpy()
+            est_pose = self.curr_est_pose[0].cpu().numpy()
             position_plt = self.env_plts['robot_est_plt']['position_plt']
             heading_plt = self.env_plts['robot_est_plt']['heading_plt']
             position_plt, heading_plt = render.draw_robot_pose(
@@ -762,13 +798,23 @@ class LocalizeGibsonEnv(iGibsonEnv):
             self.env_plts['robot_est_plt']['position_plt'] = position_plt
             self.env_plts['robot_est_plt']['heading_plt'] = heading_plt
 
-            # particles color coded using weights
-            particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
-            lin_weights = tf.nn.softmax(particle_weights, axis=-1)
+            # # particles color coded using weights
+            # particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
+            # lin_weights = tf.nn.softmax(particle_weights, axis=-1)
+            # particles_plt = self.env_plts['robot_est_plt']['particles_plt']
+            # particles_plt = render.draw_particles_pose(
+            #     particles[0].cpu().numpy(),
+            #     lin_weights[0].cpu().numpy(),
+            #     floor_map.shape,
+            #     particles_plt)
+            # self.env_plts['robot_est_plt']['particles_plt'] = particles_plt
+
+            # kmeans-cluster particles color coded using weights
+            cc_particles, cc_weights = self.curr_cluster
             particles_plt = self.env_plts['robot_est_plt']['particles_plt']
             particles_plt = render.draw_particles_pose(
-                particles[0].numpy(),
-                lin_weights[0].numpy(),
+                cc_particles,
+                cc_weights,
                 floor_map.shape,
                 particles_plt)
             self.env_plts['robot_est_plt']['particles_plt'] = particles_plt
@@ -785,7 +831,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             est_pose_mts = datautils.inv_transform_pose(est_pose, floor_map.shape, self.map_pixel_in_meters)
             pose_diff = gt_pose_mts-est_pose_mts
             pose_diff[-1] = datautils.normalize(pose_diff[-1]) # normalize
-            
+
             step_txt_plt = self.env_plts['step_txt_plt']
             step_txt_plt = render.draw_text(
                 f'pose mse: {np.linalg.norm(pose_diff):02.3f} ',
