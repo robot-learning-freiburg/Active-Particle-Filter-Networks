@@ -79,16 +79,15 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.use_tf_function = use_tf_function
         if self.use_pfnet:
             self.init_pfnet(pf_params)
-            task_obs_dim = 18 + 3 # robot_prorpio_state (18) + est_pose (3)
         else:
-            task_obs_dim = 18 # robot_prorpio_state (18)
             self.pf_params.use_plot = False
             self.pf_params.store_plot = False
 
         # custom tf_agents we are using supports dict() type observations
         observation_space = OrderedDict()
-        self.custom_output = ['rgb_obs', 'depth_obs', 'obstacle_map', 'particle_cluster']
+        self.custom_output = ['task_obs', 'rgb_obs', 'depth_obs', 'obstacle_map', 'particle_cluster']
 
+        task_obs_dim = 18 # robot_prorpio_state (18)
         if 'task_obs' in self.custom_output:
             # HACK: use [-1k, +1k] range for TanhNormalProjectionNetwork to work
             observation_space['task_obs'] = gym.spaces.Box(
@@ -143,16 +142,16 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         self.pf_params.return_state = True
         self.pf_params.stateful = False
-        self.pf_params.global_map_size = [1000, 1000, 1]
-        self.pf_params.window_scaler = 8.0
+        self.pf_params.global_map_size = FLAGS.global_map_size
+        self.pf_params.window_scaler = FLAGS.window_scaler
         self.pf_params.max_step = self.config.get('max_step', 500)
 
         self.pf_params.transition_std[0] = self.pf_params.transition_std[0] / self.map_pixel_in_meters  # convert meters to pixels
         self.pf_params.init_particles_std[0] = self.pf_params.init_particles_std[0] / self.map_pixel_in_meters  # convert meters to pixels
 
-        self.pf_params.obs_ch = 3
-        self.pf_params.obs_mode = 'rgb'
-        self.pf_params.num_clusters = 10
+        self.pf_params.obs_ch = FLAGS.obs_ch
+        self.pf_params.obs_mode = FLAGS.obs_mode
+        self.pf_params.num_clusters = FLAGS.num_clusters
 
         # build initial covariance matrix of particles, in pixels and radians
         particle_std2 = np.square(self.pf_params.init_particles_std.copy())  # variance
@@ -275,7 +274,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             ])['pred'].cpu().numpy()
             # TODO: may need better reward
             # compute reward and normalize to range [-10, 0]
-            # reward = np.clip(reward-pose_mse, -10, 0)
+            reward = np.clip(reward-pose_mse, -10, 0)
 
         custom_state = self.process_state(state)
         return custom_state, reward, done, info
@@ -333,26 +332,21 @@ class LocalizeGibsonEnv(iGibsonEnv):
         # process and return only output we are expecting to
         processed_state = OrderedDict()
         if 'task_obs' in self.custom_output:
-            if self.use_pfnet:
-                processed_state['task_obs'] = np.concatenate([
-                    self.robots[0].calc_state(),  # robot proprioceptive state
-                    self.curr_est_pose[0].cpu().numpy()  # gaussian mean of particles (x,y, theta)
-                ])
-            else:
-                processed_state['task_obs'] = np.concatenate([
-                    self.robots[0].calc_state(),  # robot proprioceptive state
-                ])
+            processed_state['task_obs'] = self.robots[0].calc_state()  # robot proprioceptive state
         if 'rgb_obs' in self.custom_output:
             processed_state['rgb_obs'] = state['rgb']  # [0, 1] range rgb image
         if 'depth_obs' in self.custom_output:
             processed_state['depth_obs'] = state['depth']  # [0, 1] range depth image
         if 'particle_cluster' in self.custom_output:
-            processed_state['particle_cluster'] = np.concatenate([
-                self.curr_cluster[0],
-                np.expand_dims(self.curr_cluster[1], axis=1)
-            ], axis=-1) # [x, y, theta, weight]
+            cluster_centers, cluster_weights = self.curr_cluster
+            particle_cluster = []
+            floor_map = self.get_floor_map()
+            for i, cluster_center in enumerate(cluster_centers):
+                pose_mts = datautils.inv_transform_pose(cluster_center, floor_map.shape, self.map_pixel_in_meters)
+                particle_cluster.append(np.append(pose_mts, cluster_weights[i]))
+            processed_state['particle_cluster'] = np.stack(particle_cluster) # particle_cluster [x, y, theta, weight]
         if 'obstacle_map' in self.custom_output:
-            processed_state['obstacle_map'] = self.obstacle_map/2 # [0, 1] range floor map
+            processed_state['obstacle_map'] = self.get_obstacle_map() # [0, 1] range floor map
 
         return processed_state
 

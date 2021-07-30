@@ -48,6 +48,10 @@ from tf_agents.policies import random_tf_policy
 from tf_agents.replay_buffers import tf_uniform_replay_buffer
 from tf_agents.utils import common
 
+flags.DEFINE_string('obs_mode', 'rgb-depth',
+                    'Observation input type. Possible values: rgb / depth / rgb-depth.')
+flags.DEFINE_integer('obs_ch', 4, 'Observation channels.')
+flags.DEFINE_integer('num_clusters', 10, 'Number of particle clusters.')
 flags.DEFINE_string('root_dir', os.getenv('TEST_UNDECLARED_OUTPUTS_DIR'),
                     'Root directory for writing logs/summaries/checkpoints.')
 flags.DEFINE_multi_string(
@@ -136,6 +140,10 @@ flags.DEFINE_float('alpha_resample_ratio', 0.5,
                    'Alpha equal to 1.0 corresponds to hard-resampling.')
 flags.DEFINE_list('transition_std', [0.02, 0.0872665],
                   'Standard deviations for transition model. Values: translation std (meters), rotation std (radians)')
+flags.DEFINE_list('global_map_size', [1000, 1000, 1],
+                'Global map size in pixels (H, W, C).')
+flags.DEFINE_float('window_scaler', 8.0,
+                   'Rescale factor for extracing local map.')
 flags.DEFINE_string('pfnet_load',
                     os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pfnetwork/checkpoints/pfnet_igibson_data',
                                  'checkpoint_87_5.830/pfnet_checkpoint'),
@@ -279,8 +287,16 @@ def train_eval(
                 kernel_initializer=glorot_uniform_initializer,
             ))
 
-        if 'depth' in observation_spec:
-            preprocessing_layers['depth'] = tf.keras.Sequential(mlp_layers(
+        if 'depth_obs' in observation_spec:
+            preprocessing_layers['depth_obs'] = tf.keras.Sequential(mlp_layers(
+                conv_1d_layer_params=None,
+                conv_2d_layer_params=conv_2d_layer_params,
+                fc_layer_params=encoder_fc_layers,
+                kernel_initializer=glorot_uniform_initializer,
+            ))
+
+        if 'obstacle_map' in observation_spec:
+            preprocessing_layers['obstacle_map'] = tf.keras.Sequential(mlp_layers(
                 conv_1d_layer_params=None,
                 conv_2d_layer_params=conv_2d_layer_params,
                 fc_layer_params=encoder_fc_layers,
@@ -297,6 +313,14 @@ def train_eval(
 
         if 'task_obs' in observation_spec:
             preprocessing_layers['task_obs'] = tf.keras.Sequential(mlp_layers(
+                conv_1d_layer_params=None,
+                conv_2d_layer_params=None,
+                fc_layer_params=encoder_fc_layers,
+                kernel_initializer=glorot_uniform_initializer,
+            ))
+
+        if 'particle_cluster' in observation_spec:
+            preprocessing_layers['particle_cluster'] = tf.keras.Sequential(mlp_layers(
                 conv_1d_layer_params=None,
                 conv_2d_layer_params=None,
                 fc_layer_params=encoder_fc_layers,
@@ -560,6 +584,14 @@ def main(_):
     action_timestep = FLAGS.action_timestep
     physics_timestep = FLAGS.physics_timestep
     is_localize_env = FLAGS.is_localize_env
+
+    # compute observation channel dim
+    if FLAGS.obs_mode == 'rgb-depth':
+        FLAGS.obs_ch = 4
+    elif FLAGS.obs_mode == 'depth':
+        FLAGS.obs_ch = 1
+    else:
+        FLAGS.obs_ch = 3
 
     # set random seeds
     random.seed(FLAGS.seed)
