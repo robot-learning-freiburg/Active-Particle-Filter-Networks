@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 import numpy as np
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 from pathlib import Path
 import random
 import tensorflow as tf
@@ -217,8 +218,6 @@ def parse_args():
     params.env_mode = 'headless'
     os.environ['CUDA_VISIBLE_DEVICES'] = str(params.device_idx)
     os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-    tf.get_logger().setLevel('WARNING')
 
     # set random seeds
     random.seed(params.seed)

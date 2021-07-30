@@ -15,10 +15,12 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 from pathlib import Path
 from PIL import Image
 from pfnetwork import pfnet
 import tensorflow as tf
+tf.get_logger().setLevel('ERROR')
 
 
 class LocalizeGibsonEnv(iGibsonEnv):
