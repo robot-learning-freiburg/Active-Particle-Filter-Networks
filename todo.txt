@@ -273,3 +273,12 @@ July 15th 2021
 --------------
 1. train single trajectory for > 1000 backprop steps(epoch) without noise
 2. train for single apartment for > 1000 backprop steps(epoch) with and without noise
+
+July 28th 2021
+--------------
+1. check if network doing well for train data
+2. collect more training data
+3. take the network trained on single aprt for rl task: rgbd + obstacle/floor map + k-mean (10 cluster) [x, y, theta, weight]
+    1: at xy obstacle/empty
+    2: at xy particle position particle weight (sum)
+    3: at xy particle position orientation (weighted mean)
