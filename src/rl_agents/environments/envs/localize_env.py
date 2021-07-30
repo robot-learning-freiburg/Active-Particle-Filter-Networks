@@ -19,6 +19,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 from pathlib import Path
 from PIL import Image
 from pfnetwork import pfnet
+from sklearn.cluster import KMeans
 import tensorflow as tf
 tf.get_logger().setLevel('ERROR')
 
@@ -542,33 +543,40 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         return loss_dict
 
-    def compute_kmeans(self, num_iterations=20):
+    def compute_kmeans(self, num_iterations=1):
         num_clusters = self.pf_params.num_clusters
         particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
         lin_weights = tf.nn.softmax(particle_weights, axis=-1)[0].cpu().numpy()
         particles = particles[0].cpu().numpy()
 
-        kmeans = tf.compat.v1.estimator.experimental.KMeans(
-            num_clusters=num_clusters,
-            use_mini_batch=False
-        )
-        def particles_ds():
-            return tf.compat.v1.data.Dataset.from_tensors(
-                tf.convert_to_tensor(particles, dtype=tf.float32)
-            )
-
-        previous_centers = np.zeros((num_clusters, 3))
-        for _ in range(num_iterations):
-            kmeans.train(particles_ds)
-            cluster_centers = kmeans.cluster_centers()
-            if np.linalg.norm(cluster_centers - previous_centers) < 1e-2:
-                break
-            else:
-                previous_centers = cluster_centers
-
-        cluster_centers = kmeans.cluster_centers()
-        cluster_indices = list(kmeans.predict_cluster_index(particles_ds))
+        kmeans = KMeans(n_clusters=num_clusters)
+        kmeans.fit_predict(particles)
+        cluster_indices = kmeans.labels_
+        cluster_centers = kmeans.cluster_centers_
         cluster_weights = np.zeros(num_clusters)
+
+        # kmeans = tf.compat.v1.estimator.experimental.KMeans(
+        #     num_clusters=num_clusters,
+        #     use_mini_batch=False
+        # )
+        # def particles_ds():
+        #     return tf.compat.v1.data.Dataset.from_tensors(
+        #         tf.convert_to_tensor(particles, dtype=tf.float32)
+        #     )
+        #
+        # previous_centers = np.zeros((num_clusters, 3))
+        # for _ in range(num_iterations):
+        #     kmeans.train(particles_ds)
+        #     cluster_centers = kmeans.cluster_centers()
+        #     if np.linalg.norm(cluster_centers - previous_centers) < 1e-2:
+        #         break
+        #     else:
+        #         previous_centers = cluster_centers
+        #
+        # cluster_centers = kmeans.cluster_centers()
+        # cluster_indices = list(kmeans.predict_cluster_index(particles_ds))
+        # cluster_weights = np.zeros(num_clusters)
+
         for i, particle in enumerate(particles):
             cluster_index = cluster_indices[i]
             cluster_weights[cluster_index] += lin_weights[i]
