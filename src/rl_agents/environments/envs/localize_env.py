@@ -87,7 +87,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         # custom tf_agents we are using supports dict() type observations
         observation_space = OrderedDict()
-        self.custom_output = ['task_obs', ]
+        self.custom_output = ['rgb_obs', 'depth_obs', 'obstacle_map', 'particle_cluster']
 
         if 'task_obs' in self.custom_output:
             # HACK: use [-1k, +1k] range for TanhNormalProjectionNetwork to work
@@ -100,6 +100,21 @@ class LocalizeGibsonEnv(iGibsonEnv):
             observation_space['rgb_obs'] = gym.spaces.Box(
                 low=0.0, high=1.0,
                 shape=(self.image_height, self.image_width, 3),
+                dtype=np.float32)
+        if 'depth_obs' in self.custom_output:
+            observation_space['depth_obs'] = gym.spaces.Box(
+                low=0.0, high=1.0,
+                shape=(self.image_height, self.image_width, 1),
+                dtype=np.float32)
+        if 'particle_cluster' in self.custom_output:
+            observation_space['particle_cluster'] = gym.spaces.Box(
+                low=-1000.0, high=+1000.0,
+                shape=(self.pf_params.num_clusters,4),
+                dtype=np.float32)
+        if 'obstacle_map' in self.custom_output:
+            observation_space['obstacle_map'] = gym.spaces.Box(
+                low=0.0, high=1.0,
+                shape=self.pf_params.global_map_size,
                 dtype=np.float32)
 
         self.observation_space = gym.spaces.Dict(observation_space)
@@ -260,7 +275,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             ])['pred'].cpu().numpy()
             # TODO: may need better reward
             # compute reward and normalize to range [-10, 0]
-            reward = np.clip(reward-pose_mse, -10, 0)
+            # reward = np.clip(reward-pose_mse, -10, 0)
 
         custom_state = self.process_state(state)
         return custom_state, reward, done, info
@@ -297,23 +312,23 @@ class LocalizeGibsonEnv(iGibsonEnv):
         assert np.min(state['rgb'])>=0. and np.max(state['rgb'])<=1.
         assert np.min(state['depth'])>=0. and np.max(state['depth'])<=1.
 
-        # HACK: to collect data
-        new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 1] ->[0, 255]
-        new_depth_obs = copy.deepcopy(state['depth']*100) # [0, 1] ->[0, 100]
-
-        # check for close obstacles to robot
-        min_depth = np.min(new_depth_obs, axis=0)
-        left = np.min(min_depth[:64]) < self.depth_th
-        left_front = np.min(min_depth[64:128]) < self.depth_th
-        right_front = np.min(min_depth[128:192]) < self.depth_th
-        right = np.min(min_depth[192:]) < self.depth_th
-
-        # process new rgb, depth observation: convert [0, 255] to [-1, +1] range
-        return [
-                datautils.process_raw_image(new_rgb_obs),
-                datautils.process_raw_image(new_depth_obs),
-                np.array([left, left_front, right_front, right])
-            ]
+        # # HACK: to collect data
+        # new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 1] ->[0, 255]
+        # new_depth_obs = copy.deepcopy(state['depth']*100) # [0, 1] ->[0, 100]
+        #
+        # # check for close obstacles to robot
+        # min_depth = np.min(new_depth_obs, axis=0)
+        # left = np.min(min_depth[:64]) < self.depth_th
+        # left_front = np.min(min_depth[64:128]) < self.depth_th
+        # right_front = np.min(min_depth[128:192]) < self.depth_th
+        # right = np.min(min_depth[192:]) < self.depth_th
+        #
+        # # process new rgb, depth observation: convert [0, 255] to [-1, +1] range
+        # return [
+        #         datautils.process_raw_image(new_rgb_obs),
+        #         datautils.process_raw_image(new_depth_obs),
+        #         np.array([left, left_front, right_front, right])
+        #     ]
 
         # process and return only output we are expecting to
         processed_state = OrderedDict()
@@ -327,10 +342,17 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 processed_state['task_obs'] = np.concatenate([
                     self.robots[0].calc_state(),  # robot proprioceptive state
                 ])
-            # print(np.min(processed_state['task_obs']), np.max(processed_state['task_obs']))
         if 'rgb_obs' in self.custom_output:
             processed_state['rgb_obs'] = state['rgb']  # [0, 1] range rgb image
-            # cv2.imwrite('./test.png', processed_state['rgb_obs'] * 255)
+        if 'depth_obs' in self.custom_output:
+            processed_state['depth_obs'] = state['depth']  # [0, 1] range depth image
+        if 'particle_cluster' in self.custom_output:
+            processed_state['particle_cluster'] = np.concatenate([
+                self.curr_cluster[0],
+                np.expand_dims(self.curr_cluster[1], axis=1)
+            ], axis=-1) # [x, y, theta, weight]
+        if 'obstacle_map' in self.custom_output:
+            processed_state['obstacle_map'] = self.obstacle_map/2 # [0, 1] range floor map
 
         return processed_state
 
@@ -544,6 +566,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
         return loss_dict
 
     def compute_kmeans(self, num_iterations=1):
+        """
+        """
+
         num_clusters = self.pf_params.num_clusters
         particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
         lin_weights = tf.nn.softmax(particle_weights, axis=-1)[0].cpu().numpy()
@@ -580,6 +605,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         for i, particle in enumerate(particles):
             cluster_index = cluster_indices[i]
             cluster_weights[cluster_index] += lin_weights[i]
+
         return cluster_centers, cluster_weights
 
     def set_scene(self, scene_id, floor_num):
