@@ -872,7 +872,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 f'pose mse: {np.linalg.norm(pose_diff):02.3f} ',
                 '#7B241C', self.plt_ax, step_txt_plt)
             self.env_plts['step_txt_plt'] = step_txt_plt
-            print(f'gt_pose: {gt_pose_mts}, est_pose: {est_pose_mts} in mts')
+            # print(f'gt_pose: {gt_pose_mts}, est_pose: {est_pose_mts} in mts')
 
             self.plt_ax.legend([self.env_plts['robot_gt_plt']['position_plt'],
                                 self.env_plts['robot_est_plt']['position_plt']],

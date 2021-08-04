@@ -375,14 +375,13 @@ def test_agent(arg_params):
 
     test_summary_writer = tf.summary.create_file_writer(log_dir)
     with test_summary_writer.as_default():
-        step = 0
-        time_step = tf_env.reset()
-        while not time_step.is_last():
-            tf_env.render('human')
-            action_step = policy.action(time_step)
-            time_step = tf_env.step(action_step.action)
-            tf.summary.scalar('mse_reward', time_step.reward[0], step=step)
-            step += 1
+        for eps in range(num_eval_episodes):
+            time_step = tf_env.reset()
+            while not time_step.is_last():
+                tf_env.render('human')
+                action_step = policy.action(time_step)
+                time_step = tf_env.step(action_step.action)
+            tf.summary.scalar('mse_reward', time_step.reward[0], step=eps)
         tf_env.close()
 
     logging.info('Test Done')
