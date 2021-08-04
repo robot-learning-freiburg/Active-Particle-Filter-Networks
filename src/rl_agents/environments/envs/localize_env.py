@@ -131,6 +131,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         assert 0.0 <= FLAGS.alpha_resample_ratio <= 1.0
         assert FLAGS.init_particles_distr in ['gaussian', 'uniform']
         assert len(FLAGS.transition_std) == len(FLAGS.init_particles_std) == 2
+        assert len(FLAGS.global_map_size) == 3
 
         self.pf_params.init_particles_distr = FLAGS.init_particles_distr
         self.pf_params.init_particles_std = np.array(FLAGS.init_particles_std, dtype=np.float32)
@@ -145,7 +146,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         self.pf_params.return_state = True
         self.pf_params.stateful = False
-        self.pf_params.global_map_size = FLAGS.global_map_size
+        self.pf_params.global_map_size = np.array(FLAGS.global_map_size, dtype=np.float32)
         self.pf_params.window_scaler = FLAGS.window_scaler
         self.pf_params.max_step = self.config.get('max_step', 500)
 
@@ -528,7 +529,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 init_particles_distr,
                 new_pose.cpu().numpy(),
                 floor_map[0],
-                init_particles_cov
+                init_particles_cov,
                 particles_range)), dtype=tf.float32)
         init_particle_weights = tf.constant(
             np.log(1.0 / float(num_particles)),
