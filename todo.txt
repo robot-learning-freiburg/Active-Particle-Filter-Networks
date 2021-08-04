@@ -303,3 +303,12 @@ July 28th 2021
     1: at xy obstacle/empty
     2: at xy particle position particle weight (sum)
     3: at xy particle position orientation (weighted mean)
+
+August 4th 2021
+---------------
+train rl with rgbd + particle cluster (in px) + floor_map + mse_reward - for fixed episode length (150 steps) single aprt
+1. gaussian vs uniform initial dist
+2. particle cluster use previous cluster centers as init guess vs random at each episode step.
+3. raw particle + weights vs particle cluster
+4. Active neural Localization and Deep Active Localization
+5. AMCL vs pfnet with laser scan (optional)
