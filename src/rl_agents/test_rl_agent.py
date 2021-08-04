@@ -242,8 +242,8 @@ def test_agent(arg_params):
             kernel_initializer=glorot_uniform_initializer,
         ))
 
-    if 'depth' in observation_spec:
-        preprocessing_layers['depth'] = tf.keras.Sequential(mlp_layers(
+    if 'depth_obs' in observation_spec:
+        preprocessing_layers['depth_obs'] = tf.keras.Sequential(mlp_layers(
             conv_1d_layer_params=None,
             conv_2d_layer_params=conv_2d_layer_params,
             fc_layer_params=encoder_fc_layers,
