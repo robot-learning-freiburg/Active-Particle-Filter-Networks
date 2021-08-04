@@ -7,6 +7,7 @@ import numpy as np
 import os
 import random
 import tensorflow as tf
+from tqdm import tqdm
 
 # import custom tf_agents
 from tf_agents.agents.ddpg import critic_network
@@ -375,12 +376,13 @@ def test_agent(arg_params):
 
     test_summary_writer = tf.summary.create_file_writer(log_dir)
     with test_summary_writer.as_default():
-        for eps in range(num_eval_episodes):
+        for eps in tqdm(range(arg_params.num_eval_episodes)):
             time_step = tf_env.reset()
+            tf_env.render('human')
             while not time_step.is_last():
-                tf_env.render('human')
                 action_step = policy.action(time_step)
                 time_step = tf_env.step(action_step.action)
+                tf_env.render('human')
             tf.summary.scalar('mse_reward', time_step.reward[0], step=eps)
         tf_env.close()
 

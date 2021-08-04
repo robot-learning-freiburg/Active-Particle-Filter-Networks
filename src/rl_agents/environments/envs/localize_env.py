@@ -289,6 +289,26 @@ class LocalizeGibsonEnv(iGibsonEnv):
         :return: state: new observation
         """
 
+        if self.pf_params.use_plot:
+            # clear subplots
+            plt.clf()
+            self.plt_ax = self.fig.add_subplot(111)
+            self.env_plts = {
+                'map_plt': None,
+                'robot_gt_plt': {
+                    'position_plt': None,
+                    'heading_plt': None,
+                },
+                'robot_est_plt': {
+                    'position_plt': None,
+                    'heading_plt': None,
+                    'particles_plt': None,
+                },
+                'step_txt_plt': None,
+            }
+
+            self.store_results()
+        
         state = super(LocalizeGibsonEnv, self).reset()
         if self.use_pfnet:
             new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 255]
@@ -469,26 +489,6 @@ class LocalizeGibsonEnv(iGibsonEnv):
         num_particles = self.pf_params.num_particles
         init_particles_cov = self.pf_params.init_particles_cov
         init_particles_distr = self.pf_params.init_particles_distr
-
-        if self.pf_params.use_plot:
-            # clear subplots
-            plt.clf()
-            self.plt_ax = self.fig.add_subplot(111)
-            self.env_plts = {
-                'map_plt': None,
-                'robot_gt_plt': {
-                    'position_plt': None,
-                    'heading_plt': None,
-                },
-                'robot_est_plt': {
-                    'position_plt': None,
-                    'heading_plt': None,
-                    'particles_plt': None,
-                },
-                'step_txt_plt': None,
-            }
-
-            self.store_results()
 
         # get new robot state
         new_robot_state = self.robots[0].calc_state()
