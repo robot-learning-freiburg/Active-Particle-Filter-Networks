@@ -170,6 +170,27 @@ $ nohup python -u train_eval.py \
 --store_plot=False \
 --seed=100 > nohup.out &
 
+$ nohup python -u test_rl_agent.py \
+--root_dir=train_eval_output \
+--obs_mode='rgb-depth' \
+--num_clusters=10 \
+--num_eval_episodes=10 \
+--agent='sac_agent' \
+--is_localize_env=True \
+--config_file=./configs/turtlebot_point_nav.yaml \
+--gpu_num=0 \
+--init_env_pfnet=True \
+--init_particles_distr='gaussian' \
+--init_particles_std=0.15,0.523599 \
+--num_particles=1000 \
+--resample=True \
+--alpha_resample_ratio=1.0 \
+--transition_std=0.02,0.0872665 \
+--pfnet_load=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_87_5.830/pfnet_checkpoint \
+--use_plot=True \
+--store_plot=True \
+--seed=100 > nohup.out &
+
 June 23rd 2021
 --------------
 1. train from scratch for single sequence - to check anything works

@@ -24,6 +24,21 @@ from tf_agents.utils import common
 
 # define testing parameters
 flags.DEFINE_string(
+    name='obs_mode',
+    default='rgb-depth',
+    help='Observation input type. Possible values: rgb / depth / rgb-depth.'
+)
+flags.DEFINE_integer(
+    name='obs_ch',
+    default=4,
+    help='Observation channels.'
+)
+flags.DEFINE_integer(
+    name='num_clusters',
+    default=10,
+    help='Number of particle clusters.'
+)
+flags.DEFINE_string(
     name='root_dir',
     default='./test_output',
     help='Root directory for pretrained agent logs/summaries/checkpoints.'
@@ -88,7 +103,7 @@ flags.DEFINE_string(
 )
 flags.DEFINE_list(
     name='init_particles_std',
-    default=[30, 0.523599],
+    default=[0.15, 0.523599],
     help='Standard deviations for generated initial particles for tracking distribution. '
          'Values: translation std (meters), rotation std (radians)'
 )
@@ -225,6 +240,14 @@ def test_agent(arg_params):
             kernel_initializer=glorot_uniform_initializer,
         ))
 
+    if 'obstacle_map' in observation_spec:
+        preprocessing_layers['obstacle_map'] = tf.keras.Sequential(mlp_layers(
+            conv_1d_layer_params=None,
+            conv_2d_layer_params=conv_2d_layer_params,
+            fc_layer_params=encoder_fc_layers,
+            kernel_initializer=glorot_uniform_initializer,
+        ))
+
     if 'scan' in observation_spec:
         preprocessing_layers['scan'] = tf.keras.Sequential(mlp_layers(
             conv_1d_layer_params=conv_1d_layer_params,
@@ -235,6 +258,14 @@ def test_agent(arg_params):
 
     if 'task_obs' in observation_spec:
         preprocessing_layers['task_obs'] = tf.keras.Sequential(mlp_layers(
+            conv_1d_layer_params=None,
+            conv_2d_layer_params=None,
+            fc_layer_params=encoder_fc_layers,
+            kernel_initializer=glorot_uniform_initializer,
+        ))
+
+    if 'particle_cluster' in observation_spec:
+        preprocessing_layers['particle_cluster'] = tf.keras.Sequential(mlp_layers(
             conv_1d_layer_params=None,
             conv_2d_layer_params=None,
             fc_layer_params=encoder_fc_layers,
@@ -364,6 +395,14 @@ def main(_):
     random.seed(FLAGS.seed)
     np.random.seed(FLAGS.seed)
     tf.random.set_seed(FLAGS.seed)
+
+    # compute observation channel dim
+    if FLAGS.obs_mode == 'rgb-depth':
+        FLAGS.obs_ch = 4
+    elif FLAGS.obs_mode == 'depth':
+        FLAGS.obs_ch = 1
+    else:
+        FLAGS.obs_ch = 3
 
     test_agent(FLAGS)
 
