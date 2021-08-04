@@ -109,6 +109,11 @@ flags.DEFINE_list(
          'Values: translation std (meters), rotation std (radians)'
 )
 flags.DEFINE_integer(
+    name='particles_range',
+    default=100,
+    help='Pixel range to limit uniform distribution sampling +/- box particles_range center at robot pose'
+)
+flags.DEFINE_integer(
     name='num_particles',
     default=500,
     help='Number of particles in Particle Filter.'

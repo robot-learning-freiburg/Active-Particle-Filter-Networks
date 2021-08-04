@@ -130,6 +130,8 @@ flags.DEFINE_string('init_particles_distr', 'gaussian',
 flags.DEFINE_list('init_particles_std', [0.15, 0.523599],
                   'Standard deviations for generated initial particles for tracking distribution. '
                   'Values: translation std (meters), rotation std (radians)')
+flags.DEFINE_integer('particles_range', 100,
+                     'Pixel range to limit uniform distribution sampling +/- box particles_range center at robot pose')
 flags.DEFINE_integer('num_particles', 500,
                      'Number of particles in Particle Filter.')
 flags.DEFINE_boolean('resample', True,

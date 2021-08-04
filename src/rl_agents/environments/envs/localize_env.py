@@ -134,6 +134,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         self.pf_params.init_particles_distr = FLAGS.init_particles_distr
         self.pf_params.init_particles_std = np.array(FLAGS.init_particles_std, dtype=np.float32)
+        self.pf_params.particles_range = FLAGS.particles_range
         self.pf_params.num_particles = FLAGS.num_particles
         self.pf_params.resample = FLAGS.resample
         self.pf_params.alpha_resample_ratio = FLAGS.alpha_resample_ratio
@@ -308,7 +309,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             }
 
             self.store_results()
-        
+
         state = super(LocalizeGibsonEnv, self).reset()
         if self.use_pfnet:
             new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 255]
@@ -489,6 +490,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         num_particles = self.pf_params.num_particles
         init_particles_cov = self.pf_params.init_particles_cov
         init_particles_distr = self.pf_params.init_particles_distr
+        particles_range = self.pf_params.particles_range
 
         # get new robot state
         new_robot_state = self.robots[0].calc_state()
@@ -526,7 +528,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 init_particles_distr,
                 new_pose.cpu().numpy(),
                 floor_map[0],
-                init_particles_cov)), dtype=tf.float32)
+                init_particles_cov
+                particles_range)), dtype=tf.float32)
         init_particle_weights = tf.constant(
             np.log(1.0 / float(num_particles)),
             shape=(batch_size, num_particles),
