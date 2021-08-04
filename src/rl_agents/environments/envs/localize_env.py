@@ -87,7 +87,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         # custom tf_agents we are using supports dict() type observations
         observation_space = OrderedDict()
-        self.custom_output = ['task_obs', 'rgb_obs', 'depth_obs', 'obstacle_map', 'particle_cluster']
+        self.custom_output = ['rgb_obs', 'depth_obs', 'obstacle_map', 'particle_cluster']
 
         task_obs_dim = 18 # robot_prorpio_state (18)
         if 'task_obs' in self.custom_output:
