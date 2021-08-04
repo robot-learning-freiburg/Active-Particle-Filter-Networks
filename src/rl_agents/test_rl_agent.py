@@ -129,6 +129,16 @@ flags.DEFINE_list(
     default=[0.0, 0.0],
     help='Standard deviations for transition model. Values: translation std (meters), rotation std (radians)'
 )
+flags.DEFINE_list(
+    name='global_map_size',
+    default=[1000, 1000, 1],
+    help='Global map size in pixels (H, W, C).'
+)
+flags.DEFINE_float(
+    name='window_scaler',
+    default=8.0,
+    help='Rescale factor for extracing local map.'
+)
 flags.DEFINE_string(
     name='pfnet_load',
     default=os.path.join(
