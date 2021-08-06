@@ -577,7 +577,13 @@ class LocalizeGibsonEnv(iGibsonEnv):
         lin_weights = tf.nn.softmax(particle_weights, axis=-1)[0].cpu().numpy()
         particles = particles[0].cpu().numpy()
 
-        kmeans = KMeans(n_clusters=num_clusters)
+        if self.curr_cluster is None:
+            # random initialization
+            kmeans = KMeans(n_clusters=num_clusters)
+        else:
+            # previous cluster center initialization
+            prev_cluster_centers, _ = self.curr_cluster
+            kmeans = KMeans(n_clusters=num_clusters, init=prev_cluster_centers)
         kmeans.fit_predict(particles)
         cluster_indices = kmeans.labels_
         cluster_centers = kmeans.cluster_centers_
