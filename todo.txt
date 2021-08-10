@@ -179,6 +179,7 @@ $ nohup python -u test_rl_agent.py \
 --obs_mode='rgb-depth' \
 --num_eval_episodes=10 \
 --agent='sac_agent' \
+--eval_deterministic=True \
 --is_localize_env=True \
 --config_file=./configs/locobot_pfnet_nav.yaml \
 --gpu_num=0 \
@@ -196,7 +197,7 @@ $ nohup python -u test_rl_agent.py \
 --pfnet_load=./pfnetwork/checkpoints/pfnet_igibson_data/final/Rs_aprt/checkpoint_242_0.041/pfnet_checkpoint \
 --use_plot=True \
 --store_plot=True \
---seed=100 > nohup_train_rl_uniform.out &
+--seed=100 > nohup_test_rl_uniform.out &
 
 June 23rd 2021
 --------------

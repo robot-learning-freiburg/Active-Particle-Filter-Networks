@@ -59,6 +59,11 @@ flags.DEFINE_string(
     default='random',
     help='Agent Behavior'
 )
+flags.DEFINE_boolean(
+    name='eval_deterministic',
+    default=False,
+    help='Whether to run evaluation using a deterministic policy'
+)
 
 # define igibson env parameters
 flags.DEFINE_boolean(
@@ -213,7 +218,6 @@ def test_agent(arg_params):
     debug_summaries = False
     summarize_grads_and_vars = False
     eval_metrics_callback = None
-    eval_deterministic = False
 
     env_load_fn = lambda model_id, mode, use_tf_function, device_idx: suite_gibson.load(
         config_file=arg_params.config_file,
@@ -336,7 +340,7 @@ def test_agent(arg_params):
         train_step_counter=global_step)
     tf_agent.initialize()
 
-    if eval_deterministic:
+    if arg_params.eval_deterministic:
         eval_policy = greedy_policy.GreedyPolicy(tf_agent.policy)
     else:
         eval_policy = tf_agent.policy

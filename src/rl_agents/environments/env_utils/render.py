@@ -69,7 +69,7 @@ def draw_particles_pose(particles, weights, map_shape, particles_plt, scale=1):
 
     # HACK: display particles alpha proprtional to their weights
     lin_weights = softmax(weights)
-    th = np.mean(lin_weights)
+    th = 0 # np.mean(lin_weights)
     alphas = np.where(lin_weights >= th, 1, 0) * lin_weights
     alphas = alphas/np.max(alphas)
 
