@@ -579,11 +579,12 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         if self.curr_cluster is None:
             # random initialization
-            kmeans = KMeans(n_clusters=num_clusters)
+            kmeans = KMeans(n_clusters=num_clusters, n_init=10)
         else:
             # previous cluster center initialization
             prev_cluster_centers, _ = self.curr_cluster
-            kmeans = KMeans(n_clusters=num_clusters, init=prev_cluster_centers)
+            assert list(prev_cluster_centers.shape) == [num_clusters, 3]
+            kmeans = KMeans(n_clusters=num_clusters, init=prev_cluster_centers, n_init=1)
         kmeans.fit_predict(particles)
         cluster_indices = kmeans.labels_
         cluster_centers = kmeans.cluster_centers_
