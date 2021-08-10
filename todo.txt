@@ -175,29 +175,28 @@ $ nohup python -u train_eval.py \
 --seed=100 > nohup_train_rl_uniform.out &
 
 $ nohup python -u test_rl_agent.py \
---root_dir=train_eval_output \
+--root_dir=train_rl_uniform \
 --obs_mode='rgb-depth' \
---num_clusters=10 \
 --num_eval_episodes=10 \
 --agent='sac_agent' \
 --is_localize_env=True \
---config_file=./configs/turtlebot_point_nav.yaml \
+--config_file=./configs/locobot_pfnet_nav.yaml \
 --gpu_num=0 \
 --init_env_pfnet=True \
---init_particles_distr='gaussian' \
---init_particles_std=0.15,0.523599 \
+--init_particles_distr='uniform' \
+--init_particles_std=0.4,0.523599 \
 --particles_range=100 \
---num_particles=1000 \
+--num_particles=500 \
 --resample=True \
---alpha_resample_ratio=1.0 \
---transition_std=0.02,0.0872665 \
+--alpha_resample_ratio=0.9 \
+--transition_std=0.04,0.0872665 \
 --obs_mode='rgb-depth' \
 --num_clusters=10 \
 --global_map_size=1000,1000,1 \
---pfnet_load=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_87_5.830/pfnet_checkpoint \
+--pfnet_load=./pfnetwork/checkpoints/pfnet_igibson_data/final/Rs_aprt/checkpoint_242_0.041/pfnet_checkpoint \
 --use_plot=True \
 --store_plot=True \
---seed=100 > nohup.out &
+--seed=100 > nohup_train_rl_uniform.out &
 
 June 23rd 2021
 --------------
