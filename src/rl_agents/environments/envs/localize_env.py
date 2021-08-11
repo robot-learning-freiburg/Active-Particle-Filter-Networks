@@ -72,6 +72,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         # For the igibson maps, each pixel represents 0.01m, and the center of the image correspond to (0,0)
         self.map_pixel_in_meters = 0.01
         self.depth_th = 3.
+        self.robot_size_px = 0.5/self.map_pixel_in_meters # 0.5m
 
         argparser = argparse.ArgumentParser()
         self.pf_params = argparser.parse_args([])
@@ -112,10 +113,20 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 low=-1000.0, high=+1000.0,
                 shape=(self.pf_params.num_clusters,4),
                 dtype=np.float32)
+        if 'raw_particles' in self.custom_output:
+            observation_space['raw_particles'] = gym.spaces.Box(
+                low=-1000.0, high=+1000.0,
+                shape=(self.pf_params.num_particles,4),
+                dtype=np.float32)
         if 'obstacle_map' in self.custom_output:
             observation_space['obstacle_map'] = gym.spaces.Box(
                 low=0.0, high=1.0,
                 shape=self.pf_params.global_map_size,
+                dtype=np.float32)
+        if 'likelihood_map' in self.custom_output:
+            observation_space['likelihood_map'] = gym.spaces.Box(
+                low=-10.0, high=+10.0,
+                shape=(*self.pf_params.global_map_size[-2], 3),
                 dtype=np.float32)
 
         self.observation_space = gym.spaces.Dict(observation_space)
@@ -373,8 +384,40 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 processed_state['kmeans_cluster'] = np.stack(particle_cluster) # particle_cluster [x, y, theta, weight]
             else:
                 processed_state['kmeans_cluster'] = None
+        if 'raw_particles' in self.custom_output:
+            particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
+            lin_weights = tf.nn.softmax(particle_weights, axis=-1)  # normalize weights
+            processed_state['raw_particles'] = np.append(particles[0].cpu().numpy(), lin_weights[0].cpu().numpy())
         if 'obstacle_map' in self.custom_output:
             processed_state['obstacle_map'] = self.get_obstacle_map() # [0, 1] range floor map
+        if 'likelihood_map' in self.custom_output:
+
+            obstacle_map = self.get_obstacle_map() # [0, 1] range floor map
+            particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
+            particles = particles[0].cpu().numpy()
+            lin_weights = tf.nn.softmax(particle_weights, axis=-1)[0].cpu().numpy()  # normalize weights
+
+            likelihood_map = np.full(self.get_obstacle_map().shape.as_list()[:2] + [3], 1e-16)
+
+            # update obstacle map channel
+            likelihood_map[:, :, 0] = np.where( obstacle_map > 0.5, 1, 0)
+            for particle_px, wt in enumerate(particles, lin_weights):
+                x, y, orn = particle_px
+
+                # update weights channel
+                likelihood_map[
+                    int(np.rint(x-self.robot_size_px/2.)):int(np.rint(x+self.robot_size_px/2.))+1,
+                    int(np.rint(y-self.robot_size_px/2.)):int(np.rint(y+self.robot_size_px/2.))+1, 1] += wt
+
+                # update orientation channel
+                likelihood_map[
+                    int(np.rint(x-self.robot_size_px/2.)):int(np.rint(x+self.robot_size_px/2.))+1,
+                    int(np.rint(y-self.robot_size_px/2.)):int(np.rint(y+self.robot_size_px/2.))+1, 2] += wt*datautils.normalize(orn)
+            # weighed mean of orientation channel w.r.t weights channel
+            likelihood_map[:, :, 2] /= likelihood_map[:, :, 1]
+
+            processed_state['likelihood_map'] = likelihood_map
+
 
         return processed_state
 
