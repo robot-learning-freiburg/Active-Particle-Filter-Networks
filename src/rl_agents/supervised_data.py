@@ -60,6 +60,11 @@ flags.DEFINE_string(
     default='rgb-depth',
     help='Observation input type. Possible values: rgb / depth / rgb-depth.'
 )
+flags.DEFINE_list(
+    name='custom_output',
+    default=['rgb_obs', 'depth_obs', 'obstacle_map', 'kmeans_cluster'],
+    help='A comma-separated list of env observation types.'
+)
 flags.DEFINE_float(
     name='action_timestep',
     default=1.0 / 10.0,

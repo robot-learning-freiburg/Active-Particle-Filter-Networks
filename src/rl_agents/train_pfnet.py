@@ -34,6 +34,12 @@ def parse_args():
         help='Observation input type. Possible values: rgb / depth / rgb-depth.'
     )
     arg_parser.add_argument(
+        '--custom_output',
+        nargs='*',
+        default=['rgb_obs', 'depth_obs', 'obstacle_map', 'kmeans_cluster'],
+        help='A comma-separated list of env observation types.'
+    )
+    arg_parser.add_argument(
         '--root_dir',
         type=str,
         default='./train_output',

@@ -29,6 +29,11 @@ flags.DEFINE_string(
     default='rgb-depth',
     help='Observation input type. Possible values: rgb / depth / rgb-depth.'
 )
+flags.DEFINE_list(
+    name='custom_output',
+    default=['rgb_obs', 'depth_obs', 'obstacle_map', 'kmeans_cluster'],
+    help='A comma-separated list of env observation types.'
+)
 flags.DEFINE_integer(
     name='obs_ch',
     default=4,
@@ -284,8 +289,8 @@ def test_agent(arg_params):
             kernel_initializer=glorot_uniform_initializer,
         ))
 
-    if 'particle_cluster' in observation_spec:
-        preprocessing_layers['particle_cluster'] = tf.keras.Sequential(mlp_layers(
+    if 'kmeans_cluster' in observation_spec:
+        preprocessing_layers['kmeans_cluster'] = tf.keras.Sequential(mlp_layers(
             conv_1d_layer_params=None,
             conv_2d_layer_params=None,
             fc_layer_params=encoder_fc_layers,

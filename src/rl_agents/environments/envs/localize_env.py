@@ -84,10 +84,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
             self.pf_params.store_plot = False
             self.pf_params.num_clusters = pf_params.num_clusters
             self.pf_params.global_map_size = pf_params.global_map_size
+            self.custom_output = pf_params.custom_output
 
         # custom tf_agents we are using supports dict() type observations
         observation_space = OrderedDict()
-        self.custom_output = ['rgb_obs', 'depth_obs', 'obstacle_map', 'particle_cluster']
 
         task_obs_dim = 18 # robot_prorpio_state (18)
         if 'task_obs' in self.custom_output:
@@ -107,8 +107,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 low=0.0, high=1.0,
                 shape=(self.image_height, self.image_width, 1),
                 dtype=np.float32)
-        if 'particle_cluster' in self.custom_output:
-            observation_space['particle_cluster'] = gym.spaces.Box(
+        if 'kmeans_cluster' in self.custom_output:
+            observation_space['kmeans_cluster'] = gym.spaces.Box(
                 low=-1000.0, high=+1000.0,
                 shape=(self.pf_params.num_clusters,4),
                 dtype=np.float32)
@@ -156,6 +156,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.pf_params.obs_ch = FLAGS.obs_ch
         self.pf_params.obs_mode = FLAGS.obs_mode
         self.pf_params.num_clusters = FLAGS.num_clusters
+        self.custom_output = FLAGS.custom_output
 
         # build initial covariance matrix of particles, in pixels and radians
         particle_std2 = np.square(self.pf_params.init_particles_std.copy())  # variance
@@ -361,7 +362,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             processed_state['rgb_obs'] = state['rgb']  # [0, 1] range rgb image
         if 'depth_obs' in self.custom_output:
             processed_state['depth_obs'] = state['depth']  # [0, 1] range depth image
-        if 'particle_cluster' in self.custom_output:
+        if 'kmeans_cluster' in self.custom_output:
             if self.curr_cluster is not None:
                 cluster_centers, cluster_weights = self.curr_cluster
                 particle_cluster = []
@@ -369,9 +370,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 for i, cluster_center in enumerate(cluster_centers):
                     pose_mts = datautils.inv_transform_pose(cluster_center, floor_map.shape, self.map_pixel_in_meters)
                     particle_cluster.append(np.append(pose_mts, cluster_weights[i]))
-                processed_state['particle_cluster'] = np.stack(particle_cluster) # particle_cluster [x, y, theta, weight]
+                processed_state['kmeans_cluster'] = np.stack(particle_cluster) # particle_cluster [x, y, theta, weight]
             else:
-                processed_state['particle_cluster'] = None
+                processed_state['kmeans_cluster'] = None
         if 'obstacle_map' in self.custom_output:
             processed_state['obstacle_map'] = self.get_obstacle_map() # [0, 1] range floor map
 

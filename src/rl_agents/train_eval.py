@@ -50,6 +50,8 @@ from tf_agents.utils import common
 
 flags.DEFINE_string('obs_mode', 'rgb-depth',
                     'Observation input type. Possible values: rgb / depth / rgb-depth.')
+flags.DEFINE_list('custom_output', ['rgb_obs', 'depth_obs', 'obstacle_map', 'kmeans_cluster'],
+                  'A comma-separated list of env observation types.')
 flags.DEFINE_integer('obs_ch', 4, 'Observation channels.')
 flags.DEFINE_integer('num_clusters', 10, 'Number of particle clusters.')
 flags.DEFINE_string('root_dir', os.getenv('TEST_UNDECLARED_OUTPUTS_DIR'),
@@ -321,8 +323,8 @@ def train_eval(
                 kernel_initializer=glorot_uniform_initializer,
             ))
 
-        if 'particle_cluster' in observation_spec:
-            preprocessing_layers['particle_cluster'] = tf.keras.Sequential(mlp_layers(
+        if 'kmeans_cluster' in observation_spec:
+            preprocessing_layers['kmeans_cluster'] = tf.keras.Sequential(mlp_layers(
                 conv_1d_layer_params=None,
                 conv_2d_layer_params=None,
                 fc_layer_params=encoder_fc_layers,
