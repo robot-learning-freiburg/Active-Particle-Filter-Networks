@@ -333,14 +333,29 @@ other methods:
 4. Active Neural Localization (https://github.com/devendrachaplot/Neural-Localization)
 5. Deep Active Localization (https://github.com/montrealrobotics/dal)
 
-1. per modality [rgb, depth, rgbd, laser scan] to show same performance for igibson env as with paper's results.
+1. per modality [rgb, depth, rgbd, lidar scan] to show same performance for igibson env as with paper's results.
   train particle filter net for ~100 apartments with multiple floors (i.e ~100k trajectories each 150 env steps)
   batch_size:4, gpu:12gb, ram:10gb, num_particles:50, train_epochs: 50 (per epoch use all data) -> 6 days training time + 1 day testing time (with ablation study)
   ablation: gaussion vs uniform init dist with multiple covariance, 500 vs 1000 particles, multiple re-sampling rate
   fine-tuning vs training from scratch vs out of box
 2. train SAC rl agent with above filter for 1 apartment for reward(mse error + collision penality) obs(particle rep + floor map + rgbd)
-  batch_size:1, gpu:6gb, ram:24gb, num_particles:500, train_epochs: 100k -> 3 days training time + testing time
+  batch_size:4, gpu:6gb, ram:24gb, num_particles:500, train_epochs: 100k -> 3 days training time + testing time
   different representations: kmeans cluster center vs raw particles vs local floor map (particle centered)
   ablation: gaussion vs uniform init dist with multiple covariance, 500 vs 1000 particles, with and without rgbd obs, particle efficiency vs env step efficiency
 
   Deep active localization and Active neural localization implementation check
+
+
+  August 11th 2021
+  ----------------
+
+1. log collisions
+2. collision penality: -1.0
+3. initialize uniform dist with offset to gt pose
+4. 100 x 100 px from max range of lidar around robot
+5. get tf1 working on pearl8
+
+channel
+1: at xy obstacle/empty (0/1)
+2: at xy particle position particle weight (sum)
+3: at xy particle position orientation (weighted mean)

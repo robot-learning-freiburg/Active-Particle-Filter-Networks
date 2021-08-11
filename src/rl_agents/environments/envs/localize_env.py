@@ -712,9 +712,12 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 sample_i = 0
                 b_particles = []
 
-                # get bounding box for more efficient sampling
+                # sample offset from the Gaussian ground truth
+                center = np.random.multivariate_normal(mean=robot_pose[b_idx], cov=particles_cov)
+
+                # get bounding box, centered around the offset, for more efficient sampling
                 # rmin, rmax, cmin, cmax = self.bounding_box(scene_map)
-                rmin, rmax, cmin, cmax = self.bounding_box(scene_map, robot_pose[b_idx], particles_range)
+                rmin, rmax, cmin, cmax = self.bounding_box(scene_map, center, particles_range)
 
                 while sample_i < num_particles:
                     particle = np.random.uniform(low=(cmin, rmin, 0.0), high=(cmax, rmax, 2.0 * np.pi), size=(3,))
@@ -728,7 +731,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         elif particles_distr == 'gaussian':
             # iterate per batch_size
             for b_idx in range(batches):
-                # sample offset from the Gaussian
+                # sample offset from the Gaussian ground truth
                 center = np.random.multivariate_normal(mean=robot_pose[b_idx], cov=particles_cov)
 
                 # sample particles from the Gaussian, centered around the offset

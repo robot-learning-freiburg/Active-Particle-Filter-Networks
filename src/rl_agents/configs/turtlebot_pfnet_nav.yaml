@@ -29,7 +29,7 @@ task_obs_dim: 4
 reward_type: geodesic
 success_reward: 10.0
 potential_reward_weight: 1.0
-collision_reward_weight: -0.1
+collision_reward_weight: -1.0
 
 # discount factor
 discount_factor: 0.99
