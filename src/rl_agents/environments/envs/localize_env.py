@@ -72,61 +72,62 @@ class LocalizeGibsonEnv(iGibsonEnv):
         # For the igibson maps, each pixel represents 0.01m, and the center of the image correspond to (0,0)
         self.map_pixel_in_meters = 0.01
         self.depth_th = 3.
-        self.robot_size_px = 0.5/self.map_pixel_in_meters # 0.5m
+        self.robot_size_px = 0.4/self.map_pixel_in_meters # 0.4m
 
         argparser = argparse.ArgumentParser()
         self.pf_params = argparser.parse_args([])
         self.use_pfnet = init_pfnet
         self.use_tf_function = use_tf_function
         if self.use_pfnet:
+            print("=====> LocalizeGibsonEnv's pfnet initializing....")
             self.init_pfnet(pf_params)
         else:
             self.pf_params.use_plot = False
             self.pf_params.store_plot = False
             self.pf_params.num_clusters = pf_params.num_clusters
             self.pf_params.global_map_size = pf_params.global_map_size
-            self.custom_output = pf_params.custom_output
+            self.pf_params.custom_output = pf_params.custom_output
 
         # custom tf_agents we are using supports dict() type observations
         observation_space = OrderedDict()
 
         task_obs_dim = 18 # robot_prorpio_state (18)
-        if 'task_obs' in self.custom_output:
+        if 'task_obs' in self.pf_params.custom_output:
             # HACK: use [-1k, +1k] range for TanhNormalProjectionNetwork to work
             observation_space['task_obs'] = gym.spaces.Box(
                 low=-1000.0, high=+1000.0,
                 shape=(task_obs_dim,),
                 dtype=np.float32)
         # image_height and image_width are obtained from env config file
-        if 'rgb_obs' in self.custom_output:
+        if 'rgb_obs' in self.pf_params.custom_output:
             observation_space['rgb_obs'] = gym.spaces.Box(
                 low=0.0, high=1.0,
                 shape=(self.image_height, self.image_width, 3),
                 dtype=np.float32)
-        if 'depth_obs' in self.custom_output:
+        if 'depth_obs' in self.pf_params.custom_output:
             observation_space['depth_obs'] = gym.spaces.Box(
                 low=0.0, high=1.0,
                 shape=(self.image_height, self.image_width, 1),
                 dtype=np.float32)
-        if 'kmeans_cluster' in self.custom_output:
+        if 'kmeans_cluster' in self.pf_params.custom_output:
             observation_space['kmeans_cluster'] = gym.spaces.Box(
                 low=-1000.0, high=+1000.0,
                 shape=(self.pf_params.num_clusters,4),
                 dtype=np.float32)
-        if 'raw_particles' in self.custom_output:
+        if 'raw_particles' in self.pf_params.custom_output:
             observation_space['raw_particles'] = gym.spaces.Box(
                 low=-1000.0, high=+1000.0,
                 shape=(self.pf_params.num_particles,4),
                 dtype=np.float32)
-        if 'obstacle_map' in self.custom_output:
+        if 'obstacle_map' in self.pf_params.custom_output:
             observation_space['obstacle_map'] = gym.spaces.Box(
                 low=0.0, high=1.0,
                 shape=self.pf_params.global_map_size,
                 dtype=np.float32)
-        if 'likelihood_map' in self.custom_output:
+        if 'likelihood_map' in self.pf_params.custom_output:
             observation_space['likelihood_map'] = gym.spaces.Box(
                 low=-10.0, high=+10.0,
-                shape=(*self.pf_params.global_map_size[-2], 3),
+                shape=(*self.pf_params.global_map_size[:2], 3),
                 dtype=np.float32)
 
         self.observation_space = gym.spaces.Dict(observation_space)
@@ -167,7 +168,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.pf_params.obs_ch = FLAGS.obs_ch
         self.pf_params.obs_mode = FLAGS.obs_mode
         self.pf_params.num_clusters = FLAGS.num_clusters
-        self.custom_output = FLAGS.custom_output
+        self.pf_params.custom_output = FLAGS.custom_output
 
         # build initial covariance matrix of particles, in pixels and radians
         particle_std2 = np.square(self.pf_params.init_particles_std.copy())  # variance
@@ -367,13 +368,13 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         # process and return only output we are expecting to
         processed_state = OrderedDict()
-        if 'task_obs' in self.custom_output:
+        if 'task_obs' in self.pf_params.custom_output:
             processed_state['task_obs'] = self.robots[0].calc_state()  # robot proprioceptive state
-        if 'rgb_obs' in self.custom_output:
+        if 'rgb_obs' in self.pf_params.custom_output:
             processed_state['rgb_obs'] = state['rgb']  # [0, 1] range rgb image
-        if 'depth_obs' in self.custom_output:
+        if 'depth_obs' in self.pf_params.custom_output:
             processed_state['depth_obs'] = state['depth']  # [0, 1] range depth image
-        if 'kmeans_cluster' in self.custom_output:
+        if 'kmeans_cluster' in self.pf_params.custom_output:
             if self.curr_cluster is not None:
                 cluster_centers, cluster_weights = self.curr_cluster
                 particle_cluster = []
@@ -384,25 +385,25 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 processed_state['kmeans_cluster'] = np.stack(particle_cluster) # particle_cluster [x, y, theta, weight]
             else:
                 processed_state['kmeans_cluster'] = None
-        if 'raw_particles' in self.custom_output:
+        if 'raw_particles' in self.pf_params.custom_output:
             particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
             lin_weights = tf.nn.softmax(particle_weights, axis=-1)  # normalize weights
             processed_state['raw_particles'] = np.append(particles[0].cpu().numpy(), lin_weights[0].cpu().numpy())
-        if 'obstacle_map' in self.custom_output:
-            processed_state['obstacle_map'] = self.get_obstacle_map() # [0, 1] range floor map
-        if 'likelihood_map' in self.custom_output:
+        if 'obstacle_map' in self.pf_params.custom_output:
+            processed_state['obstacle_map'] = self.get_obstacle_map() # [0, 2] range floor map
+        if 'likelihood_map' in self.pf_params.custom_output:
 
-            obstacle_map = self.get_obstacle_map() # [0, 1] range floor map
+            obstacle_map = np.squeeze(self.get_obstacle_map(), axis=-1) # [0, 2] range floor map
             particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
             particles = particles[0].cpu().numpy()
             lin_weights = tf.nn.softmax(particle_weights, axis=-1)[0].cpu().numpy()  # normalize weights
-
-            likelihood_map = np.full(self.get_obstacle_map().shape.as_list()[:2] + [3], 1e-16)
+            likelihood_map = np.zeros(list(obstacle_map.shape)[:2] + [3])
 
             # update obstacle map channel
-            likelihood_map[:, :, 0] = np.where( obstacle_map > 0.5, 1, 0)
-            for particle_px, wt in enumerate(particles, lin_weights):
-                x, y, orn = particle_px
+            likelihood_map[:, :, 0] = np.where( obstacle_map/2. > 0.5, 1, 0) # clip to 0 or 1
+            for idx in range(self.pf_params.num_particles):
+                x, y, orn = particles[idx]
+                wt = lin_weights[idx]
 
                 # update weights channel
                 likelihood_map[
@@ -414,7 +415,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
                     int(np.rint(x-self.robot_size_px/2.)):int(np.rint(x+self.robot_size_px/2.))+1,
                     int(np.rint(y-self.robot_size_px/2.)):int(np.rint(y+self.robot_size_px/2.))+1, 2] += wt*datautils.normalize(orn)
             # weighed mean of orientation channel w.r.t weights channel
-            likelihood_map[:, :, 2] /= likelihood_map[:, :, 1]
+            indices = likelihood_map[:, :, 1] > 0.
+            likelihood_map[indices, 2] /= likelihood_map[indices, 1]
 
             processed_state['likelihood_map'] = likelihood_map
 
