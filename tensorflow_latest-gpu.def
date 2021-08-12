@@ -27,13 +27,14 @@ AUTHOR Suresh Guttikonda
     python3 -m pip install --upgrade pip
 
     # install igibson packages
-    git clone --branch master https://github.com/StanfordVL/iGibson /opt/igibson --recursive
+    # git clone --branch master https://github.com/StanfordVL/iGibson /opt/igibson --recursive
+    git clone --branch ig-develop https://github.com/suresh-guttikonda/iGibson.git /opt/igibson --recursive
     cd /opt/igibson
     pip3 install -e .
 
     # install igibson custom pybullet
-    pip3 uninstall -y pybullet
-    pip3 install https://github.com/StanfordVL/bullet3/archive/master.zip
+    # pip3 uninstall -y pybullet
+    # pip3 install https://github.com/StanfordVL/bullet3/archive/master.zip
 
     # install custom tf-agents
     # git clone --branch cvpr21_challenge_tf2.4 https://github.com/StanfordVL/agents/ /opt/agents --recursive
@@ -46,6 +47,6 @@ AUTHOR Suresh Guttikonda
     pip3 install -U tensorboard-plugin-profile
 
     # download the required assets
-    python -m gibson2.utils.assets_utils --download_assets
-    python -m gibson2.utils.assets_utils --download_demo_data
-    python -m gibson2.utils.assets_utils --download_dataset https://storage.googleapis.com/gibson_scenes/gibson_v2_4+.tar.gz
+    python -m igibson.utils.assets_utils --download_assets
+    python -m igibson.utils.assets_utils --download_demo_data
+    # python -m igibson.utils.assets_utils --download_dataset https://storage.googleapis.com/gibson_scenes/gibson_v2_4+.tar.gz
