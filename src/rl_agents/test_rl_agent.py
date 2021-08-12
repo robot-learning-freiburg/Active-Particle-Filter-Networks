@@ -273,6 +273,14 @@ def test_agent(arg_params):
             kernel_initializer=glorot_uniform_initializer,
         ))
 
+    if 'likelihood_map' in observation_spec:
+        preprocessing_layers['likelihood_map'] = tf.keras.Sequential(mlp_layers(
+            conv_1d_layer_params=None,
+            conv_2d_layer_params=conv_2d_layer_params,
+            fc_layer_params=encoder_fc_layers,
+            kernel_initializer=glorot_uniform_initializer,
+        ))
+
     if 'scan' in observation_spec:
         preprocessing_layers['scan'] = tf.keras.Sequential(mlp_layers(
             conv_1d_layer_params=conv_1d_layer_params,
