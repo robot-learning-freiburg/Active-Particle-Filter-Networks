@@ -31,7 +31,7 @@ flags.DEFINE_string(
 )
 flags.DEFINE_list(
     name='custom_output',
-    default=['rgb_obs', 'depth_obs', 'obstacle_map', 'kmeans_cluster'],
+    default=['rgb_obs', 'depth_obs', 'floor_map', 'kmeans_cluster'],
     help='A comma-separated list of env observation types.'
 )
 flags.DEFINE_integer(
@@ -147,12 +147,12 @@ flags.DEFINE_list(
 )
 flags.DEFINE_list(
     name='global_map_size',
-    default=[1000, 1000, 1],
+    default=[100, 100, 1],
     help='Global map size in pixels (H, W, C).'
 )
 flags.DEFINE_float(
     name='window_scaler',
-    default=8.0,
+    default=1.0,
     help='Rescale factor for extracing local map.'
 )
 flags.DEFINE_string(
@@ -265,8 +265,8 @@ def test_agent(arg_params):
             kernel_initializer=glorot_uniform_initializer,
         ))
 
-    if 'obstacle_map' in observation_spec:
-        preprocessing_layers['obstacle_map'] = tf.keras.Sequential(mlp_layers(
+    if 'floor_map' in observation_spec:
+        preprocessing_layers['floor_map'] = tf.keras.Sequential(mlp_layers(
             conv_1d_layer_params=None,
             conv_2d_layer_params=conv_2d_layer_params,
             fc_layer_params=encoder_fc_layers,

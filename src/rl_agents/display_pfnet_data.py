@@ -41,7 +41,7 @@ def parse_args():
     arg_parser.add_argument(
         '--custom_output',
         nargs='*',
-        default=['rgb_obs', 'depth_obs', 'obstacle_map', 'kmeans_cluster'],
+        default=['rgb_obs', 'depth_obs', 'floor_map', 'kmeans_cluster'],
         help='A comma-separated list of env observation types.'
     )
     arg_parser.add_argument(
@@ -135,13 +135,13 @@ def parse_args():
     arg_parser.add_argument(
         '--global_map_size',
         nargs='*',
-        default=["1000", "1000", "1"],
+        default=["100", "100", "1"],
         help='Global map size in pixels (H, W, C)'
     )
     arg_parser.add_argument(
         '--window_scaler',
         type=float,
-        default=8.0,
+        default=1.0,
         help='Rescale factor for extracing local map'
     )
 
@@ -281,7 +281,6 @@ def display_data(arg_params):
         init_particles = batch_sample['init_particles'][b_idx]
         # init_particle_weights = np.full(shape=(batch_size, num_particles), fill_value=np.log(1.0 / float(num_particles)))[b_idx]
         init_particle_weights = np.random.random(size=(batch_size, num_particles))[b_idx]
-        obstacle_map = batch_sample['obstacle_map'][b_idx]
         floor_map = batch_sample['floor_map'][b_idx]
         org_map_shape = batch_sample['org_map_shape'][b_idx]
 

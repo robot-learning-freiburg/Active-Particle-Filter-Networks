@@ -50,7 +50,7 @@ from tf_agents.utils import common
 
 flags.DEFINE_string('obs_mode', 'rgb-depth',
                     'Observation input type. Possible values: rgb / depth / rgb-depth.')
-flags.DEFINE_list('custom_output', ['rgb_obs', 'depth_obs', 'obstacle_map', 'kmeans_cluster'],
+flags.DEFINE_list('custom_output', ['rgb_obs', 'depth_obs', 'floor_map', 'kmeans_cluster'],
                   'A comma-separated list of env observation types.')
 flags.DEFINE_integer('obs_ch', 4, 'Observation channels.')
 flags.DEFINE_integer('num_clusters', 10, 'Number of particle clusters.')
@@ -144,9 +144,9 @@ flags.DEFINE_float('alpha_resample_ratio', 0.5,
                    'Alpha equal to 1.0 corresponds to hard-resampling.')
 flags.DEFINE_list('transition_std', [0.02, 0.0872665],
                   'Standard deviations for transition model. Values: translation std (meters), rotation std (radians)')
-flags.DEFINE_list('global_map_size', [1000, 1000, 1],
+flags.DEFINE_list('global_map_size', [100, 100, 1],
                 'Global map size in pixels (H, W, C).')
-flags.DEFINE_float('window_scaler', 8.0,
+flags.DEFINE_float('window_scaler', 1.0,
                    'Rescale factor for extracing local map.')
 flags.DEFINE_string('pfnet_load',
                     os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pfnetwork/checkpoints/pfnet_igibson_data',
@@ -299,8 +299,8 @@ def train_eval(
                 kernel_initializer=glorot_uniform_initializer,
             ))
 
-        if 'obstacle_map' in observation_spec:
-            preprocessing_layers['obstacle_map'] = tf.keras.Sequential(mlp_layers(
+        if 'floor_map' in observation_spec:
+            preprocessing_layers['floor_map'] = tf.keras.Sequential(mlp_layers(
                 conv_1d_layer_params=None,
                 conv_2d_layer_params=conv_2d_layer_params,
                 fc_layer_params=encoder_fc_layers,

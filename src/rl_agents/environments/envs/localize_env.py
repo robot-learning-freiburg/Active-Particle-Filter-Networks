@@ -8,8 +8,8 @@ import cv2
 from ..env_utils import datautils
 from ..env_utils import pfnet_loss
 from ..env_utils import render
-from gibson2.envs.igibson_env import iGibsonEnv
-from gibson2.utils.assets_utils import get_scene_path
+from igibson.envs.igibson_env import iGibsonEnv
+from igibson.utils.assets_utils import get_scene_path
 import gym
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 import matplotlib.pyplot as plt
@@ -69,10 +69,12 @@ class LocalizeGibsonEnv(iGibsonEnv):
         del self.task.termination_conditions[-1]
         del self.task.reward_functions[-1]
 
-        # For the igibson maps, each pixel represents 0.01m, and the center of the image correspond to (0,0)
-        self.map_pixel_in_meters = 0.01
+        # For the igibson maps, originally each pixel represents 0.01m, and the center of the image correspond to (0,0)
+        self.map_default_resolution = 0.01
+        # in igibson we work with rescaled 0.01m to 0.1m maps to sample robot poses
+        self.map_pixel_in_meters = self.config.get('trav_map_resolution', 0.1)
         self.depth_th = 3.
-        self.robot_size_px = 0.4/self.map_pixel_in_meters # 0.4m
+        self.robot_size_px = 0.3/self.map_pixel_in_meters # 0.03m
 
         argparser = argparse.ArgumentParser()
         self.pf_params = argparser.parse_args([])
@@ -90,7 +92,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 self.pf_params.custom_output = pf_params.custom_output
             else:
                 self.pf_params.num_clusters = 10
-                self.pf_params.global_map_size = [1000, 1000, 1]
+                self.pf_params.global_map_size = [100, 100, 1]
                 self.pf_params.custom_output = ['rgb_obs', 'depth_obs']
 
         # custom tf_agents we are using supports dict() type observations
@@ -124,8 +126,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 low=-1000.0, high=+1000.0,
                 shape=(self.pf_params.num_particles,4),
                 dtype=np.float32)
-        if 'obstacle_map' in self.pf_params.custom_output:
-            observation_space['obstacle_map'] = gym.spaces.Box(
+        if 'floor_map' in self.pf_params.custom_output:
+            observation_space['floor_map'] = gym.spaces.Box(
                 low=0.0, high=1.0,
                 shape=self.pf_params.global_map_size,
                 dtype=np.float32)
@@ -384,11 +386,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 cluster_centers, cluster_weights = self.curr_cluster
                 floor_map = self.get_floor_map()
                 def cluster_pose(cluster_center, cluster_weight):
-                    pose_in_mts = datautils.inv_transform_pose(cluster_center, floor_map.shape, self.map_pixel_in_meters)
-                    return np.append(pose_in_mts, cluster_weight)   # cluster_pose [x, y, theta, weight]
+                    return np.array([*self.scene.map_to_world(cluster_center[:2]), cluster_center[2], cluster_weight])   # cluster_pose [x, y, theta, weight] in mts
 
                 processed_state['kmeans_cluster'] = np.stack([
-                    np.append(cluster_centers[c_idx], cluster_weights[c_idx]) for c_idx in range(self.pf_params.num_clusters)
+                    np.append(cluster_centers[c_idx], cluster_weights[c_idx]) for c_idx in range(self.pf_params.num_clusters)   # cluster_pose [x, y, theta, weight] in px
                 ])
             else:
                 processed_state['kmeans_cluster'] = None
@@ -396,31 +397,31 @@ class LocalizeGibsonEnv(iGibsonEnv):
             particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
             lin_weights = tf.nn.softmax(particle_weights, axis=-1)  # normalize weights
             processed_state['raw_particles'] = np.append(particles[0].cpu().numpy(), lin_weights[0].cpu().numpy())
-        if 'obstacle_map' in self.pf_params.custom_output:
-            processed_state['obstacle_map'] = self.get_obstacle_map() # [0, 2] range floor map
+        if 'floor_map' in self.pf_params.custom_output:
+            processed_state['floor_map'] = self.get_floor_map() # [0, 2] range floor map
         if 'likelihood_map' in self.pf_params.custom_output:
 
-            obstacle_map = np.squeeze(self.get_obstacle_map(), axis=-1) # [0, 2] range floor map
+            floor_map = np.squeeze(self.get_floor_map(), axis=-1) # [0, 2] range floor map
             particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
             particles = particles[0].cpu().numpy()
             lin_weights = tf.nn.softmax(particle_weights, axis=-1)[0].cpu().numpy()  # normalize weights
-            likelihood_map = np.zeros(list(obstacle_map.shape)[:2] + [3])
+            likelihood_map = np.zeros(list(floor_map.shape)[:2] + [3])
 
             # update obstacle map channel
-            likelihood_map[:, :, 0] = np.where( obstacle_map/2. > 0.5, 1, 0) # clip to 0 or 1
+            likelihood_map[:, :, 0] = np.where( floor_map/2. > 0.5, 1, 0) # clip to 0 or 1
             for idx in range(self.pf_params.num_particles):
-                x, y, orn = particles[idx]
+                col, row, orn = particles[idx]
                 wt = lin_weights[idx]
 
                 # update weights channel
                 likelihood_map[
-                    int(np.rint(x-self.robot_size_px/2.)):int(np.rint(x+self.robot_size_px/2.))+1,
-                    int(np.rint(y-self.robot_size_px/2.)):int(np.rint(y+self.robot_size_px/2.))+1, 1] += wt
+                    int(np.rint(col-self.robot_size_px/2.)):int(np.rint(col+self.robot_size_px/2.))+1,
+                    int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 1] += wt
 
                 # update orientation channel
                 likelihood_map[
-                    int(np.rint(x-self.robot_size_px/2.)):int(np.rint(x+self.robot_size_px/2.))+1,
-                    int(np.rint(y-self.robot_size_px/2.)):int(np.rint(y+self.robot_size_px/2.))+1, 2] += wt*datautils.normalize(orn)
+                    int(np.rint(col-self.robot_size_px/2.)):int(np.rint(col+self.robot_size_px/2.))+1,
+                    int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 2] += wt*datautils.normalize(orn)
             # weighed mean of orientation channel w.r.t weights channel
             indices = likelihood_map[:, :, 1] > 0.
             likelihood_map[indices, 2] /= likelihood_map[indices, 1]
@@ -534,8 +535,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
     def reset_pfnet(self, new_obs):
         """
-        obstacle_map: used as particle filter state
-        floor_map: used for sampling init random particles
+        floor_map: used as particle filter state and for sampling init random particles
         """
 
         trajlen = self.pf_params.trajlen
@@ -610,7 +610,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         self.floor_map = floor_map
         self.obstacle_map = obstacle_map
-        self.curr_pfnet_state = [init_particles, init_particle_weights, obstacle_map]
+        self.curr_pfnet_state = [init_particles, init_particle_weights, floor_map]
         self.curr_gt_pose = new_pose
         self.curr_est_pose = self.get_est_pose()
         self.curr_obs = [
@@ -698,6 +698,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
                          f'floor_{self.task.floor_num}.png')
         ))
 
+        # HACK: use same rescaling as in iGibsonEnv
+        height, width = obstacle_map.shape
+        resize = int(height * self.map_default_resolution / self.map_pixel_in_meters)
+        obstacle_map = cv2.resize(obstacle_map, (resize, resize))
+
         # process new obstacle map: convert [0, 255] to [0, 2] range
         obstacle_map = datautils.process_raw_map(obstacle_map)
 
@@ -727,6 +732,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         trav_map[obstacle_map == 0] = 0
 
+        # HACK: use same rescaling as in iGibsonEnv
+        height, width = trav_map.shape
+        resize = int(height * self.map_default_resolution / self.map_pixel_in_meters)
+        trav_map = cv2.resize(trav_map, (resize, resize))
         trav_map_erosion = self.config.get('trav_map_erosion', 2)
         trav_map = cv2.erode(trav_map, np.ones((trav_map_erosion, trav_map_erosion)))
         trav_map[trav_map < 255] = 0
@@ -827,11 +836,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
         robot_pos = robot_state[0:3]  # [x, y, z]
         robot_orn = robot_state[3:6]  # [r, p, y]
 
-        # transform from co-ordinate space to pixel space
-        robot_pos_xy = datautils.transform_position(robot_pos[:2], floor_map_shape, self.map_pixel_in_meters)  # [x, y]
-        robot_pose = np.array([robot_pos_xy[0], robot_pos_xy[1], robot_orn[2]])  # [x, y, theta]
+        # transform from co-ordinate space [x, y] to pixel space [col, row]
+        robot_pose_px = np.array([*self.scene.world_to_map(robot_pos[:2]), robot_orn[2]])  # [x, y, theta]
 
-        return robot_pose
+        return robot_pose_px
 
 
     def get_est_pose(self):
@@ -929,8 +937,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
             # self.env_plts['step_txt_plt'] = step_txt_plt
 
             # pose mse in mts
-            gt_pose_mts = datautils.inv_transform_pose(gt_pose, floor_map.shape, self.map_pixel_in_meters)
-            est_pose_mts = datautils.inv_transform_pose(est_pose, floor_map.shape, self.map_pixel_in_meters)
+            gt_pose_mts = np.array([*self.scene.map_to_world(gt_pose[:2]), gt_pose[2]])
+            est_pose_mts = np.array([*self.scene.map_to_world(est_pose[:2]), gt_pose[2]])
             pose_diff = gt_pose_mts-est_pose_mts
             pose_diff[-1] = datautils.normalize(pose_diff[-1]) # normalize
 

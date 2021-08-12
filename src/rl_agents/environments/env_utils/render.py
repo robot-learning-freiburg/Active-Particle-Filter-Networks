@@ -60,12 +60,8 @@ def draw_particles_pose(particles, weights, map_shape, particles_plt, scale=1):
     :return matplotlib.collections.PathCollection: updated plot of particles
     """
 
-    part_x, part_y, part_th = tf.unstack(particles, axis=-1, num=3)   # (k, 3)
+    part_col, part_row, part_th = tf.unstack(particles, axis=-1, num=3)   # (k, 3)
     height, width, channel = map_shape
-
-    # rescale
-    part_x = part_x / scale
-    part_y = part_y / scale
 
     # HACK: display particles alpha proprtional to their weights
     lin_weights = softmax(weights)
@@ -78,10 +74,10 @@ def draw_particles_pose(particles, weights, map_shape, particles_plt, scale=1):
 
     if particles_plt is None:
         # render particles positions with color
-        particles_plt = plt.scatter(part_x, part_y, s=10, c=rgba_colors)
+        particles_plt = plt.scatter(part_row, part_col, s=10, c=rgba_colors)
     else:
         # update existing particles positions and color
-        particles_plt.set_offsets(tf.stack([part_x, part_y], axis=-1))
+        particles_plt.set_offsets(tf.stack([part_row, part_col], axis=-1))
         particles_plt.set_color(rgba_colors)
 
     return particles_plt
@@ -99,25 +95,21 @@ def draw_robot_pose(robot_pose, color, map_shape, plt_ax, position_plt, heading_
     :return tuple(matplotlib.patches.Wedge, matplotlib.lines.Line2D): updated position and heading plot of robot
     """
 
-    x, y, heading = robot_pose
+    col, row, heading = robot_pose
     height, width, channel = map_shape
 
-    # rescale
-    x = x / scale
-    y = y / scale
-
-    heading_len  = robot_radius = 10.0
-    xdata = [x, x + (robot_radius + heading_len) * np.cos(heading)]
-    ydata = [y, y + (robot_radius + heading_len) * np.sin(heading)]
+    heading_len  = robot_radius = 1.0
+    xdata = [row, row + (robot_radius + heading_len) * np.cos(heading)]
+    ydata = [col, col + (robot_radius + heading_len) * np.sin(heading)]
 
     if position_plt == None:
         # render robot position and heading with color
-        position_plt = Wedge((x, y), robot_radius, 0, 360, color=color, alpha=0.5)
+        position_plt = Wedge((row, col), robot_radius, 0, 360, color=color, alpha=0.5)
         plt_ax.add_artist(position_plt)
         heading_plt, = plt_ax.plot(xdata, ydata, color=color, alpha=0.5)
     else:
         # update existing robot position and heading
-        position_plt.update({'center': [x, y]})
+        position_plt.update({'center': [row, col]})
         heading_plt.update({'xdata': xdata, 'ydata': ydata})
 
     return position_plt, heading_plt

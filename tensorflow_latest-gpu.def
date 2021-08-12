@@ -28,7 +28,7 @@ AUTHOR Suresh Guttikonda
 
     # install igibson packages
     # git clone --branch master https://github.com/StanfordVL/iGibson /opt/igibson --recursive
-    git clone --branch ig-develop https://github.com/suresh-guttikonda/iGibson.git /opt/igibson --recursive
+    git clone --branch master https://github.com/suresh-guttikonda/iGibson.git /opt/igibson --recursive
     cd /opt/igibson
     pip3 install -e .
 

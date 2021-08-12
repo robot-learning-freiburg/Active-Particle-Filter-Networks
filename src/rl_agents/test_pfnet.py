@@ -38,7 +38,7 @@ def parse_args():
     arg_parser.add_argument(
         '--custom_output',
         nargs='*',
-        default=['rgb_obs', 'depth_obs', 'obstacle_map', 'kmeans_cluster'],
+        default=['rgb_obs', 'depth_obs', 'floor_map', 'kmeans_cluster', 'likelihood_map'],
         help='A comma-separated list of env observation types.'
     )
     arg_parser.add_argument(
@@ -135,13 +135,13 @@ def parse_args():
     arg_parser.add_argument(
         '--global_map_size',
         nargs='*',
-        default=["1000", "1000", "1"],
+        default=["100", "100", "1"],
         help='Global map size in pixels (H, W, C)'
     )
     arg_parser.add_argument(
         '--window_scaler',
         type=float,
-        default=8.0,
+        default=1.0,
         help='Rescale factor for extracing local map'
     )
 
@@ -233,7 +233,7 @@ def parse_args():
     return params
 
 
-def store_results(eps_idx, obstacle_map, org_map_shape, particle_states, particle_weights, true_states, params):
+def store_results(eps_idx, floor_map, org_map_shape, particle_states, particle_weights, true_states, params):
     trajlen = params.trajlen
     b_idx = 0
 
@@ -252,7 +252,7 @@ def store_results(eps_idx, obstacle_map, org_map_shape, particle_states, particl
     est_states = tf.stack([part_x, part_y, part_th], axis=-1)
 
     # plot map
-    floor_map = obstacle_map[b_idx].numpy()  # [H, W, 1]
+    floor_map = floor_map[b_idx].numpy()  # [H, W, 1]
     pad_map_shape = floor_map.shape
     o_map_shape = org_map_shape[b_idx]
 
@@ -385,7 +385,6 @@ def pfnet_test(arg_params):
             odometry = tf.convert_to_tensor(batch_sample['odometry'], dtype=tf.float32)
             true_states = tf.convert_to_tensor(batch_sample['true_states'], dtype=tf.float32)
             floor_map = tf.convert_to_tensor(batch_sample['floor_map'], dtype=tf.float32)
-            obstacle_map = tf.convert_to_tensor(batch_sample['obstacle_map'], dtype=tf.float32)
             org_map_shape = batch_sample['org_map_shape']
             init_particles = tf.convert_to_tensor(batch_sample['init_particles'], dtype=tf.float32)
             init_particle_weights = tf.constant(np.log(1.0 / float(num_particles)),
@@ -400,7 +399,7 @@ def pfnet_test(arg_params):
             init_mse_list.append(init_mse)
 
             # start trajectory with initial particles and weights
-            state = [init_particles, init_particle_weights, obstacle_map]
+            state = [init_particles, init_particle_weights, floor_map]
 
             # if stateful: reset RNN s.t. initial_state is set to initial particles and weights
             # if non-stateful: pass the state explicity every step
@@ -440,7 +439,7 @@ def pfnet_test(arg_params):
                 # store results as video
                 arg_params.out_folder = os.path.join(arg_params.root_dir, f'output')
                 Path(arg_params.out_folder).mkdir(parents=True, exist_ok=True)
-                store_results(eps_idx, obstacle_map, org_map_shape, particle_states, particle_weights, true_states, arg_params)
+                store_results(eps_idx, floor_map, org_map_shape, particle_states, particle_weights, true_states, arg_params)
 
         # report results
         init_mean_rmse = np.mean(np.sqrt(init_mse_list)) * 100
