@@ -84,9 +84,14 @@ class LocalizeGibsonEnv(iGibsonEnv):
         else:
             self.pf_params.use_plot = False
             self.pf_params.store_plot = False
-            self.pf_params.num_clusters = pf_params.num_clusters
-            self.pf_params.global_map_size = pf_params.global_map_size
-            self.pf_params.custom_output = pf_params.custom_output
+            if pf_params is not None:
+                self.pf_params.num_clusters = pf_params.num_clusters
+                self.pf_params.global_map_size = pf_params.global_map_size
+                self.pf_params.custom_output = pf_params.custom_output
+            else:
+                self.pf_params.num_clusters = 10
+                self.pf_params.global_map_size = [1000, 1000, 1]
+                self.pf_params.custom_output = ['rgb_obs', ''depth_obs'']
 
         # custom tf_agents we are using supports dict() type observations
         observation_space = OrderedDict()

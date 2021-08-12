@@ -359,3 +359,17 @@ channel
 1: at xy obstacle/empty (0/1)
 2: at xy particle position particle weight (sum)
 3: at xy particle position orientation (weighted mean)
+
+
+Setup Instructions:
+------------------
+1. Install miniconda from (https://docs.conda.io/en/latest/miniconda.html)
+2. Create conda environment
+  $ conda create -n py3-igibson python=3.7 anaconda
+  $ pip install --upgrade pip
+  $ pip install tensorflow
+3. Setup igibson
+  $ git clone https://github.com/StanfordVL/iGibson --recursive --branch ig-develop
+  $ cd iGibson
+  $ source activate py3-igibson
+  $ pip install -e .
