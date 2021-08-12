@@ -377,12 +377,14 @@ class LocalizeGibsonEnv(iGibsonEnv):
         if 'kmeans_cluster' in self.pf_params.custom_output:
             if self.curr_cluster is not None:
                 cluster_centers, cluster_weights = self.curr_cluster
-                particle_cluster = []
                 floor_map = self.get_floor_map()
-                for i, cluster_center in enumerate(cluster_centers):
-                    pose_mts = datautils.inv_transform_pose(cluster_center, floor_map.shape, self.map_pixel_in_meters)
-                    particle_cluster.append(np.append(pose_mts, cluster_weights[i]))
-                processed_state['kmeans_cluster'] = np.stack(particle_cluster) # particle_cluster [x, y, theta, weight]
+                def cluster_pose(cluster_center, cluster_weight):
+                    pose_in_mts = datautils.inv_transform_pose(cluster_center, floor_map.shape, self.map_pixel_in_meters)
+                    return np.append(pose_in_mts, cluster_weight)   # cluster_pose [x, y, theta, weight]
+
+                processed_state['kmeans_cluster'] = np.stack([
+                    np.append(cluster_centers[c_idx], cluster_weights[c_idx]) for c_idx in range(self.pf_params.num_clusters)
+                ])
             else:
                 processed_state['kmeans_cluster'] = None
         if 'raw_particles' in self.pf_params.custom_output:
@@ -634,7 +636,6 @@ class LocalizeGibsonEnv(iGibsonEnv):
         kmeans.fit_predict(particles)
         cluster_indices = kmeans.labels_
         cluster_centers = kmeans.cluster_centers_
-        cluster_weights = np.zeros(num_clusters)
 
         # kmeans = tf.compat.v1.estimator.experimental.KMeans(
         #     num_clusters=num_clusters,
@@ -658,9 +659,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
         # cluster_indices = list(kmeans.predict_cluster_index(particles_ds))
         # cluster_weights = np.zeros(num_clusters)
 
-        for i, particle in enumerate(particles):
-            cluster_index = cluster_indices[i]
-            cluster_weights[cluster_index] += lin_weights[i]
+        assert list(lin_weights.shape) == list(cluster_indices.shape)
+        cluster_weights = np.array([
+                            np.sum(lin_weights[cluster_indices==c_idx]) for c_idx in range(num_clusters)
+                        ])
 
         return cluster_centers, cluster_weights
 

@@ -296,11 +296,10 @@ class PFCell(keras.layers.AbstractRNNCell):
         # reshape to format expected by spatial transform network
         transform_m = tf.reshape(transform_m[:, :2], [batch_size, num_particles, 6])
 
-        # iterate over num_particles to tranform image using spatial transform network
-        list = []
-        for i in range(num_particles):
-            list.append(transformer(global_map, transform_m[:, i], local_map_size))
-        local_maps = tf.stack(list, axis=1)
+        # iterate over num_particles to transform image using spatial transform network
+        local_maps = tf.stack([
+            transformer(global_map, transform_m[:, i], local_map_size) for i in range(num_particles)
+        ], axis=1)
 
         # reshape if any information has lost in spatial transform network
         local_maps = tf.reshape(local_maps,
