@@ -49,7 +49,7 @@ from tf_agents.replay_buffers import tf_uniform_replay_buffer
 from tf_agents.utils import common
 
 flags.DEFINE_string('obs_mode', 'rgb-depth',
-                    'Observation input type. Possible values: rgb / depth / rgb-depth.')
+                    'Observation input type. Possible values: rgb / depth / rgb-depth / occupancy_grid.')
 flags.DEFINE_list('custom_output', ['rgb_obs', 'depth_obs', 'floor_map', 'kmeans_cluster'],
                   'A comma-separated list of env observation types.')
 flags.DEFINE_integer('obs_ch', 4, 'Observation channels.')
@@ -600,10 +600,12 @@ def main(_):
     # compute observation channel dim
     if FLAGS.obs_mode == 'rgb-depth':
         FLAGS.obs_ch = 4
-    elif FLAGS.obs_mode == 'depth':
+    elif FLAGS.obs_mode == 'rgb':
+        FLAGS.obs_ch = 3
+    elif FLAGS.obs_mode == 'depth' or FLAGS.obs_mode == 'occupancy_grid':
         FLAGS.obs_ch = 1
     else:
-        FLAGS.obs_ch = 3
+        raise ValueError
 
     # set random seeds
     random.seed(FLAGS.seed)

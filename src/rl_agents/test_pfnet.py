@@ -33,12 +33,12 @@ def parse_args():
         '--obs_mode',
         type=str,
         default='rgb-depth',
-        help='Observation input type. Possible values: rgb / depth / rgb-depth.'
+        help='Observation input type. Possible values: rgb / depth / rgb-depth / occupancy_grid.'
     )
     arg_parser.add_argument(
         '--custom_output',
         nargs='*',
-        default=['rgb_obs', 'depth_obs', 'floor_map', 'kmeans_cluster', 'likelihood_map'],
+        default=['rgb_obs', 'depth_obs', 'floor_map', 'kmeans_cluster', 'likelihood_map', 'scan_obs', 'occupancy_grid'],
         help='A comma-separated list of env observation types.'
     )
     arg_parser.add_argument(
@@ -189,10 +189,12 @@ def parse_args():
     # compute observation channel dim
     if params.obs_mode == 'rgb-depth':
         params.obs_ch = 4
-    elif params.obs_mode == 'depth':
+    elif params.obs_mode == 'rgb':
+        params.obs_ch = 3
+    elif params.obs_mode == 'depth' or params.obs_mode == 'occupancy_grid':
         params.obs_ch = 1
     else:
-        params.obs_ch = 3
+        raise ValueError
 
     # convert multi-input fields to numpy arrays
     params.transition_std = np.array(params.transition_std, np.float32)

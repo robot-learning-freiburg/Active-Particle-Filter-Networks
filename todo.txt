@@ -373,4 +373,5 @@ Setup Instructions:
   $ cd iGibson
   $ source activate py3-igibson
   $ pip install -e .
-4. add lidar to locobot.urdf
+4. add (lidar sensor) scan_link and scan_joint iGibson/igibson/data/assets/models/locobot/locobot.urdf
+  refer turtlebot.urdf

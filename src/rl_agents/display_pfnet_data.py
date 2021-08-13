@@ -36,7 +36,7 @@ def parse_args():
         '--obs_mode',
         type=str,
         default='rgb-depth',
-        help='Observation input type. Possible values: rgb / depth / rgb-depth.'
+        help='Observation input type. Possible values: rgb / depth / rgb-depth / occupancy_grid.'
     )
     arg_parser.add_argument(
         '--custom_output',
@@ -211,10 +211,12 @@ def parse_args():
     # compute observation channel dim
     if params.obs_mode == 'rgb-depth':
         params.obs_ch = 4
-    elif params.obs_mode == 'depth':
+    elif params.obs_mode == 'rgb':
+        params.obs_ch = 3
+    elif params.obs_mode == 'depth' or params.obs_mode == 'occupancy_grid':
         params.obs_ch = 1
     else:
-        params.obs_ch = 3
+        raise ValueError
 
     # HACK:
     params.loop = 6
@@ -298,8 +300,12 @@ def display_data(arg_params):
             cv2.imwrite('./depth.png', cv2.applyColorMap(
                 datautils.denormalize_observation(observation[t_idx]*255/100).astype(np.uint8),
                 cv2.COLORMAP_JET))
-        else:
+        elif arg_params.obs_mode == 'rgb':
             cv2.imwrite('./rgb.png', datautils.denormalize_observation(observation[t_idx]))
+        elif arg_params.obs_mode == 'occupancy_grid':
+            cv2.imwrite('./occupancy_grid.png', observation[t_idx])
+        else:
+            ValueError
 
         scene_id = parsed_record['scene_id'][b_idx][0].decode('utf-8')
         floor_num = parsed_record['floor_num'][b_idx][0]

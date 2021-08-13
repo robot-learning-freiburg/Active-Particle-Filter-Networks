@@ -27,7 +27,7 @@ from tf_agents.utils import common
 flags.DEFINE_string(
     name='obs_mode',
     default='rgb-depth',
-    help='Observation input type. Possible values: rgb / depth / rgb-depth.'
+    help='Observation input type. Possible values: rgb / depth / rgb-depth / occupancy_grid.'
 )
 flags.DEFINE_list(
     name='custom_output',
@@ -432,10 +432,12 @@ def main(_):
     # compute observation channel dim
     if FLAGS.obs_mode == 'rgb-depth':
         FLAGS.obs_ch = 4
-    elif FLAGS.obs_mode == 'depth':
+    elif FLAGS.obs_mode == 'rgb':
+        FLAGS.obs_ch = 3
+    elif FLAGS.obs_mode == 'depth' or FLAGS.obs_mode == 'occupancy_grid':
         FLAGS.obs_ch = 1
     else:
-        FLAGS.obs_ch = 3
+        raise ValueError
 
     test_agent(FLAGS)
 

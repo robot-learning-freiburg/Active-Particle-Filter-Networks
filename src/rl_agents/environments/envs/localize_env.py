@@ -136,6 +136,12 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 low=-10.0, high=+10.0,
                 shape=(*self.pf_params.global_map_size[:2], 3),
                 dtype=np.float32)
+        if "occupancy_grid" in self.pf_params.custom_output:
+            self.grid_resolution = self.config.get("grid_resolution", 128)
+            observation_space['occupancy_grid'] = gym.spaces.Box(
+                low=0.0, high=1.0,
+                shape=(self.grid_resolution, self.grid_resolution, 1),
+                dtype=np.float32)
 
         self.observation_space = gym.spaces.Dict(observation_space)
 
@@ -292,9 +298,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
         if self.use_pfnet:
             new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 255]
             new_depth_obs = copy.deepcopy(state['depth']*100) # [0, 100]
+            new_occupancy_grid = copy.deepcopy(state['occupancy_grid'])
             pose_mse = self.step_pfnet([
                 new_rgb_obs,
-                new_depth_obs
+                new_depth_obs,
+                new_occupancy_grid
             ])['pred'].cpu().numpy()
             # TODO: may need better reward
             # compute reward and normalize to range [-10, 0]
@@ -335,9 +343,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
         if self.use_pfnet:
             new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 255]
             new_depth_obs = copy.deepcopy(state['depth']*100) # [0, 100]
+            new_occupancy_grid = copy.deepcopy(state['occupancy_grid'])
             pose_mse = self.reset_pfnet([
                 new_rgb_obs,
-                new_depth_obs
+                new_depth_obs,
+                new_occupancy_grid
             ])['pred'].cpu().numpy()
 
         custom_state = self.process_state(state)
@@ -358,6 +368,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         # # HACK: to collect data
         # new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 1] ->[0, 255]
         # new_depth_obs = copy.deepcopy(state['depth']*100) # [0, 1] ->[0, 100]
+        # new_occupancy_grid = copy.deepcopy(state['occupancy_grid']) # [0, 0.5, 1]
         #
         # # check for close obstacles to robot
         # min_depth = np.min(new_depth_obs, axis=0)
@@ -370,7 +381,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
         # return [
         #         datautils.process_raw_image(new_rgb_obs),
         #         datautils.process_raw_image(new_depth_obs),
-        #         np.array([left, left_front, right_front, right])
+        #         np.array([left, left_front, right_front, right]),
+        #         new_occupancy_grid
         #     ]
 
         # process and return only output we are expecting to
@@ -450,14 +462,14 @@ class LocalizeGibsonEnv(iGibsonEnv):
         obs_mode = self.pf_params.obs_mode
 
         floor_map = self.floor_map[0]
-        old_rgb_obs, old_depth_obs = self.curr_obs
+        old_rgb_obs, old_depth_obs, old_occupancy_grid = self.curr_obs
         old_pose = self.curr_gt_pose[0].cpu().numpy()
         old_pfnet_state = self.curr_pfnet_state
 
         # get new robot state
         new_robot_state = self.robots[0].calc_state()
 
-        new_rgb_obs, new_depth_obs = new_obs
+        new_rgb_obs, new_depth_obs, new_occupancy_grid = new_obs
         # process new rgb observation: convert [0, 255] to [-1, +1] range
         new_rgb_obs = datautils.process_raw_image(new_rgb_obs)
 
@@ -476,6 +488,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
             tf.convert_to_tensor(new_rgb_obs, dtype=tf.float32), axis=0)
         new_depth_obs = tf.expand_dims(
             tf.convert_to_tensor(new_depth_obs, dtype=tf.float32), axis=0)
+        new_occupancy_grid = tf.expand_dims(
+            tf.convert_to_tensor(new_occupancy_grid, dtype=tf.float32), axis=0)
         new_odom = tf.expand_dims(
             tf.convert_to_tensor(new_odom, dtype=tf.float32), axis=0)
         new_pose = tf.expand_dims(
@@ -490,8 +504,12 @@ class LocalizeGibsonEnv(iGibsonEnv):
             ], axis=-1)
         elif obs_mode == 'depth':
             observation = tf.expand_dims(old_depth_obs, axis=1)
-        else:
+        elif obs_mode == 'rgb':
             observation = tf.expand_dims(old_rgb_obs, axis=1)
+        elif obs_mode == 'occupancy_grid':
+            observation = tf.expand_dims(old_occupancy_grid, axis=1)
+        else:
+            raise ValueError
 
         # sanity check
         assert list(odometry.shape) == [batch_size, trajlen, 3], f'{odometry.shape}'
@@ -531,7 +549,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.curr_est_pose = self.get_est_pose()
         self.curr_obs = [
             new_rgb_obs,
-            new_depth_obs
+            new_depth_obs,
+            new_occupancy_grid
         ]
         self.curr_cluster = self.compute_kmeans()
 
@@ -558,7 +577,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         floor_map = self.get_floor_map()
         obstacle_map = self.get_obstacle_map()
 
-        new_rgb_obs, new_depth_obs = new_obs
+        new_rgb_obs, new_depth_obs, new_occupancy_grid = new_obs
         # process new rgb observation: convert [0, 255] to [-1, +1] range
         new_rgb_obs = datautils.process_raw_image(new_rgb_obs)
 
@@ -573,6 +592,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
             tf.convert_to_tensor(new_rgb_obs, dtype=tf.float32), axis=0)
         new_depth_obs = tf.expand_dims(
             tf.convert_to_tensor(new_depth_obs, dtype=tf.float32), axis=0)
+        new_occupancy_grid = tf.expand_dims(
+            tf.convert_to_tensor(new_occupancy_grid, dtype=tf.float32), axis=0)
         new_pose = tf.expand_dims(
             tf.convert_to_tensor(new_pose, dtype=tf.float32), axis=0)
         floor_map = tf.expand_dims(
@@ -598,6 +619,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         assert list(new_pose.shape) == [batch_size, 3], f'{new_pose.shape}'
         assert list(new_rgb_obs.shape) == [batch_size, 56, 56, 3], f'{new_rgb_obs.shape}'
         assert list(new_depth_obs.shape) == [batch_size, 56, 56, 1], f'{new_depth_obs.shape}'
+        assert list(new_occupancy_grid.shape) == [batch_size, 128, 128, 1], f'{new_depth_obs.shape}'
         assert list(init_particles.shape) == [batch_size, num_particles, 3], f'{init_particles.shape}'
         assert list(init_particle_weights.shape) == [batch_size, num_particles], f'{init_particle_weights.shape}'
         assert list(floor_map.shape) == [batch_size, *map_size], f'{floor_map.shape}'
@@ -620,7 +642,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.curr_est_pose = self.get_est_pose()
         self.curr_obs = [
             new_rgb_obs,
-            new_depth_obs
+            new_depth_obs,
+            new_occupancy_grid
         ]
         self.curr_cluster = self.compute_kmeans()
 

@@ -58,7 +58,7 @@ flags.DEFINE_string(
 flags.DEFINE_string(
     name='obs_mode',
     default='rgb-depth',
-    help='Observation input type. Possible values: rgb / depth / rgb-depth.'
+    help='Observation input type. Possible values: rgb / depth / rgb-depth / occupancy_grid.'
 )
 flags.DEFINE_list(
     name='custom_output',
@@ -191,10 +191,12 @@ def main(_):
     # compute observation channel dim
     if params.obs_mode == 'rgb-depth':
         params.obs_ch = 4
-    elif params.obs_mode == 'depth':
+    elif params.obs_mode == 'rgb':
+        params.obs_ch = 3
+    elif params.obs_mode == 'depth' or params.obs_mode == 'occupancy_grid':
         params.obs_ch = 1
     else:
-        params.obs_ch = 3
+        raise ValueError
 
     print(params)
     collect_data(env, params, FLAGS.filename, FLAGS.num_records)
