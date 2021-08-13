@@ -330,6 +330,7 @@ def gather_episode_stats(env, params, sample_particles=False):
             obs, reward, done, _ = env.step(action)
         assert list(obs[0].shape) == [56, 56, 3]
         assert list(obs[1].shape) == [56, 56, 1]
+        assert list(obs[3].shape) == [56, 56, 1]
         rgb_observation.append(obs[0])
         depth_observation.append(obs[1])
         left, left_front, right_front, right = obs[2] # obstacle (not)present
@@ -445,7 +446,7 @@ def serialize_tf_record(episode_data):
     # HACK: rescale to [0, 255] and [0, 100]
     rgb_observation = denormalize_observation(episode_data['rgb_observation'])
     depth_observation = denormalize_observation(episode_data['depth_observation'])
-    occupancy_grid = episode_data['occupancy_grid']
+    occupancy_grid = (episode_data['occupancy_grid']*10).astype(np.int32)  # [0, 5, 10]
     states = episode_data['true_states']
     odometry = episode_data['odometry']
     scene_id = episode_data['scene_id']
@@ -600,8 +601,8 @@ def transform_raw_record(env, parsed_record, params):
     elif obs_mode == 'occupancy_grid':
         occupancy_grid_observation = parsed_record['occupancy_grid'].reshape(
             [batch_size] + list(parsed_record['occupancy_grid_shape'][0]))[:, :trajlen]
-        assert np.min(occupancy_grid_observation)>=0. and np.max(occupancy_grid_observation)<=1.
-        trans_record['occupancy_grid'] = normalize_observation(occupancy_grid_observation.astype(np.float32))
+        assert np.min(occupancy_grid_observation)>=0. and np.max(occupancy_grid_observation)<=10.
+        trans_record['observation'] = (occupancy_grid_observation/10.).astype(np.float32)  # [0, 0.5, 1]
     else:
         raise ValueError
 
@@ -647,11 +648,11 @@ def transform_raw_record(env, parsed_record, params):
     trans_record['init_particles'] = np.concatenate(trans_record['init_particles'], axis=0)   # [batch_size, N, 3]
 
     # sanity check
-    assert list(trans_record['odometry'].shape) == [batch_size, trajlen, 3]
-    assert list(trans_record['true_states'].shape) == [batch_size, trajlen, 3]
-    assert list(trans_record['observation'].shape) == [batch_size, trajlen, 56, 56, obs_ch]
-    assert list(trans_record['init_particles'].shape) == [batch_size, num_particles, 3]
-    assert list(trans_record['floor_map'].shape) == [batch_size, *pad_map_size]
-    assert list(trans_record['obstacle_map'].shape) == [batch_size, *pad_map_size]
+    assert list(trans_record['odometry'].shape) == [batch_size, trajlen, 3], f'{trans_record["odometry"].shape}'
+    assert list(trans_record['true_states'].shape) == [batch_size, trajlen, 3], f'{trans_record["true_states"].shape}'
+    assert list(trans_record['observation'].shape) == [batch_size, trajlen, 56, 56, obs_ch], f'{trans_record["observation"].shape}'
+    assert list(trans_record['init_particles'].shape) == [batch_size, num_particles, 3], f'{trans_record["init_particles"].shape}'
+    assert list(trans_record['floor_map'].shape) == [batch_size, *pad_map_size], f'{trans_record["floor_map"].shape}'
+    assert list(trans_record['obstacle_map'].shape) == [batch_size, *pad_map_size], f'{trans_record["obstacle_map"].shape}'
 
     return trans_record

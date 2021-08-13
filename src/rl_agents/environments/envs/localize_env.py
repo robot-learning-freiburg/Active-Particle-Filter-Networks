@@ -379,10 +379,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
         #
         # # process new rgb, depth observation: convert [0, 255] to [-1, +1] range
         # return [
-        #         datautils.process_raw_image(new_rgb_obs),
-        #         datautils.process_raw_image(new_depth_obs),
+        #         datautils.process_raw_image(new_rgb_obs, resize=(56, 56)),
+        #         datautils.process_raw_image(new_depth_obs, resize=(56, 56)),
         #         np.array([left, left_front, right_front, right]),
-        #         new_occupancy_grid
+        #         np.atleast_3d(datautils.decode_image(new_occupancy_grid, resize=(56, 56)).astype(np.float32))
         #     ]
 
         # process and return only output we are expecting to
@@ -471,10 +471,13 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         new_rgb_obs, new_depth_obs, new_occupancy_grid = new_obs
         # process new rgb observation: convert [0, 255] to [-1, +1] range
-        new_rgb_obs = datautils.process_raw_image(new_rgb_obs)
+        new_rgb_obs = datautils.process_raw_image(new_rgb_obs, resize=(56, 56))
 
         # process new depth observation: convert [0, 100] to [-1, +1] range
-        new_depth_obs = datautils.process_raw_image(new_depth_obs)
+        new_depth_obs = datautils.process_raw_image(new_depth_obs, resize=(56, 56))
+
+        # process new occupancy_grid
+        new_occupancy_grid = np.atleast_3d(datautils.decode_image(new_occupancy_grid, resize=(56, 56)).astype(np.float32))
 
         # process new robot state: convert coords to pixel space
         new_pose = self.get_robot_pose(new_robot_state, floor_map.shape)
@@ -579,10 +582,13 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         new_rgb_obs, new_depth_obs, new_occupancy_grid = new_obs
         # process new rgb observation: convert [0, 255] to [-1, +1] range
-        new_rgb_obs = datautils.process_raw_image(new_rgb_obs)
+        new_rgb_obs = datautils.process_raw_image(new_rgb_obs, resize=(56, 56))
 
         # process new depth observation: convert [0, 100] to [-1, +1] range
-        new_depth_obs = datautils.process_raw_image(new_depth_obs)
+        new_depth_obs = datautils.process_raw_image(new_depth_obs, resize=(56, 56))
+
+        # process new occupancy_grid
+        new_occupancy_grid = np.atleast_3d(datautils.decode_image(new_occupancy_grid, resize=(56, 56)).astype(np.float32))
 
         # process new robot state: convert coords to pixel space
         new_pose = self.get_robot_pose(new_robot_state, floor_map.shape)

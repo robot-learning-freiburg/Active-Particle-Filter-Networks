@@ -303,7 +303,7 @@ def display_data(arg_params):
         elif arg_params.obs_mode == 'rgb':
             cv2.imwrite('./rgb.png', datautils.denormalize_observation(observation[t_idx]))
         elif arg_params.obs_mode == 'occupancy_grid':
-            cv2.imwrite('./occupancy_grid.png', observation[t_idx])
+            cv2.imwrite('./occupancy_grid.png', observation[t_idx]*255)
         else:
             ValueError
 
