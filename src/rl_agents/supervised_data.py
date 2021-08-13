@@ -62,7 +62,7 @@ flags.DEFINE_string(
 )
 flags.DEFINE_list(
     name='custom_output',
-    default=['rgb_obs', 'depth_obs', 'floor_map', 'kmeans_cluster'],
+    default=['rgb_obs', 'depth_obs', 'occupancy_grid', 'floor_map', 'kmeans_cluster', 'likelihood_map'],
     help='A comma-separated list of env observation types.'
 )
 flags.DEFINE_float(
@@ -173,19 +173,27 @@ def main(_):
     argparser = argparse.ArgumentParser()
     params = argparser.parse_args([])
 
+    # For the igibson maps, originally each pixel represents 0.01m, and the center of the image correspond to (0,0)
+    params.map_pixel_in_meters = 0.01
+    # in igibson we work with rescaled 0.01m to 0.1m maps to sample robot poses
+    params.trav_map_resolution = 0.1
     params.loop = 6
     params.agent = FLAGS.agent
     params.trajlen = FLAGS.max_step//params.loop
     params.max_lin_vel = env.config.get("linear_velocity", 0.5)
     params.max_ang_vel = env.config.get("angular_velocity", np.pi/2)
-    params.global_map_size = np.array([4000, 4000, 1])
+    params.global_map_size = np.array([100, 100, 1])
     params.obs_mode = FLAGS.obs_mode
     params.batch_size = 1
     params.num_particles = 10
     params.init_particles_distr = 'gaussian'
-    particle_std = np.array([0.3, 0.523599])
+    particle_std = np.array([0.15, 0.523599])
+    transition_std = np.array([0.02, 0.0872665])
+    transition_std[0] = (transition_std[0] / params.map_pixel_in_meters) * params.trav_map_resolution # convert meters to pixels and rescale to trav map resolution
+    particle_std[0] = (particle_std[0] / params.map_pixel_in_meters) * params.trav_map_resolution    # convert meters to pixels and rescale to trav map resolution
     particle_std2 = np.square(particle_std)  # variance
     params.init_particles_cov = np.diag(particle_std2[(0, 0, 1), ])
+    params.transition_std = transition_std
     params.particles_range = 100
 
     # compute observation channel dim

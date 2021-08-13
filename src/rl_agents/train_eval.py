@@ -50,7 +50,7 @@ from tf_agents.utils import common
 
 flags.DEFINE_string('obs_mode', 'rgb-depth',
                     'Observation input type. Possible values: rgb / depth / rgb-depth / occupancy_grid.')
-flags.DEFINE_list('custom_output', ['rgb_obs', 'depth_obs', 'floor_map', 'kmeans_cluster'],
+flags.DEFINE_list('custom_output', ['rgb_obs', 'depth_obs', 'occupancy_grid', 'floor_map', 'kmeans_cluster', 'likelihood_map'],
                   'A comma-separated list of env observation types.')
 flags.DEFINE_integer('obs_ch', 4, 'Observation channels.')
 flags.DEFINE_integer('num_clusters', 10, 'Number of particle clusters.')

@@ -38,7 +38,7 @@ def parse_args():
     arg_parser.add_argument(
         '--custom_output',
         nargs='*',
-        default=['rgb_obs', 'depth_obs', 'floor_map', 'kmeans_cluster', 'likelihood_map', 'scan_obs', 'occupancy_grid'],
+        default=['rgb_obs', 'depth_obs', 'occupancy_grid', 'floor_map', 'kmeans_cluster', 'likelihood_map'],
         help='A comma-separated list of env observation types.'
     )
     arg_parser.add_argument(

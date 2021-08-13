@@ -368,7 +368,7 @@ Setup Instructions:
   $ conda create -n py3-igibson python=3.7 anaconda
   $ pip install --upgrade pip
   $ pip install tensorflow
-3. Setup igibson
+3. Setup igibson from (http://svl.stanford.edu/igibson/docs/installation.html)
   $ git clone https://github.com/StanfordVL/iGibson --recursive --branch ig-develop
   $ cd iGibson
   $ source activate py3-igibson
