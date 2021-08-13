@@ -25,6 +25,7 @@ AUTHOR Suresh Guttikonda
     python3 -m venv --system-site-packages /opt/venvs/py3-igibson
     . /opt/venvs/py3-igibson/bin/activate
     python3 -m pip install --upgrade pip
+    pip install -U scikit-learn
 
     # install igibson packages
     # git clone --branch master https://github.com/StanfordVL/iGibson /opt/igibson --recursive

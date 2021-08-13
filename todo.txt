@@ -112,14 +112,14 @@ $ nohup python -u supervised_data.py \
 $ nohup python -u train_pfnet.py \
 --root_dir=./run1 \
 --tfrecordpath=./pfnet_data \
---epochs=20 \
+--epochs=100 \
 --obs_mode='rgb-depth' \
---num_train_samples=37500 \
---num_eval_samples=2500 \
---batch_size=6 \
+--num_train_samples=4000 \
+--num_eval_samples=500 \
+--batch_size=12 \
 --s_buffer_size=500 \
---pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_87_5.830/pfnet_checkpoint \
---learning_rate=2.5e-3 \
+--pfnet_loadpath='' \
+--learning_rate=5e-5 \
 --init_particles_distr='gaussian' \
 --init_particles_std '0.15' '0.523599' \
 --particles_range=100 \
@@ -127,9 +127,9 @@ $ nohup python -u train_pfnet.py \
 --transition_std '0.' '0.' \
 --resample=false \
 --alpha_resample_ratio=0.5 \
---global_map_size '4000' '4000' '1' \
---window_scaler=8.0 \
---config_file=./configs/turtlebot_pfnet_nav.yaml \
+--global_map_size '100' '100' '1' \
+--window_scaler=1.0 \
+--config_file=./configs/locobot_pfnet_nav.yaml \
 --device_idx=1 \
 --multiple_gpus=false \
 --seed=42 > nohup.out &
@@ -373,3 +373,4 @@ Setup Instructions:
   $ cd iGibson
   $ source activate py3-igibson
   $ pip install -e .
+4. add lidar to locobot.urdf

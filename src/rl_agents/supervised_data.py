@@ -196,6 +196,7 @@ def main(_):
     else:
         params.obs_ch = 3
 
+    print(params)
     collect_data(env, params, FLAGS.filename, FLAGS.num_records)
 
     # test_ds = get_dataflow([FLAGS.filename])

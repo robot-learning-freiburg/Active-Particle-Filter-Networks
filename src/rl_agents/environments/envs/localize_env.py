@@ -381,6 +381,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
             processed_state['rgb_obs'] = state['rgb']  # [0, 1] range rgb image
         if 'depth_obs' in self.pf_params.custom_output:
             processed_state['depth_obs'] = state['depth']  # [0, 1] range depth image
+        if 'scan_obs' in self.pf_params.custom_output:
+            processed_state['scan_obs'] = state['scan']
+        if 'occupancy_grid' in self.pf_params.custom_output:
+            # robot is at center facing right in grid
+            processed_state['occupancy_grid'] = state['occupancy_grid'] #   [0: occupied, 0.5: unknown, 1: free]
         if 'kmeans_cluster' in self.pf_params.custom_output:
             if self.curr_cluster is not None:
                 cluster_centers, cluster_weights = self.curr_cluster
