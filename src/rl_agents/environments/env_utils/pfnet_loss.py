@@ -3,13 +3,13 @@
 import numpy as np
 import tensorflow as tf
 
-def compute_loss(particle_states, particle_weights, true_states, map_pixel_in_meters):
+def compute_loss(particle_states, particle_weights, true_states, trav_map_resolution):
     """
 
     :param particle_states: particle states after observation update but before motion update (batch, trajlen, k, 3)
     :param particle_weights: particle likelihoods in the log space (unnormalized) (batch, trajlen, k)
     :param true_states: true state of robot (batch, trajlen, 3)
-    :param int map_pixel_in_meters: The width (and height) of a pixel of the map in meters
+    :param float trav_map_resolution: The map rescale factor for iGibsonEnv
 
     :return dict: total loss and coordinate loss (in meters)
     """
@@ -23,8 +23,8 @@ def compute_loss(particle_states, particle_weights, true_states, map_pixel_in_me
                     ), axis=2)
     coords_diffs = mean_coords - true_coords
 
-    # convert from pixel coordinates to meters
-    coords_diffs = coords_diffs * map_pixel_in_meters
+    # iGibsonEnv.scene.map_to_world()
+    coords_diffs = coords_diffs * trav_map_resolution
 
     # coordinates loss component: (x-x')^2 + (y-y')^2
     loss_coords = tf.math.reduce_sum(tf.math.square(coords_diffs), axis=2)

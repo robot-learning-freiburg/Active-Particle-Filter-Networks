@@ -70,11 +70,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
         del self.task.reward_functions[-1]
 
         # For the igibson maps, originally each pixel represents 0.01m, and the center of the image correspond to (0,0)
-        self.map_default_resolution = 0.01
+        self.map_pixel_in_meters = 0.01
         # in igibson we work with rescaled 0.01m to 0.1m maps to sample robot poses
-        self.map_pixel_in_meters = self.config.get('trav_map_resolution', 0.1)
+        self.trav_map_resolution = self.config.get('trav_map_resolution', 0.1)
         self.depth_th = 3.
-        self.robot_size_px = 0.3/self.map_pixel_in_meters # 0.03m
+        self.robot_size_px = (0.3/self.map_pixel_in_meters) * self.trav_map_resolution # 0.03m
 
         argparser = argparse.ArgumentParser()
         self.pf_params = argparser.parse_args([])
@@ -169,8 +169,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.pf_params.window_scaler = FLAGS.window_scaler
         self.pf_params.max_step = self.config.get('max_step', 500)
 
-        self.pf_params.transition_std[0] = self.pf_params.transition_std[0] / self.map_pixel_in_meters  # convert meters to pixels
-        self.pf_params.init_particles_std[0] = self.pf_params.init_particles_std[0] / self.map_pixel_in_meters  # convert meters to pixels
+        self.pf_params.transition_std[0] = (self.pf_params.transition_std[0] / self.map_pixel_in_meters) * self.trav_map_resolution # convert meters to pixels and rescale to trav map resolution
+        self.pf_params.init_particles_std[0] = (self.pf_params.init_particles_std[0] / self.map_pixel_in_meters) * self.trav_map_resolution  # convert meters to pixels and rescale to trav map resolution
 
         self.pf_params.obs_ch = FLAGS.obs_ch
         self.pf_params.obs_mode = FLAGS.obs_mode
@@ -519,7 +519,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         assert list(true_old_pose.shape) == [batch_size, trajlen, 3], f'{true_old_pose.shape}'
         assert list(particles.shape) == [batch_size, trajlen, num_particles, 3], f'{particles.shape}'
         assert list(particle_weights.shape) == [batch_size, trajlen, num_particles], f'{particle_weights.shape}'
-        loss_dict = pfnet_loss.compute_loss(particles, particle_weights, true_old_pose, self.map_pixel_in_meters)
+        loss_dict = pfnet_loss.compute_loss(particles, particle_weights, true_old_pose, self.trav_map_resolution)
 
         self.curr_pfnet_state = new_pfnet_state
         self.curr_gt_pose = new_pose
@@ -606,7 +606,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         assert list(true_old_pose.shape) == [batch_size, trajlen, 3], f'{true_old_pose.shape}'
         assert list(particles.shape) == [batch_size, trajlen, num_particles, 3], f'{particles.shape}'
         assert list(particle_weights.shape) == [batch_size, trajlen, num_particles], f'{particle_weights.shape}'
-        loss_dict = pfnet_loss.compute_loss(particles, particle_weights, true_old_pose, self.map_pixel_in_meters)
+        loss_dict = pfnet_loss.compute_loss(particles, particle_weights, true_old_pose, self.trav_map_resolution)
 
         self.floor_map = floor_map
         self.obstacle_map = obstacle_map
@@ -700,7 +700,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         # HACK: use same rescaling as in iGibsonEnv
         height, width = obstacle_map.shape
-        resize = int(height * self.map_default_resolution / self.map_pixel_in_meters)
+        resize = int(height * self.map_pixel_in_meters / self.trav_map_resolution)
         obstacle_map = cv2.resize(obstacle_map, (resize, resize))
 
         # process new obstacle map: convert [0, 255] to [0, 2] range
@@ -734,7 +734,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         # HACK: use same rescaling as in iGibsonEnv
         height, width = trav_map.shape
-        resize = int(height * self.map_default_resolution / self.map_pixel_in_meters)
+        resize = int(height * self.map_pixel_in_meters / self.trav_map_resolution)
         trav_map = cv2.resize(trav_map, (resize, resize))
         trav_map_erosion = self.config.get('trav_map_erosion', 2)
         trav_map = cv2.erode(trav_map, np.ones((trav_map_erosion, trav_map_erosion)))

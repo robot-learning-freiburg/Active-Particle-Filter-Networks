@@ -178,8 +178,10 @@ def parse_args():
     # parse parameters
     params = arg_parser.parse_args()
 
-    # For the igibson maps, each pixel represents 0.01m, and the center of the image correspond to (0,0)
+    # For the igibson maps, originally each pixel represents 0.01m, and the center of the image correspond to (0,0)
     params.map_pixel_in_meters = 0.01
+    # in igibson we work with rescaled 0.01m to 0.1m maps to sample robot poses
+    params.trav_map_resolution = 0.1
 
     # post-processing
     params.num_train_batches = params.num_train_samples//params.batch_size
@@ -189,8 +191,8 @@ def parse_args():
     params.init_particles_std = np.array(params.init_particles_std, np.float32)
     params.global_map_size = np.array(params.global_map_size, np.int32)
 
-    params.transition_std[0] = params.transition_std[0] / params.map_pixel_in_meters  # convert meters to pixels
-    params.init_particles_std[0] = params.init_particles_std[0] / params.map_pixel_in_meters  # convert meters to pixels
+    params.transition_std[0] = (params.transition_std[0] / params.map_pixel_in_meters) * params.trav_map_resolution # convert meters to pixels and rescale to trav map resolution
+    params.init_particles_std[0] = (params.init_particles_std[0] / params.map_pixel_in_meters) * params.trav_map_resolution  # convert meters to pixels and rescale to trav map resolution
 
     # build initial covariance matrix of particles, in pixels and radians
     particle_std = params.init_particles_std.copy()
@@ -258,6 +260,7 @@ def display_data(arg_params):
     env.reset()
     arg_params.trajlen = env.config.get('max_step', 500)//arg_params.loop
     arg_params.floors = 1
+    print(arg_params)
 
     b_idx = 0
     t_idx = 10
@@ -312,33 +315,33 @@ def display_data(arg_params):
         alphas = np.where(init_lin_weights >= th, 1, 0) * init_lin_weights
         alphas = alphas/np.max(alphas)
 
-        part_x, part_y, part_th = np.split(init_particles, 3, axis=-1)
+        part_col, part_row, part_th = np.split(init_particles, 3, axis=-1)
         rgba_colors = cm.rainbow(init_particle_weights-np.min(init_particle_weights))
         rgba_colors[:, 3] = alphas
-        plt_ax.scatter(part_x, part_y, s=10, c=rgba_colors)
+        plt_ax.scatter(part_row, part_col, s=10, c=rgba_colors)
 
         # gt init pose
-        x1, y1, th1 = true_states[0]
-        heading_len  = robot_radius = 10.0
-        xdata = [x1, x1 + (robot_radius + heading_len) * np.cos(th1)]
-        ydata = [y1, y1 + (robot_radius + heading_len) * np.sin(th1)]
-        position_plt = Wedge((x1, y1), r=robot_radius, theta1=0, theta2=360, color='blue', alpha=0.5)
+        c1, r1, th1 = true_states[0]
+        heading_len  = robot_radius = 1.0
+        xdata = [r1, r1 + (robot_radius + heading_len) * np.cos(th1)]
+        ydata = [c1, c1 + (robot_radius + heading_len) * np.sin(th1)]
+        position_plt = Wedge((r1, c1), r=robot_radius, theta1=0, theta2=360, color='blue', alpha=0.5)
         plt_ax.add_artist(position_plt)
         plt_ax.plot(xdata, ydata, color='blue', alpha=0.5)
 
         # # gt trajectory (w.r.t odometry)
-        # x1, y1, th1 = true_states[0]
+        # c1, r1, th1 = true_states[0]
         # for t_idx in range(1, true_states.shape[0]):
-        #     x2, y2, th2 = true_states[t_idx]
-        #     plt_ax.arrow(x1, y1, (x2-x1), (y2-y1), head_width=5, head_length=7, fc='blue', ec='blue')
-        #     x1, y1, th1 = x2, y2, th2
+        #     c2, r2, th2 = true_states[t_idx]
+        #     plt_ax.arrow(r1, c1, (r2-r1), (c2-c1), head_width=0.5, head_length=0.7, fc='blue', ec='blue')
+        #     c1, r1, th1 = c2, r2, th2
 
         # gt trajectory (w.r.t gt pose)
-        x1, y1, th1 = true_states[0]
+        c1, r1, th1 = true_states[0]
         for t_idx in range(0, odometry.shape[0]-1):
-            x2, y2, th2 = datautils.sample_motion_odometry(np.array([x1, y1, th1]),odometry[t_idx])
-            plt_ax.arrow(x1, y1, (x2-x1), (y2-y1), head_width=5, head_length=7, fc='black', ec='black')
-            x1, y1, th1 = x2, y2, th2
+            c2, r2, th2 = datautils.sample_motion_odometry(np.array([c1, r1, th1]),odometry[t_idx])
+            plt_ax.arrow(r1, c1, (r2-r1), (c2-c1), head_width=0.5, head_length=0.7, fc='black', ec='black')
+            c1, r1, th1 = c2, r2, th2
 
     plt.tight_layout()
     for key, plt_ax in plts.items():

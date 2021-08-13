@@ -206,8 +206,10 @@ def parse_args():
     # parse parameters
     params = arg_parser.parse_args()
 
-    # For the igibson maps, each pixel represents 0.01m, and the center of the image correspond to (0,0)
+    # For the igibson maps, originally each pixel represents 0.01m, and the center of the image correspond to (0,0)
     params.map_pixel_in_meters = 0.01
+    # in igibson we work with rescaled 0.01m to 0.1m maps to sample robot poses
+    params.trav_map_resolution = 0.1
 
     # post-processing
     params.num_train_batches = params.num_train_samples//params.batch_size
@@ -226,8 +228,8 @@ def parse_args():
     params.init_particles_std = np.array(params.init_particles_std, np.float32)
     params.global_map_size = np.array(params.global_map_size, np.int32)
 
-    params.transition_std[0] = params.transition_std[0] / params.map_pixel_in_meters  # convert meters to pixels
-    params.init_particles_std[0] = params.init_particles_std[0] / params.map_pixel_in_meters  # convert meters to pixels
+    params.transition_std[0] = (params.transition_std[0] / params.map_pixel_in_meters) * params.trav_map_resolution # convert meters to pixels and rescale to trav map resolution
+    params.init_particles_std[0] = (params.init_particles_std[0] / params.map_pixel_in_meters) * params.trav_map_resolution  # convert meters to pixels and rescale to trav map resolution
 
     # build initial covariance matrix of particles, in pixels and radians
     particle_std = params.init_particles_std.copy()
@@ -354,7 +356,7 @@ def pfnet_train(arg_params):
 
             # compute loss
             loss_dict = pfnet_loss.compute_loss(particle_states, particle_weights, true_states,
-                                                arg_params.map_pixel_in_meters)
+                                                arg_params.trav_map_resolution)
             loss_pred = loss_dict['pred']
 
         # compute gradients of the trainable variables with respect to the loss
@@ -381,7 +383,7 @@ def pfnet_train(arg_params):
 
         # compute loss
         loss_dict = pfnet_loss.compute_loss(particle_states, particle_weights, true_states,
-                                            arg_params.map_pixel_in_meters)
+                                            arg_params.trav_map_resolution)
         loss_pred = loss_dict['pred']
 
         eval_loss(loss_pred)  # overall trajectory loss
