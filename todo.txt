@@ -74,15 +74,15 @@ $ nohup python -u test_pfnet.py \
 --obs_mode='rgb-depth' \
 --scene_id='Rs' \
 --init_particles_distr='gaussian' \
---init_particles_std '0.15' '0.523599' \
+--init_particles_std '0.2' '0.523599' \
 --particles_range=100 \
 --num_particles=500 \
---transition_std '0.02' '0.0872665' \
+--transition_std '0.04' '0.0872665' \
 --resample=true \
---alpha_resample_ratio=0.8 \
---global_map_size '4000' '4000' '1' \
---window_scaler=8.0 \
---config_file=./configs/turtlebot_random_nav.yaml \
+--alpha_resample_ratio=0.95 \
+--global_map_size '100' '100' '1' \
+--window_scaler=1.0 \
+--config_file=./configs/locobot_pfnet_nav.yaml \
 --device_idx=0 \
 --seed=15 > nohup1.out &
 
@@ -97,9 +97,9 @@ $ nohup python -u supervised_data.py \
 --filename=./pfnet_data/train/Rs0_floor0.tfrecord \
 --scene_id='Rs' \
 --agent='random' \
---num_records=500 \
+--num_records=5 \
 --obs_mode='rgb-depth' \
---config_file=./configs/turtlebot_pfnet_nav.yaml \
+--config_file=./configs/locobot_pfnet_nav.yaml \
 --env_mode='headless' \
 --gpu_num=0 \
 --init_env_pfnet=False \
@@ -208,21 +208,21 @@ June 23rd 2021
 
 $ nohup python -u display_pfnet_data.py \
 --root_dir=./run1 \
---tfrecordpath=./pfnet_data \
+--tfrecordpath=./Rs_data \
 --obs_mode='rgb-depth' \
 --num_train_samples=500 \
 --batch_size=1 \
 --s_buffer_size=50 \
 --init_particles_distr='gaussian' \
---init_particles_std '0.15' '0.523599' \
+--init_particles_std '0.2' '0.523599' \
 --particles_range=100 \
 --num_particles=30 \
---transition_std '0.' '0.' \
+--transition_std '0.04' '0.0872665' \
 --resample=false \
 --alpha_resample_ratio=0.5 \
---global_map_size '2600' '2600' '1' \
---window_scaler=8.0 \
---config_file=./configs/turtlebot_pfnet_nav.yaml \
+--global_map_size '100' '100' '1' \
+--window_scaler=1.0 \
+--config_file=./configs/locobot_pfnet_nav.yaml \
 --device_idx=0 \
 --seed=42 > nohup.out &
 

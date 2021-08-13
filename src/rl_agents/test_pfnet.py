@@ -353,6 +353,7 @@ def pfnet_test(arg_params):
     )
     env.reset()
     arg_params.trajlen = env.config.get('max_step', 500)//arg_params.loop
+    assert arg_params.trav_map_resolution == env.trav_map_resolution
 
     # create particle filter net model
     pfnet_model = pfnet.pfnet_model(arg_params)
@@ -487,8 +488,9 @@ def rt_pfnet_test(arg_params):
         device_idx=arg_params.device_idx,
         pf_params=arg_params
     )
-    env.reset()
+    obs = env.reset()
     env.render('human')
+    assert arg_params.trav_map_resolution == env.trav_map_resolution
 
     trajlen = env.config.get('max_step', 500)//arg_params.loop
     max_lin_vel = env.config.get("linear_velocity", 0.5)

@@ -304,6 +304,7 @@ def pfnet_train(arg_params):
     )
     env.reset()
     arg_params.trajlen = env.config.get('max_step', 500)//arg_params.loop
+    assert arg_params.trav_map_resolution == env.trav_map_resolution
 
     # create particle filter net model
     if arg_params.multiple_gpus:

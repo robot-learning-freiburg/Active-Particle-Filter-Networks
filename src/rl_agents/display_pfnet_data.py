@@ -260,6 +260,7 @@ def display_data(arg_params):
     env.reset()
     arg_params.trajlen = env.config.get('max_step', 500)//arg_params.loop
     arg_params.floors = 1
+    assert arg_params.trav_map_resolution == env.trav_map_resolution
     print(arg_params)
 
     b_idx = 0
