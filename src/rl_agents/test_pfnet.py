@@ -308,10 +308,10 @@ def store_results(eps_idx, floor_map, org_map_shape, particle_states, particle_w
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         images.append(img)
 
-    end_gt_pose = datautils.inv_transform_pose(true_state[b_idx], o_map_shape, params.map_pixel_in_meters)
-    end_est_pose = datautils.inv_transform_pose(est_state[b_idx], o_map_shape, params.map_pixel_in_meters)
-    print(f'{eps_idx} End True Pose: {end_gt_pose}, End Estimated Pose: {end_est_pose} in mts')
-    print(f'{eps_idx} End True Pose: {true_state[b_idx]}, End Estimated Pose: {est_state[b_idx]} in px')
+    # end_gt_pose = datautils.inv_transform_pose(true_state[b_idx], o_map_shape, params.map_pixel_in_meters)
+    # end_est_pose = datautils.inv_transform_pose(est_state[b_idx], o_map_shape, params.map_pixel_in_meters)
+    # print(f'{eps_idx} End True Pose: {end_gt_pose}, End Estimated Pose: {end_est_pose} in mts')
+    # print(f'{eps_idx} End True Pose: {true_state[b_idx]}, End Estimated Pose: {est_state[b_idx]} in px')
 
     size = (images[0].shape[0], images[0].shape[1])
     out = cv2.VideoWriter(
@@ -334,7 +334,7 @@ def pfnet_test(arg_params):
     """
 
     root_dir = os.path.expanduser(arg_params.root_dir)
-    log_dir = os.path.join(root_dir, 'log_dir')
+    test_dir = os.path.join(root_dir, 'test')
 
     # evaluation data
     filenames = list(glob.glob(arg_params.testfiles[0]))
@@ -375,7 +375,7 @@ def pfnet_test(arg_params):
     num_particles = arg_params.num_particles
 
     print(arg_params)
-    test_summary_writer = tf.summary.create_file_writer(log_dir)
+    test_summary_writer = tf.summary.create_file_writer(test_dir)
     with test_summary_writer.as_default():
         # run over all evaluation samples in an epoch
         mse_list = []
