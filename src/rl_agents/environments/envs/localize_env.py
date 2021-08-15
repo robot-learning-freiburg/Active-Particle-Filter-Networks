@@ -631,7 +631,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         assert list(new_pose.shape) == [batch_size, 3], f'{new_pose.shape}'
         assert list(new_rgb_obs.shape) == [batch_size, 56, 56, 3], f'{new_rgb_obs.shape}'
         assert list(new_depth_obs.shape) == [batch_size, 56, 56, 1], f'{new_depth_obs.shape}'
-        assert list(new_occupancy_grid.shape) == [batch_size, 128, 128, 1], f'{new_depth_obs.shape}'
+        assert list(new_occupancy_grid.shape) == [batch_size, 56, 56, 1], f'{new_occupancy_grid.shape}'
         assert list(init_particles.shape) == [batch_size, num_particles, 3], f'{init_particles.shape}'
         assert list(init_particle_weights.shape) == [batch_size, num_particles], f'{init_particle_weights.shape}'
         assert list(floor_map.shape) == [batch_size, *map_size], f'{floor_map.shape}'
@@ -822,9 +822,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 rmin, rmax, cmin, cmax = self.bounding_box(scene_map, center, particles_range)
 
                 while sample_i < num_particles:
-                    particle = np.random.uniform(low=(cmin, rmin, 0.0), high=(cmax, rmax, 2.0 * np.pi), size=(3,))
+                    particle = np.random.uniform(low=(rmin, cmin, 0.0), high=(rmax, cmax, 2.0 * np.pi), size=(3,))
                     # reject if mask is zero
-                    if not scene_map[int(np.rint(particle[1])), int(np.rint(particle[0]))]:
+                    if not scene_map[int(np.rint(particle[0])), int(np.rint(particle[1]))]:
                         continue
                     b_particles.append(particle)
 
