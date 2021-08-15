@@ -237,7 +237,7 @@ def parse_args():
     return params
 
 
-def store_results(eps_idx, floor_map, org_map_shape, particle_states, particle_weights, true_states, params):
+def store_results(eps_idx, floor_map, org_map_shape, particle_states, particle_weights, true_states, env, params):
     trajlen = params.trajlen
     b_idx = 0
 
@@ -308,10 +308,10 @@ def store_results(eps_idx, floor_map, org_map_shape, particle_states, particle_w
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         images.append(img)
 
-    # end_gt_pose = datautils.inv_transform_pose(true_state[b_idx], o_map_shape, params.map_pixel_in_meters)
-    # end_est_pose = datautils.inv_transform_pose(est_state[b_idx], o_map_shape, params.map_pixel_in_meters)
-    # print(f'{eps_idx} End True Pose: {end_gt_pose}, End Estimated Pose: {end_est_pose} in mts')
-    # print(f'{eps_idx} End True Pose: {true_state[b_idx]}, End Estimated Pose: {est_state[b_idx]} in px')
+    gt_pose_mts = np.array([*self.scene.map_to_world(true_state[b_idx][:2]), true_state[b_idx][2]])
+    est_pose_mts = np.array([*self.scene.map_to_world(est_state[b_idx][:2]), est_state[b_idx][2]])
+    print(f'{eps_idx} End True Pose: {gt_pose_mts}, End Estimated Pose: {est_pose_mts} in mts')
+    print(f'{eps_idx} End True Pose: {true_state[b_idx]}, End Estimated Pose: {est_state[b_idx]} in px')
 
     size = (images[0].shape[0], images[0].shape[1])
     out = cv2.VideoWriter(
@@ -444,7 +444,7 @@ def pfnet_test(arg_params):
                 # store results as video
                 arg_params.out_folder = os.path.join(arg_params.root_dir, f'output')
                 Path(arg_params.out_folder).mkdir(parents=True, exist_ok=True)
-                store_results(eps_idx, floor_map, org_map_shape, particle_states, particle_weights, true_states, arg_params)
+                store_results(eps_idx, floor_map, org_map_shape, particle_states, particle_weights, true_states, env, arg_params)
 
         # report results
         init_mean_rmse = np.mean(np.sqrt(init_mse_list)) * 100
