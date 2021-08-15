@@ -62,9 +62,9 @@ $ nohup python -u test_pfnet.py \
 --transition_std '0.02' '0.0872665' \
 --resample=true \
 --alpha_resample_ratio=0.8 \
---global_map_size '4000' '4000' '1' \
---window_scaler=8.0 \
---config_file=./configs/turtlebot_random_nav.yaml \
+--global_map_size '100' '100' '1' \
+--window_scaler=1.0 \
+--config_file=./configs/locobot_pfnet_nav.yaml \
 --device_idx=0 \
 --seed=15 > nohup1.out &
 

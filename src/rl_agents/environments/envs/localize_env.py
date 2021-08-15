@@ -411,39 +411,45 @@ class LocalizeGibsonEnv(iGibsonEnv):
             else:
                 processed_state['kmeans_cluster'] = None
         if 'raw_particles' in self.pf_params.custom_output:
-            particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
-            lin_weights = tf.nn.softmax(particle_weights, axis=-1)  # normalize weights
-            processed_state['raw_particles'] = np.append(particles[0].cpu().numpy(), lin_weights[0].cpu().numpy())
+            if self.curr_pfnet_state is not None:
+                particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
+                lin_weights = tf.nn.softmax(particle_weights, axis=-1)  # normalize weights
+                processed_state['raw_particles'] = np.append(particles[0].cpu().numpy(), lin_weights[0].cpu().numpy())
+            else:
+                processed_state['raw_particles'] = None
         if 'floor_map' in self.pf_params.custom_output:
             processed_state['floor_map'] = self.get_floor_map() # [0, 2] range floor map
         if 'likelihood_map' in self.pf_params.custom_output:
 
-            floor_map = np.squeeze(self.get_floor_map(), axis=-1) # [0, 2] range floor map
-            particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
-            particles = particles[0].cpu().numpy()
-            lin_weights = tf.nn.softmax(particle_weights, axis=-1)[0].cpu().numpy()  # normalize weights
-            likelihood_map = np.zeros(list(floor_map.shape)[:2] + [3])
+            if self.curr_pfnet_state is not None:
+                floor_map = np.squeeze(self.get_floor_map(), axis=-1) # [0, 2] range floor map
+                particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
+                particles = particles[0].cpu().numpy()
+                lin_weights = tf.nn.softmax(particle_weights, axis=-1)[0].cpu().numpy()  # normalize weights
+                likelihood_map = np.zeros(list(floor_map.shape)[:2] + [3])
 
-            # update obstacle map channel
-            likelihood_map[:, :, 0] = np.where( floor_map/2. > 0.5, 1, 0) # clip to 0 or 1
-            for idx in range(self.pf_params.num_particles):
-                col, row, orn = particles[idx]
-                wt = lin_weights[idx]
+                # update obstacle map channel
+                likelihood_map[:, :, 0] = np.where( floor_map/2. > 0.5, 1, 0) # clip to 0 or 1
+                for idx in range(self.pf_params.num_particles):
+                    col, row, orn = particles[idx]
+                    wt = lin_weights[idx]
 
-                # update weights channel
-                likelihood_map[
-                    int(np.rint(col-self.robot_size_px/2.)):int(np.rint(col+self.robot_size_px/2.))+1,
-                    int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 1] += wt
+                    # update weights channel
+                    likelihood_map[
+                        int(np.rint(col-self.robot_size_px/2.)):int(np.rint(col+self.robot_size_px/2.))+1,
+                        int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 1] += wt
 
-                # update orientation channel
-                likelihood_map[
-                    int(np.rint(col-self.robot_size_px/2.)):int(np.rint(col+self.robot_size_px/2.))+1,
-                    int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 2] += wt*datautils.normalize(orn)
-            # weighed mean of orientation channel w.r.t weights channel
-            indices = likelihood_map[:, :, 1] > 0.
-            likelihood_map[indices, 2] /= likelihood_map[indices, 1]
+                    # update orientation channel
+                    likelihood_map[
+                        int(np.rint(col-self.robot_size_px/2.)):int(np.rint(col+self.robot_size_px/2.))+1,
+                        int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 2] += wt*datautils.normalize(orn)
+                # weighed mean of orientation channel w.r.t weights channel
+                indices = likelihood_map[:, :, 1] > 0.
+                likelihood_map[indices, 2] /= likelihood_map[indices, 1]
 
-            processed_state['likelihood_map'] = likelihood_map
+                processed_state['likelihood_map'] = likelihood_map
+            else:
+                processed_state['likelihood_map'] = None
 
 
         return processed_state
