@@ -308,8 +308,8 @@ def store_results(eps_idx, floor_map, org_map_shape, particle_states, particle_w
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         images.append(img)
 
-    gt_pose_mts = np.array([*self.scene.map_to_world(true_state[b_idx][:2]), true_state[b_idx][2]])
-    est_pose_mts = np.array([*self.scene.map_to_world(est_state[b_idx][:2]), est_state[b_idx][2]])
+    gt_pose_mts = np.array([*env.scene.map_to_world(true_state[b_idx][:2]), true_state[b_idx][2]])
+    est_pose_mts = np.array([*env.scene.map_to_world(est_state[b_idx][:2]), est_state[b_idx][2]])
     print(f'{eps_idx} End True Pose: {gt_pose_mts}, End Estimated Pose: {est_pose_mts} in mts')
     print(f'{eps_idx} End True Pose: {true_state[b_idx]}, End Estimated Pose: {est_state[b_idx]} in px')
 
