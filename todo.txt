@@ -376,3 +376,20 @@ Setup Instructions:
   $ pip install -e .
 4. add (lidar sensor) scan_link and scan_joint iGibson/igibson/data/assets/models/locobot/locobot.urdf
   refer turtlebot.urdf
+
+
+  August 18th 2021
+  ----------------
+0. normalize reward instead of clip to [-10, 0]
+1. use cos n sin for belief rep channel [4]
+2. use different hyperparameters for sac (rl agent) with simplest task: fixed start position
+    replay_buffer_capacity 1000
+    train_steps_per_iteration 1
+    batch_size 4
+    gamma 0.99
+    actor_learning_rate 0.0003
+    critic_learning_rate 0.0003
+    alpha_learning_rate 0.0003
+2. use pixel wise/avg pool layer instead of square for likelihood_map
+3. cross check if floormap/travmap can be generated online
+4. start writing report/presentation
