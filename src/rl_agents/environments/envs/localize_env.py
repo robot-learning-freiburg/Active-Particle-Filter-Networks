@@ -134,7 +134,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         if 'likelihood_map' in self.pf_params.custom_output:
             observation_space['likelihood_map'] = gym.spaces.Box(
                 low=-10.0, high=+10.0,
-                shape=(*self.pf_params.global_map_size[:2], 3),
+                shape=(*self.pf_params.global_map_size[:2], 4),
                 dtype=np.float32)
         if "occupancy_grid" in self.pf_params.custom_output:
             self.grid_resolution = self.config.get("grid_resolution", 128)
@@ -304,9 +304,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 new_depth_obs,
                 new_occupancy_grid
             ])['pred'].cpu().numpy()
+
             # TODO: may need better reward
-            # compute reward and normalize to range [-10, 0]
-            reward = np.clip(reward-pose_mse, -10, 0)
+            reward -= pose_mse
 
         custom_state = self.process_state(state)
         return custom_state, reward, done, info
@@ -426,12 +426,13 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
                 particles = particles[0].cpu().numpy()
                 lin_weights = tf.nn.softmax(particle_weights, axis=-1)[0].cpu().numpy()  # normalize weights
-                likelihood_map = np.zeros(list(floor_map.shape)[:2] + [3])
+                likelihood_map = np.zeros(list(floor_map.shape)[:2] + [4])  # [H, W, 4]
 
                 # update obstacle map channel
                 likelihood_map[:, :, 0] = np.where( floor_map/2. > 0.5, 1, 0) # clip to 0 or 1
                 for idx in range(self.pf_params.num_particles):
                     col, row, orn = particles[idx]
+                    orn = datautils.normalize(orn)
                     wt = lin_weights[idx]
 
                     # update weights channel
@@ -439,13 +440,18 @@ class LocalizeGibsonEnv(iGibsonEnv):
                         int(np.rint(col-self.robot_size_px/2.)):int(np.rint(col+self.robot_size_px/2.))+1,
                         int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 1] += wt
 
-                    # update orientation channel
+                    # update orientation cos component channel
                     likelihood_map[
                         int(np.rint(col-self.robot_size_px/2.)):int(np.rint(col+self.robot_size_px/2.))+1,
-                        int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 2] += wt*datautils.normalize(orn)
+                        int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 2] += wt*np.cos(orn)
+                    # update orientation sin component channel
+                    likelihood_map[
+                        int(np.rint(col-self.robot_size_px/2.)):int(np.rint(col+self.robot_size_px/2.))+1,
+                        int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 3] += wt*np.sin(orn)
                 # weighed mean of orientation channel w.r.t weights channel
                 indices = likelihood_map[:, :, 1] > 0.
                 likelihood_map[indices, 2] /= likelihood_map[indices, 1]
+                likelihood_map[indices, 3] /= likelihood_map[indices, 1]
 
                 processed_state['likelihood_map'] = likelihood_map
             else:
