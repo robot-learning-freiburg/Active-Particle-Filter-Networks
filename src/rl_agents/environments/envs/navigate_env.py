@@ -2,7 +2,7 @@
 
 from collections import OrderedDict
 import cv2
-from gibson2.envs.igibson_env import iGibsonEnv
+from igibson.envs.igibson_env import iGibsonEnv
 import gym
 import numpy as np
 

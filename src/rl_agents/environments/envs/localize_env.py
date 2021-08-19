@@ -119,12 +119,12 @@ class LocalizeGibsonEnv(iGibsonEnv):
         if 'kmeans_cluster' in self.pf_params.custom_output:
             observation_space['kmeans_cluster'] = gym.spaces.Box(
                 low=-1000.0, high=+1000.0,
-                shape=(self.pf_params.num_clusters,4),
+                shape=(self.pf_params.num_clusters,5),
                 dtype=np.float32)
         if 'raw_particles' in self.pf_params.custom_output:
             observation_space['raw_particles'] = gym.spaces.Box(
                 low=-1000.0, high=+1000.0,
-                shape=(self.pf_params.num_particles,4),
+                shape=(self.pf_params.num_particles,5),
                 dtype=np.float32)
         if 'floor_map' in self.pf_params.custom_output:
             observation_space['floor_map'] = gym.spaces.Box(
@@ -306,7 +306,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
             ])['pred'].cpu().numpy()
 
             # TODO: may need better reward
-            reward -= pose_mse
+            rescale = 10
+            reward = (reward-pose_mse)/rescale
 
         custom_state = self.process_state(state)
         return custom_state, reward, done, info
@@ -403,7 +404,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 cluster_centers, cluster_weights = self.curr_cluster
                 floor_map = self.get_floor_map()
                 def cluster_pose(cluster_center, cluster_weight):
-                    return np.array([*self.scene.map_to_world(cluster_center[:2]), cluster_center[2], cluster_weight])   # cluster_pose [x, y, theta, weight] in mts
+                    return np.array([*self.scene.map_to_world(cluster_center[:2]), *cluster_center[2:], cluster_weight])   # cluster_pose [x, y, theta, weight] in mts
 
                 processed_state['kmeans_cluster'] = np.stack([
                     np.append(cluster_centers[c_idx], cluster_weights[c_idx]) for c_idx in range(self.pf_params.num_clusters)   # cluster_pose [x, y, theta, weight] in px
@@ -413,8 +414,15 @@ class LocalizeGibsonEnv(iGibsonEnv):
         if 'raw_particles' in self.pf_params.custom_output:
             if self.curr_pfnet_state is not None:
                 particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
-                lin_weights = tf.nn.softmax(particle_weights, axis=-1)  # normalize weights
-                processed_state['raw_particles'] = np.append(particles[0].cpu().numpy(), lin_weights[0].cpu().numpy())
+                lin_weights = tf.nn.softmax(particle_weights, axis=-1)[0].cpu().numpy()  # normalize weights
+                particles = particles[0].cpu().numpy()
+
+                assert list(particles.shape) == [self.pf_params.num_particles, 3]
+                particles_ext = np.zeros((self.pf_params.num_particles, 4))
+                particles_ext[:, :2] = particles[:, :2]
+                particles_ext[:, 2] = np.cos(particles[:, 2])
+                particles_ext[:, 3] = np.sin(particles[:, 2])
+                processed_state['raw_particles'] = np.append(particles_ext, lin_weights)
             else:
                 processed_state['raw_particles'] = None
         if 'floor_map' in self.pf_params.custom_output:
@@ -667,7 +675,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         return loss_dict
 
-    def compute_kmeans(self, num_iterations=1):
+    def compute_kmeans(self):
         """
         """
 
@@ -676,39 +684,24 @@ class LocalizeGibsonEnv(iGibsonEnv):
         lin_weights = tf.nn.softmax(particle_weights, axis=-1)[0].cpu().numpy()
         particles = particles[0].cpu().numpy()
 
+        # expand orientation to corresponding cos and sine components
+        assert list(particles.shape) == [self.pf_params.num_particles, 3]
+        particles_ext = np.zeros((self.pf_params.num_particles, 4))
+        particles_ext[:, :2] = particles[:, :2]
+        particles_ext[:, 2] = np.cos(particles[:, 2])
+        particles_ext[:, 3] = np.sin(particles[:, 2])
+
         if self.curr_cluster is None:
             # random initialization
             kmeans = KMeans(n_clusters=num_clusters, n_init=10)
         else:
             # previous cluster center initialization
             prev_cluster_centers, _ = self.curr_cluster
-            assert list(prev_cluster_centers.shape) == [num_clusters, 3]
+            assert list(prev_cluster_centers.shape) == [num_clusters, 4]
             kmeans = KMeans(n_clusters=num_clusters, init=prev_cluster_centers, n_init=1)
-        kmeans.fit_predict(particles)
+        kmeans.fit_predict(particles_ext)
         cluster_indices = kmeans.labels_
         cluster_centers = kmeans.cluster_centers_
-
-        # kmeans = tf.compat.v1.estimator.experimental.KMeans(
-        #     num_clusters=num_clusters,
-        #     use_mini_batch=False
-        # )
-        # def particles_ds():
-        #     return tf.compat.v1.data.Dataset.from_tensors(
-        #         tf.convert_to_tensor(particles, dtype=tf.float32)
-        #     )
-        #
-        # previous_centers = np.zeros((num_clusters, 3))
-        # for _ in range(num_iterations):
-        #     kmeans.train(particles_ds)
-        #     cluster_centers = kmeans.cluster_centers()
-        #     if np.linalg.norm(cluster_centers - previous_centers) < 1e-2:
-        #         break
-        #     else:
-        #         previous_centers = cluster_centers
-        #
-        # cluster_centers = kmeans.cluster_centers()
-        # cluster_indices = list(kmeans.predict_cluster_index(particles_ds))
-        # cluster_weights = np.zeros(num_clusters)
 
         assert list(lin_weights.shape) == list(cluster_indices.shape)
         cluster_weights = np.array([
@@ -966,7 +959,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
             # self.env_plts['robot_est_plt']['particles_plt'] = particles_plt
 
             # kmeans-cluster particles color coded using weights
-            cc_particles, cc_weights = self.curr_cluster
+            cc_particles_ext, cc_weights = self.curr_cluster
+            cc_particles = np.zeros((self.pf_params.num_clusters, 3))
+            cc_particles[:, :2] = cc_particles_ext[:, :2]
+            cc_particles[:, 2] = np.arctan2(cc_particles_ext[:, 3], cc_particles_ext[:, 2])
+
             particles_plt = self.env_plts['robot_est_plt']['particles_plt']
             particles_plt = render.draw_particles_pose(
                 cc_particles,
