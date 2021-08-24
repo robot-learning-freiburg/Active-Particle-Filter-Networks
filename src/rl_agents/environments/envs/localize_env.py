@@ -428,43 +428,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
         if 'floor_map' in self.pf_params.custom_output:
             processed_state['floor_map'] = self.get_floor_map() # [0, 2] range floor map
         if 'likelihood_map' in self.pf_params.custom_output:
-
             if self.curr_pfnet_state is not None:
-                floor_map = np.squeeze(self.get_floor_map(), axis=-1) # [0, 2] range floor map
-                particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
-                particles = particles[0].cpu().numpy()
-                lin_weights = tf.nn.softmax(particle_weights, axis=-1)[0].cpu().numpy()  # normalize weights
-                likelihood_map = np.zeros(list(floor_map.shape)[:2] + [4])  # [H, W, 4]
-
-                # update obstacle map channel
-                likelihood_map[:, :, 0] = np.where( floor_map/2. > 0.5, 1, 0) # clip to 0 or 1
-                for idx in range(self.pf_params.num_particles):
-                    col, row, orn = particles[idx]
-                    orn = datautils.normalize(orn)
-                    wt = lin_weights[idx]
-
-                    # update weights channel
-                    likelihood_map[
-                        int(np.rint(col-self.robot_size_px/2.)):int(np.rint(col+self.robot_size_px/2.))+1,
-                        int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 1] += wt
-
-                    # update orientation cos component channel
-                    likelihood_map[
-                        int(np.rint(col-self.robot_size_px/2.)):int(np.rint(col+self.robot_size_px/2.))+1,
-                        int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 2] += wt*np.cos(orn)
-                    # update orientation sin component channel
-                    likelihood_map[
-                        int(np.rint(col-self.robot_size_px/2.)):int(np.rint(col+self.robot_size_px/2.))+1,
-                        int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 3] += wt*np.sin(orn)
-                # weighed mean of orientation channel w.r.t weights channel
-                indices = likelihood_map[:, :, 1] > 0.
-                likelihood_map[indices, 2] /= likelihood_map[indices, 1]
-                likelihood_map[indices, 3] /= likelihood_map[indices, 1]
-
-                processed_state['likelihood_map'] = likelihood_map
+                processed_state['likelihood_map'] = self.get_likelihood_map()
             else:
                 processed_state['likelihood_map'] = None
-
 
         return processed_state
 
@@ -710,6 +677,41 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         return cluster_centers, cluster_weights
 
+    def get_likelihood_map(self):
+
+        floor_map = np.squeeze(self.get_floor_map(), axis=-1) # [0, 2] range floor map
+        particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
+        particles = particles[0].cpu().numpy()
+        lin_weights = tf.nn.softmax(particle_weights, axis=-1)[0].cpu().numpy()  # normalize weights
+        likelihood_map_ext = np.zeros(list(floor_map.shape)[:2] + [4])  # [H, W, 4]
+
+        # update obstacle map channel
+        likelihood_map_ext[:, :, 0] = np.where( floor_map/2. > 0.5, 1, 0) # clip to 0 or 1
+        for idx in range(self.pf_params.num_particles):
+            col, row, orn = particles[idx]
+            orn = datautils.normalize(orn)
+            wt = lin_weights[idx]
+
+            # update weights channel
+            likelihood_map_ext[
+                int(np.rint(col-self.robot_size_px/2.)):int(np.rint(col+self.robot_size_px/2.))+1,
+                int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 1] += wt
+
+            # update orientation cos component channel
+            likelihood_map_ext[
+                int(np.rint(col-self.robot_size_px/2.)):int(np.rint(col+self.robot_size_px/2.))+1,
+                int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 2] += wt*np.cos(orn)
+            # update orientation sin component channel
+            likelihood_map_ext[
+                int(np.rint(col-self.robot_size_px/2.)):int(np.rint(col+self.robot_size_px/2.))+1,
+                int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 3] += wt*np.sin(orn)
+        # normalize: weighed mean of orientation channel w.r.t weights channel
+        indices = likelihood_map_ext[:, :, 1] > 0.
+        likelihood_map_ext[indices, 2] /= likelihood_map_ext[indices, 1]
+        likelihood_map_ext[indices, 3] /= likelihood_map_ext[indices, 1]
+
+        return likelihood_map_ext
+
     def set_scene(self, scene_id, floor_num):
         """
         Override the task floor number
@@ -911,11 +913,25 @@ class LocalizeGibsonEnv(iGibsonEnv):
         # super(LocalizeGibsonEnv, self).render(mode)
 
         if self.use_pfnet and self.pf_params.use_plot:
-            # environment map
-            floor_map = self.floor_map[0].cpu().numpy()
-            map_plt = self.env_plts['map_plt']
-            map_plt = render.draw_floor_map(floor_map, floor_map.shape, self.plt_ax, map_plt)
-            self.env_plts['map_plt'] = map_plt
+
+            if "likelihood_map" in self.pf_params.custom_output:
+                # likelihood map
+                floor_map = self.floor_map[0].cpu().numpy()
+                likelihood_map_ext = self.get_likelihood_map()
+                likelihood_map = np.zeros((*floor_map.shape[:2], 3))
+                likelihood_map[:, :, :2] = likelihood_map_ext[:, :, :2]
+                likelihood_map[:, :, 2] = np.arctan2(likelihood_map_ext[:, :, 3], likelihood_map_ext[:, :, 2])
+                likelihood_map[:, :, 2] /= np.max(likelihood_map[:, :, 2])
+
+                map_plt = self.env_plts['map_plt']
+                map_plt = render.draw_floor_map(likelihood_map, floor_map.shape, self.plt_ax, map_plt)
+                self.env_plts['map_plt'] = map_plt
+            else:
+                # environment map
+                floor_map = self.floor_map[0].cpu().numpy()
+                map_plt = self.env_plts['map_plt']
+                map_plt = render.draw_floor_map(floor_map, floor_map.shape, self.plt_ax, map_plt)
+                self.env_plts['map_plt'] = map_plt
 
             # ground truth robot pose and heading
             color = '#7B241C'
@@ -947,30 +963,31 @@ class LocalizeGibsonEnv(iGibsonEnv):
             self.env_plts['robot_est_plt']['position_plt'] = position_plt
             self.env_plts['robot_est_plt']['heading_plt'] = heading_plt
 
-            # # particles color coded using weights
-            # particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
-            # lin_weights = tf.nn.softmax(particle_weights, axis=-1)
-            # particles_plt = self.env_plts['robot_est_plt']['particles_plt']
-            # particles_plt = render.draw_particles_pose(
-            #     particles[0].cpu().numpy(),
-            #     lin_weights[0].cpu().numpy(),
-            #     floor_map.shape,
-            #     particles_plt)
-            # self.env_plts['robot_est_plt']['particles_plt'] = particles_plt
+            if "raw_particles" in self.pf_params.custom_output:
+                # raw particles color coded using weights
+                particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
+                lin_weights = tf.nn.softmax(particle_weights, axis=-1)
+                particles_plt = self.env_plts['robot_est_plt']['particles_plt']
+                particles_plt = render.draw_particles_pose(
+                    particles[0].cpu().numpy(),
+                    lin_weights[0].cpu().numpy(),
+                    floor_map.shape,
+                    particles_plt)
+                self.env_plts['robot_est_plt']['particles_plt'] = particles_plt
+            elif "kmeans_cluster" in self.pf_params.custom_output:
+                # kmeans-cluster particles color coded using weights
+                cc_particles_ext, cc_weights = self.curr_cluster
+                cc_particles = np.zeros((self.pf_params.num_clusters, 3))
+                cc_particles[:, :2] = cc_particles_ext[:, :2]
+                cc_particles[:, 2] = np.arctan2(cc_particles_ext[:, 3], cc_particles_ext[:, 2])
 
-            # kmeans-cluster particles color coded using weights
-            cc_particles_ext, cc_weights = self.curr_cluster
-            cc_particles = np.zeros((self.pf_params.num_clusters, 3))
-            cc_particles[:, :2] = cc_particles_ext[:, :2]
-            cc_particles[:, 2] = np.arctan2(cc_particles_ext[:, 3], cc_particles_ext[:, 2])
-
-            particles_plt = self.env_plts['robot_est_plt']['particles_plt']
-            particles_plt = render.draw_particles_pose(
-                cc_particles,
-                cc_weights,
-                floor_map.shape,
-                particles_plt)
-            self.env_plts['robot_est_plt']['particles_plt'] = particles_plt
+                particles_plt = self.env_plts['robot_est_plt']['particles_plt']
+                particles_plt = render.draw_particles_pose(
+                    cc_particles,
+                    cc_weights,
+                    floor_map.shape,
+                    particles_plt)
+                self.env_plts['robot_est_plt']['particles_plt'] = particles_plt
 
             # # episode info
             # step_txt_plt = self.env_plts['step_txt_plt']

@@ -45,8 +45,7 @@ def draw_floor_map(floor_map, map_shape, plt_ax, map_plt, cmap='gray'):
         map_plt = plt_ax.imshow(floor_map[:H, :W], cmap=cmap, origin='lower')
         plt.scatter(origin_x, origin_y, s=10, c='black', marker='x', alpha=1)
     else:
-        # do nothing
-        pass
+        map_plt.set_data(floor_map[:H, :W])
     return map_plt
 
 def draw_particles_pose(particles, weights, map_shape, particles_plt, scale=1):
