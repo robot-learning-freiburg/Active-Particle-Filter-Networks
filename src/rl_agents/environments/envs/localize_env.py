@@ -921,6 +921,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 likelihood_map = np.zeros((*floor_map.shape[:2], 3))
                 likelihood_map[:, :, :2] = likelihood_map_ext[:, :, :2]
                 likelihood_map[:, :, 2] = np.arctan2(likelihood_map_ext[:, :, 3], likelihood_map_ext[:, :, 2])
+                likelihood_map[:, :, 2] -= np.min(likelihood_map[:, :, 2])
                 likelihood_map[:, :, 2] /= np.max(likelihood_map[:, :, 2])
 
                 map_plt = self.env_plts['map_plt']
