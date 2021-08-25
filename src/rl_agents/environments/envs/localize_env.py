@@ -927,12 +927,12 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 likelihood_map[:, :, 2] -= np.min(likelihood_map[:, :, 2])
 
                 # to render
-                likelihood_map[:, :, 0] = likelihood_map[:, :, 0]*(255/np.max(likelihood_map[:, :, 0]))
-                likelihood_map[:, :, 1] = likelihood_map[:, :, 1]*(255/np.max(likelihood_map[:, :, 1]))
-                likelihood_map[:, :, 2] = likelihood_map[:, :, 2]*(255/np.max(likelihood_map[:, :, 2]))
+                likelihood_map[:, :, 0] /= np.max(likelihood_map[:, :, 0])
+                likelihood_map[:, :, 1] /= np.max(likelihood_map[:, :, 1])
+                likelihood_map[:, :, 2] /= np.max(likelihood_map[:, :, 2])
 
                 map_plt = self.env_plts['map_plt']
-                map_plt = render.draw_floor_map(likelihood_map.astype(int), floor_map.shape, self.plt_ax, map_plt)
+                map_plt = render.draw_floor_map(likelihood_map, floor_map.shape, self.plt_ax, map_plt)
                 self.env_plts['map_plt'] = map_plt
             else:
                 # environment map
