@@ -415,3 +415,14 @@ Setup Instructions:
 2. use pixel wise/avg pool layer instead of square for likelihood_map
 3. cross check if floormap/travmap can be generated online
 4. start writing report/presentation
+
+
+  August 25th 2021
+  ----------------
+1. ablation study
+  a) fixed set of random init pose vs random init pose
+  b) use gaussian init distribution
+  b) different init covariance/transition std
+  d) optional --actor_learning_rate=1e-05
+2. implementing deep neural localization paper -> scan matching
+3. start writing report/presentation

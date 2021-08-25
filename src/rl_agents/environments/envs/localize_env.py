@@ -343,6 +343,18 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
             self.store_results()
 
+        # temporary changes
+        rnd_choice = np.random.choice(3)
+        if rnd_choice == 0:
+            self.task.initial_pos = np.array([0.0, 0.0, 0.0])
+            self.task.initial_orn = np.array([0.0, 0.0, 0.7])
+        elif rnd_choice == 1:
+            self.task.initial_pos = np.array([0.5, -2.0, 0.0])
+            self.task.initial_orn = np.array([0.0, 0.0, 1.7])
+        else:
+            self.task.initial_pos = np.array([-1.0, 0.35, 0.0])
+            self.task.initial_orn = np.array([0.0, 0.0, 0.0])
+
         state = super(LocalizeGibsonEnv, self).reset()
         if self.use_pfnet:
             new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 255]
