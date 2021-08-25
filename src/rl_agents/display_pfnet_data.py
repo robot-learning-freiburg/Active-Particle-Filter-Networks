@@ -224,6 +224,7 @@ def parse_args():
     params.init_env_pfnet = False
     params.store_results = True
     params.num_clusters = 10
+    params.root_dir = './'
 
     params.env_mode = 'headless'
     os.environ['CUDA_VISIBLE_DEVICES'] = str(params.device_idx)

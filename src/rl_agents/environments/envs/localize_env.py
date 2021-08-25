@@ -90,10 +90,12 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 self.pf_params.num_clusters = pf_params.num_clusters
                 self.pf_params.global_map_size = pf_params.global_map_size
                 self.pf_params.custom_output = pf_params.custom_output
+                self.pf_params.root_dir = pf_params.root_dir
             else:
                 self.pf_params.num_clusters = 10
                 self.pf_params.global_map_size = [100, 100, 1]
                 self.pf_params.custom_output = ['rgb_obs', 'depth_obs']
+                self.pf_params.root_dir = './'
 
         # custom tf_agents we are using supports dict() type observations
         observation_space = OrderedDict()
@@ -182,6 +184,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.pf_params.obs_mode = FLAGS.obs_mode
         self.pf_params.num_clusters = FLAGS.num_clusters
         self.pf_params.custom_output = FLAGS.custom_output
+        self.pf_params.root_dir = FLAGS.root_dir
 
         # build initial covariance matrix of particles, in pixels and radians
         particle_std2 = np.square(self.pf_params.init_particles_std.copy())  # variance
@@ -237,7 +240,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             # HACK FigureCanvasAgg and ion is not working together
             if self.pf_params.store_plot:
                 self.canvas = FigureCanvasAgg(self.fig)
-                self.out_folder = os.path.join('./', 'episode_runs')
+                self.out_folder = os.path.join(self.pf_params.root_dir, 'episode_runs')
                 Path(self.out_folder).mkdir(parents=True, exist_ok=True)
             else:
                 plt.ion()
