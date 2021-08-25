@@ -182,7 +182,7 @@ def main(_):
     params.trajlen = FLAGS.max_step//params.loop
     params.max_lin_vel = env.config.get("linear_velocity", 0.5)
     params.max_ang_vel = env.config.get("angular_velocity", np.pi/2)
-    params.global_map_size = np.array([100, 100, 1])
+    params.global_map_size = np.array([400, 400, 1])
     params.obs_mode = FLAGS.obs_mode
     params.batch_size = 1
     params.num_particles = 10

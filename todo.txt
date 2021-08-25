@@ -87,6 +87,22 @@ $ nohup python -u test_pfnet.py \
 --device_idx=0 \
 --seed=15 > nohup1.out &
 
+# init fixed pose1
+initial_pos: [-1.0, 0.35, 0.0] # as [x, y, z]
+initial_orn: [0.0, 0.0, 0.0]
+pose2
+initial_pos: [0.0, 0.0, 0.0] # as [x, y, z]
+initial_orn: [0.0, 0.0, 0.7]
+pose3
+initial_pos: [0.5, -2.0, 0.0] # as [x, y, z]
+initial_orn: [0.0, 0.0, 1.7]
+pose4
+initial_pos: [-3.0, 0.8, 0.0] # as [x, y, z]
+initial_orn: [0.0, 0.0, 1.2]
+pose5
+initial_pos: [0.5, 2.2, 0.0] # as [x, y, z]
+initial_orn: [0.0, 0.0, 2.2]
+
 June 9th 2021
 -------------
 1. collect random trajectories w.r.t discrete actions and train PFNet
