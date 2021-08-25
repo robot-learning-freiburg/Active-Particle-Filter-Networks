@@ -61,7 +61,7 @@ flags.DEFINE_integer(
 )
 flags.DEFINE_string(
     name='agent',
-    default='random',
+    default='rnd_agent',
     help='Agent Behavior'
 )
 flags.DEFINE_boolean(
@@ -405,7 +405,7 @@ def test_agent(arg_params):
                 action_step = policy.action(time_step)
                 time_step = tf_env.step(action_step.action)
                 tf_env.render('human')
-            tf.summary.scalar('mse_reward', time_step.reward[0], step=eps)
+            tf.summary.scalar('eps_end_mse_reward', time_step.reward[0], step=eps)
         tf_env.close()
 
     logging.info('Test Done')
