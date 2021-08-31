@@ -575,7 +575,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         new_robot_state = self.robots[0].calc_state()
 
         # process new env map
-        floor_map, _ = self.get_floor_map(pad_map_size=map_size)
+        floor_map, self.org_map_shape = self.get_floor_map(pad_map_size=map_size)
         obstacle_map, _ = self.get_obstacle_map(pad_map_size=map_size)
 
         new_rgb_obs, new_depth_obs, new_occupancy_grid = new_obs
@@ -957,13 +957,13 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 likelihood_map[:, :, 2] /= np.max(likelihood_map[:, :, 2])
 
                 map_plt = self.env_plts['map_plt']
-                map_plt = render.draw_floor_map(likelihood_map, floor_map.shape, self.plt_ax, map_plt)
+                map_plt = render.draw_floor_map(likelihood_map, self.org_map_shape, self.plt_ax, map_plt)
                 self.env_plts['map_plt'] = map_plt
             else:
                 # environment map
                 floor_map = self.floor_map[0].cpu().numpy()
                 map_plt = self.env_plts['map_plt']
-                map_plt = render.draw_floor_map(floor_map, floor_map.shape, self.plt_ax, map_plt)
+                map_plt = render.draw_floor_map(floor_map, self.org_map_shape, self.plt_ax, map_plt)
                 self.env_plts['map_plt'] = map_plt
 
             # ground truth robot pose and heading
