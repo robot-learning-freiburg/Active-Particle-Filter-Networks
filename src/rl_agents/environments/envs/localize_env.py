@@ -440,7 +440,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             else:
                 processed_state['raw_particles'] = None
         if 'floor_map' in self.pf_params.custom_output:
-            processed_state['floor_map'] = self.floor_map[0] # [0, 2] range floor map
+            processed_state['floor_map'] = self.floor_map[0].cpu().numpy() # [0, 2] range floor map
         if 'likelihood_map' in self.pf_params.custom_output:
             processed_state['likelihood_map'] = self.get_likelihood_map()
 
@@ -459,7 +459,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         obs_ch = self.pf_params.obs_ch
         obs_mode = self.pf_params.obs_mode
 
-        floor_map = self.floor_map[0]
+        floor_map = self.floor_map[0].cpu().numpy()
         old_rgb_obs, old_depth_obs, old_occupancy_grid = self.curr_obs
         old_pose = self.curr_gt_pose[0].cpu().numpy()
         old_pfnet_state = self.curr_pfnet_state
@@ -693,7 +693,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         if self.curr_pfnet_state is None:
             return None
 
-        floor_map = np.squeeze(self.floor_map[0], axis=-1) # [0, 2] range floor map
+        floor_map = self.floor_map[0, :, :, 0].cpu().numpy()# [0, 2] range floor map
         particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
         particles = particles[0].cpu().numpy()
         lin_weights = tf.nn.softmax(particle_weights, axis=-1)[0].cpu().numpy()  # normalize weights
@@ -950,7 +950,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 likelihood_map[:, :, 2] = np.arctan2(likelihood_map_ext[:, :, 3], likelihood_map_ext[:, :, 2])
                 likelihood_map[:, :, 2] -= np.min(likelihood_map[:, :, 2])
 
-                # to render
+
+                # convert to [0, 1] range
                 likelihood_map[:, :, 0] /= np.max(likelihood_map[:, :, 0])
                 likelihood_map[:, :, 1] /= np.max(likelihood_map[:, :, 1])
                 likelihood_map[:, :, 2] /= np.max(likelihood_map[:, :, 2])

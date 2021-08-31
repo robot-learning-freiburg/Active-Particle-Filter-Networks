@@ -231,6 +231,7 @@ June 23rd 2021
 
 $ nohup python -u display_pfnet_data.py \
 --root_dir=./run1 \
+--pfnet_loadpath='' \
 --tfrecordpath=./Rs_data \
 --obs_mode='rgb-depth' \
 --num_train_samples=500 \
