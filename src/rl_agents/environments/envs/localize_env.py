@@ -417,7 +417,6 @@ class LocalizeGibsonEnv(iGibsonEnv):
         if 'kmeans_cluster' in self.pf_params.custom_output:
             if self.curr_cluster is not None:
                 cluster_centers, cluster_weights = self.curr_cluster
-                floor_map = self.get_floor_map()
                 def cluster_pose(cluster_center, cluster_weight):
                     return np.array([*self.scene.map_to_world(cluster_center[:2]), *cluster_center[2:], cluster_weight])   # cluster_pose [x, y, theta, weight] in mts
 
@@ -441,12 +440,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
             else:
                 processed_state['raw_particles'] = None
         if 'floor_map' in self.pf_params.custom_output:
-            processed_state['floor_map'] = self.get_floor_map() # [0, 2] range floor map
+            processed_state['floor_map'] = self.floor_map[0] # [0, 2] range floor map
         if 'likelihood_map' in self.pf_params.custom_output:
-            if self.curr_pfnet_state is not None:
-                processed_state['likelihood_map'] = self.get_likelihood_map()
-            else:
-                processed_state['likelihood_map'] = None
+            processed_state['likelihood_map'] = self.get_likelihood_map()
 
         return processed_state
 
@@ -579,8 +575,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
         new_robot_state = self.robots[0].calc_state()
 
         # process new env map
-        floor_map = self.get_floor_map()
-        obstacle_map = self.get_obstacle_map()
+        floor_map, _ = self.get_floor_map(pad_map_size=map_size)
+        obstacle_map, _ = self.get_obstacle_map(pad_map_size=map_size)
 
         new_rgb_obs, new_depth_obs, new_occupancy_grid = new_obs
         # process new rgb observation: convert [0, 255] to [-1, +1] range
@@ -694,7 +690,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
     def get_likelihood_map(self):
 
-        floor_map = np.squeeze(self.get_floor_map(), axis=-1) # [0, 2] range floor map
+        if self.curr_pfnet_state is None:
+            return None
+
+        floor_map = np.squeeze(self.floor_map[0], axis=-1) # [0, 2] range floor map
         particles, particle_weights, _ = self.curr_pfnet_state  # after transition update
         particles = particles[0].cpu().numpy()
         lin_weights = tf.nn.softmax(particle_weights, axis=-1)[0].cpu().numpy()  # normalize weights
@@ -741,7 +740,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.task.floor_num = floor_num
 
 
-    def get_obstacle_map(self, scene_id=None, floor_num=None):
+    def get_obstacle_map(self, scene_id=None, floor_num=None, pad_map_size=None):
         """
         Get the scene obstacle map
 
@@ -764,11 +763,16 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         # process new obstacle map: convert [0, 255] to [0, 2] range
         obstacle_map = datautils.process_raw_map(obstacle_map)
+        org_map_shape = obstacle_map.shape
 
-        return obstacle_map
+        # HACK: right zero-pad floor/obstacle map
+        if pad_map_size is not None:
+            obstacle_map = datautils.pad_images(obstacle_map, pad_map_size)
+
+        return obstacle_map, org_map_shape
 
 
-    def get_floor_map(self, scene_id=None, floor_num=None):
+    def get_floor_map(self, scene_id=None, floor_num=None, pad_map_size=None):
         """
         Get the scene floor map (traversability map + obstacle map)
 
@@ -801,8 +805,13 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         # process new obstacle map: convert [0, 255] to [0, 2] range
         floor_map = datautils.process_raw_map(trav_map)
+        org_map_shape = floor_map.shape
 
-        return floor_map
+        # HACK: right zero-pad floor/obstacle map
+        if pad_map_size is not None:
+            floor_map = datautils.pad_images(floor_map, pad_map_size)
+
+        return floor_map, org_map_shape
 
 
     def get_random_particles(self, num_particles, particles_distr, robot_pose, scene_map, particles_cov, particles_range=100):

@@ -69,6 +69,12 @@ def parse_args():
         help='Minibatch size for training'
     )
     arg_parser.add_argument(
+        '--pfnet_loadpath',
+        type=str,
+        default='',
+        help='Load a previously trained pfnet model from a checkpoint file.'
+    )
+    arg_parser.add_argument(
         '--s_buffer_size',
         type=int,
         default=500,
@@ -221,10 +227,12 @@ def parse_args():
     # HACK:
     params.loop = 6
     params.use_tf_function = False
-    params.init_env_pfnet = False
+    params.init_env_pfnet = True
     params.store_results = True
     params.num_clusters = 10
     params.root_dir = './'
+    params.use_plot = False
+    params.store_plot = False
 
     params.env_mode = 'headless'
     os.environ['CUDA_VISIBLE_DEVICES'] = str(params.device_idx)
@@ -258,9 +266,24 @@ def display_data(arg_params):
         init_pfnet=arg_params.init_env_pfnet,
         action_timestep=arg_params.action_timestep,
         physics_timestep=arg_params.physics_timestep,
-        device_idx=arg_params.device_idx
+        device_idx=arg_params.device_idx,
+        pf_params=arg_params
     )
-    env.reset()
+    obs = env.reset()
+
+    likelihood_map_ext = obs['likelihood_map']
+    floor_map = env.floor_map[0].cpu().numpy()
+    likelihood_map = np.zeros((*floor_map.shape[:2], 3))
+    likelihood_map[:, :, :2] = likelihood_map_ext[:, :, :2]
+    likelihood_map[:, :, 2] = np.arctan2(likelihood_map_ext[:, :, 3], likelihood_map_ext[:, :, 2])
+    likelihood_map[:, :, 2] -= np.min(likelihood_map[:, :, 2])
+
+    # normalize
+    likelihood_map[:, :, 0] /= np.max(likelihood_map[:, :, 0])
+    likelihood_map[:, :, 1] /= np.max(likelihood_map[:, :, 1])
+    likelihood_map[:, :, 2] /= np.max(likelihood_map[:, :, 2])
+    cv2.imwrite('./likelihood_map.png', cv2.flip(likelihood_map*255, 0))
+
     arg_params.trajlen = env.config.get('max_step', 500)//arg_params.loop
     arg_params.floors = 1
     assert arg_params.trav_map_resolution == env.trav_map_resolution

@@ -300,8 +300,8 @@ def gather_episode_stats(env, params, sample_particles=False):
 
     scene_id = env.config.get('scene_id')
     floor_num = env.task.floor_num
-    floor_map = env.get_floor_map()  # already processed
-    obstacle_map = env.get_obstacle_map()  # already processed
+    floor_map, _ = env.get_floor_map()  # already processed
+    obstacle_map, _ = env.get_obstacle_map()  # already processed
     assert list(floor_map.shape) == list(obstacle_map.shape)
 
     old_pose = env.get_robot_pose(env.robots[0].calc_state(), floor_map.shape)
@@ -625,18 +625,14 @@ def transform_raw_record(env, parsed_record, params):
             scene_id = None
             floor_num = None
 
-        obstacle_map = env.get_obstacle_map(scene_id, floor_num)
-        floor_map = env.get_floor_map(scene_id, floor_num)
-        org_map_shape = obstacle_map.shape
+        # HACK: right zero-pad floor/obstacle map
+        obstacle_map, _ = env.get_obstacle_map(scene_id, floor_num, pad_map_size)
+        floor_map, org_map_shape = env.get_floor_map(scene_id, floor_num, pad_map_size)
 
         # sample random particles using gt_pose at start of trajectory
         gt_first_pose = np.expand_dims(trans_record['true_states'][b_idx, 0, :], axis=0)
         init_particles = env.get_random_particles(num_particles, particles_distr,
                                         gt_first_pose, floor_map, particles_cov, particles_range)
-
-        # HACK: center zero-pad floor/obstacle map
-        obstacle_map = pad_images(obstacle_map, pad_map_size)
-        floor_map = pad_images(floor_map, pad_map_size)
 
         trans_record['org_map_shape'].append(org_map_shape)
         trans_record['init_particles'].append(init_particles)
