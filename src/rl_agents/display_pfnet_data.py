@@ -230,7 +230,6 @@ def parse_args():
     params.init_env_pfnet = True
     params.store_results = True
     params.num_clusters = 10
-    params.root_dir = './'
     params.use_plot = False
     params.store_plot = False
 
