@@ -163,10 +163,10 @@ $ nohup python -u train_eval.py \
 --num_parallel_environments_eval=1 \
 --replay_buffer_capacity=2500 \
 --train_steps_per_iteration=1 \
---batch_size=4 \
---actor_learning_rate=1e-04 \
---critic_learning_rate=1e-04 \
---alpha_learning_rate=1e-04 \
+--batch_size=128 \
+--actor_learning_rate=5e-05 \
+--critic_learning_rate=5e-05 \
+--alpha_learning_rate=5e-05 \
 --use_tf_functions=False \
 --use_parallel_envs=False \
 --num_eval_episodes=10 \
