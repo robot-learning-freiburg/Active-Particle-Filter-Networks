@@ -1044,7 +1044,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
             step_txt_plt = self.env_plts['step_txt_plt']
             step_txt_plt = render.draw_text(
-                f' pose mse: {np.linalg.norm(pose_diff):02.3f}\n collisions: {self.collision_step}/{self.current_step}',
+                f' pose mse: {np.linalg.norm(pose_diff):02.3f}\n collisions: {self.collision_step:03.0f}/{self.current_step:03.0f}',
                 '#7B241C', self.plt_ax, step_txt_plt)
             self.env_plts['step_txt_plt'] = step_txt_plt
             # print(f'gt_pose: {gt_pose_mts}, est_pose: {est_pose_mts} in mts')

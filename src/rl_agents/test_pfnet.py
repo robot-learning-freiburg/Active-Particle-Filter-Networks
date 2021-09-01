@@ -507,7 +507,6 @@ def rt_pfnet_test(arg_params):
 
         for _ in range(arg_params.loop):
             # take action and get new observation
-            obs, reward, done, _ = env.step(action)
             obs, reward, done, info = env.step(action)
         env.render('human')
 
