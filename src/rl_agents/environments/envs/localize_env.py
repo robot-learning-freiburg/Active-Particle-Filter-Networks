@@ -350,14 +350,25 @@ class LocalizeGibsonEnv(iGibsonEnv):
             self.store_results()
 
         # temporary changes
-        rnd_choice = np.random.choice(3)
+        rnd_choice = np.random.choice(5)
         if rnd_choice == 0:
+            # pose 2
             self.task.initial_pos = np.array([0.0, 0.0, 0.0])
             self.task.initial_orn = np.array([0.0, 0.0, 0.7])
         elif rnd_choice == 1:
+            # pose 3
             self.task.initial_pos = np.array([0.5, -2.0, 0.0])
             self.task.initial_orn = np.array([0.0, 0.0, 1.7])
+        elif rnd_choice == 2:
+            # pose 4
+            self.task.initial_pos = np.array([-3.0, 0.8, 0.0])
+            self.task.initial_orn = np.array([0.0, 0.0, 1.2])
+        elif rnd_choice == 3:
+            # pose 5
+            self.task.initial_pos = np.array([0.5, 2.2, 0.0])
+            self.task.initial_orn = np.array([0.0, 0.0, 2.2])
         else:
+            # pose 1
             self.task.initial_pos = np.array([-1.0, 0.35, 0.0])
             self.task.initial_orn = np.array([0.0, 0.0, 0.0])
 
