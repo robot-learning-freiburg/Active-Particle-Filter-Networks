@@ -65,6 +65,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
             render_to_tensor=render_to_tensor,
             automatic_reset=automatic_reset)
 
+        # HACK: use termination_conditions: MaxCollision, Timeout, OutOfBound reward_functions: CollisionReward
+        # manually remove geodesic potential reward conditions
+        del self.task.reward_functions[0]
+
         # manually remove point navigation task termination and reward conditions
         del self.task.termination_conditions[-1]
         del self.task.reward_functions[-1]
@@ -307,6 +311,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 new_depth_obs,
                 new_occupancy_grid
             ])['pred'].cpu().numpy()
+            info["pose_mse"] = pose_mse
+            info["collision_penality"] = reward # contains only collision reward per step
 
             # TODO: may need better reward
             rescale = 10
@@ -1034,10 +1040,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
             est_pose_mts = np.array([*self.scene.map_to_world(est_pose[:2]), gt_pose[2]])
             pose_diff = gt_pose_mts-est_pose_mts
             pose_diff[-1] = datautils.normalize(pose_diff[-1]) # normalize
+            has_collision = ' True' if len(self.collision_links) > 0 else 'False'
 
             step_txt_plt = self.env_plts['step_txt_plt']
             step_txt_plt = render.draw_text(
-                f'pose mse: {np.linalg.norm(pose_diff):02.3f} ',
+                f' pose mse: {np.linalg.norm(pose_diff):02.3f}\n is collided: {has_collision}',
                 '#7B241C', self.plt_ax, step_txt_plt)
             self.env_plts['step_txt_plt'] = step_txt_plt
             # print(f'gt_pose: {gt_pose_mts}, est_pose: {est_pose_mts} in mts')
