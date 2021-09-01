@@ -427,3 +427,10 @@ Setup Instructions:
   d) optional --actor_learning_rate=1e-05
 2. implementing deep neural localization paper -> scan matching
 3. start writing report/presentation
+
+  September 1st 2021
+  ------------------
+1. log position, orientation, collision errors for training, evaluation, testing
+2. sac_agent.SacAgent cross check optimizer not updating weights
+3. train pfnet for couple of apartments to check generalize.
+4. email authors of active neural localization regarding their implementation.
