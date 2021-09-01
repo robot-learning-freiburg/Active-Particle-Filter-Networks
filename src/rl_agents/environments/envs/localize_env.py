@@ -311,8 +311,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 new_depth_obs,
                 new_occupancy_grid
             ])['pred'].cpu().numpy()
-            info["pose_mse"] = pose_mse
-            info["collision_penality"] = reward # contains only collision reward per step
+            info['pose_mse'] = pose_mse
+            info['collision_penality'] = reward # contains only collision reward per step
 
             # TODO: may need better reward
             rescale = 10
@@ -1044,7 +1044,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
             step_txt_plt = self.env_plts['step_txt_plt']
             step_txt_plt = render.draw_text(
-                f' pose mse: {np.linalg.norm(pose_diff):02.3f}\n is collided: {has_collision}',
+                f' pose mse: {np.linalg.norm(pose_diff):02.3f}\n collisions: {self.collision_step}/{self.current_step}',
                 '#7B241C', self.plt_ax, step_txt_plt)
             self.env_plts['step_txt_plt'] = step_txt_plt
             # print(f'gt_pose: {gt_pose_mts}, est_pose: {est_pose_mts} in mts')

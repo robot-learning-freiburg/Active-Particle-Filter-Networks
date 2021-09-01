@@ -396,6 +396,10 @@ def test_agent(arg_params):
         policy = random_policy
         log_dir = os.path.join(arg_params.root_dir, 'rnd_agent')
 
+    # Define metrics
+    eps_mse = tf.keras.metrics.Mean('eps_mse', dtype=tf.float32)
+    eps_mcp = tf.keras.metrics.Mean('eps_mcp', dtype=tf.float32)
+
     test_summary_writer = tf.summary.create_file_writer(log_dir)
     with test_summary_writer.as_default():
         for eps in tqdm(range(arg_params.num_eval_episodes)):
@@ -405,7 +409,17 @@ def test_agent(arg_params):
                 action_step = policy.action(time_step)
                 time_step = tf_env.step(action_step.action)
                 tf_env.render('human')
-            tf.summary.scalar('eps_end_mse_reward', time_step.reward[0], step=eps)
+                # eps_mse(time_step.observation[0]['info']['pose_mse'])
+                # eps_mcp(time_step.observation[0]['info']['collision_penality'])
+
+            # log per episode states
+            tf.summary.scalar('per_eps_mse', eps_mse.result(), step=eps)
+            tf.summary.scalar('per_eps_mcp', eps_mcp.result(), step=eps)
+            tf.summary.scalar('per_eps_end_reward', time_step.reward[0], step=eps)
+
+            # Reset the metrics at the start of the next episode
+            eps_mse.reset_states()
+            eps_mcp.reset_states()
         tf_env.close()
 
     logging.info('Test Done')
