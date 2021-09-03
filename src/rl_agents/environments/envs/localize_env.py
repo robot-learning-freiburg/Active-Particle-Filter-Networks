@@ -324,7 +324,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         custom_state = self.process_state(state)
         custom_reward = np.array(custom_reward)
-        return custom_state, custom_reward, done, info
+        return custom_state, reward, done, info
 
 
     def reset(self):
