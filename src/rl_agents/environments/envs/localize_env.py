@@ -302,6 +302,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
         """
 
         state, reward, done, info = super(LocalizeGibsonEnv, self).step(action)
+        custom_reward = {}
+        custom_reward['collision_penality'] = info['collision_penality'] = reward # contains only collision reward per step
+        
         if self.use_pfnet:
             new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 255]
             new_depth_obs = copy.deepcopy(state['depth']*100) # [0, 100]
@@ -311,15 +314,14 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 new_depth_obs,
                 new_occupancy_grid
             ])['pred'].cpu().numpy()
-            info['pose_mse'] = pose_mse
-            info['collision_penality'] = reward # contains only collision reward per step
+            custom_reward['pose_mse'] = info['pose_mse'] = pose_mse
 
             # TODO: may need better reward
             rescale = 10
             reward = (reward-pose_mse)/rescale
 
         custom_state = self.process_state(state)
-        return custom_state, reward, done, info
+        return custom_state, custom_reward, done, info
 
 
     def reset(self):
