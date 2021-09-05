@@ -199,6 +199,7 @@ $ nohup python -u train_eval.py \
 $ nohup python -u test_rl_agent.py \
 --root_dir=train_rl_uniform \
 --num_eval_episodes=10 \
+--use_tf_functions=False \
 --agent='sac_agent' \
 --eval_deterministic=True \
 --is_localize_env=True \

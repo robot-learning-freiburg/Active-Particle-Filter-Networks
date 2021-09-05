@@ -10,6 +10,7 @@ import tensorflow as tf
 from tqdm import tqdm
 
 # import custom tf_agents
+import rl_utils
 from tf_agents.agents.ddpg import critic_network
 from tf_agents.agents.sac import sac_agent
 from environments import suite_gibson
@@ -48,6 +49,11 @@ flags.DEFINE_string(
     name='root_dir',
     default='./test_output',
     help='Root directory for pretrained agent logs/summaries/checkpoints.'
+)
+flags.DEFINE_boolean(
+    name='use_tf_functions',
+    default=True,
+    help='Whether to use graph/eager mode execution'
 )
 flags.DEFINE_integer(
     name='num_eval_episodes',
@@ -200,11 +206,11 @@ def test_agent(arg_params):
 
     conv_1d_layer_params = [(32, 8, 4), (64, 4, 2), (64, 3, 1)]
     conv_2d_layer_params = [(32, (8, 8), 4), (64, (4, 4), 2), (64, (3, 3), 2)]
-    encoder_fc_layers = [256]
-    actor_fc_layers = [256]
-    critic_obs_fc_layers = [256]
-    critic_action_fc_layers = [256]
-    critic_joint_fc_layers = [256]
+    encoder_fc_layers = [512, 512]
+    actor_fc_layers = [512, 512]
+    critic_obs_fc_layers = [512, 512]
+    critic_action_fc_layers = [512, 512]
+    critic_joint_fc_layers = [512, 512]
     gamma = 0.99
     actor_learning_rate = 3e-4
     critic_learning_rate = 3e-4
@@ -367,6 +373,10 @@ def test_agent(arg_params):
         tf_metrics.AverageReturnMetric(buffer_size=arg_params.num_eval_episodes),
         tf_metrics.AverageEpisodeLengthMetric(buffer_size=arg_params.num_eval_episodes)
     ]
+    eval_info_metrics = [
+        rl_utils.AveragePoseMSEMetric(buffer_size=arg_params.num_eval_episodes),
+        rl_utils.AverageCollisionPenalityMetric(buffer_size=arg_params.num_eval_episodes)
+    ]
     train_metrics = [
         tf_metrics.NumberOfEpisodes(),
         tf_metrics.EnvironmentSteps(),
@@ -401,26 +411,41 @@ def test_agent(arg_params):
     eps_mcp = tf.keras.metrics.Mean('eps_mcp', dtype=tf.float32)
 
     test_summary_writer = tf.summary.create_file_writer(log_dir)
-    with test_summary_writer.as_default():
-        for eps in tqdm(range(arg_params.num_eval_episodes)):
-            time_step = tf_env.reset()
-            tf_env.render('human')
-            while not time_step.is_last():
-                action_step = policy.action(time_step)
-                time_step = tf_env.step(action_step.action)
-                tf_env.render('human')
-                # eps_mse(time_step.observation[0]['info']['pose_mse'])
-                # eps_mcp(time_step.observation[0]['info']['collision_penality'])
+    results = metric_utils.eager_compute(
+        eval_metrics,
+        eval_info_metrics,
+        tf_env,
+        policy,
+        num_episodes=arg_params.num_eval_episodes,
+        train_step=global_step,
+        summary_writer=test_summary_writer,
+        summary_prefix='Metrics',
+        use_function=arg_params.use_tf_functions,
+    )
+    if eval_metrics_callback is not None:
+        eval_metrics_callback(results, global_step.numpy())
+    metric_utils.log_metrics(eval_metrics)
 
-            # log per episode states
-            tf.summary.scalar('per_eps_mse', eps_mse.result(), step=eps)
-            tf.summary.scalar('per_eps_mcp', eps_mcp.result(), step=eps)
-            tf.summary.scalar('per_eps_end_reward', time_step.reward[0], step=eps)
-
-            # Reset the metrics at the start of the next episode
-            eps_mse.reset_states()
-            eps_mcp.reset_states()
-        tf_env.close()
+    # with test_summary_writer.as_default():
+    #     for eps in tqdm(range(arg_params.num_eval_episodes)):
+    #         time_step = tf_env.reset()
+    #         tf_env.render('human')
+    #         while not time_step.is_last():
+    #             action_step = policy.action(time_step)
+    #             time_step = tf_env.step(action_step.action)
+    #             tf_env.render('human')
+    #             eps_mse(tf_env.get_info()['pose_mse'][0])
+    #             eps_mcp(tf_env.get_info()['collision_penality'][0])
+    #
+    #         # log per episode states
+    #         tf.summary.scalar('per_eps_mse', eps_mse.result(), step=eps)
+    #         tf.summary.scalar('per_eps_mcp', eps_mcp.result(), step=eps)
+    #         tf.summary.scalar('per_eps_end_reward', time_step.reward[0], step=eps)
+    #
+    #         # Reset the metrics at the start of the next episode
+    #         eps_mse.reset_states()
+    #         eps_mcp.reset_states()
+    #     tf_env.close()
 
     logging.info('Test Done')
 

@@ -27,6 +27,7 @@ import random
 import functools
 
 # custom tf_agents
+import rl_utils
 from tf_agents.system import system_multiprocessing as multiprocessing
 from tf_agents.agents.ddpg import critic_network
 from tf_agents.agents.sac import sac_agent
@@ -241,6 +242,10 @@ def train_eval(
     eval_metrics = [
         tf_metrics.AverageReturnMetric(buffer_size=num_eval_episodes),
         tf_metrics.AverageEpisodeLengthMetric(buffer_size=num_eval_episodes)
+    ]
+    eval_info_metrics = [
+        rl_utils.AveragePoseMSEMetric(buffer_size=num_eval_episodes),
+        rl_utils.AverageCollisionPenalityMetric(buffer_size=num_eval_episodes)
     ]
 
     global_step = tf.compat.v1.train.get_or_create_global_step()
