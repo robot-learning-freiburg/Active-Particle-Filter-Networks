@@ -424,7 +424,7 @@ def test_agent(arg_params):
     )
     if eval_metrics_callback is not None:
         eval_metrics_callback(results, global_step.numpy())
-    metric_utils.log_metrics(eval_metrics)
+    metric_utils.log_metrics(eval_metrics+eval_info_metrics)
 
     # with test_summary_writer.as_default():
     #     for eps in tqdm(range(arg_params.num_eval_episodes)):
