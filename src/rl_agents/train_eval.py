@@ -460,6 +460,7 @@ def train_eval(
 
         results = metric_utils.eager_compute(
             eval_metrics,
+            eval_info_metrics,
             eval_tf_env,
             eval_policy,
             num_episodes=num_eval_episodes,
@@ -470,7 +471,7 @@ def train_eval(
         )
         if eval_metrics_callback is not None:
             eval_metrics_callback(results, global_step.numpy())
-        metric_utils.log_metrics(eval_metrics)
+        metric_utils.log_metrics(eval_metrics+eval_info_metrics)
 
         if eval_only:
             logging.info('Eval finished')
@@ -533,6 +534,7 @@ def train_eval(
             if global_step_val % eval_interval == 0:
                 results = metric_utils.eager_compute(
                     eval_metrics,
+                    eval_info_metrics,
                     eval_tf_env,
                     eval_policy,
                     num_episodes=num_eval_episodes,
@@ -543,7 +545,7 @@ def train_eval(
                 )
                 if eval_metrics_callback is not None:
                     eval_metrics_callback(results, global_step_val)
-                metric_utils.log_metrics(eval_metrics)
+                metric_utils.log_metrics(eval_metrics+eval_info_metrics)
 
             if global_step_val % train_checkpoint_interval == 0:
                 train_checkpointer.save(global_step=global_step_val)

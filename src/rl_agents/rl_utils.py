@@ -100,7 +100,7 @@ class AverageCollisionPenalityMetric(tf_metric.TFStepMetric):
                 self.environment_steps))
 
         # Update accumulator with received pose mse.
-        self._collision_penality_accumulator.assign_add(-collision_penality)
+        self._collision_penality_accumulator.assign_add(collision_penality)
 
         # increment step when not final step
         self.environment_steps.assign_add(tf.cast(~traj.is_boundary(), self._dtype))
@@ -108,7 +108,7 @@ class AverageCollisionPenalityMetric(tf_metric.TFStepMetric):
         # Add mean over episode length's collision penality to buffer.
         last_episode_indices = tf.squeeze(tf.where(traj.is_last()), axis=-1)
         for indx in last_episode_indices:
-            self._buffer.add(self._collision_penality_accumulator[indx]/self.environment_steps[indx])
+            self._buffer.add(-self._collision_penality_accumulator[indx]/self.environment_steps[indx])
 
         return traj
 
