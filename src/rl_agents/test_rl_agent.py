@@ -374,8 +374,9 @@ def test_agent(arg_params):
         tf_metrics.AverageEpisodeLengthMetric(buffer_size=arg_params.num_eval_episodes)
     ]
     eval_info_metrics = [
-        rl_utils.AveragePoseMSEMetric(buffer_size=arg_params.num_eval_episodes),
-        rl_utils.AverageCollisionPenalityMetric(buffer_size=arg_params.num_eval_episodes)
+        rl_utils.AverageStepPositionErrorMetric(buffer_size=num_eval_episodes),
+        rl_utils.AverageStepOrientationErrorMetric(buffer_size=num_eval_episodes),
+        rl_utils.AverageStepCollisionPenalityMetric(buffer_size=num_eval_episodes)
     ]
     train_metrics = [
         tf_metrics.NumberOfEpisodes(),

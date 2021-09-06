@@ -16,19 +16,19 @@ from tf_agents.utils import common
 from tf_agents.trajectories import trajectory
 
 @gin.configurable(module='tf_agents')
-class AveragePoseMSEMetric(tf_metric.TFStepMetric):
-    """Metric to compute the average of mean over episode length's pose mse."""
+class AverageStepPositionErrorMetric(tf_metric.TFStepMetric):
+    """Metric to compute the average of mean over episode length's position error."""
 
     def __init__(self,
-            name='AveragePoseMSE',
+            name='AverageStepPositionError',
             prefix='Metrics',
             dtype=tf.float32,
             batch_size=1,
             buffer_size=10):
-        super(AveragePoseMSEMetric, self).__init__(name=name, prefix=prefix)
+        super(AverageStepPositionErrorMetric, self).__init__(name=name, prefix=prefix)
         self._buffer = tf_metrics.TFDeque(buffer_size, dtype)
         self._dtype = dtype
-        self._pose_mse_accumulator = common.create_variable(
+        self._coords_error_accumulator = common.create_variable(
             initial_value=0, dtype=dtype, shape=(batch_size, ), name='Accumulator')
         self.environment_steps = common.create_variable(
             initial_value=0, dtype=dtype, shape=(batch_size, ), name='environment_steps')
@@ -36,26 +36,26 @@ class AveragePoseMSEMetric(tf_metric.TFStepMetric):
     @common.function(autograph=True)
     def call(self, trajectory_tuple):
         traj = trajectory.from_transition(trajectory_tuple[0], trajectory_tuple[1], trajectory_tuple[2])
-        pose_mse = trajectory_tuple[3]['pose_mse'] if 'pose_mse' in trajectory_tuple[3] else [0.0]
+        coords = trajectory_tuple[3]['coords'] if 'coords' in trajectory_tuple[3] else [0.0]
 
         # Zero out batch indices where a new episode is starting.
-        self._pose_mse_accumulator.assign(
-            tf.where(traj.is_first(), tf.zeros_like(self._pose_mse_accumulator),
-                self._pose_mse_accumulator))
+        self._coords_error_accumulator.assign(
+            tf.where(traj.is_first(), tf.zeros_like(self._coords_error_accumulator),
+                self._coords_error_accumulator))
         self.environment_steps.assign(
             tf.where(traj.is_first(), tf.zeros_like(self.environment_steps),
                 self.environment_steps))
 
         # Update accumulator with received pose mse.
-        self._pose_mse_accumulator.assign_add(pose_mse)
+        self._coords_error_accumulator.assign_add(coords)
 
         # increment step when not final step
         self.environment_steps.assign_add(tf.cast(~traj.is_boundary(), self._dtype))
 
-        # Add mean over episode length's pose_mse to buffer.
+        # Add mean over episode length's position error to buffer.
         last_episode_indices = tf.squeeze(tf.where(traj.is_last()), axis=-1)
         for indx in last_episode_indices:
-            self._buffer.add(self._pose_mse_accumulator[indx]/self.environment_steps[indx])
+            self._buffer.add(self._coords_error_accumulator[indx]/self.environment_steps[indx])
 
         return traj
 
@@ -65,20 +65,72 @@ class AveragePoseMSEMetric(tf_metric.TFStepMetric):
     @common.function
     def reset(self):
         self._buffer.clear()
-        self._pose_mse_accumulator.assign(tf.zeros_like(self._pose_mse_accumulator))
+        self._coords_error_accumulator.assign(tf.zeros_like(self._coords_error_accumulator))
 
 @gin.configurable(module='tf_agents')
-class AverageCollisionPenalityMetric(tf_metric.TFStepMetric):
+class AverageStepOrientationErrorMetric(tf_metric.TFStepMetric):
+    """Metric to compute the average of mean over episode length's orientation error."""
+
+    def __init__(self,
+            name='AverageStepOrientationError',
+            prefix='Metrics',
+            dtype=tf.float32,
+            batch_size=1,
+            buffer_size=10):
+        super(AverageStepOrientationError, self).__init__(name=name, prefix=prefix)
+        self._buffer = tf_metrics.TFDeque(buffer_size, dtype)
+        self._dtype = dtype
+        self._orient_error_accumulator = common.create_variable(
+            initial_value=0, dtype=dtype, shape=(batch_size, ), name='Accumulator')
+        self.environment_steps = common.create_variable(
+            initial_value=0, dtype=dtype, shape=(batch_size, ), name='environment_steps')
+
+    @common.function(autograph=True)
+    def call(self, trajectory_tuple):
+        traj = trajectory.from_transition(trajectory_tuple[0], trajectory_tuple[1], trajectory_tuple[2])
+        coords = trajectory_tuple[3]['orient'] if 'orient' in trajectory_tuple[3] else [0.0]
+
+        # Zero out batch indices where a new episode is starting.
+        self._orient_error_accumulator.assign(
+            tf.where(traj.is_first(), tf.zeros_like(self._orient_error_accumulator),
+                self._orient_error_accumulator))
+        self.environment_steps.assign(
+            tf.where(traj.is_first(), tf.zeros_like(self.environment_steps),
+                self.environment_steps))
+
+        # Update accumulator with received pose mse.
+        self._orient_error_accumulator.assign_add(coords)
+
+        # increment step when not final step
+        self.environment_steps.assign_add(tf.cast(~traj.is_boundary(), self._dtype))
+
+        # Add mean over episode length's orientation error to buffer.
+        last_episode_indices = tf.squeeze(tf.where(traj.is_last()), axis=-1)
+        for indx in last_episode_indices:
+            self._buffer.add(self._orient_error_accumulator[indx]/self.environment_steps[indx])
+
+        return traj
+
+    def result(self):
+        return self._buffer.mean()
+
+    @common.function
+    def reset(self):
+        self._buffer.clear()
+        self._orient_error_accumulator.assign(tf.zeros_like(self._orient_error_accumulator))
+
+@gin.configurable(module='tf_agents')
+class AverageStepCollisionPenalityMetric(tf_metric.TFStepMetric):
     """Metric to compute the average of mean over episode length's collision penality."""
 
     def __init__(self,
-            name='AverageCollisionPenality',
+            name='AverageStepCollisionPenality',
             prefix='Metrics',
             dtype=tf.float64,
             batch_size=1,
             buffer_size=10):
 
-        super(AverageCollisionPenalityMetric, self).__init__(name=name, prefix=prefix)
+        super(AverageStepCollisionPenalityMetric, self).__init__(name=name, prefix=prefix)
         self._buffer = tf_metrics.TFDeque(buffer_size, dtype)
         self._dtype = dtype
         self._collision_penality_accumulator = common.create_variable(

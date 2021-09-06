@@ -45,5 +45,6 @@ def compute_loss(particle_states, particle_weights, true_states, trav_map_resolu
     loss = {}
     loss['pred'] = loss_pred      # float
     loss['coords'] = loss_coords    # [batch_size, trajlen]
+    loss['orient'] = loss_orient    # [batch_size, trajlen]
 
     return loss

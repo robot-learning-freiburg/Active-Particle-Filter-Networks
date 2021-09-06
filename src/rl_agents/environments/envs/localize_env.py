@@ -302,28 +302,27 @@ class LocalizeGibsonEnv(iGibsonEnv):
         """
 
         state, reward, done, info = super(LocalizeGibsonEnv, self).step(action)
-        custom_reward = []
-        custom_reward.append(reward)
         info['collision_penality'] = reward # contains only collision reward per step
 
         if self.use_pfnet:
             new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 255]
             new_depth_obs = copy.deepcopy(state['depth']*100) # [0, 100]
             new_occupancy_grid = copy.deepcopy(state['occupancy_grid'])
-            pose_mse = self.step_pfnet([
+
+            # HACK: wrap stop_gradient to make sure pfnet weights are not updated during rl training
+            loss_dict = tf.stop_gradient(self.step_pfnet([
                 new_rgb_obs,
                 new_depth_obs,
                 new_occupancy_grid
-            ])['pred'].cpu().numpy()
-            custom_reward.append(pose_mse)
-            info['pose_mse'] = pose_mse
+            ]))
+            info['coords'] = tf.math.reduce_mean(loss_dict['coords']).cpu().numpy()
+            info['orient'] = tf.math.reduce_mean(loss_dict['orient']).cpu().numpy()
 
             # TODO: may need better reward
             rescale = 10
             reward = (reward-pose_mse)/rescale
 
         custom_state = self.process_state(state)
-        custom_reward = np.array(custom_reward)
         return custom_state, reward, done, info
 
 
