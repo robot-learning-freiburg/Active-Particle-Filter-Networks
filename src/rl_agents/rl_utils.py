@@ -77,7 +77,7 @@ class AverageStepOrientationErrorMetric(tf_metric.TFStepMetric):
             dtype=tf.float32,
             batch_size=1,
             buffer_size=10):
-        super(AverageStepOrientationError, self).__init__(name=name, prefix=prefix)
+        super(AverageStepOrientationErrorMetric, self).__init__(name=name, prefix=prefix)
         self._buffer = tf_metrics.TFDeque(buffer_size, dtype)
         self._dtype = dtype
         self._orient_error_accumulator = common.create_variable(

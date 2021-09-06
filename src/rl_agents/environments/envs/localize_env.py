@@ -310,17 +310,17 @@ class LocalizeGibsonEnv(iGibsonEnv):
             new_occupancy_grid = copy.deepcopy(state['occupancy_grid'])
 
             # HACK: wrap stop_gradient to make sure pfnet weights are not updated during rl training
-            loss_dict = tf.stop_gradient(self.step_pfnet([
+            loss_dict = self.step_pfnet([
                 new_rgb_obs,
                 new_depth_obs,
                 new_occupancy_grid
-            ]))
+            ])
             info['coords'] = tf.math.reduce_mean(loss_dict['coords']).cpu().numpy()
             info['orient'] = tf.math.reduce_mean(loss_dict['orient']).cpu().numpy()
 
             # TODO: may need better reward
             rescale = 10
-            reward = (reward-pose_mse)/rescale
+            reward = (reward-tf.stop_gradient(loss_dict['pred']))/rescale
 
         custom_state = self.process_state(state)
         return custom_state, reward, done, info
