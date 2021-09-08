@@ -301,7 +301,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
         :return: info: info dictionary with any useful information
         """
 
-        state, reward, done, info = super(LocalizeGibsonEnv, self).step(action)
+        # HACK: we use low update frequency
+        for _ in range(self.pf_params.loop):
+            state, reward, done, info = super(LocalizeGibsonEnv, self).step(action)
         info['collision_penality'] = reward # contains only collision reward per step
 
         if self.use_pfnet:

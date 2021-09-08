@@ -435,3 +435,11 @@ Setup Instructions:
 2. sac_agent.SacAgent cross check optimizer not updating weights
 3. train pfnet for couple of apartments to check generalize.
 4. email authors of active neural localization regarding their implementation.
+
+
+  September 9th 2021
+  ------------------
+1. use same particle filter lower update frequency for rl agent ad used in training
+2. ablation study: test with higher update frequency particle filter success rate
+3. randomly select eval/test apartments for particle filter net
+4. log the results to final report table

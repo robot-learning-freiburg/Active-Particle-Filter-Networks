@@ -505,9 +505,8 @@ def rt_pfnet_test(arg_params):
             action = np.random.choice(5, p=[0.7, 0.0, 0.15, 0.15, 0.0])
             # action = env.action_space.sample()
 
-        for _ in range(arg_params.loop):
-            # take action and get new observation
-            obs, reward, done, info = env.step(action)
+        # take action and get new observation
+        obs, reward, done, info = env.step(action)
         env.render('human')
 
     env.close()

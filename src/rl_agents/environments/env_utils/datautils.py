@@ -325,9 +325,8 @@ def gather_episode_stats(env, params, sample_particles=False):
                 # backward
                 action = np.array([-max_lin_vel, np.random.uniform(low=-max_ang_vel, high=max_ang_vel)])
 
-        for _ in range(params.loop):
-            # take action and get new observation
-            obs, reward, done, _ = env.step(action)
+        # take action and get new observation
+        obs, reward, done, _ = env.step(action)
         assert list(obs[0].shape) == [56, 56, 3]
         assert list(obs[1].shape) == [56, 56, 1]
         assert list(obs[3].shape) == [56, 56, 1]
