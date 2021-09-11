@@ -180,6 +180,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.pf_params.global_map_size = np.array(FLAGS.global_map_size, dtype=np.int32)
         self.pf_params.window_scaler = FLAGS.window_scaler
         self.pf_params.max_step = self.config.get('max_step', 500)
+        self.pf_params.loop = 6
 
         self.pf_params.transition_std[0] = (self.pf_params.transition_std[0] / self.map_pixel_in_meters) * self.trav_map_resolution # convert meters to pixels and rescale to trav map resolution
         self.pf_params.init_particles_std[0] = (self.pf_params.init_particles_std[0] / self.map_pixel_in_meters) * self.trav_map_resolution  # convert meters to pixels and rescale to trav map resolution
