@@ -408,7 +408,8 @@ def test_agent(arg_params):
         log_dir = os.path.join(arg_params.root_dir, 'rnd_agent')
 
     # Define metrics
-    eps_mse = tf.keras.metrics.Mean('eps_mse', dtype=tf.float32)
+    eps_msp = tf.keras.metrics.Mean('eps_msp', dtype=tf.float32)
+    eps_mso = tf.keras.metrics.Mean('eps_mso', dtype=tf.float32)
     eps_mcp = tf.keras.metrics.Mean('eps_mcp', dtype=tf.float32)
 
     test_summary_writer = tf.summary.create_file_writer(log_dir)
@@ -435,16 +436,19 @@ def test_agent(arg_params):
                 action_step = policy.action(time_step)
                 time_step = tf_env.step(action_step.action)
                 tf_env.render('human')
-                eps_mse(tf_env.get_info()['pose_mse'][0])
+                eps_msp(tf_env.get_info()['coords'][0])
+                eps_mso(tf_env.get_info()['orient'][0])
                 eps_mcp(tf_env.get_info()['collision_penality'][0])
 
             # log per episode states
-            tf.summary.scalar('per_eps_mse', eps_mse.result(), step=eps)
+            tf.summary.scalar('per_eps_msp', eps_msp.result(), step=eps)
+            tf.summary.scalar('per_eps_mso', eps_mso.result(), step=eps)
             tf.summary.scalar('per_eps_mcp', eps_mcp.result(), step=eps)
             tf.summary.scalar('per_eps_end_reward', time_step.reward[0], step=eps)
 
             # Reset the metrics at the start of the next episode
-            eps_mse.reset_states()
+            eps_msp.reset_states()
+            eps_mso.reset_states()
             eps_mcp.reset_states()
         tf_env.close()
 
