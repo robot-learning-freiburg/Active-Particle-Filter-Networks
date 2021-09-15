@@ -1,0 +1,92 @@
+pybullet build time: Aug 12 2021 18:24:14
+Namespace(alpha_resample_ratio=1.0, batch_size=12, epochs=50, evalfiles=['./house3d_data/eval/valid.tfrecords'], global_map_size=array([4000, 4000,    1]), gpu_num=3, init_particles_cov=array([[225.   ,   0.   ,   0.   ],
+       [  0.   , 225.   ,   0.   ],
+       [  0.   ,   0.   ,   0.274]], dtype=float32), init_particles_distr='tracking', init_particles_std=array([15.   ,  0.524], dtype=float32), learningrate=0.0001, load='', logpath='house3d_rgb', map_pixel_in_meters=0.02, num_eval_samples=816, num_particles=30, num_test_samples=80, num_train_samples=72000, obs_ch=3, obs_mode='rgb', resample=False, return_state=True, root_dir='house3d_rgb/run_20210908-205908', run_evaluation=True, s_buffer_size=500, seed=42, stateful=False, testfiles=['./house3d_data/eval/valid.tfrecords'], trainfiles=['./house3d_data/train/train.tfrecords'], trajlen=24, transition_std=array([0., 0.], dtype=float32), window_scaler=8.0)
+  0%|          | 0/50 [00:00<?, ?it/s]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 0, train loss: 0.552, eval loss: 0.411
+  2%|▏         | 1/50 [5:20:12<261:29:51, 19212.08s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 1, train loss: 0.422, eval loss: 0.410
+  4%|▍         | 2/50 [10:41:39<256:45:16, 19256.59s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 2, train loss: 0.394, eval loss: 0.554
+  6%|▌         | 3/50 [16:04:37<252:07:34, 19311.79s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 3, train loss: 0.364, eval loss: 0.398
+  8%|▊         | 4/50 [21:25:22<246:25:23, 19285.30s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 4, train loss: 0.368, eval loss: 0.338
+ 10%|█         | 5/50 [26:45:35<240:44:30, 19259.35s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 5, train loss: 0.359, eval loss: 0.338
+ 12%|█▏        | 6/50 [32:09:50<236:12:16, 19325.83s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 6, train loss: 0.345, eval loss: 0.383
+ 14%|█▍        | 7/50 [37:30:30<230:30:03, 19297.76s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 7, train loss: 0.352, eval loss: 0.317
+ 16%|█▌        | 8/50 [42:51:43<225:03:03, 19290.08s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 8, train loss: 0.339, eval loss: 0.258
+ 18%|█▊        | 9/50 [48:11:36<219:20:43, 19259.60s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 9, train loss: 0.326, eval loss: 0.333
+ 20%|██        | 10/50 [53:35:11<214:31:40, 19307.51s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 10, train loss: 0.331, eval loss: 0.298
+ 22%|██▏       | 11/50 [58:57:54<209:21:01, 19324.65s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 11, train loss: 0.319, eval loss: 0.309
+ 24%|██▍       | 12/50 [64:20:07<204:00:26, 19327.00s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 12, train loss: 0.325, eval loss: 0.346
+ 26%|██▌       | 13/50 [69:43:21<198:50:58, 19347.53s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 13, train loss: 0.312, eval loss: 0.315
+ 28%|██▊       | 14/50 [75:05:24<193:24:01, 19340.04s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 14, train loss: 0.315, eval loss: 0.436
+ 30%|███       | 15/50 [80:26:42<187:50:45, 19321.31s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 15, train loss: 0.320, eval loss: 0.280
+ 32%|███▏      | 16/50 [85:50:16<182:44:29, 19349.10s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 16, train loss: 0.303, eval loss: 0.326
+ 34%|███▍      | 17/50 [91:10:58<177:04:21, 19317.03s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 17, train loss: 0.319, eval loss: 0.284
+ 36%|███▌      | 18/50 [96:33:45<171:50:23, 19331.98s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 18, train loss: 0.298, eval loss: 0.327
+ 38%|███▊      | 19/50 [101:57:03<166:38:27, 19351.85s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 19, train loss: 0.302, eval loss: 0.327
+ 40%|████      | 20/50 [107:19:28<161:14:53, 19349.78s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 20, train loss: 0.295, eval loss: 0.379
+ 42%|████▏     | 21/50 [112:42:06<155:53:36, 19352.29s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 21, train loss: 0.300, eval loss: 0.311
+ 44%|████▍     | 22/50 [118:03:34<150:22:06, 19333.09s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 22, train loss: 0.292, eval loss: 0.302
+ 46%|████▌     | 23/50 [123:26:20<145:04:19, 19342.94s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 23, train loss: 0.302, eval loss: 0.368
+ 48%|████▊     | 24/50 [128:48:43<139:41:58, 19343.01s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 24, train loss: 0.293, eval loss: 0.245
+ 50%|█████     | 25/50 [134:13:32<134:37:48, 19386.76s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 25, train loss: 0.286, eval loss: 0.262
+ 52%|█████▏    | 26/50 [139:53:50<131:18:27, 19696.14s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 26, train loss: 0.295, eval loss: 0.357
+ 54%|█████▍    | 27/50 [145:38:18<127:41:56, 19987.69s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 27, train loss: 0.293, eval loss: 0.368
+ 56%|█████▌    | 28/50 [151:23:27<123:28:08, 20204.01s/it]=====> saving trained model 
+=====> saving evaluation model 
+Epoch 28, train loss: 0.293, eval loss: 0.497
+ 58%|█████▊    | 29/50 [156:38:18<115:33:32, 19810.10s/it]
