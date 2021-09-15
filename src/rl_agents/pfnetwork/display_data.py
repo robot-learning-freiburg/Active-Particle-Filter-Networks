@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import cv2
+import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 from matplotlib.patches import Wedge
 import numpy as np
