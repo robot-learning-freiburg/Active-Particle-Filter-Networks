@@ -10,6 +10,7 @@ from ..env_utils import pfnet_loss
 from ..env_utils import render
 from igibson.envs.igibson_env import iGibsonEnv
 from igibson.utils.assets_utils import get_scene_path
+from igibson.utils.utils import l2_distance
 import gym
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 import matplotlib.pyplot as plt
@@ -19,6 +20,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 from pathlib import Path
 from PIL import Image
 from pfnetwork import pfnet
+import pybullet as p
 from sklearn.cluster import KMeans
 import tensorflow as tf
 tf.get_logger().setLevel('ERROR')
@@ -329,6 +331,69 @@ class LocalizeGibsonEnv(iGibsonEnv):
         return custom_state, reward, done, info
 
 
+    def sample_initial_pose_and_target_pos(self):
+        """
+        Sample robot initial pose and target position
+        :param env: environment instance
+        :return: initial pose and target position
+        """
+        self.task.target_dist_min = self.task.config.get("target_dist_min", 1.0)
+        self.task.target_dist_max = self.task.config.get("target_dist_max", 10.0)
+
+        while True:
+            _, initial_pos = self.scene.get_random_point(floor=self.task.floor_num)
+            if -0.5 <= initial_pos[0] <= 0.5 and -0.5 <= initial_pos[1] <= 0.5:
+                break
+
+        max_trials = 100
+        dist = 0.0
+        for _ in range(max_trials):
+            _, target_pos = self.scene.get_random_point(floor=self.task.floor_num)
+            if self.scene.build_graph:
+                _, dist = self.scene.get_shortest_path(
+                    self.task.floor_num, initial_pos[:2], target_pos[:2], entire_path=False
+                )
+            else:
+                dist = l2_distance(initial_pos, target_pos)
+            if self.task.target_dist_min < dist < self.task.target_dist_max:
+                break
+        if not (self.task.target_dist_min < dist < self.task.target_dist_max):
+            print("WARNING: Failed to sample initial and target positions")
+        initial_orn = np.array([0, 0, np.random.uniform(0, np.pi * 2)])
+        return initial_pos, initial_orn, target_pos
+
+
+    def reset_agent(self):
+        """
+        Reset robot initial pose.
+        Sample initial pose and target position, check validity, and land it.
+        :param env: environment instance
+        """
+        reset_success = False
+        max_trials = 100
+
+        # cache pybullet state
+        # TODO: p.saveState takes a few seconds, need to speed up
+        state_id = p.saveState()
+        for i in range(max_trials):
+            initial_pos, initial_orn, target_pos = self.sample_initial_pose_and_target_pos()
+            reset_success = self.test_valid_position(
+                self.robots[0], initial_pos, initial_orn
+            ) and self.test_valid_position(self.robots[0], target_pos)
+            p.restoreState(state_id)
+            if reset_success:
+                break
+
+        if not reset_success:
+            logging.warning("WARNING: Failed to reset robot without collision")
+
+        p.removeState(state_id)
+
+        self.task.target_pos = target_pos
+        self.task.initial_pos = initial_pos
+        self.task.initial_orn = initial_orn
+
+
     def reset(self):
         """
         Reset episode
@@ -356,28 +421,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
             self.store_results()
 
-        # temporary changes
-        rnd_choice = np.random.choice(5)
-        if rnd_choice == 0:
-            # pose 2
-            self.task.initial_pos = np.array([0.0, 0.0, 0.0])
-            self.task.initial_orn = np.array([0.0, 0.0, 0.7])
-        elif rnd_choice == 1:
-            # pose 3
-            self.task.initial_pos = np.array([0.5, -2.0, 0.0])
-            self.task.initial_orn = np.array([0.0, 0.0, 1.7])
-        elif rnd_choice == 2:
-            # pose 4
-            self.task.initial_pos = np.array([-3.0, 0.8, 0.0])
-            self.task.initial_orn = np.array([0.0, 0.0, 1.2])
-        elif rnd_choice == 3:
-            # pose 5
-            self.task.initial_pos = np.array([0.5, 2.2, 0.0])
-            self.task.initial_orn = np.array([0.0, 0.0, 2.2])
-        else:
-            # pose 1
-            self.task.initial_pos = np.array([-1.0, 0.35, 0.0])
-            self.task.initial_orn = np.array([0.0, 0.0, 0.0])
+        # HACK: sample robot pose from selective area
+        self.reset_agent()
 
         state = super(LocalizeGibsonEnv, self).reset()
         if self.use_pfnet:
