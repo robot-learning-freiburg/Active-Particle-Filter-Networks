@@ -189,7 +189,8 @@ def run_testing(params):
             tf.summary.scalar('eps_final_rmse', np.sqrt(loss_dict['coords'][0][-1]), step=eps_idx)
 
             # localization is successfull if the rmse error is below 1m for the last 25% of the trajectory
-            successful = np.all(loss_dict['coords'][-trajlen // 4:] < 1.0 ** 2)  # below 1 meter
+            assert list(loss_dict['coords'].shape) == [batch_size, trajlen]
+            successful = np.all(loss_dict['coords'][:, -trajlen // 4:] < 1.0 ** 2)  # below 1 meter
             success_list.append(successful)
 
             if params.store_results:
