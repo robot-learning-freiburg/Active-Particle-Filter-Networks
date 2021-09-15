@@ -464,7 +464,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
             else:
                 processed_state['raw_particles'] = None
         if 'floor_map' in self.pf_params.custom_output:
-            processed_state['floor_map'] = self.floor_map[0].cpu().numpy() # [0, 2] range floor map
+            if self.floor_map is None:
+                floor_map, self.org_map_shape = self.get_floor_map(pad_map_size=self.pf_params.global_map_size)
+                processed_state['floor_map'] = floor_map
+            else:
+                processed_state['floor_map'] = self.floor_map[0].cpu().numpy() # [0, 2] range floor map
         if 'likelihood_map' in self.pf_params.custom_output:
             processed_state['likelihood_map'] = self.get_likelihood_map()
 

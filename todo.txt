@@ -55,6 +55,7 @@ $ nohup python -u test_pfnet.py \
 --num_eval_samples=50 \
 --testfiles=./plots_data/random/*.tfrecord \
 --batch_size=4 \
+--custom_output 'rgb_obs' 'depth_obs' 'likelihood_map' \
 --init_particles_distr='gaussian' \
 --init_particles_std '0.15' '0.523599' \
 --particles_range=100 \
