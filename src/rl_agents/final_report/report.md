@@ -16,7 +16,7 @@
 
 |                       |     RGB    |    Depth   |    RGB-D   |
 |:---------------------:|:----------:|:----------:|:----------:|
-|  House3D (tracking)   |   41.187   |   41.572   |   44.502   |
+|  House3D (tracking)   |   38.837   |   40.626   |   40.908   |
 ```
 House3D RMSE(cm) for tracking - init_particles_distr 'tracking', init_particles_std '0.3' '0.523599', num_particles '300', map_pixel_in_meters '0.02', transition_std '0.' '0.', trajlen '24', resample 'false'
 ```
