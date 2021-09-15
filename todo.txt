@@ -444,3 +444,11 @@ Setup Instructions:
 2. ablation study: test with higher update frequency particle filter success rate
 3. randomly select eval/test apartments for particle filter net
 4. log the results to final report table
+
+  September 15th 2021
+  -------------------
+1. compare rl agent with agent used to collect pfnet data
+2. train rl agent for more env duration (say 50 update step) vs sample poses from smaller area
+3. ablation study: test with higher update frequency particle filter success rate
+4. log max return
+5. look into iGibson cited papers for test/eval data they used.
