@@ -24,7 +24,7 @@ House3D RMSE(cm) for tracking - init_particles_distr 'tracking', init_particles_
 |                                |     RGB    |    Depth   |    RGB-D   |
 |:------------------------------:|:----------:|:----------:|:----------:|
 |  House3D (localization) - (1)  |   81.373   |   81.250   |   84.069   |
-|  House3D (localization) - (2)  |   87.990   |   00.000   |   88.971   |
+|  House3D (localization) - (2)  |   87.990   |   84.681   |   88.971   |
 ```
 House3D success rate(%) for semi-global localization over one room (1)- init_particles_distr 'one-room', num_particles '500', map_pixel_in_meters '0.02', transition_std '0.04' '0.0872665', trajlen '100', resample 'true', alpha_resample_ratio '1.0'
 House3D success rate(%) for semi-global localization over one room (2)- init_particles_distr 'one-room', num_particles '1000', map_pixel_in_meters '0.02', transition_std '0.04' '0.0872665', trajlen '100', resample 'true', alpha_resample_ratio '1.0'
