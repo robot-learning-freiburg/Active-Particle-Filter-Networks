@@ -343,7 +343,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
         while True:
             _, initial_pos = self.scene.get_random_point(floor=self.task.floor_num)
-            if -0.5 <= initial_pos[0] <= 0.5 and -0.5 <= initial_pos[1] <= 0.5:
+            if -1.0 <= initial_pos[0] <= 1.0 and -1.0 <= initial_pos[1] <= 1.0:
                 break
 
         max_trials = 100
