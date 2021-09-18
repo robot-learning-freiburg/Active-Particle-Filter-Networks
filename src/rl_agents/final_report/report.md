@@ -29,9 +29,11 @@ iGibson (single aprt) RMSE(cm) for tracking - init_particles_distr 'gaussian', i
 |  House3D (localization) - (2)  |   87.990   |   84.681   |   88.971   |   ------   |
 |  iGibson (single aprt)  - (1)  |   89.375   |   19.375   |   90.625   |   21.042   |
 |  iGibson (single aprt)  - (2)  |   90.833   |   18.750   |   91.875   |   22.083   |
+|  iGibson (single aprt)  - (3)  |   87.708   |    9.792   |   90.000   |    8.333   |
 ```
 House3D success rate(%) for semi-global localization over one room (1)- init_particles_distr 'one-room', num_particles '500', map_pixel_in_meters '0.02', transition_std '0.04' '0.0872665', trajlen '100', resample 'true', alpha_resample_ratio '1.0'
 House3D success rate(%) for semi-global localization over one room (2)- init_particles_distr 'one-room', num_particles '1000', map_pixel_in_meters '0.02', transition_std '0.04' '0.0872665', trajlen '100', resample 'true', alpha_resample_ratio '1.0'
 iGibson (single aprt) success rate(%) for global localization (1)- init_particles_distr 'uniform', num_particles '500', map_pixel_in_meters '0.1', transition_std '0.04' '0.0872665', trajlen '100', resample 'true', alpha_resample_ratio '1.0'
 iGibson (single aprt) success rate(%) for global localization (2)- init_particles_distr 'uniform', num_particles '1000', map_pixel_in_meters '0.1', transition_std '0.04' '0.0872665', trajlen '100', resample 'true', alpha_resample_ratio '1.0'
+iGibson (single aprt) success rate(%) for global localization (3)- init_particles_distr 'uniform', num_particles '500', map_pixel_in_meters '0.1', transition_std '0.04' '0.0872665', trajlen '50', resample 'true', alpha_resample_ratio '1.0'
 ```
