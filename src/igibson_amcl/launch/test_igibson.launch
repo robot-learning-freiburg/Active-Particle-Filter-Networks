@@ -1,0 +1,8 @@
+<launch>
+  <!-- Map server -->
+  <arg name="map_file" default="$(find igibson_amcl)/map/floor_0.yaml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+  <!-- Rviz -->
+  <node type="rviz" name="rviz" pkg="rviz" args="-d $(find igibson_amcl)/rviz/default.rviz" />
+</launch>
