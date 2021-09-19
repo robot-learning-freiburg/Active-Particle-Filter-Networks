@@ -7,7 +7,8 @@ import numpy as np
 import os
 import random
 import rospy
-import tensorflow as tf
+from sensor_msgs.msg import LaserScan
+import tf
 
 import sys
 sys.path.append("/media/neo/robotics/deep-activate-localization/src/rl_agents/")
@@ -36,7 +37,7 @@ def parse_args():
     arg_parser.add_argument(
         '--custom_output',
         nargs='*',
-        default=['rgb_obs', 'depth_obs', 'occupancy_grid', 'floor_map', 'kmeans_cluster', 'likelihood_map'],
+        default=['rgb_obs', 'depth_obs', 'scan_obs', 'occupancy_grid', 'floor_map', 'kmeans_cluster', 'likelihood_map'],
         help='A comma-separated list of env observation types.'
     )
     arg_parser.add_argument(
@@ -227,9 +228,38 @@ def parse_args():
     # set random seeds
     random.seed(params.seed)
     np.random.seed(params.seed)
-    tf.random.set_seed(params.seed)
 
     return params
+
+laser_pub = rospy.Publisher('/scan', LaserScan, queue_size=1)
+tfbr = tf.TransformBroadcaster()
+
+def publishScan(data, scan_sensor):
+    now = rospy.Time.now()
+
+    laserscan = LaserScan()
+    laserscan.header.stamp = now
+    laserscan.header.frame_id = "scan_link"
+
+    laserscan.angle_min = -np.radians(scan_sensor.laser_angular_range/2.)
+    laserscan.angle_max = np.radians(scan_sensor.laser_angular_range/2.)
+    laserscan.angle_increment = scan_sensor.laser_angular_range/scan_sensor.n_horizontal_rays
+    laserscan.range_min = scan_sensor.min_laser_dist
+    laserscan.range_max = scan_sensor.laser_linear_range
+    laserscan.ranges = data.flatten()
+
+    laser_pub.publish(laserscan)
+
+def publishOdom(data):
+    now = rospy.Time.now()
+    # broad cast transformation from child (base_footprint) to parent (odom)
+    tfbr.sendTransform(
+                (odom[0][0], odom[0][1], 0),
+                tf.transformations.quaternion_from_euler(0, 0, odom[-1][-1]),
+                now,
+                "base_footprint",
+                "odom",
+            )
 
 def rt_pfnet_test(arg_params):
     """
@@ -259,6 +289,12 @@ def rt_pfnet_test(arg_params):
         pf_params=arg_params
     )
     obs = env.reset()
+    publishScan(obs['scan_obs'], env.sensors["scan_occ"])
+    odom = [
+                np.array(env.robots[0].get_position()) - np.array(env.task.initial_pos),
+                np.array(env.robots[0].get_rpy()) - np.array(env.task.initial_orn),
+            ]
+    publishOdom(odom)
     env.render('human')
     assert arg_params.trav_map_resolution == env.trav_map_resolution
 
@@ -275,13 +311,15 @@ def rt_pfnet_test(arg_params):
 
         # take action and get new observation
         obs, reward, done, info = env.step(action)
+        publishScan(obs['scan_obs'], env.sensors["scan_occ"])
         env.render('human')
 
     env.close()
 
 if __name__ == '__main__':
-    parsed_params = parse_args()
+    rospy.init_node('igibson_node')
 
-    # rt_pfnet_test(parsed_params)
-    img = cv2.imread("/opt/igibson/igibson/data/g_dataset/Rs/floor_0.png")
-    cv2.imwrite("floor_0_fliped.png", cv2.flip(img, 0))
+    parsed_params = parse_args()
+    rt_pfnet_test(parsed_params)
+
+    rospy.spin()

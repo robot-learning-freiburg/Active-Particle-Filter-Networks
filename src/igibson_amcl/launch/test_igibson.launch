@@ -5,4 +5,18 @@
 
   <!-- Rviz -->
   <node type="rviz" name="rviz" pkg="rviz" args="-d $(find igibson_amcl)/rviz/default.rviz" />
+
+  <!-- Static Transform -->
+  <node pkg="tf" type="static_transform_publisher" name="base_to_scan" args="0.0 0.0 0.36 0 0 0 1 base_footprint scan_link 100" />
+
+  <!-- AMCL -->
+  <arg name="initial_pose_x" default="0.0"/>
+  <arg name="initial_pose_y" default="0.0"/>
+  <arg name="initial_pose_a" default="0.0"/>
+  <include file="$(find igibson_amcl)/launch/amcl.launch.xml">
+    <arg name="initial_pose_x" value="$(arg initial_pose_x)"/>
+    <arg name="initial_pose_y" value="$(arg initial_pose_y)"/>
+    <arg name="initial_pose_a" value="$(arg initial_pose_a)"/>
+  </include>
+
 </launch>

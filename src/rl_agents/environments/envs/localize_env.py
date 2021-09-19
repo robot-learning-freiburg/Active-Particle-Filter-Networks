@@ -151,6 +151,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 low=0.0, high=1.0,
                 shape=(self.grid_resolution, self.grid_resolution, 1),
                 dtype=np.float32)
+        if "scan_obs" in self.pf_params.custom_output:
+            observation_space["scan_obs"] = gym.spaces.Box(
+                low=0.0, high=1.0,
+                shape=(self.n_horizontal_rays * self.n_vertical_beams, 1),
+                dtype=np.float32)
 
         self.observation_space = gym.spaces.Dict(observation_space)
 
