@@ -5,15 +5,6 @@
 | Single apartment | rgb / rgbd / depth + gaussian/uniform + more/less particles | rgb / rgbd / depth / scan + gaussian/uniform + more/less particles |
 | Multiple apartments | rgb / rgbd / depth + gaussian/uniform + more/less particles| rgb / rgbd / depth / scan + gaussian/uniform + more/less particles |
 
-#### Active Localization
-
-| Test Name | for iGibson env|
-|:---------:|:--------------:|
-| Single apartment (fixed pose) | belief map / k means cluster + rgb / rgbd / depth + gaussian/uniform + more/less particles |
-| Single apartment (random pose) | belief map / k means cluster + rgb / rgbd / depth + gaussian/uniform + more/less particles |
-| Multiple apartments (random pose) |belief map / k means cluster + rgb / rgbd / depth + gaussian/uniform + more/less particles |
-
-
 |                          |     RGB    |    Depth   |    RGB-D   |    Lidar   |
 |:------------------------:|:----------:|:----------:|:----------:|:----------:|
 |  House3D (tracking)      |   38.837   |   40.626   |   40.908   |   ------   |
@@ -37,3 +28,11 @@ iGibson (single aprt) success rate(%) for global localization (1)- init_particle
 iGibson (single aprt) success rate(%) for global localization (2)- init_particles_distr 'uniform', num_particles '1000', map_pixel_in_meters '0.1', transition_std '0.04' '0.0872665', trajlen '100', resample 'true', alpha_resample_ratio '1.0'
 iGibson (single aprt) success rate(%) for global localization (3)- init_particles_distr 'uniform', num_particles '500', map_pixel_in_meters '0.1', transition_std '0.04' '0.0872665', trajlen '50', resample 'true', alpha_resample_ratio '1.0'
 ```
+
+#### Active Localization
+
+| Test Name | for iGibson env|
+|:---------:|:--------------:|
+| Single apartment (fixed pose) | belief map / k means cluster + rgb / rgbd / depth + gaussian/uniform + more/less particles |
+| Single apartment (random pose) | belief map / k means cluster + rgb / rgbd / depth + gaussian/uniform + more/less particles |
+| Multiple apartments (random pose) |belief map / k means cluster + rgb / rgbd / depth + gaussian/uniform + more/less particles |
