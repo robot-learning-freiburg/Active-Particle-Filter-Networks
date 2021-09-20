@@ -5,7 +5,7 @@
 | Single apartment | rgb / rgbd / depth + gaussian/uniform + more/less particles | rgb / rgbd / depth / scan + gaussian/uniform + more/less particles |
 | Multiple apartments | rgb / rgbd / depth + gaussian/uniform + more/less particles| rgb / rgbd / depth / scan + gaussian/uniform + more/less particles |
 
-|                          |     RGB    |    Depth   |    RGB-D   |    Lidar   |
+|  Mean Squared Error (cm) |     RGB    |    Depth   |    RGB-D   |    Lidar   |
 |:------------------------:|:----------:|:----------:|:----------:|:----------:|
 |  House3D (tracking)      |   38.837   |   40.626   |   40.908   |   ------   |
 |  iGibson (single aprt)   |   18.168   |   43.144   |   18.097   |   43.356   |
@@ -14,7 +14,7 @@ House3D RMSE(cm) for tracking - init_particles_distr 'tracking', init_particles_
 iGibson (single aprt) RMSE(cm) for tracking - init_particles_distr 'gaussian', init_particles_std '0.15' '0.523599', num_particles '300', map_pixel_in_meters '0.1', transition_std '0.' '0.', trajlen '24', resample 'false'
 ```
 
-|                                |     RGB    |    Depth   |    RGB-D   |    Lidar   |
+|         Success Rate (%)       |     RGB    |    Depth   |    RGB-D   |    Lidar   |
 |:------------------------------:|:----------:|:----------:|:----------:|:----------:|
 |  House3D (localization) - (1)  |   81.373   |   81.250   |   84.069   |   ------   |
 |  House3D (localization) - (2)  |   87.990   |   84.681   |   88.971   |   ------   |
