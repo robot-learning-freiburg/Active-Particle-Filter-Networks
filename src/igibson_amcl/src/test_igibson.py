@@ -7,8 +7,12 @@ import numpy as np
 import os
 import random
 import rospy
+from sensor_msgs import point_cloud2 as pc2
 from sensor_msgs.msg import LaserScan
-import tf
+from sensor_msgs.msg import PointCloud2
+from std_msgs.msg import Header
+from transforms3d.quaternions import quat2mat
+# import tf
 
 import sys
 sys.path.append("/media/neo/robotics/deep-activate-localization/src/rl_agents/")
@@ -232,34 +236,86 @@ def parse_args():
     return params
 
 laser_pub = rospy.Publisher('/scan', LaserScan, queue_size=1)
-tfbr = tf.TransformBroadcaster()
+lidar_pub = rospy.Publisher("/laser/points", PointCloud2, queue_size=10)
+# tfbr = tf.TransformBroadcaster()
 
-def publishScan(data, scan_sensor):
+def publishScan(scan, env):
     now = rospy.Time.now()
+    scan_sensor = env.sensors["scan_occ"]
+    laser_pose = env.robots[0].parts["scan_link"].get_pose()
+    base_pose = env.robots[0].parts["base_link"].get_pose()
+    laser_linear_range = scan_sensor.laser_linear_range
+    laser_angular_range = scan_sensor.laser_angular_range
+    min_laser_dist = scan_sensor.min_laser_dist
+    n_horizontal_rays = scan_sensor.n_horizontal_rays
 
+
+    # laser_angular_half_range = laser_angular_range / 2.0
+    #
+    # angle = np.arange(
+    #     -np.radians(laser_angular_half_range),
+    #     np.radians(laser_angular_half_range),
+    #     np.radians(laser_angular_range) / n_horizontal_rays,
+    # )
+    # unit_vector_laser = np.array([[np.cos(ang), np.sin(ang), 0.0] for ang in angle])
+    #
+    # scan_laser = unit_vector_laser * (scan * (laser_linear_range - min_laser_dist) + min_laser_dist)
+    #
+    # laser_translation = laser_pose[:3]
+    # laser_rotation = quat2mat([laser_pose[6], laser_pose[3], laser_pose[4], laser_pose[5]])
+    # scan_world = laser_rotation.dot(scan_laser.T).T + laser_translation
+    #
+    # base_translation = base_pose[:3]
+    # base_rotation = quat2mat([base_pose[6], base_pose[3], base_pose[4], base_pose[5]])
+    # scan_local = base_rotation.T.dot((scan_world - base_translation).T).T
+    # scan_local = scan_local[:, :2]
+    # scan_local = np.concatenate([np.array([[0, 0]]), scan_local, np.array([[0, 0]])], axis=0)
+    # print(scan_local.shape)
+
+
+    # laser scan
     laserscan = LaserScan()
     laserscan.header.stamp = now
     laserscan.header.frame_id = "scan_link"
 
-    laserscan.angle_min = -np.radians(scan_sensor.laser_angular_range/2.)
-    laserscan.angle_max = np.radians(scan_sensor.laser_angular_range/2.)
-    laserscan.angle_increment = scan_sensor.laser_angular_range/scan_sensor.n_horizontal_rays
-    laserscan.range_min = scan_sensor.min_laser_dist
-    laserscan.range_max = scan_sensor.laser_linear_range
-    laserscan.ranges = data.flatten()
+    laserscan.angle_min = -np.radians(laser_angular_range/2.)
+    laserscan.angle_max = np.radians(laser_angular_range/2.)
+    laserscan.angle_increment = laser_angular_range/n_horizontal_rays
+    laserscan.range_min = min_laser_dist
+    laserscan.range_max = laser_linear_range
+    laserscan.ranges = (scan * (laser_linear_range - min_laser_dist) + min_laser_dist).reshape(-1).tolist()
+    print(np.min(laserscan.ranges), np.max(laserscan.ranges))
 
-    laser_pub.publish(laserscan)
+    # laser_pub.publish(laserscan)
+
+
+    # lidar point clouds
+    lidar_header = Header()
+    lidar_header.stamp = now
+    lidar_header.frame_id = "scan_link"
+
+    laser_angular_half_range = laser_angular_range / 2.0
+    angle = np.arange(
+        -np.radians(laser_angular_half_range),
+        np.radians(laser_angular_half_range),
+        np.radians(laser_angular_range) / n_horizontal_rays,
+    )
+    unit_vector_laser = np.array([[np.cos(ang), np.sin(ang), 0.0] for ang in angle])
+    lidar_points = unit_vector_laser * (scan * (laser_linear_range - min_laser_dist) + min_laser_dist)
+
+    lidar_message = pc2.create_cloud_xyz32(lidar_header, lidar_points.tolist())
+    lidar_pub.publish(lidar_message)
 
 def publishOdom(data):
     now = rospy.Time.now()
     # broad cast transformation from child (base_footprint) to parent (odom)
-    tfbr.sendTransform(
-                (odom[0][0], odom[0][1], 0),
-                tf.transformations.quaternion_from_euler(0, 0, odom[-1][-1]),
-                now,
-                "base_footprint",
-                "odom",
-            )
+    # tfbr.sendTransform(
+    #             (odom[0][0], odom[0][1], 0),
+    #             tf.transformations.quaternion_from_euler(0, 0, odom[-1][-1]),
+    #             now,
+    #             "base_footprint",
+    #             "odom",
+    #         )
 
 def rt_pfnet_test(arg_params):
     """
@@ -289,12 +345,8 @@ def rt_pfnet_test(arg_params):
         pf_params=arg_params
     )
     obs = env.reset()
-    publishScan(obs['scan_obs'], env.sensors["scan_occ"])
-    odom = [
-                np.array(env.robots[0].get_position()) - np.array(env.task.initial_pos),
-                np.array(env.robots[0].get_rpy()) - np.array(env.task.initial_orn),
-            ]
-    publishOdom(odom)
+    publishScan(obs['scan_obs'], env)
+    cv2.imwrite("occupancy_grid.png", obs['occupancy_grid']*255)
     env.render('human')
     assert arg_params.trav_map_resolution == env.trav_map_resolution
 
