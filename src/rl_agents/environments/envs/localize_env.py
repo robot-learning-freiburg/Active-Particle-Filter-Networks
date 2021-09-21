@@ -411,6 +411,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             # clear subplots
             plt.clf()
             self.plt_ax = self.fig.add_subplot(111)
+            self.plt_ax.set_title('iGibson Apartment')
             self.env_plts = {
                 'map_plt': None,
                 'robot_gt_plt': {
@@ -1116,15 +1117,18 @@ class LocalizeGibsonEnv(iGibsonEnv):
             has_collision = ' True' if len(self.collision_links) > 0 else 'False'
 
             step_txt_plt = self.env_plts['step_txt_plt']
+            # step_txt_plt = render.draw_text(
+            #     f' pose mse: {np.linalg.norm(pose_diff):02.3f}\n collisions: {self.collision_step:03.0f}/{self.current_step:03.0f}',
+            #     '#7B241C', self.plt_ax, step_txt_plt)
             step_txt_plt = render.draw_text(
-                f' pose mse: {np.linalg.norm(pose_diff):02.3f}\n collisions: {self.collision_step:03.0f}/{self.current_step:03.0f}',
-                '#7B241C', self.plt_ax, step_txt_plt)
+                f' pose mse: {np.linalg.norm(pose_diff):02.3f}\n current step: {self.current_step//self.pf_params.loop:02.0f}',
+                '#FFFFFF', self.plt_ax, step_txt_plt)
             self.env_plts['step_txt_plt'] = step_txt_plt
             # print(f'gt_pose: {gt_pose_mts}, est_pose: {est_pose_mts} in mts')
 
             self.plt_ax.legend([self.env_plts['robot_gt_plt']['position_plt'],
                                 self.env_plts['robot_est_plt']['position_plt']],
-                               ["gt_pose", "est_pose"], loc='upper left')
+                               ["GT Pose", "Est Pose"], loc='upper left', fontsize=12)
 
             if self.pf_params.store_plot:
                 self.canvas.draw()

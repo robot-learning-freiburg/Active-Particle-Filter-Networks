@@ -20,9 +20,9 @@ def draw_text(text, bgcolor, plt_ax, text_plt):
 
     if text_plt is None:
         # render text with color
-        text_plt = plt_ax.text(0.95, 0.95, text, backgroundcolor=bgcolor,
+        text_plt = plt_ax.text(0.97, 0.97, text, backgroundcolor=bgcolor,
                         horizontalalignment='right', verticalalignment='top',
-                        transform=plt_ax.transAxes, fontsize=10)
+                        transform=plt_ax.transAxes, fontsize=12)
     else:
         # update existing text
         text_plt.set_text(text)

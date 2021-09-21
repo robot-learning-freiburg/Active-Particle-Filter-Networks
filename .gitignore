@@ -4,3 +4,7 @@
 *.mp4
 *.idea
 *data
+build
+devel
+logs
+.catkin_tools
