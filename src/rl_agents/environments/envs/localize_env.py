@@ -251,10 +251,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
             }
 
             # HACK FigureCanvasAgg and ion is not working together
+            self.out_folder = os.path.join(self.pf_params.root_dir, 'episode_runs')
+            Path(self.out_folder).mkdir(parents=True, exist_ok=True)
             if self.pf_params.store_plot:
                 self.canvas = FigureCanvasAgg(self.fig)
-                self.out_folder = os.path.join(self.pf_params.root_dir, 'episode_runs')
-                Path(self.out_folder).mkdir(parents=True, exist_ok=True)
             else:
                 plt.ion()
                 plt.show()
@@ -270,6 +270,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.obstacle_map = None
         self.floor_map = None
 
+        self.eps_obs = {
+            'rgb': [],
+            'depth': [],
+            'occupancy_grid': []
+        }
         self.curr_plt_images = []
         self.curr_pfnet_state = None
         self.curr_obs = None
@@ -288,6 +293,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.obstacle_map = None
         self.floor_map = None
 
+        self.eps_obs = {
+            'rgb': [],
+            'depth': [],
+            'occupancy_grid': []
+        }
         self.curr_plt_images = []
         self.curr_pfnet_state = None
         self.curr_obs = None
@@ -427,6 +437,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             }
 
             self.store_results()
+        self.store_obs()
 
         # HACK: sample robot pose from selective area
         self.reset_agent()
@@ -456,6 +467,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
         """
         assert np.min(state['rgb'])>=0. and np.max(state['rgb'])<=1.
         assert np.min(state['depth'])>=0. and np.max(state['depth'])<=1.
+
+        self.eps_obs['rgb'].append((state['rgb']*255).astype(np.uint8))
+        self.eps_obs['depth'].append(cv2.applyColorMap((state['depth']*255).astype(np.uint8), cv2.COLORMAP_JET))
+        self.eps_obs['occupancy_grid'].append(cv2.cvtColor((state['occupancy_grid']*255).astype(np.uint8), cv2.COLOR_GRAY2BGR))
 
         # # HACK: to collect data
         # new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 1] ->[0, 255]
@@ -1153,22 +1168,45 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 # to prevent plot from closing after environment is closed
                 plt.ioff()
                 plt.show()
+        self.store_obs()
 
         print("=====> iGibsonEnv closed")
 
 
+    def convert_imgs_to_video(self, images, file_path):
+        fps = 60
+        frame_size = (images[0].shape[0], images[0].shape[1])
+        out = cv2.VideoWriter(file_path,
+                              cv2.VideoWriter_fourcc(*'XVID'),
+                              fps, frame_size)
+        for img in images:
+            out.write(img)
+        out.release()
+
+    def store_obs(self):
+        if len(self.eps_obs['rgb']) > 0:
+            print(self.eps_obs['rgb'][0].shape)
+            file_path = os.path.join(self.out_folder, f'rgb_episode_run_{self.current_episode}.avi')
+            self.convert_imgs_to_video(self.eps_obs['rgb'], file_path)
+            print(f'stored rgb imgs {len(self.eps_obs["rgb"])} to {file_path}')
+            self.eps_obs['rgb'] = []
+        if len(self.eps_obs['depth']) > 0:
+            print(self.eps_obs['depth'][0].shape)
+            file_path = os.path.join(self.out_folder, f'depth_episode_run_{self.current_episode}.avi')
+            self.convert_imgs_to_video(self.eps_obs['depth'], file_path)
+            print(f'stored depth imgs {len(self.eps_obs["depth"])} to {file_path}')
+            self.eps_obs['depth'] = []
+        if len(self.eps_obs['occupancy_grid']) > 0:
+            print(self.eps_obs['occupancy_grid'][0].shape)
+            file_path = os.path.join(self.out_folder, f'occupancy_episode_run_{self.current_episode}.avi')
+            self.convert_imgs_to_video(self.eps_obs['occupancy_grid'], file_path)
+            print(f'stored occupancy imgs {len(self.eps_obs["occupancy_grid"])} to {file_path}')
+            self.eps_obs['occupancy_grid'] = []
+
     def store_results(self):
         if len(self.curr_plt_images) > 0:
-            fps = 30
-            frame_size = (self.curr_plt_images[0].shape[0], self.curr_plt_images[0].shape[1])
             file_path = os.path.join(self.out_folder, f'episode_run_{self.current_episode}.avi')
-            out = cv2.VideoWriter(file_path,
-                                  cv2.VideoWriter_fourcc(*'XVID'),
-                                  fps, frame_size)
-
-            for img in self.curr_plt_images:
-                out.write(img)
-            out.release()
+            self.convert_imgs_to_video(self.curr_plt_images, file_path)
             print(f'stored img results {len(self.curr_plt_images)} eps steps to {file_path}')
             self.curr_plt_images = []
         else:
