@@ -81,7 +81,7 @@ def draw_particles_pose(particles, weights, map_shape, particles_plt, scale=1):
 
     return particles_plt
 
-def draw_robot_pose(robot_pose, color, map_shape, plt_ax, position_plt, heading_plt, scale=1):
+def draw_robot_pose(robot_pose, color, map_shape, plt_ax, position_plt, heading_plt, plt_path=False, scale=1):
     """
     Render the robot pose on the scene floor map
     :param ndarray robot_pose: ndarray representing robot position (x, y) and heading (theta)
@@ -110,5 +110,7 @@ def draw_robot_pose(robot_pose, color, map_shape, plt_ax, position_plt, heading_
         # update existing robot position and heading
         position_plt.update({'center': [row, col]})
         heading_plt.update({'xdata': xdata, 'ydata': ydata})
+    if plt_path is True:
+        plt_ax.arrow(xdata[0], ydata[0], (xdata[1]-xdata[0]), (ydata[1]-ydata[0]), head_width=0.5, head_length=0.7, fc='brown', ec='brown')
 
     return position_plt, heading_plt

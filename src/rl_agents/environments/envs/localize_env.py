@@ -1072,7 +1072,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 floor_map.shape,
                 self.plt_ax,
                 position_plt,
-                heading_plt)
+                heading_plt,
+                plt_path=True)
             self.env_plts['robot_gt_plt']['position_plt'] = position_plt
             self.env_plts['robot_gt_plt']['heading_plt'] = heading_plt
 
@@ -1087,7 +1088,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 floor_map.shape,
                 self.plt_ax,
                 position_plt,
-                heading_plt)
+                heading_plt,
+                plt_path=False)
             self.env_plts['robot_est_plt']['position_plt'] = position_plt
             self.env_plts['robot_est_plt']['heading_plt'] = heading_plt
 
