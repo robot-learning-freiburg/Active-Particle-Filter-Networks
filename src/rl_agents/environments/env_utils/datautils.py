@@ -270,6 +270,27 @@ def get_discrete_action(max_lin_vel, max_ang_vel):
 #
 #     return np.array([x, y, theta])
 
+def obstacle_avoidance(state, max_lin_vel, max_ang_vel):
+    """
+    Choose action by avoiding obstances which highest preference to move forward
+    """
+    assert list(state.shape) == [4]
+    left, left_front, right_front, right = state # obstacle (not)present area
+
+    if not left_front and not right_front:
+        # move forward
+        action = np.array([max_lin_vel, 0.])
+    elif not left or not left_front:
+        # turn left
+        action = np.array([0., max_ang_vel])
+    elif not right or not right_front:
+        # turn right
+        action = np.array([0., -max_ang_vel])
+    else:
+        # backward
+        action = np.array([-max_lin_vel, np.random.uniform(low=-max_ang_vel, high=max_ang_vel)])
+
+    return action
 
 def gather_episode_stats(env, params, sample_particles=False):
     """
@@ -295,7 +316,6 @@ def gather_episode_stats(env, params, sample_particles=False):
     obs = env.reset()  # already processed
     rgb_observation.append(obs[0])
     depth_observation.append(obs[1])
-    left, left_front, right_front, right = obs[2] # obstacle (not)present
     occupancy_grid_observation.append(obs[3])
 
     scene_id = env.config.get('scene_id')
@@ -312,18 +332,7 @@ def gather_episode_stats(env, params, sample_particles=False):
         if agent == 'manual':
             action = get_discrete_action(max_lin_vel, max_ang_vel)
         else:
-            if not left_front and not right_front:
-                # move forward
-                action = np.array([max_lin_vel, 0.])
-            elif not left or not left_front:
-                # turn left
-                action = np.array([0., max_ang_vel])
-            elif not right or not right_front:
-                # turn right
-                action = np.array([0., -max_ang_vel])
-            else:
-                # backward
-                action = np.array([-max_lin_vel, np.random.uniform(low=-max_ang_vel, high=max_ang_vel)])
+            action = obstacle_avoidance(obs[2], max_lin_vel, max_ang_vel)
 
         # take action and get new observation
         obs, reward, done, _ = env.step(action)

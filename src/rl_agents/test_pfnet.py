@@ -501,10 +501,12 @@ def rt_pfnet_test(arg_params):
     for _ in range(trajlen-1):
         if agent == 'manual':
             action = datautils.get_discrete_action(max_lin_vel, max_ang_vel)
+        if agent == 'avoidance':
+            action = datautils.obstacle_avoidance(obs[2], max_lin_vel, max_ang_vel) # obstacle (not)present area
         else:
             # default random action forward: 0.7, turn: 0.3, backward:0., do_nothing:0.0
-            action = np.random.choice(5, p=[0.7, 0.0, 0.15, 0.15, 0.0])
-            # action = env.action_space.sample()
+            # action = np.random.choice(5, p=[0.7, 0.0, 0.15, 0.15, 0.0])
+            action = env.action_space.sample()
 
         # take action and get new observation
         obs, reward, done, info = env.step(action)
