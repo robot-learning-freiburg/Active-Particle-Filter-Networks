@@ -336,7 +336,7 @@ def display_data(arg_params):
         plt_ax = plts[floor_num]
 
         # floor map
-        map_plt = render.draw_floor_map(floor_map, org_map_shape, plt_ax, None, None)
+        map_plt = render.draw_floor_map(floor_map, org_map_shape, plt_ax, None, cmap='gray')
 
         # init particles
         # HACK: display particles alpha proprtional to their weights

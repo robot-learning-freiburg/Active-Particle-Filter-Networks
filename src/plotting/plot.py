@@ -52,7 +52,7 @@ def main():
     # one_aprts = ax.plot(one_aprts_loss[:, 0], one_aprts_loss[:, 1])
 
     ax.set_title('Evaluation loss for iGibson environment')
-    ax.set_xlabel("# of train epochs")
+    ax.set_xlabel("# of eval epochs")
     ax.set_ylabel("RMSE (cm)")
     ax.legend([
                 "115 Floors (Generalize)",

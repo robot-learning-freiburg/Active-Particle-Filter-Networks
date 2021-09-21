@@ -452,3 +452,13 @@ Setup Instructions:
 3. ablation study: test with higher update frequency particle filter success rate
 4. log max return
 5. look into iGibson cited papers for test/eval data they used.
+
+
+September 21st 2021
+-------------------
+1. plot x.axis w.r.t # of batches
+2. store images instead of screen recording
+3. lidar check for different scene if obstacles are being detected.
+3. further analyze generalization of particle filter -> passive localization
+4. if the 4.0 box case with 50 eps duration fails, look for changing reward function -> active localization
+5. if have time, train for floor map instead of obstacle map

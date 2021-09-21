@@ -50,13 +50,13 @@ AUTHOR Suresh Guttikonda
     # download the required assets
     python -m igibson.utils.assets_utils --download_assets
     python -m igibson.utils.assets_utils --download_demo_data
-    # python -m igibson.utils.assets_utils --download_dataset https://storage.googleapis.com/gibson_scenes/gibson_v2_4+.tar.gz
+    python -m igibson.utils.assets_utils --download_dataset https://storage.googleapis.com/gibson_scenes/gibson_v2_4+.tar.gz
 
     # install ros melodic
-    sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-    curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add -
-    apt-get update
-    apt-get -y install ros-melodic-desktop
-    apt-get -y install ros-melodic-navigation
-    apt-get -y install ros-melodic-perception
-    apt-get -y install ros-melodic-pointcloud-to-laserscan
+    # sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+    # curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add -
+    # apt-get update
+    # apt-get -y install ros-melodic-desktop
+    # apt-get -y install ros-melodic-navigation
+    # apt-get -y install ros-melodic-perception
+    # apt-get -y install ros-melodic-pointcloud-to-laserscan
