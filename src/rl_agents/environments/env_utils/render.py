@@ -5,6 +5,7 @@ import numpy as np
 import tensorflow as tf
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
+from matplotlib import patches
 from matplotlib.patches import Wedge
 from scipy.special import softmax
 
@@ -44,6 +45,9 @@ def draw_floor_map(floor_map, map_shape, plt_ax, map_plt, cmap='gray'):
         # draw floor map
         map_plt = plt_ax.imshow(floor_map[:H, :W], cmap=cmap, origin='lower')
         plt.scatter(origin_x, origin_y, s=10, c='black', marker='x', alpha=1)
+
+        # rect = patches.Rectangle((45, 45), 10, 10, linewidth=1, edgecolor='white', facecolor='none')
+        # plt_ax.add_patch(rect)
     else:
         map_plt.set_data(floor_map[:H, :W])
     return map_plt
