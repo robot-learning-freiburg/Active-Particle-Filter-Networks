@@ -5,6 +5,7 @@ import argparse
 from collections import OrderedDict
 import copy
 import cv2
+from datetime import datetime
 from ..env_utils import datautils
 from ..env_utils import pfnet_loss
 from ..env_utils import render
@@ -251,7 +252,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
             }
 
             # HACK FigureCanvasAgg and ion is not working together
-            self.out_folder = os.path.join(self.pf_params.root_dir, 'episode_runs')
+            current_time = datetime.now().strftime("%Y%m%d-%H%M%S")
+            self.out_folder = os.path.join(self.pf_params.root_dir, f'episode_run_{current_time}')
             Path(self.out_folder).mkdir(parents=True, exist_ok=True)
             if self.pf_params.store_plot:
                 self.canvas = FigureCanvasAgg(self.fig)
@@ -437,7 +439,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             }
 
             self.store_results()
-        self.store_obs()
+            self.store_obs()
 
         # HACK: sample robot pose from selective area
         self.reset_agent()
@@ -1166,11 +1168,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
         if self.use_pfnet and self.pf_params.use_plot:
             if self.pf_params.store_plot:
                 self.store_results()
+                self.store_obs()
             else:
                 # to prevent plot from closing after environment is closed
                 plt.ioff()
                 plt.show()
-        self.store_obs()
 
         print("=====> iGibsonEnv closed")
 
