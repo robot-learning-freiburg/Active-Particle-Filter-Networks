@@ -49,6 +49,12 @@ def parse_args():
         help='Root directory for logs/summaries/checkpoints.'
     )
     arg_parser.add_argument(
+        '--agent',
+        type=str,
+        default='rnd_agent',
+        help='Agent Behavior'
+    )
+    arg_parser.add_argument(
         '--num_eval_samples',
         type=int,
         default=1,
@@ -481,7 +487,6 @@ def rt_pfnet_test(arg_params):
     """
 
     # HACK:
-    agent = 'manual'
     arg_params.use_plot = True
     arg_params.store_plot = False
     arg_params.init_env_pfnet = True
@@ -503,9 +508,9 @@ def rt_pfnet_test(arg_params):
     max_lin_vel = env.config.get("linear_velocity", 0.5)
     max_ang_vel = env.config.get("angular_velocity", np.pi/2)
 
-    if agent == 'manual':
+    if arg_params.agent == 'manual_agent':
         log_dir = os.path.join(arg_params.root_dir, 'manual_agent')
-    elif agent == 'avoidance':
+    elif arg_params.agent == 'avoid_agent':
         log_dir = os.path.join(arg_params.root_dir, 'avoid_agent')
     else:
         log_dir = os.path.join(arg_params.root_dir, 'rnd_agent')
@@ -523,9 +528,9 @@ def rt_pfnet_test(arg_params):
             obs = env.reset()
             env.render('human')
             for _ in range(trajlen-1):
-                if agent == 'manual':
+                if arg_params.agent == 'manual_agent':
                     action = datautils.get_discrete_action(max_lin_vel, max_ang_vel)
-                elif agent == 'avoidance':
+                elif arg_params.agent == 'avoid_agent':
                     action = datautils.obstacle_avoidance(obs['obstacle_obs'], max_lin_vel, max_ang_vel) # obstacle (not)present area
                 else:
                     # default random action forward: 0.7, turn: 0.3, backward:0., do_nothing:0.0
