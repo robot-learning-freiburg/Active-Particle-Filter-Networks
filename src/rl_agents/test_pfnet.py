@@ -488,7 +488,7 @@ def rt_pfnet_test(arg_params):
 
     # HACK:
     arg_params.use_plot = True
-    arg_params.store_plot = False
+    arg_params.store_plot = True
     arg_params.init_env_pfnet = True
 
     # create igibson env which is used "only" to sample particles
@@ -527,7 +527,7 @@ def rt_pfnet_test(arg_params):
         for eps in tqdm(range(arg_params.num_eval_episodes)):
             obs = env.reset()
             env.render('human')
-            for _ in range(trajlen-1):
+            for _ in range(trajlen):
                 if arg_params.agent == 'manual_agent':
                     action = datautils.get_discrete_action(max_lin_vel, max_ang_vel)
                 elif arg_params.agent == 'avoid_agent':
