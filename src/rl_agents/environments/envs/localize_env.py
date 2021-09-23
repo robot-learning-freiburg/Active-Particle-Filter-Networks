@@ -364,7 +364,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             if -lmt <= initial_pos[0] <= lmt and -lmt <= initial_pos[1] <= lmt:
                 break
 
-        max_trials = 100
+        max_trials = 200
         dist = 0.0
         for _ in range(max_trials):
             _, target_pos = self.scene.get_random_point(floor=self.task.floor_num)
@@ -389,7 +389,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         :param env: environment instance
         """
         reset_success = False
-        max_trials = 100
+        max_trials = 200
 
         # cache pybullet state
         # TODO: p.saveState takes a few seconds, need to speed up
