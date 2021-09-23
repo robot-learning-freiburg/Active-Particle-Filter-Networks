@@ -358,9 +358,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.task.target_dist_min = self.task.config.get("target_dist_min", 1.0)
         self.task.target_dist_max = self.task.config.get("target_dist_max", 10.0)
 
+        lmt = 1.0
         while True:
             _, initial_pos = self.scene.get_random_point(floor=self.task.floor_num)
-            if -1.0 <= initial_pos[0] <= 1.0 and -1.0 <= initial_pos[1] <= 1.0:
+            if -lmt <= initial_pos[0] <= lmt and -lmt <= initial_pos[1] <= lmt:
                 break
 
         max_trials = 100
@@ -474,17 +475,17 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.eps_obs['depth'].append(cv2.applyColorMap((state['depth']*255).astype(np.uint8), cv2.COLORMAP_JET))
         self.eps_obs['occupancy_grid'].append(cv2.cvtColor((state['occupancy_grid']*255).astype(np.uint8), cv2.COLOR_GRAY2BGR))
 
+        # check for close obstacles to robot
+        min_depth = np.min(state['depth']*100, axis=0)
+        left = np.min(min_depth[:64]) < self.depth_th
+        left_front = np.min(min_depth[64:128]) < self.depth_th
+        right_front = np.min(min_depth[128:192]) < self.depth_th
+        right = np.min(min_depth[192:]) < self.depth_th
+
         # # HACK: to collect data
         # new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 1] ->[0, 255]
         # new_depth_obs = copy.deepcopy(state['depth']*100) # [0, 1] ->[0, 100]
         # new_occupancy_grid = copy.deepcopy(state['occupancy_grid']) # [0, 0.5, 1]
-        #
-        # # check for close obstacles to robot
-        # min_depth = np.min(new_depth_obs, axis=0)
-        # left = np.min(min_depth[:64]) < self.depth_th
-        # left_front = np.min(min_depth[64:128]) < self.depth_th
-        # right_front = np.min(min_depth[128:192]) < self.depth_th
-        # right = np.min(min_depth[192:]) < self.depth_th
         #
         # # process new rgb, depth observation: convert [0, 255] to [-1, +1] range
         # return [
@@ -540,6 +541,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 processed_state['floor_map'] = self.floor_map[0].cpu().numpy() # [0, 2] range floor map
         if 'likelihood_map' in self.pf_params.custom_output:
             processed_state['likelihood_map'] = self.get_likelihood_map()
+        if 'obstacle_obs' in self.pf_params.custom_output:
+            processed_state['obstacle_obs'] = np.array([left, left_front, right_front, right])
 
         return processed_state
 

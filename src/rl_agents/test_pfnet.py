@@ -11,6 +11,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 from pathlib import Path
 import random
 import tensorflow as tf
+from tqdm import tqdm
 
 from pfnetwork import pfnet
 from environments.env_utils import datautils, pfnet_loss, render
@@ -52,6 +53,12 @@ def parse_args():
         type=int,
         default=1,
         help='Total number of samples to use for evaluation. Total evaluation samples will be num_eval_samples=num_eval_batches*batch_size'
+    )
+    arg_parser.add_argument(
+        '--num_eval_episodes',
+        type=int,
+        default=1,
+        help='The number of episodes to run eval on.'
     )
     arg_parser.add_argument(
         '--testfiles',
@@ -491,28 +498,60 @@ def rt_pfnet_test(arg_params):
         device_idx=arg_params.device_idx,
         pf_params=arg_params
     )
-    obs = env.reset()
-    env.render('human')
     assert arg_params.trav_map_resolution == env.trav_map_resolution
-
     trajlen = env.config.get('max_step', 500)//arg_params.loop
     max_lin_vel = env.config.get("linear_velocity", 0.5)
     max_ang_vel = env.config.get("angular_velocity", np.pi/2)
-    for _ in range(trajlen-1):
-        if agent == 'manual':
-            action = datautils.get_discrete_action(max_lin_vel, max_ang_vel)
-        if agent == 'avoidance':
-            action = datautils.obstacle_avoidance(obs[2], max_lin_vel, max_ang_vel) # obstacle (not)present area
-        else:
-            # default random action forward: 0.7, turn: 0.3, backward:0., do_nothing:0.0
-            # action = np.random.choice(5, p=[0.7, 0.0, 0.15, 0.15, 0.0])
-            action = env.action_space.sample()
 
-        # take action and get new observation
-        obs, reward, done, info = env.step(action)
-        env.render('human')
+    if agent == 'manual':
+        log_dir = os.path.join(arg_params.root_dir, 'manual_agent')
+    elif agent == 'avoidance':
+        log_dir = os.path.join(arg_params.root_dir, 'avoid_agent')
+    else:
+        log_dir = os.path.join(arg_params.root_dir, 'rnd_agent')
 
-    env.close()
+    # Define metrics
+    eps_msp = tf.keras.metrics.Mean('eps_msp', dtype=tf.float32)
+    eps_mso = tf.keras.metrics.Mean('eps_mso', dtype=tf.float32)
+    eps_mcp = tf.keras.metrics.Mean('eps_mcp', dtype=tf.float32)
+
+    test_summary_writer = tf.summary.create_file_writer(log_dir)
+
+    num_eval_episodes = 1
+    with test_summary_writer.as_default():
+        for eps in tqdm(range(arg_params.num_eval_episodes)):
+            obs = env.reset()
+            env.render('human')
+            for _ in range(trajlen-1):
+                if agent == 'manual':
+                    action = datautils.get_discrete_action(max_lin_vel, max_ang_vel)
+                elif agent == 'avoidance':
+                    action = datautils.obstacle_avoidance(obs['obstacle_obs'], max_lin_vel, max_ang_vel) # obstacle (not)present area
+                else:
+                    # default random action forward: 0.7, turn: 0.3, backward:0., do_nothing:0.0
+                    # action = np.random.choice(5, p=[0.7, 0.0, 0.15, 0.15, 0.0])
+                    action = env.action_space.sample()
+
+                # take action and get new observation
+                obs, reward, done, info = env.step(action)
+                env.render('human')
+
+                # update metrics per step
+                eps_msp(info['coords'])
+                eps_mso(info['orient'])
+                eps_mcp(info['collision_penality'])
+
+            # log per episode states
+            tf.summary.scalar('per_eps_msp', eps_msp.result(), step=eps)
+            tf.summary.scalar('per_eps_mso', eps_mso.result(), step=eps)
+            tf.summary.scalar('per_eps_mcp', eps_mcp.result(), step=eps)
+            tf.summary.scalar('per_eps_end_reward', reward, step=eps)
+
+            # Reset the metrics at the start of the next episode
+            eps_msp.reset_states()
+            eps_mso.reset_states()
+            eps_mcp.reset_states()
+        env.close()
 
 if __name__ == '__main__':
     parsed_params = parse_args()
