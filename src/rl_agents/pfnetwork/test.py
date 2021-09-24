@@ -64,13 +64,13 @@ def store_results(eps_idx, floor_map, org_map_shape, particle_states, particle_w
         position_plt, heading_plt = gt_plt['robot_position'], gt_plt['robot_heading']
         gt_plt['robot_position'], gt_plt['robot_heading'] = render.draw_robot_pose(
             true_state[b_idx], '#7B241C', pad_map_shape, plt_ax,
-            position_plt, heading_plt)
+            position_plt, heading_plt, plt_path=True)
 
         # plot est robot pose
         position_plt, heading_plt = est_plt['robot_position'], est_plt['robot_heading']
         est_plt['robot_position'], est_plt['robot_heading'] = render.draw_robot_pose(
             est_state[b_idx], '#515A5A', pad_map_shape, plt_ax,
-            position_plt, heading_plt)
+            position_plt, heading_plt, plt_path=False)
 
         # plot est pose particles
         particles_plt = est_plt['particles']
