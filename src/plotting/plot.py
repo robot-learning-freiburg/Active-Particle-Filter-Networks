@@ -9,13 +9,16 @@ def getEventFileData(path):
     data = {}
     for event in summary_iterator(path):
         for value in event.summary.value:
-            t = tensor_util.MakeNdarray(value.tensor)
+            if value.simple_value == 0.0:
+                t = tensor_util.MakeNdarray(value.tensor)
+            else:
+                t = np.array([value.simple_value])
             if value.tag not in data:
                 data[value.tag] = []
             data[value.tag].append([event.step, t.item()])
     return data
 
-def main():
+def generalization_plts():
     fig = plt.figure(figsize=(18, 12))
     ax = fig.add_subplot(111)
     plot = 'eval'
@@ -96,5 +99,38 @@ def main():
         plt.show()
         fig.savefig("igibson_eval_loss.png")
 
+def house3d_plts():
+    fig = plt.figure(figsize=(18, 12))
+    ax = fig.add_subplot(111)
+
+    # pfnet house3d apartments generalize
+    pfnet_train_path = "/media/neo/robotics/final_report/House3D_4000_8.0/house3d_rgb_depth/train/events.out.tfevents.1631127344.rlgpu2.10177.0.v2"
+    pfnet_train_loss = np.array(getEventFileData(pfnet_train_path)["loss"])
+    pfnet_eval_path = "/media/neo/robotics/final_report/House3D_4000_8.0/house3d_rgb_depth/eval/events.out.tfevents.1631127344.rlgpu2.10177.1.v2"
+    pfnet_eval_loss = np.array(getEventFileData(pfnet_eval_path)["loss"])
+    pfnet_train = ax.plot(pfnet_train_loss[:, 0], pfnet_train_loss[:, 1])
+    pfnet_eval = ax.plot(pfnet_eval_loss[:, 0], pfnet_eval_loss[:, 1])
+
+    dpf_train_path = "/media/neo/robotics/deep-activate-localization/bckp/jan/jan_22/runs/Jan23_00-10-06_pearl8/train_stats_mean_total_loss/events.out.tfevents.1611357667.pearl8.6887.3"
+    dpf_train_loss = np.array(getEventFileData(dpf_train_path)["train_stats"])
+    dpf_eval_path = "/media/neo/robotics/deep-activate-localization/bckp/jan/jan_27_1/runs/Jan27_10-55-58_pearl8/eval_stats_mean_loss/events.out.tfevents.1611741820.pearl8.17432.3"
+    dpf_eval_loss = np.array(getEventFileData(dpf_eval_path)["eval_stats"])
+    dpf_train = ax.plot(dpf_train_loss[:, 0], dpf_train_loss[:, 1])
+    dpf_eval = ax.plot(dpf_eval_loss[:, 0]*3, dpf_eval_loss[:, 1])
+
+    ax.set_title('Training/Evaluation loss for House3D environment', fontsize=18, weight='bold')
+    ax.set_xlabel("number of train epochs", fontsize=16)
+    ax.set_ylabel("mean square error (cm)", fontsize=16)
+    ax.legend([
+                "PFNet Train",
+                "PFNet Eval",
+                "DPF Train",
+                "DPF Eval"
+            ], loc='upper right', fontsize=12)
+
+    plt.show()
+    fig.savefig("house3d_loss.png")
+
 if __name__ == '__main__':
-    main()
+    # generalization_plts()
+    house3d_plts()
