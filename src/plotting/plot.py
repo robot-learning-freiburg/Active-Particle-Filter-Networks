@@ -161,19 +161,19 @@ def belief_plts():
 
     # kmeans representation
     pfnet_train_path = "/media/neo/robotics/August/20-07-2021/train_rl_uniform_kmeans/train/events.out.tfevents.1629406907.pearl9.4239.0.v2"
-    pfnet_train_loss = np.array(getEventFileData(pfnet_train_path)["Metrics/AverageReturn"])
+    pfnet_train_return = np.array(getEventFileData(pfnet_train_path)["Metrics/AverageReturn"])
     pfnet_eval_path = "/media/neo/robotics/August/20-07-2021/train_rl_uniform_kmeans/eval/events.out.tfevents.1629406907.pearl9.4239.1.v2"
-    pfnet_eval_loss = np.array(getEventFileData(pfnet_eval_path)["Metrics/AverageReturn"])
-    pfnet_train = ax.plot(pfnet_train_loss[:, 0], pfnet_train_loss[:, 1])
-    pfnet_eval = ax.plot(pfnet_eval_loss[:, 0], pfnet_eval_loss[:, 1])
+    pfnet_eval_return = np.array(getEventFileData(pfnet_eval_path)["Metrics/AverageReturn"])
+    pfnet_train = ax.plot(pfnet_train_return[:, 0], pfnet_train_return[:, 1])
+    pfnet_eval = ax.plot(pfnet_eval_return[:, 0], pfnet_eval_return[:, 1])
 
     # belief map representation
     dpf_train_path = "/media/neo/robotics/August/20-07-2021/train_rl_uniform_likelihood/train/events.out.tfevents.1629406377.pearl8.20947.0.v2"
-    dpf_train_loss = np.array(getEventFileData(dpf_train_path)["Metrics/AverageReturn"])
+    dpf_train_return = np.array(getEventFileData(dpf_train_path)["Metrics/AverageReturn"])
     dpf_eval_path = "/media/neo/robotics/August/20-07-2021/train_rl_uniform_likelihood/eval/events.out.tfevents.1629406377.pearl8.20947.1.v2"
-    dpf_eval_loss = np.array(getEventFileData(dpf_eval_path)["Metrics/AverageReturn"])
-    dpf_train = ax.plot(dpf_train_loss[:, 0], dpf_train_loss[:, 1])
-    dpf_eval = ax.plot(dpf_eval_loss[:, 0], dpf_eval_loss[:, 1])
+    dpf_eval_return = np.array(getEventFileData(dpf_eval_path)["Metrics/AverageReturn"])
+    dpf_train = ax.plot(dpf_train_return[:, 0], dpf_train_return[:, 1])
+    dpf_eval = ax.plot(dpf_eval_return[:, 0], dpf_eval_return[:, 1])
 
     ax.set_title('Training/Evaluation episode return for SAC agent', fontsize=18, weight='bold')
     ax.set_xlabel("number of train epochs", fontsize=16)
@@ -188,8 +188,73 @@ def belief_plts():
     plt.show()
     fig.savefig("particle_rep_sac_return.png")
 
+
+def rl_plts():
+    fig = plt.figure(figsize=(18, 12))
+    ax = fig.add_subplot(111)
+    plot = 'eval'
+
+    if plot == 'train':
+
+        # 1.0 box + 25 steps rl agent
+        box_path_1_0 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_0.5_box_25/train/events.out.tfevents.1631716010.pearl8.18818.0.v2"
+        box_return_1_0 = np.array(getEventFileData(box_path_1_0)["Metrics/AverageReturn"])
+        box_1_0 = ax.plot(box_return_1_0[:, 0], box_return_1_0[:, 1])
+
+        # 2.0 box + 25 steps rl agent
+        box_path_2_0 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_25/train/events.out.tfevents.1631867346.pearl8.18370.0.v2"
+        box_return_2_0 = np.array(getEventFileData(box_path_2_0)["Metrics/AverageReturn"])
+        box_2_0 = ax.plot(box_return_2_0[:, 0], box_return_2_0[:, 1])
+
+        # 4.0 box + 50 steps rl agent
+        box_path_4_0 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/train/events.out.tfevents.1632144090.pearl2.5531.0.v2"
+        box_return_4_0 = np.array(getEventFileData(box_path_4_0)["Metrics/AverageReturn"])
+        box_4_0 = ax.plot(box_return_4_0[:, 0], box_return_4_0[:, 1])
+
+        ax.set_title('Training episode return for SAC agent with Belief Map', fontsize=18, weight='bold')
+        ax.set_xlabel("number of train epochs", fontsize=16)
+        ax.set_ylabel("average episode return", fontsize=16)
+        ax.legend([
+                    "1.0 sampling box with N=1000, t=25",
+                    "2.0 sampling box with N=1000, t=25",
+                    "4.0 sampling box with N=1000, t=50"
+                ], loc='upper right', fontsize=12)
+
+        plt.show()
+        fig.savefig("rl_belief_train_returns.png")
+    else:
+
+        # 1.0 box + 25 steps rl agent
+        box_path_1_0 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_0.5_box_25/eval/events.out.tfevents.1631716010.pearl8.18818.1.v2"
+        box_return_1_0 = np.array(getEventFileData(box_path_1_0)["Metrics/AverageReturn"])
+        box_1_0 = ax.plot(box_return_1_0[:, 0], box_return_1_0[:, 1])
+
+        # 2.0 box + 25 steps rl agent
+        box_path_2_0 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_25/eval/events.out.tfevents.1631867347.pearl8.18370.1.v2"
+        box_return_2_0 = np.array(getEventFileData(box_path_2_0)["Metrics/AverageReturn"])
+        box_2_0 = ax.plot(box_return_2_0[:, 0], box_return_2_0[:, 1])
+
+        # 4.0 box + 50 steps rl agent
+        box_path_4_0 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/eval/events.out.tfevents.1632144090.pearl2.5531.1.v2"
+        box_return_4_0 = np.array(getEventFileData(box_path_4_0)["Metrics/AverageReturn"])
+        box_4_0 = ax.plot(box_return_4_0[:, 0], box_return_4_0[:, 1])
+
+        ax.set_title('Evaluation episode return for SAC agent with Belief Map', fontsize=18, weight='bold')
+        ax.set_xlabel("number of train epochs", fontsize=16)
+        ax.set_ylabel("average episode return", fontsize=16)
+        ax.legend([
+                    "1.0 sampling box with N=1000, t=25",
+                    "2.0 sampling box with N=1000, t=25",
+                    "4.0 sampling box with N=1000, t=50"
+                ], loc='upper right', fontsize=12)
+
+        plt.show()
+        fig.savefig("rl_belief_eval_returns.png")
+
+
 if __name__ == '__main__':
     # generalization_plts()
     # house3d_plts()
     # igibson_plts()
-    belief_plts()
+    # belief_plts()
+    rl_plts()
