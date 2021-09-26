@@ -144,18 +144,52 @@ def igibson_plts():
 
     ax.scatter(x=N, y=T, s=area, c=colors, alpha=0.5)
     for i, txt in enumerate(accuracy):
-        ax.annotate(f"    {txt}", (N[i], T[i]))
+        ax.annotate(f"    {txt}", (N[i], T[i]), fontsize=16)
 
     ax.set_xticks(np.array([0, 250, 500, 1000]))
     ax.set_yticks(np.array([0, 10, 50, 100]))
-    ax.set_title('iGibson PFNet global localization RGB-D accuracy ', fontsize=18, weight='bold')
+    ax.set_title('iGibson PFNet global localization RGB-D success (%) ', fontsize=18, weight='bold')
     ax.set_xlabel("number of particles (N)", fontsize=16)
     ax.set_ylabel("episode steps (t)", fontsize=16)
 
     plt.show()
     fig.savefig("igibson_rgbd_accuracy.png")
 
+def belief_plts():
+    fig = plt.figure(figsize=(18, 12))
+    ax = fig.add_subplot(111)
+
+    # kmeans representation
+    pfnet_train_path = "/media/neo/robotics/August/20-07-2021/train_rl_uniform_kmeans/train/events.out.tfevents.1629406907.pearl9.4239.0.v2"
+    pfnet_train_loss = np.array(getEventFileData(pfnet_train_path)["Metrics/AverageReturn"])
+    pfnet_eval_path = "/media/neo/robotics/August/20-07-2021/train_rl_uniform_kmeans/eval/events.out.tfevents.1629406907.pearl9.4239.1.v2"
+    pfnet_eval_loss = np.array(getEventFileData(pfnet_eval_path)["Metrics/AverageReturn"])
+    pfnet_train = ax.plot(pfnet_train_loss[:, 0], pfnet_train_loss[:, 1])
+    pfnet_eval = ax.plot(pfnet_eval_loss[:, 0], pfnet_eval_loss[:, 1])
+
+    # belief map representation
+    dpf_train_path = "/media/neo/robotics/August/20-07-2021/train_rl_uniform_likelihood/train/events.out.tfevents.1629406377.pearl8.20947.0.v2"
+    dpf_train_loss = np.array(getEventFileData(dpf_train_path)["Metrics/AverageReturn"])
+    dpf_eval_path = "/media/neo/robotics/August/20-07-2021/train_rl_uniform_likelihood/eval/events.out.tfevents.1629406377.pearl8.20947.1.v2"
+    dpf_eval_loss = np.array(getEventFileData(dpf_eval_path)["Metrics/AverageReturn"])
+    dpf_train = ax.plot(dpf_train_loss[:, 0], dpf_train_loss[:, 1])
+    dpf_eval = ax.plot(dpf_eval_loss[:, 0], dpf_eval_loss[:, 1])
+
+    ax.set_title('Training/Evaluation episode return for SAC agent', fontsize=18, weight='bold')
+    ax.set_xlabel("number of train epochs", fontsize=16)
+    ax.set_ylabel("average episode return", fontsize=16)
+    ax.legend([
+                "KMeans (k=10) Train",
+                "KMeans (k=10) Eval",
+                "Belief Map Train",
+                "Belief Map Eval"
+            ], loc='upper right', fontsize=12)
+
+    plt.show()
+    fig.savefig("particle_rep_sac_return.png")
+
 if __name__ == '__main__':
     # generalization_plts()
     # house3d_plts()
-    igibson_plts()
+    # igibson_plts()
+    belief_plts()
