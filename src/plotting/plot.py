@@ -57,7 +57,7 @@ def generalization_plts():
                     # "115 Floors",
                     "17 Apartments",
                     "1 Apartment"
-                ], loc='upper right', fontsize=12)
+                ], loc='upper right', fontsize=14)
 
         plt.show()
         fig.savefig("igibson_train_loss.png")
@@ -94,7 +94,7 @@ def generalization_plts():
                     # "15 Floors",
                     "4 Apartments",
                     "1 Apartment"
-                ], loc='upper right', fontsize=12)
+                ], loc='upper right', fontsize=14)
 
         plt.show()
         fig.savefig("igibson_eval_loss.png")
@@ -127,7 +127,7 @@ def house3d_plts():
                 "PFNet Eval",
                 "DPF Train",
                 "DPF Eval"
-            ], loc='upper right', fontsize=12)
+            ], loc='upper right', fontsize=14)
 
     plt.show()
     fig.savefig("house3d_loss.png")
@@ -183,13 +183,13 @@ def belief_plts():
                 "KMeans (k=10) Eval",
                 "Belief Map Train",
                 "Belief Map Eval"
-            ], loc='upper right', fontsize=12)
+            ], loc='upper right', fontsize=14)
 
     plt.show()
     fig.savefig("particle_rep_sac_return.png")
 
 
-def rl_plts():
+def rl_train_eval_plts():
     fig = plt.figure(figsize=(18, 12))
     ax = fig.add_subplot(111)
     plot = 'eval'
@@ -215,10 +215,10 @@ def rl_plts():
         ax.set_xlabel("number of train epochs", fontsize=16)
         ax.set_ylabel("average episode return", fontsize=16)
         ax.legend([
-                    "1.0 sampling box with N=1000, t=25",
-                    "2.0 sampling box with N=1000, t=25",
-                    "4.0 sampling box with N=1000, t=50"
-                ], loc='upper right', fontsize=12)
+                    "1.0 sampling box",
+                    "2.0 sampling box",
+                    "4.0 sampling box"
+                ], loc='upper right', fontsize=14)
 
         plt.show()
         fig.savefig("rl_belief_train_returns.png")
@@ -243,18 +243,50 @@ def rl_plts():
         ax.set_xlabel("number of train epochs", fontsize=16)
         ax.set_ylabel("average episode return", fontsize=16)
         ax.legend([
-                    "1.0 sampling box with N=1000, t=25",
-                    "2.0 sampling box with N=1000, t=25",
-                    "4.0 sampling box with N=1000, t=50"
-                ], loc='upper right', fontsize=12)
+                    "1.0 sampling box",
+                    "2.0 sampling box",
+                    "4.0 sampling box"
+                ], loc='upper right', fontsize=14)
 
         plt.show()
         fig.savefig("rl_belief_eval_returns.png")
 
+
+def rl_test_plts():
+    fig = plt.figure(figsize=(18, 12))
+    ax = fig.add_subplot(111)
+
+    # obstacle avoid agent
+    avoid_path = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/avoid_agent/events.out.tfevents.1632427985.pearl2.18690.0.v2"
+    avoid_end_reward = np.array(getEventFileData(avoid_path)["per_eps_end_reward"])
+    avoid_reward = ax.plot(avoid_end_reward[:, 0], avoid_end_reward[:, 1])
+
+    # random agent
+    box_path_2_0 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/rnd_agent/events.out.tfevents.1632428087.pearl2.18689.0.v2"
+    box_return_2_0 = np.array(getEventFileData(box_path_2_0)["per_eps_end_reward"])
+    box_2_0 = ax.plot(box_return_2_0[:, 0], box_return_2_0[:, 1])
+
+    # trained sac agent
+    box_path_4_0 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/sac_agent/events.out.tfevents.1632427849.pearl5.11213.0.v2"
+    box_return_4_0 = np.array(getEventFileData(box_path_4_0)["per_eps_end_reward"])
+    box_4_0 = ax.plot(box_return_4_0[:, 0], box_return_4_0[:, 1])
+
+    ax.set_title('Episode end return/ pose MSE for 4.0 sampling box', fontsize=18, weight='bold')
+    ax.set_xlabel("number of episodes", fontsize=16)
+    ax.set_ylabel("return/MSE (meters)", fontsize=16)
+    ax.legend([
+                "Obstacle Avoidance Agent",
+                "Random Action Agent",
+                "Trained SAC Agent"
+            ], loc='upper right', fontsize=14)
+
+    plt.show()
+    fig.savefig("rl_belief_test_reward.png")
 
 if __name__ == '__main__':
     # generalization_plts()
     # house3d_plts()
     # igibson_plts()
     # belief_plts()
-    rl_plts()
+    # rl_train_eval_plts()
+    rl_test_plts()
