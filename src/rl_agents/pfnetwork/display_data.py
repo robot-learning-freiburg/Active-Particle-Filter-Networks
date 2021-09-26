@@ -36,16 +36,33 @@ def display_data(params):
 
     if params.obs_mode == 'rgb-depth':
         rgb, depth = np.split(observation, [3], axis=-1)
-        cv2.imwrite('./rgb.png', preprocess.denormalize_observation(rgb)[t_idx])
+        cv2.imwrite('./rgb.png', preprocess.denormalize_observation(rgb[t_idx]))
         cv2.imwrite('./depth.png', cv2.applyColorMap(
             preprocess.denormalize_observation(depth[t_idx]*255/100).astype(np.uint8),
             cv2.COLORMAP_JET))
+
+        rgb_obs = []
+        for t_idx in range(0, rgb.shape[0]-1):
+            rgb_obs.append(preprocess.denormalize_observation(rgb[t_idx]).astype(np.uint8))
+        convert_imgs_to_video(rgb_obs, "rgb_obs.avi")
+        depth_obs = []
+        for t_idx in range(0, depth.shape[0]-1):
+            depth_obs.append(cv2.applyColorMap(preprocess.denormalize_observation(depth[t_idx]*255/100).astype(np.uint8), cv2.COLORMAP_JET))
+        convert_imgs_to_video(depth_obs, "depth_obs.avi")
     elif params.obs_mode == 'depth':
         cv2.imwrite('./depth.png', cv2.applyColorMap(
             preprocess.denormalize_observation(observation[t_idx]*255/100).astype(np.uint8),
             cv2.COLORMAP_JET))
+        depth_obs = []
+        for t_idx in range(0, observation.shape[0]-1):
+            depth_obs.append(cv2.applyColorMap(preprocess.denormalize_observation(observation[t_idx]*255/100).astype(np.uint8), cv2.COLORMAP_JET))
+        convert_imgs_to_video(depth_obs, "depth_obs.avi")
     else:
         cv2.imwrite('./rgb.png', preprocess.denormalize_observation(observation[t_idx]))
+        rgb_obs = []
+        for t_idx in range(0, observation.shape[0]-1):
+            rgb_obs.append(preprocess.denormalize_observation(observation[t_idx]).astype(np.uint8))
+        convert_imgs_to_video(rgb_obs, "rgb_obs.avi")
 
     # floor map
     fig = plt.figure(figsize=(10, 10))
@@ -89,6 +106,16 @@ def display_data(params):
     plt.savefig("traj_output.png")
 
     print('display done')
+
+def convert_imgs_to_video(images, file_path):
+    fps = 60
+    frame_size = (images[0].shape[0], images[0].shape[1])
+    out = cv2.VideoWriter(file_path,
+                          cv2.VideoWriter_fourcc(*'XVID'),
+                          fps, frame_size)
+    for img in images:
+        out.write(img)
+    out.release()
 
 if __name__ == '__main__':
     params = arguments.parse_args()
