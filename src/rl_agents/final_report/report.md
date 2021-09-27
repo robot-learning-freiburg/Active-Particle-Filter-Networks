@@ -6,11 +6,12 @@
 | Multiple apartments | rgb / rgbd / depth + gaussian/uniform + more/less particles| rgb / rgbd / depth / scan + gaussian/uniform + more/less particles |
 
 ##### Tracking -> gaussian distribution without resampling for 25 episode steps
-|  Mean Squared Error (cm) |     RGB    |    Depth   |    RGB-D   |    Lidar   |
-|:------------------------:|:----------:|:----------:|:----------:|:----------:|
-|  House3D (tracking)      |   38.837   |   40.626   |   40.908   |   ------   |
-|  iGibson (single aprt)   |   18.168   |   43.144   |   18.097   |   43.356   |
-|  iGibson (15 aprt)       |   ------   |   ------   |   53.195   |   ------   |
+|  Mean Squared Error (cm)            |     RGB    |    Depth   |    RGB-D   |    Lidar   |
+|:-----------------------------------:|:----------:|:----------:|:----------:|:----------:|
+|  House3D (tracking)                 |   38.837   |   40.626   |   40.908   |   ------   |
+|  iGibson (single aprt - obstacle)   |   18.168   |   43.144   |   18.097   |   43.356   |
+|  iGibson (single aprt - floor_map)  |   ------   |   ------   |   18.404   |   ------   |
+|  iGibson (15 aprt)                  |   ------   |   ------   |   53.195   |   ------   |
 ```
 House3D RMSE(cm) for tracking - init_particles_distr 'tracking', init_particles_std '0.3' '0.523599', num_particles '300', map_pixel_in_meters '0.02', transition_std '0.' '0.', trajlen '24', resample 'false'
 iGibson (single aprt) RMSE(cm) for tracking - init_particles_distr 'gaussian', init_particles_std '0.15' '0.523599', num_particles '300', map_pixel_in_meters '0.1', transition_std '0.' '0.', trajlen '24', resample 'false'
