@@ -5,8 +5,34 @@
 * Nvidia-Driver Version: 460.73.01
 * CUDA Version: 11.2
 
+#### Steps to setup project:
+0. Install required Nvidia Driver + CUDA + CUDNN for the system. Also refer igibson documentation for system requirements [link](http://svl.stanford.edu/igibson/docs/installation.html).
+1. Install virtual environment/package management platform like anaconda/[miniconda](https://docs.conda.io/en/latest/miniconda.html) or python virtualenv. Following assumes anaconda is installed.
+2. Create conda environment
+   ```
+      $ conda create -y -n igibson python=3.7
+      $ conda activate igibson
+    ```
+4. Setup iGibson2.0 environment (forked repository). For latest installation procedure always refer to official doc [link](http://svl.stanford.edu/igibson/docs/installation.html)
+   ```
+      $ git clone --branch master https://github.com/suresh-guttikonda/iGibson.git --recursive
+      $ cd iGibson
+      $ pip3 install -e .
+   ```
+6. Test installation is successful
+   ```
+      $ python
+      >>> import igibson
+   ```
+7. Download required igibson's assets (robot's urdf, apartments, and others)
+   ```
+      $ python -m igibson.utils.assets_utils --download_assets
+      $ python -m igibson.utils.assets_utils --download_demo_data
+      $ python -m igibson.utils.assets_utils --download_dataset https://storage.googleapis.com/gibson_scenes/gibson_v2_4+.tar.gz
+   ```
+8. 
 
-#### Steps to Install Singularity:
+#### Steps to install singularity:
 1. Enable NeuroDebian repository by following instructions on [neuro-debian](http://neuro.debian.net/). Also refer [FAQ](http://neuro.debian.net/faq.html).
 2. Install Singularity-Container as follows:
    ```
@@ -14,7 +40,7 @@
    ```
 3. For more details, refer: [singularity guide](https://sylabs.io/guides/3.7/user-guide/index.html)
 
-#### Steps to create singularity image:
+#### Steps to create singularity image to setup project:
 0. We assume corresponding nvidia-driver is already installed in host machine.
 1. Bootstrap container definition file. 'sudo' ensure proper privileges get assigned.
     ```
