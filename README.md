@@ -5,6 +5,13 @@
 * Nvidia-Driver Version: 460.73.01
 * CUDA Version: 11.2
 
+#### Useful References:
+- Install Cuda Without Root [link](https://stackoverflow.com/questions/39379792/install-cuda-without-root)
+   ```
+      sh cuda_10.1.105_418.39_linux.run --silent --toolkit --toolkitpath=$HOME/tkit
+   ```
+- Install Cudnn in Ubuntu [link](https://askubuntu.com/questions/1230645/when-is-cuda-gonna-be-released-for-ubuntu-20-04)
+
 #### Steps to setup project:
 0. Install required Nvidia Driver + CUDA + CUDNN for the system. Also refer igibson documentation for system requirements [link](http://svl.stanford.edu/igibson/docs/installation.html).
 1. Install virtual environment/package management platform like anaconda/[miniconda](https://docs.conda.io/en/latest/miniconda.html) or python virtualenv. Following assumes anaconda is installed.
@@ -30,7 +37,61 @@
       $ python -m igibson.utils.assets_utils --download_demo_data
       $ python -m igibson.utils.assets_utils --download_dataset https://storage.googleapis.com/gibson_scenes/gibson_v2_4+.tar.gz
    ```
-8. 
+8. For locobot, we add additional lidar scan to its urdf file. For reference, turtlebot's urdf has the sensor by default.
+   ```
+      $ vi igibson/data/assets/models/locobot/locobot.urdf
+    
+    <link name="scan_link">
+      <inertial>
+         <mass value="0"/>
+         <origin xyz="0 0 0"/>
+         <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+      </inertial>
+      <visual>
+         <geometry>
+            <cylinder length="0.02" radius="0.01"/>
+         </geometry>
+         <origin rpy="0 0 0" xyz="0.001 0 0.05199"/>
+      </visual>
+    </link>
+    <joint name="scan_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="scan_link"/>
+      <origin rpy="0 0 0" xyz="0.10 0.0 0.46"/>
+      <axis xyz="0 0 1"/>
+    </joint>
+   ```
+10. Install additional packages
+   ```
+      $ pip install --upgrade pip
+      $ pip install tensorflow
+      $ pip install -U numpy
+      $ pip install -U scikit-learn
+      $ conda install -c anaconda cudnn
+   ```
+12. Test pretrained particle filter + igibson environment with random agent and result wll be stored to test_output directory.
+   ```
+      $ python -u test_pfnet.py \
+         --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_63_0.136/pfnet_checkpoint \
+         --obs_mode='rgb-depth' \
+         --custom_output 'rgb_obs' 'depth_obs' 'likelihood_map' \
+         --scene_id='Rs' \
+         --num_eval_episodes=1 \
+         --agent='rnd_agent' \
+         --init_particles_distr='gaussian' \
+         --init_particles_std '0.2' '0.523599' \
+         --particles_range=100 \
+         --num_particles=500 \
+         --transition_std '0.04' '0.0872665' \
+         --resample=true \
+         --alpha_resample_ratio=0.95 \
+         --global_map_size '100' '100' '1' \
+         --window_scaler=1.0 \
+         --config_file=./configs/locobot_pfnet_nav.yaml \
+         --device_idx=0 \
+         --seed=15
+   ```
+15. 
 
 #### Steps to install singularity:
 1. Enable NeuroDebian repository by following instructions on [neuro-debian](http://neuro.debian.net/). Also refer [FAQ](http://neuro.debian.net/faq.html).
