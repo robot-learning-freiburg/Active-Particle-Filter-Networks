@@ -29,7 +29,7 @@ tf.get_logger().setLevel('ERROR')
 
 class LocalizeGibsonEnv(iGibsonEnv):
     """
-    Custom implementation of localization task based on iGibsonEnv
+    Custom implementation of localization task extending iGibsonEnv's functionality
     """
 
     def __init__(
@@ -47,9 +47,17 @@ class LocalizeGibsonEnv(iGibsonEnv):
             pf_params=None,
     ):
         """
+        Perform required iGibsonEnv initialization.
+        In addition, override behaviour specific to localization task, which are:
+        1. appropriate task reward function and task termination conditions
+        2. initialize particle filter network
+        3. initialize custom observation specs to return on env.step() and env.reset()
+
         :param config_file: config_file path
         :param scene_id: override scene_id in config file
         :param mode: headless, gui, iggui
+        :param use_tf_function: whether to wrap pfnetwork with tf.graph
+        :param init_pfnet: whether to initialize pfnetwork
         :param action_timestep: environment executes action per action_timestep second
         :param physics_timestep: physics timestep for pybullet
         :param device_idx: which GPU to run the simulation and rendering on
@@ -87,6 +95,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.pf_params = argparser.parse_args([])
         self.use_pfnet = init_pfnet
         self.use_tf_function = use_tf_function
+        # initialize particle filter
         if self.use_pfnet:
             print("=====> LocalizeGibsonEnv's pfnet initializing....")
             self.init_pfnet(pf_params)
@@ -105,7 +114,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 self.pf_params.root_dir = './'
                 self.pf_params.loop = 6
 
-        # custom tf_agents we are using supports dict() type observations
+        # for custom tf_agents we are using supports dict() type observations
         observation_space = OrderedDict()
 
         task_obs_dim = 18 # robot_prorpio_state (18)
@@ -166,6 +175,8 @@ class LocalizeGibsonEnv(iGibsonEnv):
     def init_pf_params(self, FLAGS):
         """
         Initialize Particle Filter parameters
+
+        :paramFLAGS: absl.flags parsed command-line arguments to initialize pfnet
         """
 
         assert 0.0 <= FLAGS.alpha_resample_ratio <= 1.0
@@ -208,14 +219,17 @@ class LocalizeGibsonEnv(iGibsonEnv):
     def init_pfnet(self, pf_params):
         """
         Initialize Particle Filter
+
+        :param pf_params: argparse.Namespace parsed command-line arguments to initialize pfnet
         """
 
+        # initialize particle filter with input parameters otherwise use default values
         if pf_params is not None:
             self.pf_params = pf_params
         else:
             self.init_pf_params(flags.FLAGS)
 
-        # HACK:
+        # HACK: for real time particle filter update
         self.pf_params.batch_size = 1
         self.pf_params.trajlen = 1
 
@@ -229,12 +243,13 @@ class LocalizeGibsonEnv(iGibsonEnv):
             self.pfnet_model.load_weights(self.pf_params.pfnet_loadpath)
             print("=====> loaded pf model checkpoint " + self.pf_params.pfnet_loadpath)
 
+        # wrap model with tf.graph
         if self.use_tf_function:
             print("=====> wrapped pfnet in tf.graph")
             self.pfnet_model = tf.function(self.pfnet_model)
 
         if self.pf_params.use_plot:
-            # code related to displaying results in matplotlib
+            # code related to displaying/storing results in matplotlib
             self.fig = plt.figure(figsize=(7, 7))
             self.plt_ax = None
             self.env_plts = {
@@ -327,6 +342,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             state, reward, done, info = super(LocalizeGibsonEnv, self).step(action)
         info['collision_penality'] = reward # contains only collision reward per step
 
+        # perform particle filter update
         if self.use_pfnet:
             new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 255]
             new_depth_obs = copy.deepcopy(state['depth']*100) # [0, 100]
@@ -341,10 +357,12 @@ class LocalizeGibsonEnv(iGibsonEnv):
             info['coords'] = tf.math.reduce_mean(loss_dict['coords']).cpu().numpy()
             info['orient'] = tf.math.reduce_mean(loss_dict['orient']).cpu().numpy()
 
-            # TODO: may need better reward
+            # include pfnet's estimate in environment's reward
+            # TODO: may need better reward ?
             rescale = 10
             reward = (reward-tf.stop_gradient(loss_dict['pred']))/rescale
 
+        # return custom environment observation
         custom_state = self.process_state(state)
         return custom_state, reward, done, info
 
@@ -446,6 +464,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         self.reset_agent()
 
         state = super(LocalizeGibsonEnv, self).reset()
+        # perform particle filter update
         if self.use_pfnet:
             new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 255]
             new_depth_obs = copy.deepcopy(state['depth']*100) # [0, 100]
@@ -456,13 +475,14 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 new_occupancy_grid
             ])['pred'].cpu().numpy()
 
+        # return custom environment observation
         custom_state = self.process_state(state)
         return custom_state
 
 
     def process_state(self, state):
         """
-        Perform additional processing.
+        Perform additional processing of environment's observation.
 
         :param state: env observations
 
@@ -482,7 +502,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         right_front = np.min(min_depth[128:192]) < self.depth_th
         right = np.min(min_depth[192:]) < self.depth_th
 
-        # # HACK: to collect data
+        # # HACK: to collect supervised data for particle filter training
         # new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 1] ->[0, 255]
         # new_depth_obs = copy.deepcopy(state['depth']*100) # [0, 1] ->[0, 100]
         # new_occupancy_grid = copy.deepcopy(state['occupancy_grid']) # [0, 0.5, 1]
@@ -549,7 +569,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
     def step_pfnet(self, new_obs):
         """
-        Perform one particle filter step
+        Perform one particle filter update step
+
+        :param new_obs: latest observation from env.step()
+
+        :return loss_dict: dictionary of total loss and coordinate loss (in meters)
         """
 
         trajlen = self.pf_params.trajlen
@@ -559,12 +583,13 @@ class LocalizeGibsonEnv(iGibsonEnv):
         obs_ch = self.pf_params.obs_ch
         obs_mode = self.pf_params.obs_mode
 
+        # previous robot's pose, observation and particle filter state
         floor_map = self.floor_map[0].cpu().numpy()
         old_rgb_obs, old_depth_obs, old_occupancy_grid = self.curr_obs
         old_pose = self.curr_gt_pose[0].cpu().numpy()
         old_pfnet_state = self.curr_pfnet_state
 
-        # get new robot state
+        # get latest robot state
         new_robot_state = self.robots[0].calc_state()
 
         new_rgb_obs, new_depth_obs, new_occupancy_grid = new_obs
@@ -618,7 +643,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         assert list(old_pfnet_state[0].shape) == [batch_size, num_particles, 3], f'{old_pfnet_state[0].shape}'
         assert list(old_pfnet_state[1].shape) == [batch_size, num_particles], f'{old_pfnet_state[1].shape}'
 
-        # construct pfnet input
+        # construct latest pfnet input = latest observation + previous particle filter state
         curr_input = [observation, odometry]
         model_input = (curr_input, old_pfnet_state)
 
@@ -631,7 +656,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         if pfnet_stateful:
             self.pfnet_model.layers[-1].reset_states(old_pfnet_state)  # RNN layer
 
-        # forward pass pfnet
+        # forward pass pfnet (in eval mode)
         # output: contains particles and weights before transition update
         # pfnet_state: contains particles and weights after transition update
         output, new_pfnet_state = self.pfnet_model(model_input, training=False)
@@ -640,11 +665,13 @@ class LocalizeGibsonEnv(iGibsonEnv):
         particles, particle_weights = output
         true_old_pose = tf.expand_dims(self.curr_gt_pose, axis=1)
 
+        # sanity check
         assert list(true_old_pose.shape) == [batch_size, trajlen, 3], f'{true_old_pose.shape}'
         assert list(particles.shape) == [batch_size, trajlen, num_particles, 3], f'{particles.shape}'
         assert list(particle_weights.shape) == [batch_size, trajlen, num_particles], f'{particle_weights.shape}'
         loss_dict = pfnet_loss.compute_loss(particles, particle_weights, true_old_pose, self.trav_map_resolution)
 
+        # latest robot's pose, observation and particle filter state
         self.curr_pfnet_state = new_pfnet_state
         self.curr_gt_pose = new_pose
         self.curr_est_pose = self.get_est_pose()
@@ -660,7 +687,11 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
     def reset_pfnet(self, new_obs):
         """
-        floor_map: used as particle filter state and for sampling init random particles
+        Reset particle filter on start of new episode
+
+        :param new_obs: latest observation from env.reset()
+
+        :return loss_dict: dictionary of total loss and coordinate loss (in meters)
         """
 
         trajlen = self.pf_params.trajlen
@@ -671,7 +702,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         init_particles_distr = self.pf_params.init_particles_distr
         particles_range = self.pf_params.particles_range
 
-        # get new robot state
+        # get latest robot state
         new_robot_state = self.robots[0].calc_state()
 
         # process new env map
@@ -734,11 +765,13 @@ class LocalizeGibsonEnv(iGibsonEnv):
         particle_weights = tf.expand_dims(init_particle_weights, axis=1)
         true_old_pose = tf.expand_dims(new_pose, axis=1)
 
+        # sanity check
         assert list(true_old_pose.shape) == [batch_size, trajlen, 3], f'{true_old_pose.shape}'
         assert list(particles.shape) == [batch_size, trajlen, num_particles, 3], f'{particles.shape}'
         assert list(particle_weights.shape) == [batch_size, trajlen, num_particles], f'{particle_weights.shape}'
         loss_dict = pfnet_loss.compute_loss(particles, particle_weights, true_old_pose, self.trav_map_resolution)
 
+        # latest robot's pose, observation and particle filter state
         self.floor_map = floor_map
         self.obstacle_map = obstacle_map
         self.curr_pfnet_state = [init_particles, init_particle_weights, floor_map]
@@ -755,6 +788,10 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
     def compute_kmeans(self):
         """
+        Construct KMeans of particles & particle_weights from particle filter's current state
+
+        :return cluster_centers: input 'num_clusters' computed cluster centers
+        :return cluster_weights: corresponding particles in cluster total particle_weights
         """
 
         num_clusters = self.pf_params.num_clusters
@@ -773,7 +810,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             # random initialization
             kmeans = KMeans(n_clusters=num_clusters, n_init=10)
         else:
-            # previous cluster center initialization
+            # previous cluster center as initialization guess
             prev_cluster_centers, _ = self.curr_cluster
             assert list(prev_cluster_centers.shape) == [num_clusters, 4]
             kmeans = KMeans(n_clusters=num_clusters, init=prev_cluster_centers, n_init=1)
@@ -789,6 +826,14 @@ class LocalizeGibsonEnv(iGibsonEnv):
         return cluster_centers, cluster_weights
 
     def get_likelihood_map(self):
+        """
+        Construct Belief map/Likelihood map of particles & particle_weights from particle filter's current state
+
+        :return likelihood_map_ext: [H, W, 4] map where each pixel position corresponds particle's position
+            channel 0: floor_map of the environment
+            channel 1: particle's weights
+            channel 2, 3: particle's orientiation sine and cosine components
+        """
 
         if self.curr_pfnet_state is None:
             return None
@@ -925,7 +970,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         :param particles_cov: for tracking Gaussian covariance matrix (3, 3)
         :param num_particles: integer indicating the number of random particles per batch
         :param scene_map: floor map to sample valid random particles
-        :param particles_range: particles range in pixels for uniform distribution
+        :param particles_range: limit particles range in pixels centered from robot_pose for uniform distribution
 
         :return ndarray: random particle poses  (batch_size, num_particles, 3) in pixel space
         """
@@ -949,6 +994,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
                 # rmin, rmax, cmin, cmax = self.bounding_box(scene_map)
                 rmin, rmax, cmin, cmax = self.bounding_box(scene_map, center, particles_range)
 
+                # check if sampled pose is in environment map's free space
                 while sample_i < num_particles:
                     particle = np.random.uniform(low=(rmin, cmin, 0.0), high=(rmax, cmax, 2.0 * np.pi), size=(3,))
                     # reject if mask is zero
@@ -1001,6 +1047,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
 
     def get_robot_pose(self, robot_state, floor_map_shape):
+        """
+        Transform robot's pose from coordinate space to pixel space.
+        """
         robot_pos = robot_state[0:3]  # [x, y, z]
         robot_orn = robot_state[3:6]  # [r, p, y]
 
@@ -1011,6 +1060,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
 
     def get_est_pose(self):
+        """
+        Compute estimate pose from particle and particle_weights (== weighted mean)
+        """
 
         batch_size = self.pf_params.batch_size
         num_particles = self.pf_params.num_particles
@@ -1042,7 +1094,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         if self.use_pfnet and self.pf_params.use_plot:
 
             if "likelihood_map" in self.pf_params.custom_output:
-                # likelihood map
+                # belief map / likelihood map
                 floor_map = self.floor_map[0].cpu().numpy()
                 likelihood_map_ext = self.get_likelihood_map()
                 likelihood_map = np.zeros((*floor_map.shape[:2], 3))
@@ -1168,6 +1220,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         """
         super(LocalizeGibsonEnv, self).close()
 
+        # store the plots as video
         if self.use_pfnet and self.pf_params.use_plot:
             if self.pf_params.store_plot:
                 self.store_results()
@@ -1181,6 +1234,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
 
 
     def convert_imgs_to_video(self, images, file_path):
+        """
+        Convert images to video
+        """
         fps = 60
         frame_size = (images[0].shape[0], images[0].shape[1])
         out = cv2.VideoWriter(file_path,
@@ -1191,6 +1247,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
         out.release()
 
     def store_obs(self):
+        """
+        Store the episode environment's observations as video
+        """
         if len(self.eps_obs['rgb']) > 0:
             print(self.eps_obs['rgb'][0].shape)
             file_path = os.path.join(self.out_folder, f'rgb_episode_run_{self.current_episode}.avi')
@@ -1211,6 +1270,9 @@ class LocalizeGibsonEnv(iGibsonEnv):
             self.eps_obs['occupancy_grid'] = []
 
     def store_results(self):
+        """
+        Store the episode environment's belief map/likelihood map as video
+        """
         if len(self.curr_plt_images) > 0:
             file_path = os.path.join(self.out_folder, f'episode_run_{self.current_episode}.avi')
             self.convert_imgs_to_video(self.curr_plt_images, file_path)
