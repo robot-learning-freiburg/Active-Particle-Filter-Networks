@@ -850,23 +850,25 @@ class LocalizeGibsonEnv(iGibsonEnv):
             col, row, orn = particles[idx]
             orn = datautils.normalize(orn)
             wt = lin_weights[idx]
+            x = np.clip(int(np.rint(col)), 0, likelihood_map_ext.shape[0]-1)
+            y = np.clip(int(np.rint(row)), 0, likelihood_map_ext.shape[1]-1)
 
             # update weights channel
             # likelihood_map_ext[
             #     int(np.rint(col-self.robot_size_px/2.)):int(np.rint(col+self.robot_size_px/2.))+1,
             #     int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 1] += wt
-            likelihood_map_ext[int(np.rint(col)), int(np.rint(row)), 1] += wt
+            likelihood_map_ext[x, y, 1] += wt
 
             # update orientation cos component channel
             # likelihood_map_ext[
             #     int(np.rint(col-self.robot_size_px/2.)):int(np.rint(col+self.robot_size_px/2.))+1,
             #     int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 2] += wt*np.cos(orn)
-            likelihood_map_ext[int(np.rint(col)), int(np.rint(row)), 2] += wt*np.cos(orn)
+            likelihood_map_ext[x, y, 2] += wt*np.cos(orn)
             # update orientation sin component channel
             # likelihood_map_ext[
             #     int(np.rint(col-self.robot_size_px/2.)):int(np.rint(col+self.robot_size_px/2.))+1,
             #     int(np.rint(row-self.robot_size_px/2.)):int(np.rint(row+self.robot_size_px/2.))+1, 3] += wt*np.sin(orn)
-            likelihood_map_ext[int(np.rint(col)), int(np.rint(row)), 3] += wt*np.sin(orn)
+            likelihood_map_ext[x, y, 3] += wt*np.sin(orn)
         # normalize: weighed mean of orientation channel w.r.t weights channel
         indices = likelihood_map_ext[:, :, 1] > 0.
         likelihood_map_ext[indices, 2] /= likelihood_map_ext[indices, 1]
