@@ -208,6 +208,7 @@ class PFCell(keras.layers.AbstractRNNCell):
 
         part_x, part_y, part_th = tf.unstack(particle_states, axis=-1, num=3)   # (bs, k, 3)
 
+        # non-noisy odometry
         odometry = tf.expand_dims(odometry, axis=1) # (batch_size, 1, 3)
         odom_x, odom_y, odom_th = tf.unstack(odometry, axis=-1, num=3)
 
@@ -217,6 +218,7 @@ class PFCell(keras.layers.AbstractRNNCell):
         # add orientation noise before translation
         part_th = part_th + noise_th
 
+        # non-noisy translation and rotation
         cos_th = tf.cos(part_th)
         sin_th = tf.sin(part_th)
         delta_x = cos_th * odom_x - sin_th * odom_y

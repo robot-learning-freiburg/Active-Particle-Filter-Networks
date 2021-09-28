@@ -583,7 +583,7 @@ def transform_raw_record(env, parsed_record, params):
     particles_distr = params.init_particles_distr
     particles_range = params.particles_range
 
-    # Required rescale to [-1, 1]
+    # perform required rescale to [-1, 1]
     assert obs_mode in ['rgb', 'depth', 'rgb-depth', 'occupancy_grid']
     if obs_mode == 'rgb-depth':
         rgb_observation = parsed_record['rgb_observation'].reshape(

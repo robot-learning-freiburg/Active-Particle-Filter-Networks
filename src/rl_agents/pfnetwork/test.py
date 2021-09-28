@@ -15,6 +15,9 @@ from datetime import datetime
 import preprocess, arguments, pfnet_loss
 
 def store_results(eps_idx, floor_map, org_map_shape, particle_states, particle_weights, true_states, params):
+    """
+    Store results as video
+    """
     trajlen = params.trajlen
     b_idx = 0
 
