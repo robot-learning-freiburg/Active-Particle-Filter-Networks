@@ -5,12 +5,17 @@
 * Nvidia-Driver Version: 460.73.01
 * CUDA Version: 11.2
 
+#### Installation:
+- Option1 : Installation from source (https://github.com/suresh-guttikonda/deep-activate-localization#steps-to-setup-project)
+- Option2 : Installation from singularity image (https://github.com/suresh-guttikonda/deep-activate-localization#steps-to-create-singularity-image-to-setup-project) Note: modifying locobot urdf can be tricky in this case.
+
 #### Useful References:
 - Install Cuda Without Root [link](https://stackoverflow.com/questions/39379792/install-cuda-without-root)
    ```
       sh cuda_10.1.105_418.39_linux.run --silent --toolkit --toolkitpath=$HOME/tkit
    ```
 - Install Cudnn in Ubuntu [link](https://askubuntu.com/questions/1230645/when-is-cuda-gonna-be-released-for-ubuntu-20-04)
+
 
 #### Steps to setup project:
 0. Install required Nvidia Driver + CUDA + CUDNN for the system. Also refer igibson documentation for system requirements [link](http://svl.stanford.edu/igibson/docs/installation.html).
@@ -81,7 +86,11 @@
       <root_folder>$ cd agents
       <root_folder>/agents$ pip3 install -e .
    ```
-10. Test pretrained particle filter + igibson environment with random agent, result will be stored to test_output directory.
+10. Get the Active Localization code + pretrained checkpoints
+   ```
+      <root_folder>$ git clone https://github.com/suresh-guttikonda/deep-activate-localization.git --recursive
+   ```
+11. Test pretrained particle filter + igibson environment with random agent, result will be stored to test_output directory.
    ```
       <root_folder>/deep-activate-localization/src/rl_agents$ python -u test_pfnet.py \
          --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_63_0.136/pfnet_checkpoint \
