@@ -18,7 +18,7 @@
 2. Create conda environment
    ```
       $ conda create -y -n igibson python=3.7
-      $ conda activate igibson
+      $ source activate igibson
     ```
 4. Setup iGibson2.0 environment (forked repository). For latest installation procedure always refer to official doc [link](http://svl.stanford.edu/igibson/docs/installation.html)
    ```
@@ -26,7 +26,7 @@
       <root_folder>$ cd iGibson
       <root_folder>/iGibson$ pip3 install -e .
    ```
-6. Test installation is successful
+6. Test igibson installation is successful
    ```
       <root_folder>/iGibson$ python
       >>> import igibson
@@ -67,9 +67,15 @@
       <root_folder>$ pip install tensorflow==2.6.0
       <root_folder>$ pip install -U numpy==1.21.1
       <root_folder>$ pip install -U scikit-learn
-      <root_folder>$ conda install -c anaconda cudnn
+      <root_folder>$ conda install -c anaconda cudnn=7.6.5
    ```
-12. Install TF Agents
+12. Test tensorflow installation is successful
+   ```
+      <root_folder>$ python
+      >>> import tensorflow as tf
+      >>> tf.config.list_logical_devices()
+   ```
+14. Install TF Agents
    ```
       <root_folder>$ git clone --branch cvpr21_challenge_tf2.4 https://github.com/suresh-guttikonda/agents/ --recursive
       <root_folder>$ cd agents
