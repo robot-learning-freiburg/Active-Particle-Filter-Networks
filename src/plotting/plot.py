@@ -192,7 +192,7 @@ def belief_plts():
 def rl_train_eval_plts():
     fig = plt.figure(figsize=(18, 12))
     ax = fig.add_subplot(111)
-    plot = 'eval'
+    plot = 'train'
 
     if plot == 'train':
 
@@ -211,13 +211,19 @@ def rl_train_eval_plts():
         box_return_4_0 = np.array(getEventFileData(box_path_4_0)["Metrics/AverageReturn"])
         box_4_0 = ax.plot(box_return_4_0[:, 0], box_return_4_0[:, 1])
 
+        # 5.0 box + 50 steps rl agent
+        box_path_5_0 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.5_box_50/train/events.out.tfevents.1632349779.pearl8.24775.0.v2"
+        box_return_5_0 = np.array(getEventFileData(box_path_5_0)["Metrics/AverageReturn"])
+        box_5_0 = ax.plot(box_return_5_0[:, 0], box_return_5_0[:, 1])
+
         ax.set_title('Training episode return for SAC agent with Belief Map', fontsize=18, weight='bold')
         ax.set_xlabel("number of train epochs", fontsize=16)
         ax.set_ylabel("average episode return", fontsize=16)
         ax.legend([
                     "1.0 sampling box",
                     "2.0 sampling box",
-                    "4.0 sampling box"
+                    "4.0 sampling box",
+                    "5.0 sampling box"
                 ], loc='upper right', fontsize=14)
 
         plt.show()
@@ -239,13 +245,19 @@ def rl_train_eval_plts():
         box_return_4_0 = np.array(getEventFileData(box_path_4_0)["Metrics/AverageReturn"])
         box_4_0 = ax.plot(box_return_4_0[:, 0], box_return_4_0[:, 1])
 
+        # 5.0 box + 50 steps rl agent
+        box_path_5_0 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.5_box_50/eval/events.out.tfevents.1632349779.pearl8.24775.1.v2"
+        box_return_5_0 = np.array(getEventFileData(box_path_5_0)["Metrics/AverageReturn"])
+        box_5_0 = ax.plot(box_return_5_0[:, 0], box_return_5_0[:, 1])
+
         ax.set_title('Evaluation episode return for SAC agent with Belief Map', fontsize=18, weight='bold')
         ax.set_xlabel("number of train epochs", fontsize=16)
         ax.set_ylabel("average episode return", fontsize=16)
         ax.legend([
                     "1.0 sampling box",
                     "2.0 sampling box",
-                    "4.0 sampling box"
+                    "4.0 sampling box",
+                    "5.0 sampling box"
                 ], loc='upper right', fontsize=14)
 
         plt.show()
