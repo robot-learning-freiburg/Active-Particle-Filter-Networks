@@ -52,7 +52,7 @@ def parse_args():
         '--agent',
         type=str,
         default='rnd_agent',
-        help='Agent Behavior'
+        help='Agent Behavior [rnd_agent: random, avoid_agent: obstacle avoidance, manual_agent: manual control]'
     )
     arg_parser.add_argument(
         '--num_eval_samples',
@@ -560,6 +560,6 @@ def rt_pfnet_test(arg_params):
 
 if __name__ == '__main__':
     parsed_params = parse_args()
-    pfnet_test(parsed_params)
+    # pfnet_test(parsed_params)
 
-    # rt_pfnet_test(parsed_params)
+    rt_pfnet_test(parsed_params)

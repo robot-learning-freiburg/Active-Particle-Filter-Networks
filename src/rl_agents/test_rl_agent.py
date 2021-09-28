@@ -68,7 +68,7 @@ flags.DEFINE_integer(
 flags.DEFINE_string(
     name='agent',
     default='rnd_agent',
-    help='Agent Behavior'
+    help='Agent Behavior [rnd_agent: random, sac_agent: trained sac]'
 )
 flags.DEFINE_boolean(
     name='eval_deterministic',
