@@ -22,24 +22,24 @@
     ```
 4. Setup iGibson2.0 environment (forked repository). For latest installation procedure always refer to official doc [link](http://svl.stanford.edu/igibson/docs/installation.html)
    ```
-      $ git clone --branch master https://github.com/suresh-guttikonda/iGibson.git --recursive
-      $ cd iGibson
-      $ pip3 install -e .
+      <root_folder>$ git clone --branch master https://github.com/suresh-guttikonda/iGibson.git --recursive
+      <root_folder>$ cd iGibson
+      <root_folder>/iGibson$ pip3 install -e .
    ```
 6. Test installation is successful
    ```
-      $ python
+      <root_folder>/iGibson$ python
       >>> import igibson
    ```
 7. Download required igibson's assets (robot's urdf, apartments, and others)
    ```
-      $ python -m igibson.utils.assets_utils --download_assets
-      $ python -m igibson.utils.assets_utils --download_demo_data
-      $ python -m igibson.utils.assets_utils --download_dataset https://storage.googleapis.com/gibson_scenes/gibson_v2_4+.tar.gz
+      <root_folder>/iGibson$ python -m igibson.utils.assets_utils --download_assets
+      <root_folder>/iGibson$ python -m igibson.utils.assets_utils --download_demo_data
+      <root_folder>/iGibson$ python -m igibson.utils.assets_utils --download_dataset https://storage.googleapis.com/gibson_scenes/gibson_v2_4+.tar.gz
    ```
 8. For locobot, we add additional lidar scan to its urdf file. For reference, turtlebot's urdf has the sensor by default.
    ```
-      $ vi igibson/data/assets/models/locobot/locobot.urdf
+      <root_folder>/iGibson$ vi igibson/data/assets/models/locobot/locobot.urdf
     
     <link name="scan_link">
       <inertial>
@@ -63,15 +63,21 @@
    ```
 10. Install additional packages
    ```
-      $ pip install --upgrade pip
-      $ pip install tensorflow
-      $ pip install -U numpy
-      $ pip install -U scikit-learn
-      $ conda install -c anaconda cudnn
+      <root_folder>$ pip install --upgrade pip
+      <root_folder>$ pip install tensorflow==2.6.0
+      <root_folder>$ pip install -U numpy==1.21.1
+      <root_folder>$ pip install -U scikit-learn
+      <root_folder>$ conda install -c anaconda cudnn
    ```
-12. Test pretrained particle filter + igibson environment with random agent and result wll be stored to test_output directory.
+12. Install TF Agents
    ```
-      $ python -u test_pfnet.py \
+      <root_folder>$ git clone --branch cvpr21_challenge_tf2.4 https://github.com/suresh-guttikonda/agents/ --recursive
+      <root_folder>$ cd agents
+      <root_folder>/agents$ pip3 install -e .
+   ```
+14. Test pretrained particle filter + igibson environment with random agent and result wll be stored to test_output directory.
+   ```
+      <root_folder>/deep-activate-localization/src/rl_agents$ python -u test_pfnet.py \
          --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_63_0.136/pfnet_checkpoint \
          --obs_mode='rgb-depth' \
          --custom_output 'rgb_obs' 'depth_obs' 'likelihood_map' \
