@@ -119,8 +119,10 @@ def obs_encoder(obs_shape=[56, 56, 3]):
 
 def map_obs_encoder():
 
-    joint_matrix = keras.Input(shape=[14, 14, 24], name="map_obs_features")   # (bs*np, 14, 14, 24)
-    assert joint_matrix.get_shape().as_list()[1:4] == [14, 14, 24]
+    joint_matrix = keras.Input(shape=[14, 14, 16], name="map_obs_features")   # (bs*np, 14, 14, 24)
+    assert joint_matrix.get_shape().as_list()[1:4] == [14, 14, 16]
+    # joint_matrix = keras.Input(shape=[14, 14, 24], name="map_obs_features")   # (bs*np, 14, 14, 24)
+    # assert joint_matrix.get_shape().as_list()[1:4] == [14, 14, 24]
     x = joint_matrix
 
     # pad manually to match different kernel sizes
