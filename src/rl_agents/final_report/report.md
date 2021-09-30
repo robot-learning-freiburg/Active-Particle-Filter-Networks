@@ -11,7 +11,7 @@
 |  House3D (tracking)                 |   38.837   |   40.626   |   40.908   |   ------   |
 |  iGibson (single aprt - obstacle)   |   18.168   |   43.144   |   18.097   |   43.356   |
 |  iGibson (single aprt - floor_map)  |   ------   |   ------   |   18.404   |   ------   |
-|  iGibson (single aprt - w/o map)    |   ------   |   ------   |      |   ------   |
+|  iGibson (single aprt - w/o map)    |   ------   |   ------   |   62.446   |   ------   |
 |  iGibson (15 aprt)                  |   ------   |   ------   |   53.195   |   ------   |
 |  iGibson (115 single aprt)          |   ------   |   ------   |   ------   |   ------   |
 ```
