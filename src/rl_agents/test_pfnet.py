@@ -408,7 +408,7 @@ def pfnet_test(arg_params):
             init_particle_weights = tf.constant(np.log(1.0 / float(num_particles)),
                                                 shape=(batch_size, num_particles), dtype=tf.float32)
             # compute initial loss
-            init_loss_dict = pfnet_loss.compute_loss(tf.expand_dims(init_particles, axis=1),
+            init_loss_dict = pfnet_loss.compute_mse_loss(tf.expand_dims(init_particles, axis=1),
                             tf.expand_dims(init_particle_weights, axis=1),
                             tf.expand_dims(true_states[:, 0], axis=1),
                             arg_params.trav_map_resolution)
@@ -437,7 +437,7 @@ def pfnet_test(arg_params):
             assert list(true_states.shape) == [batch_size, trajlen, 3]
 
             # compute loss
-            loss_dict = pfnet_loss.compute_loss(particle_states, particle_weights, true_states,
+            loss_dict = pfnet_loss.compute_mse_loss(particle_states, particle_weights, true_states,
                                                 arg_params.trav_map_resolution)
 
             # we have squared differences along the trajectory

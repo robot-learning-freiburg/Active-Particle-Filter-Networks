@@ -121,7 +121,7 @@ def house3d_plts():
 
     ax.set_title('Training/Evaluation loss for House3D environment', fontsize=18, weight='bold')
     ax.set_xlabel("number of train epochs", fontsize=16)
-    ax.set_ylabel("mean square error (cm)", fontsize=16)
+    ax.set_ylabel("pose error (meters)", fontsize=16)
     ax.legend([
                 "PFNet Train",
                 "PFNet Eval",
@@ -295,10 +295,52 @@ def rl_test_plts():
     plt.show()
     fig.savefig("rl_belief_test_reward.png")
 
+def diff_steps_plts():
+    fig = plt.figure(figsize=(18, 12))
+    ax = fig.add_subplot(111)
+
+    # # 1.0 box + 25 steps rl agent
+    # box_path_1_0_25 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_25/train/events.out.tfevents.1631867346.pearl8.18370.0.v2"
+    # box_return_1_0_25 = np.array(getEventFileData(box_path_1_0_25)["Metrics/AverageReturn"])
+    # box_1_0_25 = ax.plot(box_return_1_0_25[:, 0], box_return_1_0_25[:, 1])
+    #
+    # # 1.0 box + 50 steps rl agent
+    # box_path_1_0_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_50/train/events.out.tfevents.1631961881.pearl2.22000.0.v2"
+    # box_return_1_0_50 = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageReturn"])
+    # box_1_0_50 = ax.plot(box_return_1_0_50[:, 0], box_return_1_0_50[:, 1])
+
+    # 1.0 box + 25 steps rl agent
+    box_path_1_0_25 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_25/eval/events.out.tfevents.1631867347.pearl8.18370.1.v2"
+    box_return_1_0_25 = np.array(getEventFileData(box_path_1_0_25)["Metrics/AverageReturn"])
+    # box_return_1_0_25 = np.array(getEventFileData(box_path_1_0_25)["Metrics/AverageStepCollisionPenality"])
+    # box_return_1_0_25 = np.array(getEventFileData(box_path_1_0_25)["Metrics/AverageStepOrientationError"])
+    # box_return_1_0_25 = np.array(getEventFileData(box_path_1_0_25)["Metrics/AverageStepPositionError"])
+    box_1_0_25 = ax.plot(box_return_1_0_25[:, 0], box_return_1_0_25[:, 1])
+
+    # 1.0 box + 50 steps rl agent
+    box_path_1_0_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_50/eval/events.out.tfevents.1631961881.pearl2.22000.1.v2"
+    box_return_1_0_50 = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageReturn"])
+    # box_return_1_0_50 = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageStepCollisionPenality"])
+    # box_return_1_0_50 = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageStepOrientationError"])
+    # box_return_1_0_50 = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageStepPositionError"])
+    box_1_0_50 = ax.plot(box_return_1_0_50[:, 0], box_return_1_0_50[:, 1])
+
+    ax.set_title('Evaluation for SAC agent with Belief Map (2.0 sampling box)', fontsize=18, weight='bold')
+    ax.set_xlabel("number of train epochs", fontsize=16)
+    ax.set_ylabel("average episode return", fontsize=16)
+    ax.legend([
+                "25 particle filter steps",
+                "50 particle filter steps"
+            ], loc='upper right', fontsize=14)
+
+    plt.show()
+    fig.savefig("diff_steps_eval_avg_eps_return.png")
+
 if __name__ == '__main__':
     # generalization_plts()
     # house3d_plts()
     # igibson_plts()
     # belief_plts()
     # rl_train_eval_plts()
-    rl_test_plts()
+    # rl_test_plts()
+    diff_steps_plts()

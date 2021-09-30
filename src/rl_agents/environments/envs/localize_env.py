@@ -669,7 +669,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         assert list(true_old_pose.shape) == [batch_size, trajlen, 3], f'{true_old_pose.shape}'
         assert list(particles.shape) == [batch_size, trajlen, num_particles, 3], f'{particles.shape}'
         assert list(particle_weights.shape) == [batch_size, trajlen, num_particles], f'{particle_weights.shape}'
-        loss_dict = pfnet_loss.compute_loss(particles, particle_weights, true_old_pose, self.trav_map_resolution)
+        loss_dict = pfnet_loss.compute_mse_loss(particles, particle_weights, true_old_pose, self.trav_map_resolution)
 
         # latest robot's pose, observation and particle filter state
         self.curr_pfnet_state = new_pfnet_state
@@ -769,7 +769,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
         assert list(true_old_pose.shape) == [batch_size, trajlen, 3], f'{true_old_pose.shape}'
         assert list(particles.shape) == [batch_size, trajlen, num_particles, 3], f'{particles.shape}'
         assert list(particle_weights.shape) == [batch_size, trajlen, num_particles], f'{particle_weights.shape}'
-        loss_dict = pfnet_loss.compute_loss(particles, particle_weights, true_old_pose, self.trav_map_resolution)
+        loss_dict = pfnet_loss.compute_mse_loss(particles, particle_weights, true_old_pose, self.trav_map_resolution)
 
         # latest robot's pose, observation and particle filter state
         self.floor_map = floor_map

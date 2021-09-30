@@ -358,7 +358,7 @@ def pfnet_train(arg_params):
             assert list(true_states.shape) == [batch_size, trajlen, 3]
 
             # compute loss
-            loss_dict = pfnet_loss.compute_loss(particle_states, particle_weights, true_states,
+            loss_dict = pfnet_loss.compute_mse_loss(particle_states, particle_weights, true_states,
                                                 arg_params.trav_map_resolution)
             loss_pred = loss_dict['pred']
 
@@ -385,7 +385,7 @@ def pfnet_train(arg_params):
         assert list(true_states.shape) == [batch_size, trajlen, 3]
 
         # compute loss
-        loss_dict = pfnet_loss.compute_loss(particle_states, particle_weights, true_states,
+        loss_dict = pfnet_loss.compute_mse_loss(particle_states, particle_weights, true_states,
                                             arg_params.trav_map_resolution)
         loss_pred = loss_dict['pred']
 
