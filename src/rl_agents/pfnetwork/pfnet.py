@@ -133,8 +133,7 @@ class PFCell(keras.layers.AbstractRNNCell):
         assert obs_features.shape.as_list()[:-1] == map_features.shape.as_list()[:-1]
 
         # merge map and observation features
-        # joint_features = tf.concat([map_features, obs_features], axis=-1)
-        joint_features = tf.concat([obs_features], axis=-1)
+        joint_features = tf.concat([map_features, obs_features], axis=-1)
         joint_features = self.joint_matrix_model(joint_features)
 
         # reshape to a vector
