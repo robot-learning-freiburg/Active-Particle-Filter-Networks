@@ -156,7 +156,7 @@ def run_testing(params):
             init_particle_weights = tf.constant(np.log(1.0/float(num_particles)),
                                         shape=(batch_size, num_particles), dtype=tf.float32)
             # compute initial loss
-            init_loss_dict = pfnet_loss.compute_loss(tf.expand_dims(init_particles, axis=1),
+            init_loss_dict = pfnet_loss.compute_mse_loss(tf.expand_dims(init_particles, axis=1),
                             tf.expand_dims(init_particle_weights, axis=1),
                             tf.expand_dims(true_states[:, 0], axis=1),
                             params.map_pixel_in_meters)
@@ -180,7 +180,7 @@ def run_testing(params):
 
             # compute loss
             particle_states, particle_weights = output
-            loss_dict = pfnet_loss.compute_loss(particle_states, particle_weights, true_states, params.map_pixel_in_meters)
+            loss_dict = pfnet_loss.compute_mse_loss(particle_states, particle_weights, true_states, params.map_pixel_in_meters)
 
             # we have squared differences along the trajectory
             mse = np.mean(loss_dict['coords'])

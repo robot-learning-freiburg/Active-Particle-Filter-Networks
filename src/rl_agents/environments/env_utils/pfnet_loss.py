@@ -3,8 +3,9 @@
 import numpy as np
 import tensorflow as tf
 
-def compute_loss(particle_states, particle_weights, true_states, trav_map_resolution):
+def compute_mse_loss(particle_states, particle_weights, true_states, trav_map_resolution):
     """
+    Compute Mean Square Error (MSE) between ground truth pose and particles
 
     :param particle_states: particle states after observation update but before motion update (batch, trajlen, k, 3)
     :param particle_weights: particle likelihoods in the log space (unnormalized) (batch, trajlen, k)

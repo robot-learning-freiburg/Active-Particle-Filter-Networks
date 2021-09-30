@@ -65,7 +65,7 @@ def run_training(params):
 
             # compute loss
             particle_states, particle_weights = output
-            loss_dict = pfnet_loss.compute_loss(particle_states, particle_weights, true_states, params.map_pixel_in_meters)
+            loss_dict = pfnet_loss.compute_mse_loss(particle_states, particle_weights, true_states, params.map_pixel_in_meters)
             loss_pred = loss_dict['pred']
 
         # compute gradients of the trainable variables with respect to the loss
@@ -85,7 +85,7 @@ def run_training(params):
 
         # compute loss
         particle_states, particle_weights = output
-        loss_dict = pfnet_loss.compute_loss(particle_states, particle_weights, true_states, params.map_pixel_in_meters)
+        loss_dict = pfnet_loss.compute_mse_loss(particle_states, particle_weights, true_states, params.map_pixel_in_meters)
         loss_pred = loss_dict['pred']
 
         eval_loss(loss_pred)  # overall trajectory loss
