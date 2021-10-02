@@ -267,33 +267,107 @@ def rl_train_eval_plts():
 def rl_test_plts():
     fig = plt.figure(figsize=(18, 12))
     ax = fig.add_subplot(111)
+    plot = 'collision_penalty'
 
-    # obstacle avoid agent
-    avoid_path = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/avoid_agent/events.out.tfevents.1632427985.pearl2.18690.0.v2"
-    avoid_end_reward = np.array(getEventFileData(avoid_path)["per_eps_end_reward"])
-    avoid_reward = ax.plot(avoid_end_reward[:, 0], avoid_end_reward[:, 1])
+    if plot == 'collision_penalty':
+        # obstacle avoid agent
+        avoid_path = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/avoid_agent/events.out.tfevents.1632427985.pearl2.18690.0.v2"
+        avoid_eps_mcp = np.array(getEventFileData(avoid_path)["per_eps_mcp"])
 
-    # random agent
-    box_path_2_0 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/rnd_agent/events.out.tfevents.1632428087.pearl2.18689.0.v2"
-    box_return_2_0 = np.array(getEventFileData(box_path_2_0)["per_eps_end_reward"])
-    box_2_0 = ax.plot(box_return_2_0[:, 0], box_return_2_0[:, 1])
+        # random agent
+        rnd_path = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/rnd_agent/events.out.tfevents.1632428087.pearl2.18689.0.v2"
+        rnd_eps_mcp = np.array(getEventFileData(rnd_path)["per_eps_mcp"])
 
-    # trained sac agent
-    box_path_4_0 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/sac_agent/events.out.tfevents.1632427849.pearl5.11213.0.v2"
-    box_return_4_0 = np.array(getEventFileData(box_path_4_0)["per_eps_end_reward"])
-    box_4_0 = ax.plot(box_return_4_0[:, 0], box_return_4_0[:, 1])
+        # trained sac agent
+        sac_path = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/sac_agent/events.out.tfevents.1632427849.pearl5.11213.0.v2"
+        sac_eps_mcp = np.array(getEventFileData(sac_path)["per_eps_mcp"])
 
-    ax.set_title('Episode end return/ pose MSE for 4.0 sampling box', fontsize=18, weight='bold')
-    ax.set_xlabel("number of episodes", fontsize=16)
-    ax.set_ylabel("return/MSE (meters)", fontsize=16)
-    ax.legend([
-                "Obstacle Avoidance Agent",
-                "Random Action Agent",
-                "Trained SAC Agent"
-            ], loc='upper right', fontsize=14)
+        data = np.concatenate([
+                    -avoid_eps_mcp[:, 1:2],
+                    -rnd_eps_mcp[:, 1:2],
+                    -sac_eps_mcp[:, 1:2]
+                ], axis=1)
+        ax.boxplot(data)
 
-    plt.show()
-    fig.savefig("rl_belief_test_reward.png")
+        ax.set_title('Episode mean collision penalty for 4.0 sampling box', fontsize=18, weight='bold')
+        ax.set_xlabel("agent behavior", fontsize=16)
+        ax.set_ylabel("mean collision penalty (%)", fontsize=16)
+        # ax.set_ylim(-1.05, 0.05)
+        ax.set_xticklabels([
+                    "Obstacle Avoidance Agent",
+                    "Random Action Agent",
+                    "Trained SAC Agent"
+                ])
+
+        plt.show()
+        fig.savefig("rl_belief_test_mcp.png")
+
+    elif plot == 'orientation_error':
+        # obstacle avoid agent
+        avoid_path = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/avoid_agent/events.out.tfevents.1632427985.pearl2.18690.0.v2"
+        avoid_eps_mso = np.array(getEventFileData(avoid_path)["per_eps_mso"])
+
+        # random agent
+        rnd_path = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/rnd_agent/events.out.tfevents.1632428087.pearl2.18689.0.v2"
+        rnd_eps_mso = np.array(getEventFileData(rnd_path)["per_eps_mso"])
+
+        # trained sac agent
+        sac_path = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/sac_agent/events.out.tfevents.1632427849.pearl5.11213.0.v2"
+        sac_eps_mso = np.array(getEventFileData(sac_path)["per_eps_mso"])
+
+        data = np.concatenate([
+                    avoid_eps_mso[:, 1:2],
+                    rnd_eps_mso[:, 1:2],
+                    sac_eps_mso[:, 1:2]
+                ], axis=1)
+        ax.boxplot(data)
+
+        ax.set_title('Episode mean orientation error for 4.0 sampling box', fontsize=18, weight='bold')
+        ax.set_xlabel("agent behavior", fontsize=16)
+        ax.set_ylabel("mean orientation error (radians)", fontsize=16)
+        ax.set_ylim(-0.05, 0.15)
+        ax.set_xticklabels([
+                    "Obstacle Avoidance Agent",
+                    "Random Action Agent",
+                    "Trained SAC Agent"
+                ])
+
+        plt.show()
+        fig.savefig("rl_belief_test_mso.png")
+
+    elif plot == 'position_error':
+        # obstacle avoid agent
+        avoid_path = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/avoid_agent/events.out.tfevents.1632427985.pearl2.18690.0.v2"
+        avoid_eps_msp = np.array(getEventFileData(avoid_path)["per_eps_msp"])
+
+        # random agent
+        rnd_path = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/rnd_agent/events.out.tfevents.1632428087.pearl2.18689.0.v2"
+        rnd_eps_msp = np.array(getEventFileData(rnd_path)["per_eps_msp"])
+
+        # trained sac agent
+        sac_path = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/sac_agent/events.out.tfevents.1632427849.pearl5.11213.0.v2"
+        sac_eps_msp = np.array(getEventFileData(sac_path)["per_eps_msp"])
+
+        data = np.concatenate([
+                    avoid_eps_msp[:, 1:2],
+                    rnd_eps_msp[:, 1:2],
+                    sac_eps_msp[:, 1:2]
+                ], axis=1)
+        ax.boxplot(data)
+
+        ax.set_title('Episode mean position error for 4.0 sampling box', fontsize=18, weight='bold')
+        ax.set_xlabel("agent behavior", fontsize=16)
+        ax.set_ylabel("mean position error (meters)", fontsize=16)
+        ax.set_ylim(-0.05, 2.0)
+        ax.set_xticklabels([
+                    "Obstacle Avoidance Agent",
+                    "Random Action Agent",
+                    "Trained SAC Agent"
+                ])
+
+        plt.show()
+        fig.savefig("rl_belief_test_msp.png")
+
 
 def diff_steps_plts():
     fig = plt.figure(figsize=(18, 12))
@@ -342,5 +416,5 @@ if __name__ == '__main__':
     # igibson_plts()
     # belief_plts()
     # rl_train_eval_plts()
-    # rl_test_plts()
-    diff_steps_plts()
+    rl_test_plts()
+    # diff_steps_plts()
