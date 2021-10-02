@@ -250,7 +250,7 @@ def rl_train_eval_plts():
         box_return_5_0 = np.array(getEventFileData(box_path_5_0)["Metrics/AverageReturn"])
         box_5_0 = ax.plot(box_return_5_0[:, 0], box_return_5_0[:, 1])
 
-        ax.set_title('Evaluation episode return for SAC agent with Belief Map', fontsize=18, weight='bold')
+        ax.set_title('Evaluation episode return for SAC agent with belief map', fontsize=18, weight='bold')
         ax.set_xlabel("number of train epochs", fontsize=16)
         ax.set_ylabel("average episode return", fontsize=16)
         ax.legend([
@@ -290,14 +290,14 @@ def rl_test_plts():
         ax.boxplot(data)
 
         ax.set_title('Episode mean collision penalty for 4.0 sampling box', fontsize=18, weight='bold')
-        ax.set_xlabel("agent behavior", fontsize=16)
+        # ax.set_xlabel("agent behavior", fontsize=16)
         ax.set_ylabel("mean collision penalty (%)", fontsize=16)
         # ax.set_ylim(-1.05, 0.05)
         ax.set_xticklabels([
                     "Obstacle Avoidance Agent",
                     "Random Action Agent",
                     "Trained SAC Agent"
-                ])
+                ], fontsize=16)
 
         plt.show()
         fig.savefig("rl_belief_test_mcp.png")
@@ -323,14 +323,14 @@ def rl_test_plts():
         ax.boxplot(data)
 
         ax.set_title('Episode mean orientation error for 4.0 sampling box', fontsize=18, weight='bold')
-        ax.set_xlabel("agent behavior", fontsize=16)
+        # ax.set_xlabel("agent behavior", fontsize=16)
         ax.set_ylabel("mean orientation error (radians)", fontsize=16)
         ax.set_ylim(-0.05, 0.15)
         ax.set_xticklabels([
                     "Obstacle Avoidance Agent",
                     "Random Action Agent",
                     "Trained SAC Agent"
-                ])
+                ], fontsize=16)
 
         plt.show()
         fig.savefig("rl_belief_test_mso.png")
@@ -356,22 +356,56 @@ def rl_test_plts():
         ax.boxplot(data)
 
         ax.set_title('Episode mean position error for 4.0 sampling box', fontsize=18, weight='bold')
-        ax.set_xlabel("agent behavior", fontsize=16)
+        # ax.set_xlabel("agent behavior", fontsize=16)
         ax.set_ylabel("mean position error (meters)", fontsize=16)
         ax.set_ylim(-0.05, 2.0)
         ax.set_xticklabels([
                     "Obstacle Avoidance Agent",
                     "Random Action Agent",
                     "Trained SAC Agent"
-                ])
+                ], fontsize=16)
 
         plt.show()
         fig.savefig("rl_belief_test_msp.png")
+
+    else:
+        # obstacle avoid agent
+        avoid_path = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/avoid_agent/events.out.tfevents.1632427985.pearl2.18690.0.v2"
+        avoid_eps_end_mse = np.array(getEventFileData(avoid_path)["per_eps_end_reward"])
+
+        # random agent
+        rnd_path = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/rnd_agent/events.out.tfevents.1632428087.pearl2.18689.0.v2"
+        rnd_eps_end_mse = np.array(getEventFileData(rnd_path)["per_eps_end_reward"])
+
+        # trained sac agent
+        sac_path = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/sac_agent/events.out.tfevents.1632427849.pearl5.11213.0.v2"
+        sac_eps_end_mse = np.array(getEventFileData(sac_path)["per_eps_end_reward"])
+
+        data = np.concatenate([
+                    -avoid_eps_end_mse[:, 1:2],
+                    -rnd_eps_end_mse[:, 1:2],
+                    -sac_eps_end_mse[:, 1:2]
+                ], axis=1)
+        ax.boxplot(data)
+
+        ax.set_title('Episode end pose error for 4.0 sampling box', fontsize=18, weight='bold')
+        # ax.set_xlabel("agent behavior", fontsize=16)
+        ax.set_ylabel("mean squared error (meters)", fontsize=16)
+        ax.set_ylim(-0.05, 0.3)
+        ax.set_xticklabels([
+                    "Obstacle Avoidance Agent",
+                    "Random Action Agent",
+                    "Trained SAC Agent"
+                ], fontsize=16)
+
+        plt.show()
+        fig.savefig("rl_belief_test_end_mse.png")
 
 
 def diff_steps_plts():
     fig = plt.figure(figsize=(18, 12))
     ax = fig.add_subplot(111)
+    plot = 'average_return'
 
     # # 1.0 box + 25 steps rl agent
     # box_path_1_0_25 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_25/train/events.out.tfevents.1631867346.pearl8.18370.0.v2"
@@ -383,32 +417,97 @@ def diff_steps_plts():
     # box_return_1_0_50 = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageReturn"])
     # box_1_0_50 = ax.plot(box_return_1_0_50[:, 0], box_return_1_0_50[:, 1])
 
-    # 1.0 box + 25 steps rl agent
-    box_path_1_0_25 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_25/eval/events.out.tfevents.1631867347.pearl8.18370.1.v2"
-    box_return_1_0_25 = np.array(getEventFileData(box_path_1_0_25)["Metrics/AverageReturn"])
-    # box_return_1_0_25 = np.array(getEventFileData(box_path_1_0_25)["Metrics/AverageStepCollisionPenality"])
-    # box_return_1_0_25 = np.array(getEventFileData(box_path_1_0_25)["Metrics/AverageStepOrientationError"])
+    if plot == 'average_return':
+        # 1.0 box + 25 steps rl agent
+        box_path_1_0_25 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_25/eval/events.out.tfevents.1631867347.pearl8.18370.1.v2"
+        box_return_1_0_25 = np.array(getEventFileData(box_path_1_0_25)["Metrics/AverageReturn"])
+        box_1_0_25 = ax.plot(box_return_1_0_25[:, 0], box_return_1_0_25[:, 1])
+
+        # 1.0 box + 50 steps rl agent
+        box_path_1_0_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_50/eval/events.out.tfevents.1631961881.pearl2.22000.1.v2"
+        box_return_1_0_50 = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageReturn"])
+        box_1_0_50 = ax.plot(box_return_1_0_50[:, 0], box_return_1_0_50[:, 1])
+
+        ax.set_title('Average episode return for SAC agent with belief map (2.0 sampling box)', fontsize=18, weight='bold')
+        ax.set_xlabel("number of eval epochs", fontsize=16)
+        ax.set_ylabel("average episode return", fontsize=16)
+        ax.legend([
+                    "25 particle filter steps",
+                    "50 particle filter steps"
+                ], loc='upper right', fontsize=14)
+
+        plt.show()
+        fig.savefig("diff_steps_eval_avg_eps_return.png")
+
+    elif plot == 'collision_penalty':
+        # 1.0 box + 25 steps rl agent
+        box_path_1_0_25 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_25/eval/events.out.tfevents.1631867347.pearl8.18370.1.v2"
+        box_return_1_0_25 = np.array(getEventFileData(box_path_1_0_25)["Metrics/AverageStepCollisionPenality"])
+        box_1_0_25 = ax.plot(box_return_1_0_25[:, 0], box_return_1_0_25[:, 1])
+
+        # 1.0 box + 50 steps rl agent
+        box_path_1_0_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_50/eval/events.out.tfevents.1631961881.pearl2.22000.1.v2"
+        box_return_1_0_50 = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageStepCollisionPenality"])
+        box_1_0_50 = ax.plot(box_return_1_0_50[:, 0], box_return_1_0_50[:, 1])
+
+        ax.set_title('Average step collision penalty for SAC agent with belief map (2.0 sampling box)', fontsize=18, weight='bold')
+        ax.set_xlabel("number of eval epochs", fontsize=16)
+        ax.set_ylabel("average collision penalty (%)", fontsize=16)
+        ax.legend([
+                    "25 particle filter steps",
+                    "50 particle filter steps"
+                ], loc='upper right', fontsize=14)
+
+        plt.show()
+        fig.savefig("diff_steps_eval_avg_step_collision.png")
+
+    elif plot == 'orientation_error':
+        # 1.0 box + 25 steps rl agent
+        box_path_1_0_25 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_25/eval/events.out.tfevents.1631867347.pearl8.18370.1.v2"
+        box_return_1_0_25 = np.array(getEventFileData(box_path_1_0_25)["Metrics/AverageStepOrientationError"])
+        box_1_0_25 = ax.plot(box_return_1_0_25[:, 0], box_return_1_0_25[:, 1])
     # box_return_1_0_25 = np.array(getEventFileData(box_path_1_0_25)["Metrics/AverageStepPositionError"])
-    box_1_0_25 = ax.plot(box_return_1_0_25[:, 0], box_return_1_0_25[:, 1])
 
-    # 1.0 box + 50 steps rl agent
-    box_path_1_0_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_50/eval/events.out.tfevents.1631961881.pearl2.22000.1.v2"
-    box_return_1_0_50 = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageReturn"])
-    # box_return_1_0_50 = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageStepCollisionPenality"])
-    # box_return_1_0_50 = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageStepOrientationError"])
+        # 1.0 box + 50 steps rl agent
+        box_path_1_0_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_50/eval/events.out.tfevents.1631961881.pearl2.22000.1.v2"
+        box_return_1_0_50 = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageStepOrientationError"])
+        box_1_0_50 = ax.plot(box_return_1_0_50[:, 0], box_return_1_0_50[:, 1])
     # box_return_1_0_50 = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageStepPositionError"])
-    box_1_0_50 = ax.plot(box_return_1_0_50[:, 0], box_return_1_0_50[:, 1])
 
-    ax.set_title('Evaluation for SAC agent with Belief Map (2.0 sampling box)', fontsize=18, weight='bold')
-    ax.set_xlabel("number of train epochs", fontsize=16)
-    ax.set_ylabel("average episode return", fontsize=16)
-    ax.legend([
-                "25 particle filter steps",
-                "50 particle filter steps"
-            ], loc='upper right', fontsize=14)
 
-    plt.show()
-    fig.savefig("diff_steps_eval_avg_eps_return.png")
+        ax.set_title('Average step orientation error for SAC agent with belief map (2.0 sampling box)', fontsize=18, weight='bold')
+        ax.set_xlabel("number of eval epochs", fontsize=16)
+        ax.set_ylabel("average orientation error (radians)", fontsize=16)
+        ax.legend([
+                    "25 particle filter steps",
+                    "50 particle filter steps"
+                ], loc='upper right', fontsize=14)
+
+        plt.show()
+        fig.savefig("diff_steps_eval_avg_step_orientation.png")
+
+    else:
+        # 1.0 box + 25 steps rl agent
+        box_path_1_0_25 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_25/eval/events.out.tfevents.1631867347.pearl8.18370.1.v2"
+        box_return_1_0_25 = np.array(getEventFileData(box_path_1_0_25)["Metrics/AverageStepPositionError"])
+        box_1_0_25 = ax.plot(box_return_1_0_25[:, 0], box_return_1_0_25[:, 1])
+
+        # 1.0 box + 50 steps rl agent
+        box_path_1_0_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_50/eval/events.out.tfevents.1631961881.pearl2.22000.1.v2"
+        box_return_1_0_50 = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageStepPositionError"])
+        box_1_0_50 = ax.plot(box_return_1_0_50[:, 0], box_return_1_0_50[:, 1])
+
+
+        ax.set_title('Average step position error for SAC agent with belief map (2.0 sampling box)', fontsize=18, weight='bold')
+        ax.set_xlabel("number of eval epochs", fontsize=16)
+        ax.set_ylabel("average position error (meters)", fontsize=16)
+        ax.legend([
+                    "25 particle filter steps",
+                    "50 particle filter steps"
+                ], loc='upper right', fontsize=14)
+
+        plt.show()
+        fig.savefig("diff_steps_eval_avg_step_position.png")
 
 if __name__ == '__main__':
     # generalization_plts()
@@ -416,5 +515,5 @@ if __name__ == '__main__':
     # igibson_plts()
     # belief_plts()
     # rl_train_eval_plts()
-    rl_test_plts()
-    # diff_steps_plts()
+    # rl_test_plts()
+    diff_steps_plts()
