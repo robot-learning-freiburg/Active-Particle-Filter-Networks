@@ -101,7 +101,7 @@
          --scene_id='Rs' \
          --num_eval_episodes=1 \
          --agent='avoid_agent' \
-         --init_particles_distr='gaussian' \
+         --init_particles_distr='uniform' \
          --init_particles_std '0.2' '0.523599' \
          --particles_range=100 \
          --num_particles=250 \
