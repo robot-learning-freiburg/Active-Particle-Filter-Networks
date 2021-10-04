@@ -41,7 +41,7 @@
       <root_folder>/iGibson$ python -m igibson.utils.assets_utils --download_assets
       <root_folder>/iGibson$ python -m igibson.utils.assets_utils --download_demo_data
    ```
-6. For locobot, we add additional lidar scan to its urdf file. For reference, turtlebot's urdf has the sensor by default.
+6. For locobot, we modify urdf file by adding additional lidar scan sensor. For reference, turtlebot's urdf file has the sensor by default.
    ```
       <root_folder>/iGibson$ vi igibson/data/assets/models/locobot/locobot.urdf
     
