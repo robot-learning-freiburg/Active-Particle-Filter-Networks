@@ -95,7 +95,7 @@
    ```
       <root_folder>$ cd deep-activate-localization/src/rl_agents
       <root_folder>/deep-activate-localization/src/rl_agents$ python -u test_pfnet.py \
-         --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_63_0.136/pfnet_checkpoint \
+         --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/report/rs_rgbd/checkpoint_28_0.065/pfnet_checkpoint \
          --obs_mode='rgb-depth' \
          --custom_output 'rgb_obs' 'depth_obs' 'likelihood_map' 'obstacle_obs' \
          --scene_id='Rs' \
