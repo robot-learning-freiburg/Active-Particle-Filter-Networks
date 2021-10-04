@@ -502,19 +502,6 @@ class LocalizeGibsonEnv(iGibsonEnv):
         right_front = np.min(min_depth[128:192]) < self.depth_th
         right = np.min(min_depth[192:]) < self.depth_th
 
-        # # HACK: to collect supervised data for particle filter training
-        # new_rgb_obs = copy.deepcopy(state['rgb']*255) # [0, 1] ->[0, 255]
-        # new_depth_obs = copy.deepcopy(state['depth']*100) # [0, 1] ->[0, 100]
-        # new_occupancy_grid = copy.deepcopy(state['occupancy_grid']) # [0, 0.5, 1]
-        #
-        # # process new rgb, depth observation: convert [0, 255] to [-1, +1] range
-        # return [
-        #         datautils.process_raw_image(new_rgb_obs, resize=(56, 56)),
-        #         datautils.process_raw_image(new_depth_obs, resize=(56, 56)),
-        #         np.array([left, left_front, right_front, right]),
-        #         np.atleast_3d(datautils.decode_image(new_occupancy_grid, resize=(56, 56)).astype(np.float32))
-        #     ]
-
         # process and return only output we are expecting to
         processed_state = OrderedDict()
         if 'task_obs' in self.pf_params.custom_output:

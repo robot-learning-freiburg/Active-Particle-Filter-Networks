@@ -313,10 +313,19 @@ def gather_episode_stats(env, params, sample_particles=False):
     depth_observation = []
     occupancy_grid_observation = []
 
-    obs = env.reset()  # already processed
-    rgb_observation.append(obs[0])
-    depth_observation.append(obs[1])
-    occupancy_grid_observation.append(obs[3])
+    obs = env.reset()  # observations are not processed
+
+    # process [0, 1] ->[0, 255] -> [-1, +1] range
+    rgb = process_raw_image(obs['rgb_obs']*255, resize=(56, 56))
+    rgb_observation.append(rgb)
+
+    # process [0, 1] ->[0, 100] -> [-1, +1] range
+    depth = process_raw_image(obs['depth_obs']*100, resize=(56, 56))
+    depth_observation.append(depth)
+
+    # process [0, 0.5, 1]
+    occupancy_grid = np.atleast_3d(decode_image(obs['occupancy_grid'], resize=(56, 56)).astype(np.float32))
+    occupancy_grid_observation.append(occupancy_grid)
 
     scene_id = env.config.get('scene_id')
     floor_num = env.task.floor_num
@@ -336,13 +345,20 @@ def gather_episode_stats(env, params, sample_particles=False):
 
         # take action and get new observation
         obs, reward, done, _ = env.step(action)
-        assert list(obs[0].shape) == [56, 56, 3]
-        assert list(obs[1].shape) == [56, 56, 1]
-        assert list(obs[3].shape) == [56, 56, 1]
-        rgb_observation.append(obs[0])
-        depth_observation.append(obs[1])
-        left, left_front, right_front, right = obs[2] # obstacle (not)present
-        occupancy_grid_observation.append(obs[3])
+
+        # process [0, 1] ->[0, 255] -> [-1, +1] range
+        rgb = process_raw_image(obs['rgb_obs']*255, resize=(56, 56))
+        rgb_observation.append(rgb)
+
+        # process [0, 1] ->[0, 100] -> [-1, +1] range
+        depth = process_raw_image(obs['depth_obs']*100, resize=(56, 56))
+        depth_observation.append(depth)
+
+        # process [0, 0.5, 1]
+        occupancy_grid = np.atleast_3d(decode_image(obs['occupancy_grid'], resize=(56, 56)).astype(np.float32))
+        occupancy_grid_observation.append(occupancy_grid)
+
+        left, left_front, right_front, right = obs['obstacle_obs'] # obstacle (not)present
 
         # get new robot state after taking action
         new_pose = env.get_robot_pose(env.robots[0].calc_state(), floor_map.shape)
