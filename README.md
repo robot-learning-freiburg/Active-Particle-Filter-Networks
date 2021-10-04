@@ -93,7 +93,7 @@
    ```
 11. Test pretrained particle filter + igibson environment with random agent, result will be stored to test_output directory.
    ```
-      <root_folder>/agents$ cd /deep-activate-localization/src/rl_agents
+      <root_folder>$ cd deep-activate-localization/src/rl_agents
       <root_folder>/deep-activate-localization/src/rl_agents$ python -u test_pfnet.py \
          --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_63_0.136/pfnet_checkpoint \
          --obs_mode='rgb-depth' \
