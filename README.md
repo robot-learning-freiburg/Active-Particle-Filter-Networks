@@ -91,7 +91,7 @@
       <root_folder>/agents$ cd..
       <root_folder>$ git clone https://github.com/suresh-guttikonda/deep-activate-localization.git --recursive
    ```
-11. Test pretrained particle filter + igibson environment with random agent, result will be stored to test_output directory.
+11. Test pretrained particle filter + igibson environment with obstacle avoidance agent, result will be stored to test_output directory.
    ```
       <root_folder>$ cd deep-activate-localization/src/rl_agents
       <root_folder>/deep-activate-localization/src/rl_agents$ python -u test_pfnet.py \
@@ -100,11 +100,11 @@
          --custom_output 'rgb_obs' 'depth_obs' 'likelihood_map' \
          --scene_id='Rs' \
          --num_eval_episodes=1 \
-         --agent='rnd_agent' \
+         --agent='avoid_agent' \
          --init_particles_distr='gaussian' \
          --init_particles_std '0.2' '0.523599' \
          --particles_range=100 \
-         --num_particles=500 \
+         --num_particles=250 \
          --transition_std '0.04' '0.0872665' \
          --resample=true \
          --alpha_resample_ratio=0.95 \
