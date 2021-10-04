@@ -114,7 +114,7 @@ June 9th 2021
 $ nohup python -u supervised_data.py \
 --filename=./pfnet_data/train/Rs0_floor0.tfrecord \
 --scene_id='Rs' \
---agent='random' \
+--agent='avoid_agent' \
 --num_records=5 \
 --custom_output='rgb_obs','depth_obs','occupancy_grid','obstacle_obs' \
 --config_file=./configs/locobot_pfnet_nav.yaml \

@@ -31,7 +31,7 @@ flags.DEFINE_integer(
 )
 flags.DEFINE_string(
     name='agent',
-    default='random',
+    default='avoid_agent',
     help='Agent Behavior'
 )
 

@@ -307,6 +307,8 @@ def gather_episode_stats(env, params, sample_particles=False):
     max_lin_vel = params.max_lin_vel
     max_ang_vel = params.max_ang_vel
 
+    assert agent in ['manual_agent', 'avoid_agent', 'rnd_agent']
+
     odometry = []
     true_poses = []
     rgb_observation = []
@@ -338,10 +340,10 @@ def gather_episode_stats(env, params, sample_particles=False):
     true_poses.append(old_pose)
 
     for _ in range(trajlen - 1):
-        if agent == 'manual':
+        if agent == 'manual_agent':
             action = get_discrete_action(max_lin_vel, max_ang_vel)
         else:
-            action = obstacle_avoidance(obs[2], max_lin_vel, max_ang_vel)
+            action = obstacle_avoidance(obs['obstacle_obs'], max_lin_vel, max_ang_vel)
 
         # take action and get new observation
         obs, reward, done, _ = env.step(action)
