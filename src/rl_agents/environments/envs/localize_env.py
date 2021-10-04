@@ -110,7 +110,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             else:
                 self.pf_params.num_clusters = 10
                 self.pf_params.global_map_size = [100, 100, 1]
-                self.pf_params.custom_output = ['rgb_obs', 'depth_obs']
+                self.pf_params.custom_output = ['rgb_obs', 'depth_obs', 'occupancy_grid', 'obstacle_obs']
                 self.pf_params.root_dir = './'
                 self.pf_params.loop = 6
 
