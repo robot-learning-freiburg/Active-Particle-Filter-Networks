@@ -461,7 +461,7 @@ class LocalizeGibsonEnv(iGibsonEnv):
             self.store_obs()
 
         # HACK: sample robot pose from selective area
-        self.reset_agent()
+        # self.reset_agent()
 
         state = super(LocalizeGibsonEnv, self).reset()
         # perform particle filter update
