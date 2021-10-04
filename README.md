@@ -67,6 +67,7 @@
    ```
 7. Install additional packages
    ```
+      <root_folder>/iGibson$ cd..
       <root_folder>$ pip install --upgrade pip
       <root_folder>$ pip install tensorflow==2.6.0
       <root_folder>$ pip install -U numpy==1.21.1
