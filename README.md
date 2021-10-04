@@ -67,7 +67,6 @@
    ```
 7. Install additional packages
    ```
-      <root_folder>/iGibson$ cd..
       <root_folder>$ pip install --upgrade pip
       <root_folder>$ pip install tensorflow==2.6.0
       <root_folder>$ pip install -U numpy==1.21.1
@@ -82,16 +81,19 @@
    ```
 9. Install TF Agents
    ```
+      <root_folder>/iGibson$ cd..
       <root_folder>$ git clone --branch cvpr21_challenge_tf2.4 https://github.com/suresh-guttikonda/agents/ --recursive
       <root_folder>$ cd agents
       <root_folder>/agents$ pip3 install -e .
    ```
 10. Get the Active Localization code + pretrained checkpoints
    ```
+      <root_folder>/agents$ cd..
       <root_folder>$ git clone https://github.com/suresh-guttikonda/deep-activate-localization.git --recursive
    ```
 11. Test pretrained particle filter + igibson environment with random agent, result will be stored to test_output directory.
    ```
+      <root_folder>/agents$ cd /deep-activate-localization/src/rl_agents
       <root_folder>/deep-activate-localization/src/rl_agents$ python -u test_pfnet.py \
          --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_63_0.136/pfnet_checkpoint \
          --obs_mode='rgb-depth' \
