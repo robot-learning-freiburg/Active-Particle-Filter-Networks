@@ -5,6 +5,9 @@
 * Nvidia-Driver Version: 460.73.01
 * CUDA Version: 11.2
 
+#### Wiki Page:
+For more details to train/test particle filter or rl agent [refer](https://github.com/suresh-guttikonda/deep-activate-localization/wiki).
+
 #### Installation:
 - Option1 : Installation from source (https://github.com/suresh-guttikonda/deep-activate-localization#steps-to-setup-project)
 - Option2 : Installation from singularity image (https://github.com/suresh-guttikonda/deep-activate-localization#steps-to-create-singularity-image-to-setup-project) Note: modifying locobot urdf can be tricky in this case.
