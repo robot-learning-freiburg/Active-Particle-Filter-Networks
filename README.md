@@ -36,11 +36,10 @@
       <root_folder>/iGibson$ python
       >>> import igibson
    ```
-5. Download required igibson's assets (robot's urdf, apartments, and others)
+5. Download required igibson's assets (robot's urdf, demo apartment, and others). For more datasets [refer](http://svl.stanford.edu/igibson/docs/dataset.html)
    ```
       <root_folder>/iGibson$ python -m igibson.utils.assets_utils --download_assets
       <root_folder>/iGibson$ python -m igibson.utils.assets_utils --download_demo_data
-      <root_folder>/iGibson$ python -m igibson.utils.assets_utils --download_dataset https://storage.googleapis.com/gibson_scenes/gibson_v2_4+.tar.gz
    ```
 6. For locobot, we add additional lidar scan to its urdf file. For reference, turtlebot's urdf has the sensor by default.
    ```
