@@ -387,6 +387,7 @@ def test_agent(arg_params):
             buffer_size=100, batch_size=tf_env.batch_size),
     ]
 
+    assert arg_params.agent in ['sac_agent', 'rnd_agent']
     if arg_params.agent == 'sac_agent':
         policy = eval_policy
         log_dir = os.path.join(arg_params.root_dir, 'sac_agent')
