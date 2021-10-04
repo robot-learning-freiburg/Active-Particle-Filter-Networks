@@ -97,7 +97,7 @@
       <root_folder>/deep-activate-localization/src/rl_agents$ python -u test_pfnet.py \
          --pfnet_loadpath=./pfnetwork/checkpoints/pfnet_igibson_data/checkpoint_63_0.136/pfnet_checkpoint \
          --obs_mode='rgb-depth' \
-         --custom_output 'rgb_obs' 'depth_obs' 'likelihood_map' \
+         --custom_output 'rgb_obs' 'depth_obs' 'likelihood_map' 'obstacle_obs' \
          --scene_id='Rs' \
          --num_eval_episodes=1 \
          --agent='avoid_agent' \
