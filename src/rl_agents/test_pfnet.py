@@ -508,6 +508,7 @@ def rt_pfnet_test(arg_params):
     max_lin_vel = env.config.get("linear_velocity", 0.5)
     max_ang_vel = env.config.get("angular_velocity", np.pi/2)
 
+    assert arg_params.agent in ['manual_agent', 'avoid_agent', 'rnd_agent']
     if arg_params.agent == 'manual_agent':
         log_dir = os.path.join(arg_params.root_dir, 'manual_agent')
     elif arg_params.agent == 'avoid_agent':
