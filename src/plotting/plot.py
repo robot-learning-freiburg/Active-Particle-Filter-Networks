@@ -509,6 +509,192 @@ def diff_steps_plts():
         plt.show()
         fig.savefig("diff_steps_eval_avg_step_position.png")
 
+def all_rl_eval_plts():
+    fig = plt.figure(figsize=(18, 12))
+    ax = fig.add_subplot(111)
+    plot = 'collision_penalty'
+    limit = 15
+
+    if plot == 'collision_penalty':
+        # 0.5 box + 25 steps rl agent
+        box_path_0_5_25 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_0.5_box_25/eval/events.out.tfevents.1631716010.pearl8.18818.1.v2"
+        box_0_5_mcp = np.array(getEventFileData(box_path_0_5_25)["Metrics/AverageStepCollisionPenality"])
+
+        # 1.0 box + 50 steps rl agent
+        box_path_1_0_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_50/eval/events.out.tfevents.1631961881.pearl2.22000.1.v2"
+        box_1_0_mcp = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageStepCollisionPenality"])
+
+        # 2.0 box + 50 steps rl agent
+        box_path_2_0_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/eval/events.out.tfevents.1632144090.pearl2.5531.1.v2"
+        box_2_0_mcp = np.array(getEventFileData(box_path_2_0_50)["Metrics/AverageStepCollisionPenality"])
+
+        # 2.5 box + 50 steps rl agent
+        box_path_2_5_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.5_box_50/eval/events.out.tfevents.1632349779.pearl8.24775.1.v2"
+        box_2_5_mcp = np.array(getEventFileData(box_path_2_5_50)["Metrics/AverageStepCollisionPenality"])
+
+        # full aprt + 50 steps rl agent
+        box_path_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_likelihood_rnd_50_new/eval/events.out.tfevents.1633162880.pearl8.3776.1.v2"
+        box_mcp = np.array(getEventFileData(box_path_50)["Metrics/AverageStepCollisionPenality"])
+
+        data = np.concatenate([
+                    box_0_5_mcp[:limit, 1:2],
+                    box_1_0_mcp[:limit, 1:2],
+                    box_2_0_mcp[:limit, 1:2],
+                    box_2_5_mcp[:limit, 1:2],
+                    box_mcp[:limit, 1:2]
+                ], axis=1)
+        ax.boxplot(data)
+
+        ax.set_title('Episode mean collision penalty for different start pose sampling area', fontsize=18, weight='bold')
+        # ax.set_xlabel("agent behavior", fontsize=16)
+        ax.set_ylabel("mean collision penalty (%)", fontsize=16)
+        # ax.set_ylim(-1.05, 0.05)
+        ax.set_xticklabels([
+                    "1.0 Sampling Box",
+                    "2.0 Sampling Box",
+                    "4.0 Sampling Box",
+                    "5.0 Sampling Box",
+                    "Full Apartment",
+                ], fontsize=16)
+
+        plt.show()
+        fig.savefig("rl_belief_eval_mcp.png")
+
+    elif plot == 'orientation_error':
+        # 0.5 box + 25 steps rl agent
+        box_path_0_5_25 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_0.5_box_25/eval/events.out.tfevents.1631716010.pearl8.18818.1.v2"
+        box_0_5_mso = np.array(getEventFileData(box_path_0_5_25)["Metrics/AverageStepOrientationError"])
+
+        # 1.0 box + 50 steps rl agent
+        box_path_1_0_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_50/eval/events.out.tfevents.1631961881.pearl2.22000.1.v2"
+        box_1_0_mso = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageStepOrientationError"])
+
+        # 2.0 box + 50 steps rl agent
+        box_path_2_0_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/eval/events.out.tfevents.1632144090.pearl2.5531.1.v2"
+        box_2_0_mso = np.array(getEventFileData(box_path_2_0_50)["Metrics/AverageStepOrientationError"])
+
+        # 2.5 box + 50 steps rl agent
+        box_path_2_5_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.5_box_50/eval/events.out.tfevents.1632349779.pearl8.24775.1.v2"
+        box_2_5_mso = np.array(getEventFileData(box_path_2_5_50)["Metrics/AverageStepOrientationError"])
+
+        # full aprt + 50 steps rl agent
+        box_path_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_likelihood_rnd_50_new/eval/events.out.tfevents.1633162880.pearl8.3776.1.v2"
+        box_mso = np.array(getEventFileData(box_path_50)["Metrics/AverageStepOrientationError"])
+
+        data = np.concatenate([
+                    box_0_5_mso[:limit, 1:2],
+                    box_1_0_mso[:limit, 1:2],
+                    box_2_0_mso[:limit, 1:2],
+                    box_2_5_mso[:limit, 1:2],
+                    box_mso[:limit, 1:2]
+                ], axis=1)
+        ax.boxplot(data)
+
+        ax.set_title('Episode mean orientation error for different start pose sampling area', fontsize=18, weight='bold')
+        # ax.set_xlabel("agent behavior", fontsize=16)
+        ax.set_ylabel("mean orientation error (radians)", fontsize=16)
+        # ax.set_ylim(-0.05, 0.15)
+        ax.set_xticklabels([
+                    "1.0 Sampling Box",
+                    "2.0 Sampling Box",
+                    "4.0 Sampling Box",
+                    "5.0 Sampling Box",
+                    "Full Apartment",
+                ], fontsize=16)
+
+        plt.show()
+        fig.savefig("rl_belief_eval_mso.png")
+
+    elif plot == 'position_error':
+        # 0.5 box + 25 steps rl agent
+        box_path_0_5_25 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_0.5_box_25/eval/events.out.tfevents.1631716010.pearl8.18818.1.v2"
+        box_0_5_msp = np.array(getEventFileData(box_path_0_5_25)["Metrics/AverageStepPositionError"])
+
+        # 1.0 box + 50 steps rl agent
+        box_path_1_0_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_50/eval/events.out.tfevents.1631961881.pearl2.22000.1.v2"
+        box_1_0_msp = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageStepPositionError"])
+
+        # 2.0 box + 50 steps rl agent
+        box_path_2_0_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/eval/events.out.tfevents.1632144090.pearl2.5531.1.v2"
+        box_2_0_msp = np.array(getEventFileData(box_path_2_0_50)["Metrics/AverageStepPositionError"])
+
+        # 2.5 box + 50 steps rl agent
+        box_path_2_5_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.5_box_50/eval/events.out.tfevents.1632349779.pearl8.24775.1.v2"
+        box_2_5_msp = np.array(getEventFileData(box_path_2_5_50)["Metrics/AverageStepPositionError"])
+
+        # full aprt + 50 steps rl agent
+        box_path_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_likelihood_rnd_50_new/eval/events.out.tfevents.1633162880.pearl8.3776.1.v2"
+        box_msp = np.array(getEventFileData(box_path_50)["Metrics/AverageStepPositionError"])
+
+        data = np.concatenate([
+                    box_0_5_msp[:limit, 1:2],
+                    box_1_0_msp[:limit, 1:2],
+                    box_2_0_msp[:limit, 1:2],
+                    box_2_5_msp[:limit, 1:2],
+                    box_msp[:limit, 1:2]
+                ], axis=1)
+        ax.boxplot(data)
+
+        ax.set_title('Episode mean position error for different start pose sampling area', fontsize=18, weight='bold')
+        # ax.set_xlabel("agent behavior", fontsize=16)
+        ax.set_ylabel("mean position error (meters)", fontsize=16)
+        # ax.set_ylim(-1.05, 0.05)
+        ax.set_xticklabels([
+                    "1.0 Sampling Box",
+                    "2.0 Sampling Box",
+                    "4.0 Sampling Box",
+                    "5.0 Sampling Box",
+                    "Full Apartment",
+                ], fontsize=16)
+
+        plt.show()
+        fig.savefig("rl_belief_eval_msp.png")
+
+    else:
+        # 0.5 box + 25 steps rl agent
+        box_path_0_5_25 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_0.5_box_25/eval/events.out.tfevents.1631716010.pearl8.18818.1.v2"
+        box_0_5_mer = np.array(getEventFileData(box_path_0_5_25)["Metrics/AverageReturn"])
+
+        # 1.0 box + 50 steps rl agent
+        box_path_1_0_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_50/eval/events.out.tfevents.1631961881.pearl2.22000.1.v2"
+        box_1_0_mer = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageReturn"])
+
+        # 2.0 box + 50 steps rl agent
+        box_path_2_0_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.0_box_50/eval/events.out.tfevents.1632144090.pearl2.5531.1.v2"
+        box_2_0_mer = np.array(getEventFileData(box_path_2_0_50)["Metrics/AverageReturn"])
+
+        # 2.5 box + 50 steps rl agent
+        box_path_2_5_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_2.5_box_50/eval/events.out.tfevents.1632349779.pearl8.24775.1.v2"
+        box_2_5_mer = np.array(getEventFileData(box_path_2_5_50)["Metrics/AverageReturn"])
+
+        # full aprt + 50 steps rl agent
+        box_path_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_likelihood_rnd_50_new/eval/events.out.tfevents.1633162880.pearl8.3776.1.v2"
+        box_mer = np.array(getEventFileData(box_path_50)["Metrics/AverageReturn"])
+
+        data = np.concatenate([
+                    box_0_5_mer[:limit, 1:2],
+                    box_1_0_mer[:limit, 1:2],
+                    box_2_0_mer[:limit, 1:2],
+                    box_2_5_mer[:limit, 1:2],
+                    box_mer[:limit, 1:2]
+                ], axis=1)
+        ax.boxplot(data)
+
+        ax.set_title('Episode mean return for different start pose sampling area', fontsize=18, weight='bold')
+        # ax.set_xlabel("agent behavior", fontsize=16)
+        ax.set_ylabel("return", fontsize=16)
+        # ax.set_ylim(-1.05, 0.05)
+        ax.set_xticklabels([
+                    "1.0 Sampling Box",
+                    "2.0 Sampling Box",
+                    "4.0 Sampling Box",
+                    "5.0 Sampling Box",
+                    "Full Apartment",
+                ], fontsize=16)
+
+        plt.show()
+        fig.savefig("rl_belief_eval_mer.png")
+
 if __name__ == '__main__':
     # generalization_plts()
     # house3d_plts()
@@ -516,4 +702,5 @@ if __name__ == '__main__':
     # belief_plts()
     # rl_train_eval_plts()
     # rl_test_plts()
-    diff_steps_plts()
+    # diff_steps_plts()
+    all_rl_eval_plts()
