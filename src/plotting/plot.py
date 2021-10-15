@@ -509,6 +509,111 @@ def diff_steps_plts():
         plt.show()
         fig.savefig("diff_steps_eval_avg_step_position.png")
 
+def diff_resample_plts():
+    fig = plt.figure(figsize=(18, 12))
+    ax = fig.add_subplot(111)
+    plot = 'average_return'
+
+    # # 1.0 box + 25 steps rl agent
+    # box_path_1_0_25 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_25/train/events.out.tfevents.1631867346.pearl8.18370.0.v2"
+    # box_return_1_0_25 = np.array(getEventFileData(box_path_1_0_25)["Metrics/AverageReturn"])
+    # box_1_0_25 = ax.plot(box_return_1_0_25[:, 0], box_return_1_0_25[:, 1])
+    #
+    # # 1.0 box + 50 steps rl agent
+    # box_path_1_0_50 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_1.0_box_50/train/events.out.tfevents.1631961881.pearl2.22000.0.v2"
+    # box_return_1_0_50 = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageReturn"])
+    # box_1_0_50 = ax.plot(box_return_1_0_50[:, 0], box_return_1_0_50[:, 1])
+
+    if plot == 'average_return':
+        # 0.5 box + 25 steps + 1.0 resample rl agent
+        box_path_1_0 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_0.5_box_25/eval/events.out.tfevents.1631716010.pearl8.18818.1.v2"
+        box_return_1_0 = np.array(getEventFileData(box_path_1_0)["Metrics/AverageReturn"])
+        box_1_0 = ax.plot(box_return_1_0[:, 0], box_return_1_0[:, 1])
+
+        # 0.5 box + 25 steps + 0.5 resample rl agent
+        box_path_0_5 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_0.5_box_0.5/eval/events.out.tfevents.1633342690.pearl8.24069.1.v2"
+        box_return_0_5 = np.array(getEventFileData(box_path_0_5)["Metrics/AverageReturn"])
+        box_0_5 = ax.plot(box_return_0_5[:, 0], box_return_0_5[:, 1])
+
+        ax.set_title('Average episode return for SAC agent with belief map (0.5 sampling box)', fontsize=18, weight='bold')
+        ax.set_xlabel("number of eval epochs", fontsize=16)
+        ax.set_ylabel("average episode return", fontsize=16)
+        ax.legend([
+                    "1.0 soft resample rate",
+                    "0.5 soft resample rate"
+                ], loc='upper right', fontsize=14)
+
+        plt.show()
+        fig.savefig("diff_resample_eval_avg_eps_return.png")
+
+    elif plot == 'collision_penalty':
+        # 0.5 box + 25 steps + 1.0 resample rl agent
+        box_path_1_0 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_0.5_box_25/eval/events.out.tfevents.1631716010.pearl8.18818.1.v2"
+        box_return_1_0 = np.array(getEventFileData(box_path_1_0)["Metrics/AverageStepCollisionPenality"])
+        box_1_0 = ax.plot(box_return_1_0[:, 0], box_return_1_0[:, 1])
+
+        # 0.5 box + 25 steps + 0.5 resample rl agent
+        box_path_0_5 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_0.5_box_0.5/eval/events.out.tfevents.1633342690.pearl8.24069.1.v2"
+        box_return_0_5 = np.array(getEventFileData(box_path_0_5)["Metrics/AverageStepCollisionPenality"])
+        box_0_5 = ax.plot(box_return_0_5[:, 0], box_return_0_5[:, 1])
+
+        ax.set_title('Average step collision penalty for SAC agent with belief map (0.5 sampling box)', fontsize=18, weight='bold')
+        ax.set_xlabel("number of eval epochs", fontsize=16)
+        ax.set_ylabel("average collision penalty (%)", fontsize=16)
+        ax.legend([
+                    "1.0 soft resample rate",
+                    "0.5 soft resample rate"
+                ], loc='upper right', fontsize=14)
+
+        plt.show()
+        fig.savefig("diff_resample_eval_avg_step_collision.png")
+
+    elif plot == 'orientation_error':
+        # 0.5 box + 25 steps + 1.0 resample rl agent
+        box_path_1_0 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_0.5_box_25/eval/events.out.tfevents.1631716010.pearl8.18818.1.v2"
+        box_return_1_0 = np.array(getEventFileData(box_path_1_0)["Metrics/AverageStepOrientationError"])
+        box_1_0 = ax.plot(box_return_1_0[:, 0], box_return_1_0[:, 1])
+
+        # 0.5 box + 25 steps + 0.5 resample rl agent
+        box_path_0_5 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_0.5_box_0.5/eval/events.out.tfevents.1633342690.pearl8.24069.1.v2"
+        box_return_0_5 = np.array(getEventFileData(box_path_0_5)["Metrics/AverageStepOrientationError"])
+        box_0_5 = ax.plot(box_return_0_5[:, 0], box_return_0_5[:, 1])
+
+
+        ax.set_title('Average step orientation error for SAC agent with belief map (0.5 sampling box)', fontsize=18, weight='bold')
+        ax.set_xlabel("number of eval epochs", fontsize=16)
+        ax.set_ylabel("average orientation error (radians)", fontsize=16)
+        ax.legend([
+                    "1.0 soft resample rate",
+                    "0.5 soft resample rate"
+                ], loc='upper right', fontsize=14)
+
+        plt.show()
+        fig.savefig("diff_resample_eval_avg_step_orientation.png")
+
+    else:
+        # 0.5 box + 25 steps + 1.0 resample rl agent
+        box_path_1_0 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_0.5_box_25/eval/events.out.tfevents.1631716010.pearl8.18818.1.v2"
+        box_return_1_0 = np.array(getEventFileData(box_path_1_0)["Metrics/AverageStepPositionError"])
+        box_1_0 = ax.plot(box_return_1_0[:, 0], box_return_1_0[:, 1])
+
+        # 0.5 box + 25 steps + 0.5 resample rl agent
+        box_path_0_5 = "/media/neo/robotics/August/17-09-2021/train_rl_uniform_0.5_box_0.5/eval/events.out.tfevents.1633342690.pearl8.24069.1.v2"
+        box_return_0_5 = np.array(getEventFileData(box_path_0_5)["Metrics/AverageStepPositionError"])
+        box_0_5 = ax.plot(box_return_0_5[:, 0], box_return_0_5[:, 1])
+
+
+        ax.set_title('Average step position error for SAC agent with belief map (0.5 sampling box)', fontsize=18, weight='bold')
+        ax.set_xlabel("number of eval epochs", fontsize=16)
+        ax.set_ylabel("average position error (meters)", fontsize=16)
+        ax.legend([
+                    "1.0 soft resample rate",
+                    "0.5 soft resample rate"
+                ], loc='upper right', fontsize=14)
+
+        plt.show()
+        fig.savefig("diff_resample_eval_avg_step_position.png")
+
 def all_rl_eval_plts():
     fig = plt.figure(figsize=(18, 12))
     ax = fig.add_subplot(111)
@@ -703,4 +808,5 @@ if __name__ == '__main__':
     # rl_train_eval_plts()
     # rl_test_plts()
     # diff_steps_plts()
-    all_rl_eval_plts()
+    diff_resample_plts()
+    # all_rl_eval_plts()
