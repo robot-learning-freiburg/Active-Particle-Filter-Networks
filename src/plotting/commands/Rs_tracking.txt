@@ -1,0 +1,83 @@
+nohup python -u test_pfnet.py \
+--root_dir=./rgbd_test \
+--pfnet_loadpath=./Rs_rgb_depth/eval/chks/checkpoint_41_0.058/pfnet_checkpoint \
+--obs_mode='rgb-depth' \
+--num_eval_samples=480 \
+--testfiles=./Rs_data/test/Rs90_5h_100.tfrecord \
+--batch_size=1 \
+--custom_output 'rgb_obs' 'depth_obs' 'likelihood_map' \
+--init_particles_distr='gaussian' \
+--init_particles_std '0.15' '0.523599' \
+--particles_range=100 \
+--num_particles=300 \
+--transition_std '0.' '0.' \
+--resample=false \
+--alpha_resample_ratio=1.0 \
+--global_map_size '400' '400' '1' \
+--window_scaler=8.0 \
+--config_file=./configs/locobot_pfnet_nav.yaml \
+--device_idx=1 \
+--seed=15 > nohup_rgbd_test.out &
+
+nohup python -u test_pfnet.py \
+--root_dir=./rgb_test \
+--pfnet_loadpath=./Rs_rgb/eval/chks/checkpoint_41_0.057/pfnet_checkpoint \
+--obs_mode='rgb' \
+--num_eval_samples=480 \
+--testfiles=./Rs_data/test/Rs90_5h_100.tfrecord \
+--batch_size=1 \
+--custom_output 'rgb_obs' 'depth_obs' 'likelihood_map' \
+--init_particles_distr='gaussian' \
+--init_particles_std '0.15' '0.523599' \
+--particles_range=100 \
+--num_particles=300 \
+--transition_std '0.' '0.' \
+--resample=false \
+--alpha_resample_ratio=1.0 \
+--global_map_size '400' '400' '1' \
+--window_scaler=8.0 \
+--config_file=./configs/locobot_pfnet_nav.yaml \
+--device_idx=1 \
+--seed=15 > nohup_rgb_test.out &
+
+nohup python -u test_pfnet.py \
+--root_dir=./depth_test \
+--pfnet_loadpath=./Rs_depth/eval/chks/checkpoint_42_0.222/pfnet_checkpoint \
+--obs_mode='depth' \
+--num_eval_samples=480 \
+--testfiles=./Rs_data/test/Rs90_5h_100.tfrecord \
+--batch_size=1 \
+--custom_output 'rgb_obs' 'depth_obs' 'likelihood_map' \
+--init_particles_distr='gaussian' \
+--init_particles_std '0.15' '0.523599' \
+--particles_range=100 \
+--num_particles=300 \
+--transition_std '0.' '0.' \
+--resample=false \
+--alpha_resample_ratio=1.0 \
+--global_map_size '400' '400' '1' \
+--window_scaler=8.0 \
+--config_file=./configs/locobot_pfnet_nav.yaml \
+--device_idx=1 \
+--seed=15 > nohup_depth_test.out &
+
+nohup python -u test_pfnet.py \
+--root_dir=./scan_test \
+--pfnet_loadpath=./Rs_scan/eval/chks/checkpoint_42_0.216/pfnet_checkpoint \
+--obs_mode='occupancy_grid' \
+--num_eval_samples=480 \
+--testfiles=./Rs_data/test/Rs90_5h_100.tfrecord \
+--batch_size=1 \
+--custom_output 'rgb_obs' 'depth_obs' 'likelihood_map' \
+--init_particles_distr='gaussian' \
+--init_particles_std '0.15' '0.523599' \
+--particles_range=100 \
+--num_particles=300 \
+--transition_std '0.' '0.' \
+--resample=false \
+--alpha_resample_ratio=1.0 \
+--global_map_size '400' '400' '1' \
+--window_scaler=8.0 \
+--config_file=./configs/locobot_pfnet_nav.yaml \
+--device_idx=1 \
+--seed=15 > nohup_occupancy_grid_test.out &

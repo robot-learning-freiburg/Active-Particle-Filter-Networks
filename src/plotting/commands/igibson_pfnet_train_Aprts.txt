@@ -1,0 +1,49 @@
+nohup python -u train_pfnet.py \
+--root_dir=./Aprts_400_8.0_new/rgb_depth \
+--tfrecordpath=./Aprts_data \
+--epochs=50 \
+--obs_mode='rgb-depth' \
+--num_train_samples=114000 \
+--num_eval_samples=15000 \
+--batch_size=12 \
+--s_buffer_size=1500 \
+--pfnet_loadpath='' \
+--learning_rate=1e-4 \
+--init_particles_distr='gaussian' \
+--init_particles_std '0.15' '0.523599' \
+--particles_range=100 \
+--num_particles=30 \
+--transition_std '0.' '0.' \
+--resample=false \
+--alpha_resample_ratio=1.0 \
+--global_map_size '400' '400' '1' \
+--window_scaler=8.0 \
+--config_file=./configs/locobot_pfnet_nav.yaml \
+--device_idx=3 \
+--multiple_gpus=false \
+--seed=42 > nohup_Aprts_rgb_depth.out &
+
+nohup python -u train_pfnet.py \
+--root_dir=./Aprts_400_8.0_new/rgb \
+--tfrecordpath=./Aprts_data \
+--epochs=50 \
+--obs_mode='rgb' \
+--num_train_samples=114000 \
+--num_eval_samples=15000 \
+--batch_size=12 \
+--s_buffer_size=1500 \
+--pfnet_loadpath='' \
+--learning_rate=1e-4 \
+--init_particles_distr='gaussian' \
+--init_particles_std '0.15' '0.523599' \
+--particles_range=100 \
+--num_particles=30 \
+--transition_std '0.' '0.' \
+--resample=false \
+--alpha_resample_ratio=1.0 \
+--global_map_size '400' '400' '1' \
+--window_scaler=8.0 \
+--config_file=./configs/locobot_pfnet_nav.yaml \
+--device_idx=2 \
+--multiple_gpus=false \
+--seed=42 > nohup_Aprts_rgb.out &

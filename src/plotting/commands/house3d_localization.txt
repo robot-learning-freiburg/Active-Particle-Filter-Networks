@@ -1,0 +1,53 @@
+nohup python -u test.py \
+--logpath='house3d_rgb_depth' \
+--testfiles './house3d_data/test/test.tfrecords' \
+--num_test_samples=816 \
+--obs_mode='rgb-depth' \
+--load='./house3d_rgb_depth/run_20210908-205532/eval/chks/checkpoint_24_0.248/pfnet_checkpoint' \
+--init_particles_distr='one-room' \
+--init_particles_std '0.3' '0.523599' \
+--trajlen=100 \
+--num_particles=1000 \
+--transition_std '0.04' '0.0872665' \
+--resample=true \
+--batch_size=1 \
+--learningrate=1e-4 \
+--epochs=1 \
+--gpu_num=1 \
+--seed=100 > nohup_house3d_rgb_depth_localization_1000.out &
+
+nohup python -u test.py \
+--logpath='house3d_rgb' \
+--testfiles './house3d_data/test/test.tfrecords' \
+--num_test_samples=816 \
+--obs_mode='rgb' \
+--load='./house3d_rgb/run_20210908-205908/eval/chks/checkpoint_24_0.245/pfnet_checkpoint' \
+--init_particles_distr='one-room' \
+--init_particles_std '0.3' '0.523599' \
+--trajlen=100 \
+--num_particles=1000 \
+--transition_std '0.04' '0.0872665' \
+--resample=true \
+--batch_size=1 \
+--learningrate=1e-4 \
+--epochs=1 \
+--gpu_num=1 \
+--seed=100 > nohup_house3d_rgb_localization_1000.out &
+
+nohup python -u test.py \
+--logpath='house3d_depth' \
+--testfiles './house3d_data/test/test.tfrecords' \
+--num_test_samples=816 \
+--obs_mode='depth' \
+--load='./house3d_depth/run_20210908-205948/eval/chks/checkpoint_24_0.253/pfnet_checkpoint' \
+--init_particles_distr='one-room' \
+--init_particles_std '0.3' '0.523599' \
+--trajlen=100 \
+--num_particles=1000 \
+--transition_std '0.04' '0.0872665' \
+--resample=true \
+--batch_size=1 \
+--learningrate=1e-4 \
+--epochs=1 \
+--gpu_num=1 \
+--seed=100 > nohup_house3d_depth_localization_1000.out &
