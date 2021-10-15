@@ -82,7 +82,7 @@ For more details to train/test particle filter or rl agent [refer](https://githu
       >>> import tensorflow as tf
       >>> tf.config.list_logical_devices()
    ```
-9. Install TF Agents
+9. Install TF Agents (forked repository)
    ```
       <root_folder>/iGibson$ cd..
       <root_folder>$ git clone --branch cvpr21_challenge_tf2.4 https://github.com/suresh-guttikonda/agents/ --recursive
