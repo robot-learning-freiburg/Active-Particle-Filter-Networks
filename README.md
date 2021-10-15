@@ -84,14 +84,14 @@ For more details to train/test particle filter or rl agent [refer](https://githu
    ```
 9. Install TF Agents (forked repository)
    ```
-      <root_folder>/iGibson$ cd..
+      <root_folder>/iGibson$ cd ..
       <root_folder>$ git clone --branch cvpr21_challenge_tf2.4 https://github.com/suresh-guttikonda/agents/ --recursive
       <root_folder>$ cd agents
       <root_folder>/agents$ pip3 install -e .
    ```
 10. Get the Active Localization code + pretrained checkpoints
    ```
-      <root_folder>/agents$ cd..
+      <root_folder>/agents$ cd ..
       <root_folder>$ git clone https://github.com/suresh-guttikonda/deep-activate-localization.git --recursive
    ```
 11. Test pretrained particle filter + igibson environment with obstacle avoidance agent, result will be stored to test_output directory.
