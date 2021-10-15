@@ -117,7 +117,36 @@ For more details to train/test particle filter or rl agent [refer](https://githu
          --device_idx=0 \
          --seed=15
    ```
-11. 
+12. Test pretrained SAC agent for igibson environment as follows (for global localization).
+   ```
+      <root_folder>$ cd deep-activate-localization/src/rl_agents
+      <root_folder>/deep-activate-localization/src/rl_agents$ python -u test_rl_agent.py \
+         --root_dir=checkpoints/train_rl_uniform_2.0_box_50 \
+         --num_eval_episodes=10 \
+         --use_tf_functions=False \
+         --agent='sac_agent' \
+         --eval_deterministic=True \
+         --is_localize_env=True \
+         --config_file=./configs/locobot_point_nav.yaml \
+         --gpu_num=0 \
+         --init_env_pfnet=True \
+         --init_particles_distr='uniform' \
+         --init_particles_std=0.2,0.523599 \
+         --particles_range=200 \
+         --num_particles=1000 \
+         --resample=True \
+         --alpha_resample_ratio=0.99 \
+         --transition_std=0.04,0.0872665 \
+         --obs_mode='rgb-depth' \
+         --custom_output='rgb_obs','depth_obs','likelihood_map' \
+         --num_clusters=10 \
+         --global_map_size=100,100,1 \
+         --window_scaler=1.0 \
+         --pfnet_load=./pfnetwork/checkpoints/pfnet_igibson_data/report/rs_rgbd/checkpoint_28_0.065/pfnet_checkpoint \
+         --use_plot=True \
+         --store_plot=True \
+         --seed=1198
+    ```
 
 #### Steps to install singularity:
 1. Enable NeuroDebian repository by following instructions on [neuro-debian](http://neuro.debian.net/). Also refer [FAQ](http://neuro.debian.net/faq.html).
