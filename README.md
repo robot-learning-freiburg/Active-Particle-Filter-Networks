@@ -146,7 +146,8 @@ For more details to train/test particle filter or rl agent [refer](https://githu
          --use_plot=True \
          --store_plot=True \
          --seed=1198
-    ```
+   ```
+
 
 #### Steps to install singularity:
 1. Enable NeuroDebian repository by following instructions on [neuro-debian](http://neuro.debian.net/). Also refer [FAQ](http://neuro.debian.net/faq.html).
@@ -155,6 +156,7 @@ For more details to train/test particle filter or rl agent [refer](https://githu
    $ sudo apt-get install -y singularity-container
    ```
 3. For more details, refer: [singularity guide](https://sylabs.io/guides/3.7/user-guide/index.html)
+
 
 #### Steps to create singularity image to setup project:
 0. We assume corresponding nvidia-driver is already installed in host machine.
