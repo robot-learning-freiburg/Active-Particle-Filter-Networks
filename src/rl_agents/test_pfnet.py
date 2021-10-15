@@ -561,6 +561,9 @@ def rt_pfnet_test(arg_params):
 
 if __name__ == '__main__':
     parsed_params = parse_args()
+    
+    # test particle filter with supervised trajectory data
     # pfnet_test(parsed_params)
 
+    # test particle filter in real-time
     rt_pfnet_test(parsed_params)
