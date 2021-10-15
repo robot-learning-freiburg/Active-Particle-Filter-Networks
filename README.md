@@ -9,8 +9,8 @@
 For more details to train/test particle filter or rl agent [refer](https://github.com/suresh-guttikonda/deep-activate-localization/wiki).
 
 #### Installation:
-- Option1 : Installation from source (https://github.com/suresh-guttikonda/deep-activate-localization#steps-to-setup-project)
-- Option2 : Installation from singularity image (https://github.com/suresh-guttikonda/deep-activate-localization#steps-to-create-singularity-image-to-setup-project) Note: modifying locobot urdf can be tricky in this case.
+- Option1 : Installation from source [refer](https://github.com/suresh-guttikonda/deep-activate-localization#steps-to-setup-project)
+- Option2 : Installation from singularity image [refer](https://github.com/suresh-guttikonda/deep-activate-localization#steps-to-create-singularity-image-to-setup-project) Note: modifying locobot urdf can be tricky in this case.
 
 #### Useful References:
 - Install Cuda Without Root [link](https://stackoverflow.com/questions/39379792/install-cuda-without-root)
