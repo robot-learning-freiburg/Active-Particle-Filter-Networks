@@ -289,15 +289,15 @@ def rl_test_plts():
                 ], axis=1)
         ax.boxplot(data)
 
-        ax.set_title('Episode mean collision penalty for 4.0 sampling box', fontsize=18, weight='bold')
+        ax.set_title('Episode mean collision penalty for 4.0 sampling box', fontsize=22, weight='bold')
         # ax.set_xlabel("agent behavior", fontsize=16)
-        ax.set_ylabel("mean collision penalty (%)", fontsize=16)
+        ax.set_ylabel("mean collision penalty (%)", fontsize=18)
         # ax.set_ylim(-1.05, 0.05)
         ax.set_xticklabels([
                     "Obstacle Avoidance Agent",
                     "Random Action Agent",
                     "Trained SAC Agent"
-                ], fontsize=16)
+                ], fontsize=18)
 
         plt.show()
         fig.savefig("rl_belief_test_mcp.png")
@@ -322,15 +322,15 @@ def rl_test_plts():
                 ], axis=1)
         ax.boxplot(data)
 
-        ax.set_title('Episode mean orientation error for 4.0 sampling box', fontsize=18, weight='bold')
+        ax.set_title('Episode mean orientation error for 4.0 sampling box', fontsize=22, weight='bold')
         # ax.set_xlabel("agent behavior", fontsize=16)
-        ax.set_ylabel("mean orientation error (radians)", fontsize=16)
+        ax.set_ylabel("mean orientation error (radians)", fontsize=18)
         ax.set_ylim(-0.05, 0.15)
         ax.set_xticklabels([
                     "Obstacle Avoidance Agent",
                     "Random Action Agent",
                     "Trained SAC Agent"
-                ], fontsize=16)
+                ], fontsize=18)
 
         plt.show()
         fig.savefig("rl_belief_test_mso.png")
@@ -355,15 +355,15 @@ def rl_test_plts():
                 ], axis=1)
         ax.boxplot(data)
 
-        ax.set_title('Episode mean position error for 4.0 sampling box', fontsize=18, weight='bold')
+        ax.set_title('Episode mean position error for 4.0 sampling box', fontsize=22, weight='bold')
         # ax.set_xlabel("agent behavior", fontsize=16)
-        ax.set_ylabel("mean position error (meters)", fontsize=16)
+        ax.set_ylabel("mean position error (meters)", fontsize=18)
         ax.set_ylim(-0.05, 2.0)
         ax.set_xticklabels([
                     "Obstacle Avoidance Agent",
                     "Random Action Agent",
                     "Trained SAC Agent"
-                ], fontsize=16)
+                ], fontsize=18)
 
         plt.show()
         fig.savefig("rl_belief_test_msp.png")
@@ -388,15 +388,15 @@ def rl_test_plts():
                 ], axis=1)
         ax.boxplot(data)
 
-        ax.set_title('Episode end pose error for 4.0 sampling box', fontsize=18, weight='bold')
+        ax.set_title('Episode end pose error for 4.0 sampling box', fontsize=22, weight='bold')
         # ax.set_xlabel("agent behavior", fontsize=16)
-        ax.set_ylabel("mean squared error (meters)", fontsize=16)
+        ax.set_ylabel("mean squared error (meters)", fontsize=18)
         ax.set_ylim(-0.05, 0.3)
         ax.set_xticklabels([
                     "Obstacle Avoidance Agent",
                     "Random Action Agent",
                     "Trained SAC Agent"
-                ], fontsize=16)
+                ], fontsize=18)
 
         plt.show()
         fig.savefig("rl_belief_test_end_mse.png")
