@@ -216,15 +216,15 @@ def rl_train_eval_plts():
         box_return_5_0 = np.array(getEventFileData(box_path_5_0)["Metrics/AverageReturn"])
         box_5_0 = ax.plot(box_return_5_0[:, 0], box_return_5_0[:, 1])
 
-        ax.set_title('Training episode return for SAC agent with Belief Map', fontsize=18, weight='bold')
-        ax.set_xlabel("number of train epochs", fontsize=16)
-        ax.set_ylabel("average episode return", fontsize=16)
+        ax.set_title('Training episode return for SAC agent with Belief Map', fontsize=22, weight='bold')
+        ax.set_xlabel("number of train epochs", fontsize=18)
+        ax.set_ylabel("average episode return", fontsize=18)
         ax.legend([
                     "1.0 sampling box",
                     "2.0 sampling box",
                     "4.0 sampling box",
                     "5.0 sampling box"
-                ], loc='upper right', fontsize=14)
+                ], loc='upper right', fontsize=16)
 
         plt.show()
         fig.savefig("rl_belief_train_returns.png")
@@ -250,15 +250,15 @@ def rl_train_eval_plts():
         box_return_5_0 = np.array(getEventFileData(box_path_5_0)["Metrics/AverageReturn"])
         box_5_0 = ax.plot(box_return_5_0[:, 0], box_return_5_0[:, 1])
 
-        ax.set_title('Evaluation episode return for SAC agent with belief map', fontsize=18, weight='bold')
-        ax.set_xlabel("number of train epochs", fontsize=16)
-        ax.set_ylabel("average episode return", fontsize=16)
+        ax.set_title('Evaluation episode return for SAC agent with belief map', fontsize=22, weight='bold')
+        ax.set_xlabel("number of train epochs", fontsize=18)
+        ax.set_ylabel("average episode return", fontsize=18)
         ax.legend([
                     "1.0 sampling box",
                     "2.0 sampling box",
                     "4.0 sampling box",
                     "5.0 sampling box"
-                ], loc='upper right', fontsize=14)
+                ], loc='upper right', fontsize=16)
 
         plt.show()
         fig.savefig("rl_belief_eval_returns.png")
