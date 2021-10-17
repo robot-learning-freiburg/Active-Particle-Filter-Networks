@@ -175,15 +175,15 @@ def belief_plts():
     dpf_train = ax.plot(dpf_train_return[:, 0], dpf_train_return[:, 1])
     dpf_eval = ax.plot(dpf_eval_return[:, 0], dpf_eval_return[:, 1])
 
-    ax.set_title('Training/Evaluation episode return for SAC agent', fontsize=18, weight='bold')
-    ax.set_xlabel("number of train epochs", fontsize=16)
-    ax.set_ylabel("average episode return", fontsize=16)
+    ax.set_title('Training/Evaluation episode return for SAC agent', fontsize=22, weight='bold')
+    ax.set_xlabel("number of train epochs", fontsize=18)
+    ax.set_ylabel("average episode return", fontsize=18)
     ax.legend([
                 "KMeans (k=10) Train",
                 "KMeans (k=10) Eval",
                 "Belief Map Train",
                 "Belief Map Eval"
-            ], loc='upper right', fontsize=14)
+            ], loc='upper left', fontsize=16)
 
     plt.show()
     fig.savefig("particle_rep_sac_return.png")
