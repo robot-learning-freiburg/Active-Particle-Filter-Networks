@@ -650,9 +650,9 @@ def all_rl_eval_plts():
                 ], axis=1)
         ax.boxplot(data)
 
-        ax.set_title('Episode mean collision penalty for different start pose sampling area', fontsize=18, weight='bold')
+        ax.set_title('Episode mean collision penalty for different start pose sampling area', fontsize=22, weight='bold')
         # ax.set_xlabel("agent behavior", fontsize=16)
-        ax.set_ylabel("mean collision penalty (%)", fontsize=16)
+        ax.set_ylabel("mean collision penalty (%)", fontsize=18)
         # ax.set_ylim(-1.05, 0.05)
         ax.set_xticklabels([
                     "1.0 Sampling Box",
@@ -660,7 +660,7 @@ def all_rl_eval_plts():
                     "4.0 Sampling Box",
                     "5.0 Sampling Box",
                     "Full Apartment",
-                ], fontsize=16)
+                ], fontsize=18)
 
         plt.show()
         fig.savefig("rl_belief_eval_mcp.png")
@@ -695,9 +695,9 @@ def all_rl_eval_plts():
                 ], axis=1)
         ax.boxplot(data)
 
-        ax.set_title('Episode mean orientation error for different start pose sampling area', fontsize=18, weight='bold')
+        ax.set_title('Episode mean orientation error for different start pose sampling area', fontsize=22, weight='bold')
         # ax.set_xlabel("agent behavior", fontsize=16)
-        ax.set_ylabel("mean orientation error (radians)", fontsize=16)
+        ax.set_ylabel("mean orientation error (radians)", fontsize=18)
         # ax.set_ylim(-0.05, 0.15)
         ax.set_xticklabels([
                     "1.0 Sampling Box",
@@ -705,7 +705,7 @@ def all_rl_eval_plts():
                     "4.0 Sampling Box",
                     "5.0 Sampling Box",
                     "Full Apartment",
-                ], fontsize=16)
+                ], fontsize=18)
 
         plt.show()
         fig.savefig("rl_belief_eval_mso.png")
@@ -740,9 +740,9 @@ def all_rl_eval_plts():
                 ], axis=1)
         ax.boxplot(data)
 
-        ax.set_title('Episode mean position error for different start pose sampling area', fontsize=18, weight='bold')
+        ax.set_title('Episode mean position error for different start pose sampling area', fontsize=22, weight='bold')
         # ax.set_xlabel("agent behavior", fontsize=16)
-        ax.set_ylabel("mean position error (meters)", fontsize=16)
+        ax.set_ylabel("mean position error (meters)", fontsize=18)
         # ax.set_ylim(-1.05, 0.05)
         ax.set_xticklabels([
                     "1.0 Sampling Box",
@@ -750,7 +750,7 @@ def all_rl_eval_plts():
                     "4.0 Sampling Box",
                     "5.0 Sampling Box",
                     "Full Apartment",
-                ], fontsize=16)
+                ], fontsize=18)
 
         plt.show()
         fig.savefig("rl_belief_eval_msp.png")
@@ -785,9 +785,9 @@ def all_rl_eval_plts():
                 ], axis=1)
         ax.boxplot(data)
 
-        ax.set_title('Episode mean return for different start pose sampling area', fontsize=18, weight='bold')
+        ax.set_title('Episode mean return for different start pose sampling area', fontsize=22, weight='bold')
         # ax.set_xlabel("agent behavior", fontsize=16)
-        ax.set_ylabel("return", fontsize=16)
+        ax.set_ylabel("return", fontsize=18)
         # ax.set_ylim(-1.05, 0.05)
         ax.set_xticklabels([
                     "1.0 Sampling Box",
@@ -795,7 +795,7 @@ def all_rl_eval_plts():
                     "4.0 Sampling Box",
                     "5.0 Sampling Box",
                     "Full Apartment",
-                ], fontsize=16)
+                ], fontsize=18)
 
         plt.show()
         fig.savefig("rl_belief_eval_mer.png")
