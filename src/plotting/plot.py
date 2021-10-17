@@ -21,7 +21,7 @@ def getEventFileData(path):
 def generalization_plts():
     fig = plt.figure(figsize=(18, 12))
     ax = fig.add_subplot(111)
-    plot = 'eval'
+    plot = 'train'
 
     if plot == 'train':
 
@@ -49,15 +49,15 @@ def generalization_plts():
         one_aprts_loss = np.array(getEventFileData(one_aprts_path)["loss"])
         one_aprts = ax.plot(one_aprts_loss[:, 0]*batches, one_aprts_loss[:, 1])
 
-        ax.set_title('Training loss for iGibson environment', fontsize=18, weight='bold')
-        ax.set_xlabel("number of training batches", fontsize=16)
-        ax.set_ylabel("mean square error (cm)", fontsize=16)
+        ax.set_title('Training loss for iGibson environment', fontsize=22, weight='bold')
+        ax.set_xlabel("number of training batches", fontsize=18)
+        ax.set_ylabel("mean square error (cm)", fontsize=18)
         ax.legend([
                     "115 Apartments",
                     # "115 Floors",
                     "17 Apartments",
                     "1 Apartment"
-                ], loc='upper right', fontsize=14)
+                ], loc='upper right', fontsize=16)
 
         plt.show()
         fig.savefig("igibson_train_loss.png")
@@ -86,15 +86,15 @@ def generalization_plts():
         one_aprts_loss = np.array(getEventFileData(one_aprts_path)["loss"])
         one_aprts = ax.plot(one_aprts_loss[:, 0]*batches, one_aprts_loss[:, 1])
 
-        ax.set_title('Evaluation loss for iGibson environment', fontsize=18, weight='bold')
-        ax.set_xlabel("number of evaluation batches", fontsize=16)
-        ax.set_ylabel("mean square error (cm)", fontsize=16)
+        ax.set_title('Evaluation loss for iGibson environment', fontsize=22, weight='bold')
+        ax.set_xlabel("number of evaluation batches", fontsize=18)
+        ax.set_ylabel("mean square error (cm)", fontsize=18)
         ax.legend([
                     "15 Apartments (unseen)",
                     # "15 Floors",
                     "4 Apartments",
                     "1 Apartment"
-                ], loc='upper right', fontsize=14)
+                ], loc='upper right', fontsize=16)
 
         plt.show()
         fig.savefig("igibson_eval_loss.png")
