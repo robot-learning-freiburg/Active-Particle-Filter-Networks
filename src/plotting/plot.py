@@ -428,13 +428,13 @@ def diff_steps_plts():
         box_return_1_0_50 = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageReturn"])
         box_1_0_50 = ax.plot(box_return_1_0_50[:, 0], box_return_1_0_50[:, 1])
 
-        ax.set_title('Average episode return for SAC agent with belief map (2.0 sampling box)', fontsize=18, weight='bold')
-        ax.set_xlabel("number of eval epochs", fontsize=16)
-        ax.set_ylabel("average episode return", fontsize=16)
+        ax.set_title('Average episode return for SAC agent with belief map (2.0 sampling box)', fontsize=22, weight='bold')
+        ax.set_xlabel("number of eval epochs", fontsize=18)
+        ax.set_ylabel("average episode return", fontsize=18)
         ax.legend([
                     "25 particle filter steps",
                     "50 particle filter steps"
-                ], loc='upper right', fontsize=14)
+                ], loc='upper right', fontsize=16)
 
         plt.show()
         fig.savefig("diff_steps_eval_avg_eps_return.png")
@@ -450,13 +450,13 @@ def diff_steps_plts():
         box_return_1_0_50 = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageStepCollisionPenality"])
         box_1_0_50 = ax.plot(box_return_1_0_50[:, 0], box_return_1_0_50[:, 1])
 
-        ax.set_title('Average step collision penalty for SAC agent with belief map (2.0 sampling box)', fontsize=18, weight='bold')
-        ax.set_xlabel("number of eval epochs", fontsize=16)
-        ax.set_ylabel("average collision penalty (%)", fontsize=16)
+        ax.set_title('Average step collision penalty for SAC agent with belief map (2.0 sampling box)', fontsize=22, weight='bold')
+        ax.set_xlabel("number of eval epochs", fontsize=18)
+        ax.set_ylabel("average collision penalty (%)", fontsize=18)
         ax.legend([
                     "25 particle filter steps",
                     "50 particle filter steps"
-                ], loc='upper right', fontsize=14)
+                ], loc='upper right', fontsize=16)
 
         plt.show()
         fig.savefig("diff_steps_eval_avg_step_collision.png")
@@ -475,13 +475,13 @@ def diff_steps_plts():
     # box_return_1_0_50 = np.array(getEventFileData(box_path_1_0_50)["Metrics/AverageStepPositionError"])
 
 
-        ax.set_title('Average step orientation error for SAC agent with belief map (2.0 sampling box)', fontsize=18, weight='bold')
-        ax.set_xlabel("number of eval epochs", fontsize=16)
-        ax.set_ylabel("average orientation error (radians)", fontsize=16)
+        ax.set_title('Average step orientation error for SAC agent with belief map (2.0 sampling box)', fontsize=22, weight='bold')
+        ax.set_xlabel("number of eval epochs", fontsize=18)
+        ax.set_ylabel("average orientation error (radians)", fontsize=18)
         ax.legend([
                     "25 particle filter steps",
                     "50 particle filter steps"
-                ], loc='upper right', fontsize=14)
+                ], loc='upper right', fontsize=16)
 
         plt.show()
         fig.savefig("diff_steps_eval_avg_step_orientation.png")
@@ -498,13 +498,13 @@ def diff_steps_plts():
         box_1_0_50 = ax.plot(box_return_1_0_50[:, 0], box_return_1_0_50[:, 1])
 
 
-        ax.set_title('Average step position error for SAC agent with belief map (2.0 sampling box)', fontsize=18, weight='bold')
-        ax.set_xlabel("number of eval epochs", fontsize=16)
-        ax.set_ylabel("average position error (meters)", fontsize=16)
+        ax.set_title('Average step position error for SAC agent with belief map (2.0 sampling box)', fontsize=22, weight='bold')
+        ax.set_xlabel("number of eval epochs", fontsize=18)
+        ax.set_ylabel("average position error (meters)", fontsize=18)
         ax.legend([
                     "25 particle filter steps",
                     "50 particle filter steps"
-                ], loc='upper right', fontsize=14)
+                ], loc='upper right', fontsize=16)
 
         plt.show()
         fig.savefig("diff_steps_eval_avg_step_position.png")
@@ -535,13 +535,13 @@ def diff_resample_plts():
         box_return_0_5 = np.array(getEventFileData(box_path_0_5)["Metrics/AverageReturn"])
         box_0_5 = ax.plot(box_return_0_5[:, 0], box_return_0_5[:, 1])
 
-        ax.set_title('Average episode return for SAC agent with belief map (0.5 sampling box)', fontsize=18, weight='bold')
-        ax.set_xlabel("number of eval epochs", fontsize=16)
-        ax.set_ylabel("average episode return", fontsize=16)
+        ax.set_title('Average episode return for SAC agent with belief map (0.5 sampling box)', fontsize=22, weight='bold')
+        ax.set_xlabel("number of eval epochs", fontsize=18)
+        ax.set_ylabel("average episode return", fontsize=18)
         ax.legend([
                     "1.0 soft resample rate",
                     "0.5 soft resample rate"
-                ], loc='upper right', fontsize=14)
+                ], loc='upper right', fontsize=16)
 
         plt.show()
         fig.savefig("diff_resample_eval_avg_eps_return.png")
@@ -557,13 +557,13 @@ def diff_resample_plts():
         box_return_0_5 = np.array(getEventFileData(box_path_0_5)["Metrics/AverageStepCollisionPenality"])
         box_0_5 = ax.plot(box_return_0_5[:, 0], box_return_0_5[:, 1])
 
-        ax.set_title('Average step collision penalty for SAC agent with belief map (0.5 sampling box)', fontsize=18, weight='bold')
-        ax.set_xlabel("number of eval epochs", fontsize=16)
-        ax.set_ylabel("average collision penalty (%)", fontsize=16)
+        ax.set_title('Average step collision penalty for SAC agent with belief map (0.5 sampling box)', fontsize=22, weight='bold')
+        ax.set_xlabel("number of eval epochs", fontsize=18)
+        ax.set_ylabel("average collision penalty (%)", fontsize=18)
         ax.legend([
                     "1.0 soft resample rate",
                     "0.5 soft resample rate"
-                ], loc='upper right', fontsize=14)
+                ], loc='upper right', fontsize=16)
 
         plt.show()
         fig.savefig("diff_resample_eval_avg_step_collision.png")
@@ -580,13 +580,13 @@ def diff_resample_plts():
         box_0_5 = ax.plot(box_return_0_5[:, 0], box_return_0_5[:, 1])
 
 
-        ax.set_title('Average step orientation error for SAC agent with belief map (0.5 sampling box)', fontsize=18, weight='bold')
-        ax.set_xlabel("number of eval epochs", fontsize=16)
-        ax.set_ylabel("average orientation error (radians)", fontsize=16)
+        ax.set_title('Average step orientation error for SAC agent with belief map (0.5 sampling box)', fontsize=22, weight='bold')
+        ax.set_xlabel("number of eval epochs", fontsize=18)
+        ax.set_ylabel("average orientation error (radians)", fontsize=18)
         ax.legend([
                     "1.0 soft resample rate",
                     "0.5 soft resample rate"
-                ], loc='upper right', fontsize=14)
+                ], loc='upper right', fontsize=16)
 
         plt.show()
         fig.savefig("diff_resample_eval_avg_step_orientation.png")
@@ -603,13 +603,13 @@ def diff_resample_plts():
         box_0_5 = ax.plot(box_return_0_5[:, 0], box_return_0_5[:, 1])
 
 
-        ax.set_title('Average step position error for SAC agent with belief map (0.5 sampling box)', fontsize=18, weight='bold')
-        ax.set_xlabel("number of eval epochs", fontsize=16)
-        ax.set_ylabel("average position error (meters)", fontsize=16)
+        ax.set_title('Average step position error for SAC agent with belief map (0.5 sampling box)', fontsize=22, weight='bold')
+        ax.set_xlabel("number of eval epochs", fontsize=18)
+        ax.set_ylabel("average position error (meters)", fontsize=18)
         ax.legend([
                     "1.0 soft resample rate",
                     "0.5 soft resample rate"
-                ], loc='upper right', fontsize=14)
+                ], loc='upper right', fontsize=16)
 
         plt.show()
         fig.savefig("diff_resample_eval_avg_step_position.png")
