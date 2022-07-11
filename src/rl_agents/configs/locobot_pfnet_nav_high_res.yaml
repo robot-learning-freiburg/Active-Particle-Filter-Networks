@@ -52,12 +52,12 @@ output: [task_obs, rgb, depth, scan, occupancy_grid]
 # Intel Realsense Depth Camera D435
 # https://store.intelrealsense.com/buy-intel-realsense-depth-camera-d435.html
 fisheye: false
-image_width: 56
-image_height: 56
+image_width: 256
+image_height: 256
 vertical_fov: 90
 # depth
 depth_low : 0.1
-depth_high: 10.0
+depth_high: 5.0
 # scan
 # Hokuyo URG-04LX-UG01
 # https://www.hokuyo-aut.jp/search/single.php?serial=166

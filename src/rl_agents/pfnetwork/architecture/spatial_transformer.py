@@ -1,10 +1,34 @@
 #!/usr/bin/env python3
 
+# MIT License
+
+# Copyright (c) 2018 Peter Karkus, AdaCompNUS
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+# This code has been adapted from https://github.com/AdaCompNUS/pfnet
+
+
 import tensorflow as tf
-# reference: https://github.com/AdaCompNUS/pfnet/blob/861b398c58574cc3e415896f3dd278a76cb2b383/transformer/spatial_transformer.py
+
 
 def transformer(U, theta, out_size):
-
     def _repeat(x, n_repeats):
         rep = tf.transpose(a=tf.expand_dims(tf.ones(shape=tf.stack([
             n_repeats,
@@ -15,10 +39,14 @@ def transformer(U, theta, out_size):
 
     def _interpolate(im, x, y, out_size):
         # constants
-        num_batch = tf.shape(input=im)[0]
-        height = tf.shape(input=im)[1]
-        width = tf.shape(input=im)[2]
-        channels = tf.shape(input=im)[3]
+        # num_batch = tf.shape(input=im)[0]
+        num_batch = im.shape[0]
+        # height = tf.shape(input=im)[1]
+        height = im.shape[1]
+        # width = tf.shape(input=im)[2]
+        width = im.shape[2]
+        # channels = tf.shape(input=im)[3]
+        channels = im.shape[3]
 
         x = tf.cast(x, 'float32')
         y = tf.cast(y, 'float32')
@@ -95,8 +123,10 @@ def transformer(U, theta, out_size):
         return grid
 
     def _transform(theta, input_dim, out_size):
-        num_batch = tf.shape(input=input_dim)[0]
-        num_channels = tf.shape(input=input_dim)[3]
+        # num_batch = tf.shape(input=input_dim)[0]
+        num_batch = input_dim.shape[0]
+        # num_channels = tf.shape(input=input_dim)[3]
+        num_channels = input_dim.shape[3]
         theta = tf.reshape(theta, (-1, 2, 3))
         theta = tf.cast(theta, 'float32')
 

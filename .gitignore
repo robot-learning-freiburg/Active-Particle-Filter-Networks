@@ -8,3 +8,12 @@ build
 devel
 logs
 .catkin_tools
+src/rl_agents/pfnetwork/rgb_depth
+src/rl_agents/pfnetwork/wandb
+src/rl_agents/run*
+src/rl_agents/test_output
+src/rl_agents/train_output
+src/rl_agents/wandb
+wandb
+nohup*
+__pycache__

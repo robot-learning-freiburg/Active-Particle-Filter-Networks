@@ -1,0 +1,20 @@
+name: active_localization2
+channels:
+  - anaconda
+  - defaults
+  - conda-forge
+  - pytorch
+dependencies:
+  - python=3.7
+  - cudatoolkit=11.2
+  - cudnn=8.1.0
+  - tensorflow==2.6.0
+  - numpy==1.21.1
+  - keras==2.6.0
+  - transforms3d==0.3.1
+  - setuptools=58.0.4=py37h06a4308_0
+  - pytorch==1.12.1
+  - pip>=22.1.2
+  - pip:
+    - wandb
+    - stable-baselines3[extra]
