@@ -12,7 +12,7 @@ Please cite the paper as follows:
    }
 ```
 
-The PF-net modules in this repository is based on https://github.com/AdaCompNUS/pfnet and implemented in tensorflow. The RL agents are implemented in pytorch based on stable-baselines3.
+The PF-net module in this repository is based on https://github.com/AdaCompNUS/pfnet and implemented in tensorflow. The RL agents are implemented in pytorch based on stable-baselines3.
 
 ## Installation
 
